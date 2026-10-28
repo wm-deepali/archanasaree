@@ -1,0 +1,1337 @@
+@import '../_var'
+
+// ======================================================
+// scrollbar mixin (aapka style)
+// ======================================================
+@mixin filter-scroll
+  &::-webkit-scrollbar
+    width: 4px
+    background: #cecece
+
+  &::-webkit-scrollbar-track
+    box-shadow: none
+
+  &::-webkit-scrollbar-thumb
+    background: #0000005d !important
+
+  &::-webkit-scrollbar-thumb:hover
+    background: var(--bgcolor) !important
+
+// shared eyebrow
+.listing-intro, .listing-journal, .listing-news
+  .eyebrow
+    display: block
+    margin-bottom: 14px
+    color: var(--primary)
+    font-size: 12px
+    font-weight: 600
+    text-transform: uppercase
+    letter-spacing: 0.25em
+
+    @include media(540)
+      font-size: 11px
+      letter-spacing: 0.2em
+
+// ======================================================
+// 1. HERO
+// ======================================================
+.listing-banner
+  position: relative
+  display: flex
+  flex-direction: column
+  overflow: hidden
+  min-height: 480px
+  margin-bottom: 30px
+  margin-top: calc(var(--headerheight) + 30px)
+  background: var(--bg)
+
+  @include media(1280)
+    min-height: 440px
+
+  @include media(1024)
+    min-height: 420px
+
+  @include media(768)
+    min-height: 500px
+
+  @include media(540)
+    min-height: 480px
+
+  .banner-img
+    position: absolute
+    inset: 0
+
+    img
+      display: block
+      width: 100%
+      height: 100%
+      object-fit: cover
+      object-position: 72% center
+
+      @include media(768)
+        object-position: 78% top
+
+  &::after
+    content: ""
+    position: absolute
+    inset: 0
+    pointer-events: none
+    background: linear-gradient(90deg, rgba(250, 246, 238, 0.96) 0%, rgba(250, 246, 238, 0.78) 43%, rgba(250, 246, 238, 0) 62%)
+
+    @include media(991)
+      background: linear-gradient(90deg, rgba(250, 246, 238, 0.96) 0%, rgba(250, 246, 238, 0.8) 52%, rgba(250, 246, 238, 0) 80%)
+
+    @include media(768)
+      background: linear-gradient(0deg, rgba(250, 246, 238, 0.97) 0%, rgba(250, 246, 238, 0.86) 55%, rgba(250, 246, 238, 0) 100%)
+
+    @include media(540)
+      background: linear-gradient(0deg, rgba(250, 246, 238, 0.97) 0%, rgba(250, 246, 238, 0.8) 50%, rgba(250, 246, 238, 0) 85%)
+
+  .container
+    position: relative
+    z-index: 2
+    display: flex
+    flex-direction: column
+    flex: 1
+
+  .crumb
+    display: flex
+    align-items: center
+    flex-wrap: wrap
+    gap: 10px
+    margin: 0
+    padding: 22px 0 0
+    list-style: none
+
+    @include media(540)
+      flex-wrap: nowrap
+      gap: 8px
+      overflow-x: auto
+      white-space: nowrap
+      scrollbar-width: none
+
+      &::-webkit-scrollbar
+        display: none
+
+    li
+      flex-shrink: 0
+      color: var(--text)
+      font-size: 12px
+      font-weight: 500
+      text-transform: uppercase
+      letter-spacing: 0.14em
+
+      @include media(540)
+        font-size: 11px
+        letter-spacing: 0.1em
+
+      a
+        color: var(--black)
+        font-size: inherit
+        transition: color 0.3s ease
+
+        &:hover
+          color: var(--primary)
+
+      i
+        display: block
+        font-size: 10px
+        opacity: 0.5
+
+      &.current
+        color: var(--primary)
+
+  .banner-content
+    max-width: 580px
+    margin: auto 0
+    padding: 30px 0 56px
+
+    @include media(1024)
+      max-width: 500px
+
+    @include media(768)
+      max-width: 560px
+      margin: auto auto 0
+      padding: 30px 0 44px
+      text-align: center
+
+    @include media(540)
+      max-width: 100%
+      padding-bottom: 38px
+
+    .eyebrow
+      display: block
+      margin-bottom: 16px
+      color: var(--primary)
+      font-size: 12px
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.25em
+
+      @include media(540)
+        font-size: 11px
+        letter-spacing: 0.2em
+
+    h1
+      margin: 0 0 18px
+
+      @include media(540)
+        margin-bottom: 14px
+
+    .banner-desc
+      margin: 0 0 28px
+      color: var(--black)
+      font-size: 15px
+      font-weight: 300
+      line-height: 1.7
+
+      @include media(768)
+        font-size: 14px
+        margin-bottom: 24px
+
+    .btn
+      @include media(540)
+        display: flex
+        width: 100%
+        justify-content: center
+
+// ======================================================
+// 2. INTRO
+// ======================================================
+.listing-intro
+  padding: 40px 0 30px
+
+  @include media(768)
+    padding: 30px 0 20px
+
+  .intro-wrap
+    max-width: 720px
+    margin: 0 auto
+    text-align: center
+
+    .heading
+      margin-bottom: 16px
+
+    p
+      margin: 0 auto
+
+// ======================================================
+// 3. TOOLBAR + LAYOUT
+// ======================================================
+.listing-main
+  padding: 30px 0 80px
+
+  @include media(1024)
+    padding-bottom: 65px
+
+  @include media(768)
+    padding: 20px 0 55px
+
+  .listing-toolbar
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 16px
+    margin-bottom: 34px
+    padding: 14px 0
+    border-top: 1px solid var(--gray)
+    border-bottom: 1px solid var(--gray)
+
+    @include media(991)
+      flex-direction: column
+      align-items: stretch
+      gap: 14px
+      margin-bottom: 26px
+      padding: 14px 0 0
+      border-bottom: 0
+
+  .listing-count
+    margin: 0
+    font-size: 14px
+    letter-spacing: 0.04em
+
+    @include media(991)
+      text-align: center
+
+    @include media(540)
+      font-size: 13px
+
+    b
+      color: var(--black)
+      font-weight: 600
+
+  .listing-tools
+    display: flex
+    align-items: center
+    gap: 18px
+
+    @include media(991)
+      display: grid
+      grid-template-columns: repeat(2, minmax(0, 1fr))
+      gap: 10px
+
+  .tool-btn
+    display: none
+    align-items: center
+    justify-content: center
+    gap: 10px
+    padding: 11px 16px
+    border: 1px solid var(--black)
+    color: var(--black)
+    font-size: 12px
+    font-weight: 500
+    text-transform: uppercase
+    letter-spacing: 0.14em
+    cursor: pointer
+    transition: all 0.3s ease
+
+    @include media(991)
+      display: inline-flex
+
+    @include media(540)
+      font-size: 11px
+      letter-spacing: 0.1em
+
+    &:hover
+      background: var(--black)
+      color: var(--white)
+
+  .view-switch
+    display: flex
+    gap: 8px
+
+    @include media(1280)
+      display: none
+
+    .view-btn
+      width: 38px
+      height: 38px
+      display: inline-flex
+      align-items: center
+      justify-content: center
+      background: transparent
+      border: 1px solid var(--gray)
+      color: var(--text)
+      font-size: 14px
+      cursor: pointer
+      transition: all 0.3s ease
+
+      &:hover, &.active
+        border-color: var(--primary)
+        color: var(--primary)
+
+  .listing-sort
+    display: flex
+    align-items: center
+    gap: 12px
+
+    @include media(991)
+      gap: 0
+
+    label
+      font-size: 12px
+      font-weight: 500
+      text-transform: uppercase
+      letter-spacing: 0.14em
+      white-space: nowrap
+
+      @include media(991)
+        position: absolute
+        width: 1px
+        height: 1px
+        overflow: hidden
+        clip: rect(0 0 0 0)
+
+    .sort-box
+      position: relative
+
+      @include media(991)
+        width: 100%
+
+      select
+        min-width: 200px
+        padding: 10px 40px 10px 16px
+        background: var(--white)
+        border: 1px solid var(--black)
+        border-radius: 0
+        color: var(--black)
+        font-size: 13px
+        cursor: pointer
+        appearance: none
+        outline: none
+        transition: border-color 0.3s ease
+
+        @include media(991)
+          width: 100%
+          min-width: 0
+          padding: 11px 36px 11px 14px
+
+        &:focus
+          border-color: var(--primary)
+
+      i
+        position: absolute
+        top: 50%
+        right: 14px
+        font-size: 10px
+        transform: translateY(-50%)
+        pointer-events: none
+
+  .listing-layout
+    display: grid
+    grid-template-columns: 280px minmax(0, 1fr)
+    gap: 44px
+    align-items: start
+
+    @include media(1280)
+      grid-template-columns: 250px minmax(0, 1fr)
+      gap: 30px
+
+    @include media(991)
+      grid-template-columns: minmax(0, 1fr)
+      gap: 0
+
+  .listing-content
+    min-width: 0
+
+  .listing-grid
+    display: grid
+    grid-template-columns: repeat(4, minmax(0, 1fr))
+    gap: 40px 22px
+
+    @include media(1280)
+      grid-template-columns: repeat(3, minmax(0, 1fr))
+      gap: 34px 20px
+
+    @include media(768)
+      grid-template-columns: repeat(2, minmax(0, 1fr))
+      gap: 28px 16px
+
+    @include media(540)
+      gap: 24px 12px
+
+    @media (min-width: 1281px)
+      &.is-3
+        grid-template-columns: repeat(3, minmax(0, 1fr))
+
+    .prod_cart
+      min-width: 0
+
+  .listing-pagination
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 16px
+    margin-top: 60px
+    padding-top: 26px
+    border-top: 1px solid var(--gray)
+
+    @include media(768)
+      margin-top: 44px
+      flex-wrap: wrap
+      justify-content: center
+      gap: 18px
+
+    ul
+      display: flex
+      align-items: center
+      gap: 6px
+      margin: 0
+      padding: 0
+      list-style: none
+
+      @include media(768)
+        order: -1
+        width: 100%
+        justify-content: center
+
+      li
+        font-size: 13px
+
+        &.dots
+          padding: 0 6px
+          opacity: 0.6
+
+        a
+          display: inline-flex
+          align-items: center
+          justify-content: center
+          min-width: 42px
+          height: 42px
+          color: var(--text)
+          font-size: 13px
+          letter-spacing: 0.1em
+          border-bottom: 2px solid transparent
+          transition: all 0.3s ease
+
+          @include media(540)
+            min-width: 38px
+            height: 40px
+
+          &:hover
+            color: var(--black)
+
+          &.active
+            color: var(--primary)
+            font-weight: 600
+            border-bottom-color: var(--secondary)
+
+    .pg-nav
+      display: inline-flex
+      align-items: center
+      gap: 10px
+      color: var(--black)
+      font-size: 12px
+      font-weight: 500
+      text-transform: uppercase
+      letter-spacing: 0.14em
+      transition: color 0.3s ease
+
+      &:hover
+        color: var(--primary)
+
+      &.is-disabled
+        opacity: 0.35
+        pointer-events: none
+
+// ======================================================
+// FILTER SIDEBAR
+// ======================================================
+.filter-overlay
+  display: none
+
+.listing-filter
+  position: sticky
+  top: calc(var(--headerheight) + 20px)
+  display: flex
+  flex-direction: column
+  max-height: calc(100vh - var(--headerheight) - 40px)
+  background: var(--white)
+  border: 1px solid var(--gray)
+  border-radius: 18px
+  overflow: hidden
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px
+  overflow: clip // programmatic scroll band: size click par content upar nahi khisakta
+
+  // ---------- head ----------
+  .f-head
+    display: flex
+    flex-shrink: 0
+    align-items: center
+    justify-content: space-between
+    gap: 12px
+    padding: 18px 22px
+    background: var(--bg)
+    border-bottom: 1px solid var(--gray)
+
+    .f-ttl
+      display: flex
+      align-items: center
+      gap: 12px
+
+    .f-icon
+      display: inline-flex
+      align-items: center
+      justify-content: center
+      width: 32px
+      height: 32px
+      border-radius: 50%
+      background: var(--primary)
+      color: var(--white)
+      font-size: 12px
+
+    h4
+      margin: 0
+      font-size: 13px
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.2em
+
+    .f-close
+      display: none
+      width: 36px
+      height: 36px
+      align-items: center
+      justify-content: center
+      color: var(--black)
+      font-size: 18px
+      cursor: pointer
+
+  .f-clear
+    padding: 0
+    background: none
+    border: 0
+    border-bottom: 1px solid var(--secondary)
+    color: var(--primary)
+    font-size: 11px
+    font-weight: 600
+    text-transform: uppercase
+    letter-spacing: 0.14em
+    cursor: pointer
+    transition: color 0.3s ease
+
+    &:hover
+      color: var(--secondary)
+
+  // ---------- scroll area ----------
+  .f-scroll
+    position: relative
+    flex: 1
+    min-height: 0
+    overflow-y: auto
+    padding: 0 22px
+    scrollbar-width: none
+    -ms-overflow-style: none
+
+    &::-webkit-scrollbar
+        display: none
+    
+
+  // ---------- group ----------
+  .f-group
+    border-bottom: 1px solid var(--gray)
+
+    &:last-child
+      border-bottom: 0
+
+    summary
+      display: flex
+      align-items: center
+      justify-content: space-between
+      padding: 10px 0
+      color: var(--text)
+      font-size: 14px
+      font-weight: 600
+      text-transform: uppercase
+      cursor: pointer
+      list-style: none
+      transition: color 0.3s ease
+
+      &::-webkit-details-marker
+        display: none
+
+      &::after
+        content: "+"
+        display: inline-flex
+        align-items: center
+        justify-content: center
+        width: 22px
+        height: 22px
+        border-radius: 50%
+        border: 1px solid var(--gray)
+        font-size: 14px
+        font-weight: 400
+        letter-spacing: 0
+        line-height: 1
+        transition: all 0.3s ease
+
+      &:hover
+        color: var(--primary)
+
+    &[open] summary::after
+      content: "−"
+      background: var(--gray)
+      border-color: var(--gray)
+      color: var(--black)
+
+  .f-body
+    padding: 0 0 22px
+
+  // ---------- pill chips ----------
+  .f-chips
+    display: flex
+    flex-wrap: wrap
+    gap: 8px
+
+  .f-chip
+    position: relative
+    cursor: pointer
+
+    input
+      position: absolute
+      inset: 0
+      width: 100%
+      height: 100%
+      margin: 0
+      opacity: 0
+      cursor: pointer
+
+      &:checked + span
+        background: var(--primary)
+        border-color: var(--primary)
+        color: var(--white)
+
+      &:focus-visible + span
+        outline: 2px solid var(--secondary)
+        outline-offset: 2px
+
+    span
+      display: inline-block
+      padding: 8px 14px
+      border: 1px solid var(--gray)
+      border-radius: 999px
+      background: var(--white)
+      color: var(--text)
+      font-size: 13px
+      line-height: 1
+      transition: all 0.25s ease
+
+    &:hover span
+      border-color: var(--secondary)
+      color: var(--primary)
+
+    input:checked + span:hover
+      color: var(--white)
+
+  // ---------- checkbox / radio list ----------
+  .f-list
+    max-height: 210px
+    overflow-y: auto
+    padding-right: 8px
+    @include filter-scroll
+
+  .f-check
+    position: relative
+    display: flex
+    align-items: center
+    gap: 12px
+    padding: 7px 0
+    cursor: pointer
+
+    input
+      position: absolute
+      inset: 0
+      width: 100%
+      height: 100%
+      margin: 0
+      opacity: 0
+      cursor: pointer
+
+      &:checked + .f-box
+        background: var(--primary)
+        border-color: var(--primary)
+
+        &::after
+          opacity: 1
+
+      &:checked ~ .f-text
+        color: var(--black)
+        font-weight: 500
+
+      &:focus-visible + .f-box
+        outline: 2px solid var(--secondary)
+        outline-offset: 2px
+
+    .f-box
+      position: relative
+      flex-shrink: 0
+      width: 17px
+      height: 17px
+      border: 1px solid #c9bfb2
+      border-radius: 4px
+      background: var(--white)
+      transition: all 0.25s ease
+
+      &::after
+        content: ""
+        position: absolute
+        top: 2px
+        left: 5px
+        width: 4px
+        height: 8px
+        border: solid var(--white)
+        border-width: 0 1.5px 1.5px 0
+        transform: rotate(45deg)
+        opacity: 0
+        transition: opacity 0.2s ease
+
+      &.is-radio
+        border-radius: 50%
+
+        &::after
+          top: 4px
+          left: 4px
+          width: 7px
+          height: 7px
+          border: 0
+          border-radius: 50%
+          background: var(--white)
+          transform: none
+
+    .f-text
+      flex: 1
+      font-size: 14px
+      color: var(--text)
+      transition: color 0.25s ease
+
+    &:hover .f-text
+      color: var(--black)
+
+  // ---------- colour swatches ----------
+  .f-swatches
+    display: flex
+    flex-wrap: wrap
+    gap: 12px
+
+  .f-swatch
+    position: relative
+    cursor: pointer
+
+    input
+      position: absolute
+      inset: 0
+      width: 100%
+      height: 100%
+      margin: 0
+      opacity: 0
+      cursor: pointer
+
+      &:checked + span
+        box-shadow: 0 0 0 2px var(--white), 0 0 0 3.5px var(--primary)
+
+      &:focus-visible + span
+        outline: 2px solid var(--secondary)
+        outline-offset: 3px
+
+    span
+      display: block
+      width: 28px
+      height: 28px
+      border-radius: 50%
+      background: var(--c)
+      border: 1px solid rgba(0, 0, 0, 0.12)
+      transition: transform 0.25s ease, box-shadow 0.25s ease
+
+    &:hover span
+      transform: scale(1.12)
+
+  // ---------- size ----------
+  .f-sizes
+    display: grid
+    grid-template-columns: repeat(3, minmax(0, 1fr))
+    gap: 8px
+
+  .f-size
+    position: relative
+    cursor: pointer
+
+    input
+      position: absolute
+      inset: 0
+      width: 100%
+      height: 100%
+      margin: 0
+      opacity: 0
+      cursor: pointer
+
+      &:checked + span
+        background: var(--primary)
+        border-color: var(--primary)
+        color: var(--white)
+
+      &:focus-visible + span
+        outline: 2px solid var(--secondary)
+        outline-offset: 2px
+
+    span
+      display: flex
+      align-items: center
+      justify-content: center
+      height: 38px
+      border: 1px solid var(--gray)
+      border-radius: 8px
+      color: var(--text)
+      font-size: 12px
+      letter-spacing: 0.08em
+      transition: all 0.25s ease
+
+    &:hover span
+      border-color: var(--secondary)
+
+  // ---------- price ----------
+  .price-range
+    position: relative
+    height: 22px
+    margin: 8px 8px 20px
+
+    .range-track
+      position: absolute
+      top: 50%
+      left: 0
+      right: 0
+      height: 3px
+      border-radius: 3px
+      background: var(--gray)
+      transform: translateY(-50%)
+
+    .range-fill
+      position: absolute
+      top: 0
+      bottom: 0
+      border-radius: 3px
+      background: linear-gradient(90deg, var(--secondary), var(--primary))
+
+    input[type="range"]
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      height: 22px
+      margin: 0
+      background: none
+      appearance: none
+      pointer-events: none
+
+      &::-webkit-slider-thumb
+        width: 18px
+        height: 18px
+        border-radius: 50%
+        background: var(--white)
+        border: 2px solid var(--primary)
+        box-shadow: 0 2px 6px rgba(99, 54, 77, 0.25)
+        appearance: none
+        pointer-events: auto
+        cursor: grab
+
+      &::-moz-range-thumb
+        width: 14px
+        height: 14px
+        border-radius: 50%
+        background: var(--white)
+        border: 2px solid var(--primary)
+        pointer-events: auto
+        cursor: grab
+
+      &::-webkit-slider-runnable-track
+        background: transparent
+
+      &::-moz-range-track
+        background: transparent
+
+  .price-inputs
+    display: flex
+    align-items: center
+    gap: 10px
+
+    .price-dash
+      flex-shrink: 0
+      width: 10px
+      height: 1px
+      background: var(--text)
+      opacity: 0.5
+
+    label
+      position: relative
+      flex: 1
+      min-width: 0
+
+      span
+        position: absolute
+        top: -8px
+        left: 10px
+        z-index: 1
+        padding: 0 5px
+        background: var(--white)
+        color: var(--text)
+        font-size: 10px
+        text-transform: uppercase
+        letter-spacing: 0.12em
+
+      b
+        position: absolute
+        top: 50%
+        left: 12px
+        font-size: 13px
+        font-weight: 500
+        transform: translateY(-50%)
+
+      input
+        width: 100%
+        padding: 12px 8px 12px 26px
+        background: var(--white)
+        border: 1px solid var(--gray)
+        border-radius: 8px
+        color: var(--black)
+        font-size: 13px
+        outline: none
+        transition: border-color 0.3s ease
+        appearance: textfield
+
+        &::-webkit-outer-spin-button, &::-webkit-inner-spin-button
+          appearance: none
+          margin: 0
+
+        &:focus
+          border-color: var(--primary)
+
+  .f-foot
+    display: none
+
+// ---------- tablet / mobile : bottom sheet (CSS only) ----------
+@include media(991)
+  .filter-overlay
+    position: fixed
+    inset: 0
+    z-index: 1090
+    display: block
+    background: rgba(40, 20, 30, 0.45)
+    opacity: 0
+    visibility: hidden
+    transition: opacity 0.3s ease, visibility 0.3s ease
+
+  .listing-filter
+    position: fixed
+    top: auto
+    left: 0
+    right: 0
+    bottom: 0
+    z-index: 1100
+    max-height: 86vh
+    border: 0
+    border-radius: 22px 22px 0 0
+    transform: translateY(100%)
+    transition: transform 0.4s ease
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15)
+
+    .f-head
+      padding: 14px 20px
+
+      .f-clear
+        display: none
+
+      .f-close
+        display: inline-flex
+
+    .f-scroll
+      padding: 0 20px
+
+    .f-foot
+      display: grid
+      flex-shrink: 0
+      grid-template-columns: 1fr 1fr
+      gap: 12px
+      padding: 14px 20px calc(14px + env(safe-area-inset-bottom))
+      border-top: 1px solid var(--gray)
+      background: var(--white)
+
+      .btn
+        justify-content: center
+        width: 100%
+
+  .filter-toggle:checked ~ .listing-layout
+    .filter-overlay
+      opacity: 1
+      visibility: visible
+
+    .listing-filter
+      transform: translateY(0)
+
+  body:has(.filter-toggle:checked)
+    overflow: hidden
+
+// ======================================================
+// 4 + 5. RECENTLY VIEWED / YOU MAY ALSO LOVE
+// ======================================================
+.listing-recent, .listing-like
+  padding: 70px 0
+
+  @include media(1024)
+    padding: 60px 0
+
+  @include media(768)
+    padding: 55px 0
+
+  @include media(540)
+    padding: 50px 0
+
+  .sec-head
+    max-width: 640px
+    text-align: center
+    margin: 0 auto 36px
+
+    @include media(768)
+      margin-bottom: 30px
+
+    @include media(540)
+      margin-bottom: 24px
+
+    .heading
+      margin-bottom: 14px
+
+    p
+      margin: 0 auto
+
+  .fourSlider
+    padding: 0 0 10px
+
+.listing-recent
+  background: var(--bg)
+
+// ======================================================
+// 6. JOURNAL
+// ======================================================
+.listing-journal
+  padding: 70px 0
+  background: var(--bg)
+
+  @include media(1024)
+    padding: 60px 0
+
+  @include media(768)
+    padding: 55px 0
+
+  @include media(540)
+    padding: 50px 0
+
+  .journal-grid
+    display: grid
+    grid-template-columns: 6fr 5fr
+    gap: 80px
+    align-items: center
+
+    @include media(1280)
+      gap: 50px
+
+    @include media(1024)
+      gap: 40px
+
+    @include media(991)
+      grid-template-columns: 1fr
+      gap: 36px
+
+  .journal-visual
+    position: relative
+    padding: 0 0 22px 22px
+
+    @include media(991)
+      max-width: 560px
+      width: 100%
+      margin: 0 auto
+
+    @include media(540)
+      padding: 0 0 14px 14px
+
+    &::before
+      content: ""
+      position: absolute
+      top: 22px
+      left: 0
+      right: 22px
+      bottom: 0
+      border: 1px solid var(--primary)
+      z-index: 0
+
+      @include media(540)
+        top: 14px
+        right: 14px
+
+  .journal-photo
+    position: relative
+    z-index: 1
+    overflow: hidden
+    aspect-ratio: 4 / 3.6
+    background: var(--gray)
+
+    @include media(540)
+      aspect-ratio: 4 / 4.4
+
+    img
+      display: block
+      width: 100%
+      height: 100%
+      object-fit: cover
+      object-position: top center
+      transition: transform 1.4s ease
+
+    &::before
+      content: ""
+      position: absolute
+      top: 0
+      left: -80%
+      z-index: 2
+      width: 45%
+      height: 100%
+      background: linear-gradient(100deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0) 100%)
+      transform: skewX(-18deg)
+      transition: left 0.9s ease
+      pointer-events: none
+
+  .journal-visual:hover .journal-photo
+    img
+      transform: scale(1.06)
+
+    &::before
+      left: 130%
+
+  .journal-content
+    min-width: 0
+
+    @include media(991)
+      max-width: 600px
+      margin: 0 auto
+
+    @include media(768)
+      text-align: center
+
+    .heading
+      margin-bottom: 20px
+
+    p
+      margin: 0 0 32px
+
+      @include media(540)
+        margin-bottom: 24px
+
+    .btn
+      @include media(540)
+        display: flex
+        width: 100%
+        justify-content: center
+
+      i
+        transition: transform 0.3s ease
+
+      &:hover i
+        transform: translateX(5px)
+
+// ======================================================
+// 7. NEWSLETTER
+// ======================================================
+.listing-news
+  padding: 70px 0
+
+  @include media(1024)
+    padding: 60px 0
+
+  @include media(768)
+    padding: 55px 0
+
+  @include media(540)
+    padding: 50px 0
+
+  .news-wrap
+    display: grid
+    grid-template-columns: 1fr 1.15fr
+    background: var(--bg)
+
+    @include media(1024)
+      grid-template-columns: 1fr 1.1fr
+
+    @include media(991)
+      grid-template-columns: 1fr
+
+  .news-photo
+    position: relative
+    overflow: hidden
+    min-height: 460px
+
+    @include media(1280)
+      min-height: 400px
+
+    @include media(1024)
+      min-height: 380px
+
+    @include media(991)
+      min-height: 0
+      aspect-ratio: 16 / 10
+
+    @include media(540)
+      aspect-ratio: 4 / 3.4
+
+    img
+      position: absolute
+      inset: 0
+      width: 100%
+      height: 100%
+      object-fit: cover
+      object-position: top center
+      display: block
+      transition: transform 1.4s ease
+
+    &::before
+      content: ""
+      position: absolute
+      top: 0
+      left: -80%
+      z-index: 1
+      width: 45%
+      height: 100%
+      background: linear-gradient(100deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0) 100%)
+      transform: skewX(-18deg)
+      transition: left 0.9s ease
+      pointer-events: none
+
+  .news-wrap:hover .news-photo
+    img
+      transform: scale(1.04)
+
+    &::before
+      left: 130%
+
+  .news-panel
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: flex-start
+    padding: 64px 70px
+
+    @include media(1280)
+      padding: 44px
+
+    @include media(1024)
+      padding: 36px 34px
+
+    @include media(768)
+      align-items: center
+      padding: 36px 30px
+      text-align: center
+
+    @include media(540)
+      padding: 32px 22px 36px
+
+    .heading
+      margin-bottom: 14px
+
+    .news-desc
+      max-width: 480px
+      margin: 0 0 38px
+
+      @include media(1024)
+        margin-bottom: 32px
+
+      @include media(768)
+        max-width: 100%
+        margin-bottom: 30px
+
+  .news-form
+    display: flex
+    align-items: flex-end
+    gap: 20px
+    width: 100%
+    max-width: 520px
+    text-align: left
+
+    @include media(1024)
+      gap: 16px
+
+    @include media(540)
+      flex-direction: column
+      align-items: stretch
+      gap: 22px
+
+    .form-group
+      flex: 1
+      min-width: 0
+
+    .btn
+      flex-shrink: 0
+
+      @include media(540)
+        width: 100%
+        justify-content: center
+
+      i
+        transition: transform 0.3s ease
+
+      &:hover i
+        transform: translateX(5px)

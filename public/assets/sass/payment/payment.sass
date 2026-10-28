@@ -1,0 +1,961 @@
+@import '../_var'
+
+$success: #2e7d32
+$success-bg: rgba(46, 125, 50, 0.07)
+$danger: #c62828
+$danger-bg: rgba(198, 40, 40, 0.06)
+
+.payment-secA
+  margin-top: calc(var(--headerheight) + 50px)
+  padding-bottom: 70px
+
+  @include media(1024)
+    margin-top: calc(var(--headerheight) + 40px)
+    padding-bottom: 60px
+
+  @include media(768)
+    margin-top: calc(var(--headerheight) + 30px)
+    padding-bottom: 50px
+
+  @include media(540)
+    margin-top: calc(var(--headerheight) + 24px)
+    padding-bottom: 40px
+
+  // ---------- Steps ----------
+  .pay-top
+    position: relative
+    display: flex
+    align-items: center
+    justify-content: center
+    margin-bottom: 30px
+    padding-bottom: 26px
+    border-bottom: 1px solid var(--gray)
+
+    @include media(1024)
+      margin-bottom: 26px
+      padding-bottom: 22px
+
+    @include media(768)
+      flex-direction: column
+      gap: 12px
+      margin-bottom: 22px
+      padding-bottom: 18px
+
+    @include media(540)
+      margin-bottom: 18px
+
+  .pay-steps
+    display: flex
+    align-items: center
+    gap: 14px
+    margin: 0
+    padding: 0
+    list-style: none
+
+    @include media(768)
+      gap: 10px
+
+    @include media(540)
+      gap: 6px
+
+    .step
+      display: flex
+      align-items: center
+      gap: 10px
+      color: var(--text)
+      font-size: 12px
+      font-weight: 500
+      text-transform: uppercase
+      letter-spacing: 0.18em
+
+      @include media(768)
+        font-size: 11px
+        letter-spacing: 0.12em
+
+      @include media(540)
+        gap: 6px
+        font-size: 10px
+        letter-spacing: 0.06em
+
+      & + .step::before
+        content: ""
+        display: block
+        width: 56px
+        height: 1px
+        background: var(--gray)
+
+        @include media(1024)
+          width: 40px
+
+        @include media(768)
+          width: 28px
+
+        @include media(540)
+          width: 14px
+
+      .step-link
+        display: flex
+        align-items: center
+        gap: 10px
+        color: inherit
+
+        @include media(540)
+          gap: 6px
+
+        &:hover
+          opacity: 0.8
+
+      .step-icon
+        display: grid
+        place-items: center
+        flex-shrink: 0
+        width: 36px
+        height: 36px
+        border: 1px solid var(--gray)
+        border-radius: 50%
+        background: var(--white)
+        color: var(--text)
+        font-size: 13px
+
+        @include media(540)
+          width: 30px
+          height: 30px
+          font-size: 11px
+
+      &.is-active
+        color: var(--black)
+        font-weight: 600
+
+        .step-icon
+          background: var(--primary)
+          border-color: var(--primary)
+          color: var(--white)
+
+      &.is-done
+        color: var(--black)
+
+        .step-icon
+          border-color: var(--primary)
+          color: var(--primary)
+
+  .secure-tag
+    position: absolute
+    top: 0
+    right: 0
+    display: inline-flex
+    align-items: center
+    gap: 8px
+    height: 36px
+    color: var(--black)
+    font-size: 12px
+    font-weight: 500
+    letter-spacing: 0.06em
+
+    @include media(768)
+      position: static
+      height: auto
+
+    @include media(540)
+      font-size: 11px
+
+    i
+      color: $success
+      font-size: 16px
+
+  // ---------- Head (one row) ----------
+  .pay-head
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 16px
+    margin-bottom: 24px
+
+    @include media(540)
+      margin-bottom: 18px
+
+    h1
+      margin: 0
+      font-size: 36px
+
+      @include media(1024)
+        font-size: 32px
+
+      @include media(768)
+        font-size: 28px
+
+      @include media(540)
+        font-size: 24px
+
+    .back-link
+      display: inline-flex
+      align-items: center
+      flex-shrink: 0
+      gap: 10px
+      padding-bottom: 6px
+      border-bottom: 1px solid var(--black)
+      color: var(--black)
+      font-size: 11px
+      font-weight: 500
+      text-transform: uppercase
+      letter-spacing: 0.16em
+      transition: all 0.3s ease
+
+      @include media(540)
+        gap: 6px
+        font-size: 10px
+        letter-spacing: 0.08em
+
+      i
+        font-size: 12px
+        transition: transform 0.3s ease
+
+      &:hover
+        border-color: var(--primary)
+        color: var(--primary)
+
+        i
+          transform: translateX(-5px)
+
+  // ---------- Failed alert (one row) ----------
+  .pay-alert
+    display: flex
+    align-items: center
+    gap: 14px
+    margin-bottom: 22px
+    padding: 14px 18px
+    border: 1px solid rgba(198, 40, 40, 0.3)
+    border-left: 4px solid $danger
+    background: $danger-bg
+
+    &[hidden]
+      display: none
+
+    @include media(540)
+      flex-wrap: wrap
+      gap: 8px 12px
+      padding: 12px 14px
+
+    > i
+      flex-shrink: 0
+      color: $danger
+      font-size: 18px
+
+    p
+      flex: 1
+      min-width: 0
+      margin: 0
+      color: var(--text)
+      font-size: 13px
+      line-height: 1.5
+
+      @include media(540)
+        font-size: 12px
+
+      strong
+        color: var(--black)
+        font-weight: 600
+
+    .alert-link
+      flex-shrink: 0
+      padding: 0 0 3px
+      border-bottom: 1px solid $danger
+      color: $danger
+      font-size: 11px
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.14em
+
+  // ---------- Layout ----------
+  .pay-layout
+    display: grid
+    grid-template-columns: minmax(0, 1fr) 400px
+    gap: 40px
+    align-items: start
+
+    @include media(1280)
+      grid-template-columns: minmax(0, 1fr) 380px
+      gap: 32px
+
+    @include media(1024)
+      grid-template-columns: minmax(0, 1fr) 340px
+      gap: 24px
+
+    @include media(991)
+      grid-template-columns: minmax(0, 1fr)
+      gap: 26px
+
+  // ---------- Single card, 3 rows ----------
+  .pay-card
+    min-width: 0
+    border: 1px solid var(--gray)
+    background: var(--white)
+
+  .pay-sec
+    padding: 24px 28px
+
+    @include media(1024)
+      padding: 22px 20px
+
+    @include media(540)
+      padding: 18px 14px
+
+    & + .pay-sec
+      border-top: 1px solid var(--gray)
+
+  .sec-label
+    margin: 0 0 16px
+    color: var(--black)
+    font-size: 12px
+    font-weight: 600
+    text-transform: uppercase
+    letter-spacing: 0.18em
+
+    @include media(540)
+      margin-bottom: 14px
+      font-size: 11px
+      letter-spacing: 0.12em
+
+  // Row 1: deliver to
+  .ship-to
+    display: flex
+    align-items: center
+    gap: 14px
+    background: var(--bg)
+
+    @include media(540)
+      gap: 10px
+
+    .ship-icon
+      display: grid
+      place-items: center
+      flex-shrink: 0
+      width: 38px
+      height: 38px
+      border: 1px solid var(--primary)
+      border-radius: 50%
+      background: var(--white)
+      color: var(--primary)
+      font-size: 14px
+
+      @include media(540)
+        width: 32px
+        height: 32px
+        font-size: 12px
+
+    .ship-text
+      display: flex
+      flex-direction: column
+      flex: 1
+      gap: 3px
+      min-width: 0
+      margin: 0
+
+      strong
+        overflow: hidden
+        color: var(--black)
+        font-size: 14px
+        font-weight: 600
+        text-overflow: ellipsis
+        white-space: nowrap
+
+        @include media(540)
+          font-size: 13px
+
+      small
+        overflow: hidden
+        color: var(--text)
+        font-size: 12px
+        text-overflow: ellipsis
+        white-space: nowrap
+
+        @include media(540)
+          font-size: 11px
+
+    .ship-change
+      flex-shrink: 0
+      padding: 0 0 3px
+      border-bottom: 1px solid var(--black)
+      color: var(--black)
+      font-size: 11px
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.14em
+      transition: all 0.3s ease
+
+      @include media(540)
+        font-size: 10px
+
+      &:hover
+        border-color: var(--primary)
+        color: var(--primary)
+
+  // Row 2: payment method (2 tiles in one row)
+  .pm
+    .pm-radio
+      position: absolute
+      width: 1px
+      height: 1px
+      margin: 0
+      opacity: 0
+      pointer-events: none
+
+    .pm-tabs
+      display: grid
+      grid-template-columns: repeat(2, minmax(0, 1fr))
+      gap: 14px
+
+      @include media(540)
+        gap: 10px
+
+    .pm-tab
+      position: relative
+      display: flex
+      align-items: center
+      gap: 12px
+      padding: 18px 16px
+      border: 1px solid var(--gray)
+      background: var(--white)
+      cursor: pointer
+      transition: border-color 0.3s ease, background 0.3s ease
+
+      @include media(1024)
+        padding: 16px 12px
+        gap: 10px
+
+      @include media(540)
+        padding: 14px 10px
+
+      &:hover
+        border-color: var(--black)
+
+    .pm-icon
+      display: grid
+      place-items: center
+      flex-shrink: 0
+      width: 40px
+      height: 40px
+      border: 1px solid var(--primary)
+      border-radius: 50%
+      background: var(--white)
+      color: var(--primary)
+      font-size: 15px
+
+      @include media(1024)
+        width: 36px
+        height: 36px
+        font-size: 14px
+
+      @include media(540)
+        display: none
+
+    .pm-text
+      display: flex
+      flex-direction: column
+      flex: 1
+      gap: 3px
+      min-width: 0
+
+      strong
+        color: var(--black)
+        font-size: 14px
+        font-weight: 600
+
+        @include media(540)
+          font-size: 13px
+
+      small
+        color: var(--text)
+        font-size: 12px
+        line-height: 1.4
+
+        @include media(540)
+          display: none
+
+    .radio-dot
+      position: relative
+      flex-shrink: 0
+      width: 20px
+      height: 20px
+      border: 2px solid var(--gray)
+      border-radius: 50%
+      background: var(--white)
+      transition: border-color 0.3s ease
+
+      @include media(540)
+        width: 18px
+        height: 18px
+
+      &::after
+        content: ""
+        position: absolute
+        top: 3px
+        right: 3px
+        bottom: 3px
+        left: 3px
+        border-radius: 50%
+        background: var(--primary)
+        transform: scale(0)
+        transition: transform 0.3s ease
+
+    .pm-badge
+      position: absolute
+      top: -10px
+      left: 14px
+      padding: 3px 9px
+      background: var(--primary)
+      color: var(--white)
+      font-size: 9px
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.12em
+
+      @include media(540)
+        left: 10px
+        font-size: 8px
+
+    // selected states
+    #pmOnline:checked ~ .pm-tabs label[for="pmOnline"],
+    #pmCod:checked ~ .pm-tabs label[for="pmCod"]
+      border-color: var(--primary)
+      background: var(--bg)
+
+      .radio-dot
+        border-color: var(--primary)
+
+        &::after
+          transform: scale(1)
+
+    #pmOnline:focus-visible ~ .pm-tabs label[for="pmOnline"],
+    #pmCod:focus-visible ~ .pm-tabs label[for="pmCod"]
+      box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.12)
+
+    // one-line info
+    .pm-info
+      display: none
+      align-items: flex-start
+      gap: 10px
+      margin: 16px 0 0
+      color: var(--text)
+      font-size: 12px
+      line-height: 1.6
+
+      @include media(540)
+        margin-top: 14px
+        font-size: 11px
+
+      i
+        margin-top: 3px
+        color: var(--primary)
+        font-size: 12px
+
+    #pmOnline:checked ~ .pm-online
+      display: flex
+
+    #pmCod:checked ~ .pm-cod
+      display: flex
+
+  // Row 3: billing
+  .check
+    display: flex
+    align-items: center
+    gap: 10px
+    cursor: pointer
+
+    @include media(540)
+      gap: 8px
+
+    input
+      flex-shrink: 0
+      width: 17px
+      height: 17px
+      margin: 0
+      accent-color: var(--primary)
+      cursor: pointer
+
+    span
+      color: var(--black)
+      font-size: 13px
+      line-height: 1.4
+
+      @include media(540)
+        font-size: 12px
+
+  .bill-form
+    display: none
+    margin-top: 22px
+    padding-top: 22px
+    border-top: 1px solid var(--gray)
+
+    @include media(540)
+      margin-top: 18px
+      padding-top: 18px
+
+  .pay-card:has(#billSame:not(:checked)) .bill-form
+    display: block
+
+  // common .form-group handles the input look
+  .fields
+    display: grid
+    grid-template-columns: repeat(12, minmax(0, 1fr))
+    gap: 28px 18px
+    padding-top: 6px
+
+    @include media(540)
+      gap: 26px 14px
+
+  .s-12
+    grid-column: span 12
+
+  .s-7
+    grid-column: span 7
+
+    @include media(768)
+      grid-column: span 12
+
+  .s-5
+    grid-column: span 5
+
+    @include media(768)
+      grid-column: span 12
+
+  .s-4
+    grid-column: span 4
+
+    @include media(768)
+      grid-column: span 6
+
+    @include media(540)
+      grid-column: span 12
+
+  // ---------- RIGHT SIDE: highlighted panel ----------
+  .pay-summary
+    position: sticky
+    top: calc(var(--headerheight) + 20px)
+    display: flex
+    flex-direction: column
+    gap: 14px
+    min-width: 0
+    padding: 20px
+    background: var(--bg)
+    border: 1px solid var(--gray)
+    border-top: 3px solid var(--primary)
+
+    @include media(1024)
+      padding: 16px
+
+    @include media(991)
+      position: static
+      padding: 18px
+
+    @include media(540)
+      padding: 14px
+
+  .box
+    padding: 22px
+    border: 1px solid var(--gray)
+
+    @include media(1024)
+      padding: 20px 18px
+
+    @include media(540)
+      padding: 18px 14px
+
+  // thumbnails + title + edit in ONE row
+  .mini-row
+    display: flex
+    align-items: center
+    gap: 14px
+    margin-bottom: 16px
+    padding-bottom: 16px
+    border-bottom: 1px solid var(--gray)
+
+    @include media(540)
+      gap: 10px
+
+    .mini-imgs
+      display: flex
+      flex-shrink: 0
+      margin: 0
+      padding: 0
+      list-style: none
+
+      li
+        width: 44px
+        border: 2px solid var(--white)
+        background: var(--bg)
+
+        @include media(540)
+          width: 38px
+
+        & + li
+          margin-left: -14px
+
+      img
+        display: block
+        width: 100%
+        aspect-ratio: 3 / 4
+        object-fit: cover
+        object-position: top center
+
+    .mini-text
+      display: flex
+      flex-direction: column
+      flex: 1
+      gap: 3px
+      min-width: 0
+      margin: 0
+
+      strong
+        color: var(--black)
+        font-size: 13px
+        font-weight: 600
+        text-transform: uppercase
+        letter-spacing: 0.14em
+
+        @include media(540)
+          font-size: 12px
+          letter-spacing: 0.08em
+
+      small
+        color: var(--text)
+        font-size: 12px
+
+    .mini-edit
+      flex-shrink: 0
+      color: var(--primary)
+      font-size: 12px
+      font-weight: 600
+      text-decoration: underline
+      text-underline-offset: 3px
+
+      @include media(540)
+        font-size: 11px
+
+  .rows
+    margin: 0
+
+    .row
+      display: flex
+      align-items: baseline
+      justify-content: space-between
+      gap: 16px
+      padding: 6px 0
+      color: var(--text)
+      font-size: 14px
+
+      @include media(540)
+        gap: 12px
+        font-size: 13px
+
+      dt
+        margin: 0
+
+      dd
+        margin: 0
+        color: var(--black)
+        text-align: right
+
+        del
+          margin-right: 4px
+          color: var(--text)
+          font-size: 12px
+          opacity: 0.7
+
+        &.is-green
+          color: $success
+          font-weight: 500
+
+      &.is-green dd
+        color: $success
+
+    .row-total
+      margin-top: 10px
+      padding-top: 16px
+      border-top: 1px solid var(--gray)
+      color: var(--black)
+      font-size: 14px
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.12em
+
+      @include media(540)
+        padding-top: 14px
+        font-size: 13px
+
+      dd
+        font-size: 22px
+        font-weight: 600
+        letter-spacing: 0
+
+        @include media(540)
+          font-size: 20px
+
+  .save-chip
+    display: flex
+    align-items: center
+    gap: 10px
+    margin: 12px 0 16px
+    padding: 10px 12px
+    background: $success-bg
+    color: $success
+    font-size: 12px
+    font-weight: 600
+    line-height: 1.4
+
+    @include media(540)
+      gap: 8px
+      font-size: 11px
+
+  .place-btn
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: 10px
+    width: 100%
+    cursor: pointer
+
+    @include media(991)
+      display: none
+
+    i
+      transition: transform 0.3s ease
+
+    &:hover i
+      transform: translateX(5px)
+
+  .cod-btn
+    display: none
+
+  // COD select hone par buttons swap
+  &:has(#pmCod:checked)
+    .pay-btn
+      display: none
+
+    .cod-btn
+      display: flex
+
+      @include media(991)
+        display: none
+
+    .bar-pay
+      display: none
+
+    .bar-cod
+      display: inline-flex
+
+  .terms-note
+    margin: 12px 0 0
+    color: var(--text)
+    font-size: 12px
+    line-height: 1.6
+    text-align: center
+
+    @include media(991)
+      margin-top: 0
+
+    @include media(540)
+      font-size: 11px
+
+    a
+      color: var(--black)
+      font-size: inherit
+      text-decoration: underline
+      text-underline-offset: 3px
+      transition: color 0.3s ease
+
+      &:hover
+        color: var(--primary)
+
+  // 3 trust points in ONE row
+  .trust-list
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 8px 12px
+    margin: 0
+    padding: 4px 2px 0
+    list-style: none
+
+    @include media(540)
+      flex-wrap: wrap
+      justify-content: center
+
+    li
+      display: flex
+      align-items: center
+      gap: 7px
+      color: var(--black)
+      font-size: 11px
+      font-weight: 500
+      line-height: 1.3
+
+      @include media(540)
+        gap: 6px
+        font-size: 10px
+
+      i
+        flex-shrink: 0
+        color: var(--primary)
+        font-size: 13px
+
+  // ---------- Mobile sticky bar ----------
+  .pay-bar
+    display: none
+
+    @include media(991)
+      position: sticky
+      bottom: calc(10px + env(safe-area-inset-bottom, 0px))
+      z-index: 10
+      display: flex
+      align-items: center
+      gap: 16px
+      margin-top: 24px
+      padding: 10px 10px 10px 18px
+      background: var(--white)
+      border: 1px solid var(--gray)
+      box-shadow: rgba(60, 30, 45, 0.16) 0 12px 36px
+
+    @include media(540)
+      gap: 12px
+      margin-top: 20px
+      padding: 8px 8px 8px 14px
+
+    .bar-total
+      display: flex
+      flex-direction: column
+      flex-shrink: 0
+      gap: 3px
+
+      span
+        color: var(--text)
+        font-size: 10px
+        font-weight: 600
+        line-height: 1
+        text-transform: uppercase
+        letter-spacing: 0.16em
+
+      strong
+        color: var(--black)
+        font-size: 20px
+        font-weight: 600
+        line-height: 1.1
+
+        @include media(540)
+          font-size: 18px
+
+    .btn
+      display: inline-flex
+      align-items: center
+      justify-content: center
+      flex: 1
+      gap: 8px
+      min-width: 0
+      white-space: nowrap
+      cursor: pointer
+
+      @include media(540)
+        padding-left: 12px
+        padding-right: 12px
+
+    .bar-cod
+      display: none

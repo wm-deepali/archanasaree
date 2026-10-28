@@ -1,0 +1,1295 @@
+@import '../_var'
+
+$success: #2e7d32
+$success-bg: rgba(46, 125, 50, 0.07)
+$danger: #c62828
+
+.checkout-secA
+  margin-top: calc(var(--headerheight) + 50px)
+  padding-bottom: 70px
+
+  @include media(1024)
+    margin-top: calc(var(--headerheight) + 40px)
+    padding-bottom: 60px
+
+  @include media(768)
+    margin-top: calc(var(--headerheight) + 30px)
+    padding-bottom: 50px
+
+  @include media(540)
+    margin-top: calc(var(--headerheight) + 24px)
+    padding-bottom: 40px
+
+  // ---------- Steps ----------
+  .co-top
+    position: relative
+    display: flex
+    align-items: center
+    justify-content: center
+    margin-bottom: 40px
+    padding-bottom: 26px
+    border-bottom: 1px solid var(--gray)
+
+    @include media(1024)
+      margin-bottom: 34px
+      padding-bottom: 22px
+
+    @include media(768)
+      flex-direction: column
+      gap: 12px
+      margin-bottom: 28px
+      padding-bottom: 18px
+
+    @include media(540)
+      margin-bottom: 24px
+
+  .co-steps
+    display: flex
+    align-items: center
+    gap: 14px
+    margin: 0
+    padding: 0
+    list-style: none
+
+    @include media(768)
+      gap: 10px
+
+    @include media(540)
+      gap: 6px
+
+    .step
+      display: flex
+      align-items: center
+      gap: 10px
+      color: var(--text)
+      font-size: 12px
+      font-weight: 500
+      text-transform: uppercase
+      letter-spacing: 0.18em
+
+      @include media(768)
+        font-size: 11px
+        letter-spacing: 0.12em
+
+      @include media(540)
+        gap: 6px
+        font-size: 10px
+        letter-spacing: 0.06em
+
+      & + .step::before
+        content: ""
+        display: block
+        width: 56px
+        height: 1px
+        background: var(--gray)
+
+        @include media(1024)
+          width: 40px
+
+        @include media(768)
+          width: 28px
+
+        @include media(540)
+          width: 14px
+
+      .step-link
+        display: flex
+        align-items: center
+        gap: 10px
+        color: inherit
+
+        @include media(540)
+          gap: 6px
+
+        &:hover
+          opacity: 0.8
+
+      .step-icon
+        display: grid
+        place-items: center
+        flex-shrink: 0
+        width: 36px
+        height: 36px
+        border: 1px solid var(--gray)
+        border-radius: 50%
+        background: var(--white)
+        color: var(--text)
+        font-size: 13px
+
+        @include media(540)
+          width: 30px
+          height: 30px
+          font-size: 11px
+
+      &.is-active
+        color: var(--black)
+        font-weight: 600
+
+        .step-icon
+          background: var(--primary)
+          border-color: var(--primary)
+          color: var(--white)
+
+      &.is-done
+        color: var(--black)
+
+        .step-icon
+          border-color: var(--primary)
+          color: var(--primary)
+
+  .secure-tag
+    position: absolute
+    top: 0
+    right: 0
+    display: inline-flex
+    align-items: center
+    gap: 8px
+    height: 36px
+    color: var(--black)
+    font-size: 12px
+    font-weight: 500
+    letter-spacing: 0.06em
+
+    @include media(768)
+      position: static
+      height: auto
+
+    @include media(540)
+      font-size: 11px
+
+    i
+      color: $success
+      font-size: 16px
+
+  // ---------- Head ----------
+  .co-head
+    position: relative
+    margin-bottom: 34px
+    text-align: center
+
+    @include media(768)
+      margin-bottom: 28px
+
+    @include media(540)
+      margin-bottom: 24px
+
+    .eyebrow
+      display: block
+      margin-bottom: 12px
+      color: var(--primary)
+      font-size: 12px
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.25em
+
+      @include media(540)
+        font-size: 11px
+        letter-spacing: 0.2em
+
+    h1
+      margin: 0
+      font-size: 40px
+
+      @include media(1024)
+        font-size: 36px
+
+      @include media(768)
+        font-size: 32px
+
+      @include media(540)
+        font-size: 28px
+
+    .back-link
+      position: absolute
+      top: 50%
+      left: 0
+      display: inline-flex
+      align-items: center
+      gap: 10px
+      padding-bottom: 6px
+      border-bottom: 1px solid var(--black)
+      color: var(--black)
+      font-size: 11px
+      font-weight: 500
+      text-transform: uppercase
+      letter-spacing: 0.16em
+      transform: translateY(-50%)
+      transition: all 0.3s ease
+
+      @include media(768)
+        position: static
+        margin-top: 14px
+        transform: none
+
+      @include media(540)
+        font-size: 10px
+        letter-spacing: 0.1em
+
+      i
+        font-size: 12px
+        transition: transform 0.3s ease
+
+      &:hover
+        border-color: var(--primary)
+        color: var(--primary)
+
+        i
+          transform: translateX(-5px)
+
+  // ---------- Layout ----------
+  .co-layout
+    display: grid
+    grid-template-columns: minmax(0, 1fr) 420px
+    gap: 56px
+    align-items: start
+
+    @include media(1280)
+      gap: 40px
+
+    @include media(1024)
+      grid-template-columns: minmax(0, 1fr) 340px
+      gap: 28px
+
+    @include media(991)
+      grid-template-columns: minmax(0, 1fr)
+      gap: 34px
+
+    @include media(540)
+      gap: 28px
+
+  .co-main
+    display: flex
+    flex-direction: column
+    gap: 22px
+    min-width: 0
+    border: 1px solid var(--border)
+
+    @include media(540)
+      gap: 18px
+
+  .co-block
+    padding: 26px 28px 30px
+    border: 1px solid var(--gray)
+    background: var(--white)
+
+    @include media(1024)
+      padding: 22px 20px 26px
+
+    @include media(540)
+      padding: 20px 16px 22px
+
+  .co-row
+    display: flex
+    align-items: center
+    justify-content: space-between
+    flex-wrap: wrap
+    gap: 8px 16px
+    margin-bottom: 20px
+
+    .co-title
+      margin: 0
+
+    @include media(540)
+      margin-bottom: 16px
+
+  .co-title
+    display: flex
+    align-items: center
+    gap: 12px
+    margin: 0 0 22px
+    color: var(--black)
+    font-size: 13px
+    font-weight: 600
+    text-transform: uppercase
+    letter-spacing: 0.16em
+
+    @include media(540)
+      gap: 10px
+      margin-bottom: 18px
+      font-size: 12px
+      letter-spacing: 0.12em
+
+    .num
+      display: grid
+      place-items: center
+      flex-shrink: 0
+      width: 28px
+      height: 28px
+      border-radius: 50%
+      background: var(--primary)
+      color: var(--white)
+      font-size: 12px
+      font-weight: 600
+      letter-spacing: 0
+
+      @include media(540)
+        width: 26px
+        height: 26px
+        font-size: 11px
+
+  .co-aside
+    margin: 0
+    color: var(--text)
+    font-size: 14px
+
+    @include media(540)
+      font-size: 12px
+
+    a
+      color: var(--primary)
+      font-weight: 600
+      font-size: inherit
+      text-decoration: underline
+      text-underline-offset: 3px
+
+  // ---------- Form fields (common .form handles inputs) ----------
+  .fields
+    display: grid
+    grid-template-columns: repeat(12, minmax(0, 1fr))
+    gap: 28px 18px
+    padding-top: 12px
+
+    @include media(540)
+      gap: 26px 14px
+
+  .s-12
+    grid-column: span 12
+
+  .s-7
+    grid-column: span 7
+
+    @include media(768)
+      grid-column: span 12
+
+  .s-6
+    grid-column: span 6
+
+    @include media(540)
+      grid-column: span 12
+
+  .s-5
+    grid-column: span 5
+
+    @include media(768)
+      grid-column: span 12
+
+  .s-4
+    grid-column: span 4
+
+    @include media(768)
+      grid-column: span 6
+
+    @include media(540)
+      grid-column: span 12
+
+  .form-group.has-prefix
+    .prefix
+      position: absolute
+      bottom: 0
+      left: 0
+      display: flex
+      align-items: center
+      height: calc(var(--inputsize) - var(--borderwidth))
+      color: var(--black)
+      font-size: 16px
+      line-height: 1
+      pointer-events: none
+
+    input
+      padding-left: 44px
+
+    label
+      left: 44px
+
+    input:focus ~ label,
+    input:not(:placeholder-shown) ~ label
+      left: 0
+
+  .check
+    display: flex
+    align-items: center
+    gap: 10px
+    margin-top: 20px
+    cursor: pointer
+
+    @include media(540)
+      gap: 8px
+      margin-top: 18px
+
+    input
+      flex-shrink: 0
+      width: 17px
+      height: 17px
+      margin: 0
+      accent-color: var(--primary)
+      cursor: pointer
+
+    span
+      color: var(--black)
+      font-size: 13px
+      line-height: 1.4
+
+      @include media(540)
+        font-size: 12px
+
+  // ---------- Address cards ----------
+  .addr-list
+    display: flex
+    flex-direction: column
+    gap: 14px
+
+    @include media(540)
+      gap: 12px
+
+  .addr-card
+    position: relative
+    border: 1px solid var(--gray)
+    background: var(--white)
+    transition: border-color 0.3s ease, background 0.3s ease
+
+    &:hover
+      border-color: var(--black)
+
+    &:has(.addr-radio:checked)
+      border-color: var(--primary)
+      background: var(--bg)
+
+    .addr-radio,
+    .edit-toggle
+      position: absolute
+      top: 0
+      left: 0
+      width: 1px
+      height: 1px
+      opacity: 0
+      pointer-events: none
+
+    .addr-body
+      display: flex
+      align-items: flex-start
+      gap: 14px
+      padding: 18px 96px 18px 18px
+      cursor: pointer
+
+      @include media(768)
+        padding: 16px 92px 16px 16px
+
+      @include media(540)
+        gap: 12px
+        padding: 16px 16px 58px
+
+    .radio-dot
+      position: relative
+      flex-shrink: 0
+      width: 20px
+      height: 20px
+      margin-top: 2px
+      border: 2px solid var(--gray)
+      border-radius: 50%
+      background: var(--white)
+      transition: border-color 0.3s ease
+
+      &::after
+        content: ""
+        position: absolute
+        top: 3px
+        right: 3px
+        bottom: 3px
+        left: 3px
+        border-radius: 50%
+        background: var(--primary)
+        transform: scale(0)
+        transition: transform 0.3s ease
+
+    .addr-radio:checked ~ .addr-body .radio-dot
+      border-color: var(--primary)
+
+      &::after
+        transform: scale(1)
+
+    .addr-radio:focus-visible ~ .addr-body .radio-dot
+      box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.12)
+
+    .addr-info
+      display: flex
+      flex-direction: column
+      gap: 4px
+      min-width: 0
+
+    .addr-top
+      display: flex
+      align-items: center
+      flex-wrap: wrap
+      gap: 8px
+
+      @include media(540)
+        gap: 6px
+
+      strong
+        color: var(--black)
+        font-size: 15px
+        font-weight: 600
+
+        @include media(540)
+          font-size: 14px
+
+    .tag
+      padding: 3px 9px
+      background: var(--bg)
+      border: 1px solid var(--gray)
+      color: var(--text)
+      font-size: 10px
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.14em
+
+      &.tag-default
+        background: var(--primary)
+        border-color: var(--primary)
+        color: var(--white)
+
+      @include media(540)
+        padding: 3px 8px
+        font-size: 9px
+
+    .addr-line
+      color: var(--text)
+      font-size: 13px
+      line-height: 1.55
+
+      @include media(540)
+        font-size: 12px
+
+    .addr-phone
+      display: flex
+      align-items: center
+      gap: 8px
+      margin-top: 4px
+      color: var(--black)
+      font-size: 13px
+
+      @include media(540)
+        gap: 6px
+        font-size: 12px
+
+      i
+        color: var(--primary)
+        font-size: 11px
+
+    .addr-edit
+      position: absolute
+      top: 14px
+      right: 14px
+      display: inline-flex
+      align-items: center
+      gap: 7px
+      padding: 0 0 3px
+      border-bottom: 1px solid var(--black)
+      color: var(--black)
+      font-size: 11px
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.14em
+      cursor: pointer
+      transition: all 0.3s ease
+
+      i
+        font-size: 10px
+
+      &:hover
+        border-color: var(--primary)
+        color: var(--primary)
+
+      @include media(768)
+        top: 12px
+        right: 12px
+
+      @include media(540)
+        top: auto
+        right: auto
+        bottom: 18px
+        left: 50px
+        font-size: 10px
+
+    .edit-toggle:focus-visible + .addr-edit
+      color: var(--primary)
+      border-color: var(--primary)
+
+    .edit-toggle:checked + .addr-edit
+      color: var(--primary)
+      border-color: var(--primary)
+
+    .addr-form
+      display: none
+      margin: 0 18px 20px
+      padding: 24px 0 0
+      border-top: 1px solid var(--gray)
+
+      @include media(768)
+        margin: 0 16px 18px
+        padding-top: 20px
+
+      h3
+        margin: 0 0 6px
+        color: var(--black)
+        font-size: 13px
+        font-weight: 600
+        text-transform: uppercase
+        letter-spacing: 0.16em
+
+        @include media(540)
+          font-size: 12px
+          letter-spacing: 0.12em
+
+    .edit-toggle:checked ~ .addr-form
+      display: block
+
+  .addr-new
+    .addr-body
+      padding-right: 18px
+
+      @include media(768)
+        padding-right: 16px
+
+      @include media(540)
+        padding-bottom: 16px
+
+    .addr-top strong
+      display: inline-flex
+      align-items: center
+      gap: 8px
+      color: var(--primary)
+
+    .addr-radio:checked ~ .addr-form
+      display: block
+
+  // ---------- Address type chips ----------
+  .type-group
+    margin: 24px 0 0
+    padding: 0
+    border: 0
+
+    legend
+      margin: 0 0 10px
+      padding: 0
+      color: var(--text)
+      font-size: 11px
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.16em
+
+      @include media(540)
+        font-size: 10px
+
+    .type-options
+      display: grid
+      grid-template-columns: repeat(3, minmax(0, 1fr))
+      gap: 10px
+
+      @include media(540)
+        gap: 8px
+
+    .type-chip
+      position: relative
+      display: block
+
+      input
+        position: absolute
+        width: 1px
+        height: 1px
+        opacity: 0
+
+      span
+        display: flex
+        align-items: center
+        justify-content: center
+        gap: 8px
+        height: 44px
+        border: 1px solid var(--gray)
+        background: var(--white)
+        color: var(--text)
+        font-size: 12px
+        font-weight: 500
+        text-transform: uppercase
+        letter-spacing: 0.12em
+        cursor: pointer
+        transition: all 0.3s ease
+
+        @include media(540)
+          gap: 6px
+          height: 42px
+          font-size: 11px
+          letter-spacing: 0.06em
+
+        i
+          font-size: 12px
+
+      &:hover span
+        border-color: var(--black)
+
+      input:checked + span
+        border-color: var(--primary)
+        background: var(--primary)
+        color: var(--white)
+
+      input:focus-visible + span
+        box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.12)
+
+  .form-actions
+    display: flex
+    align-items: center
+    flex-wrap: wrap
+    gap: 12px
+    margin-top: 24px
+
+    @include media(540)
+      gap: 10px
+      margin-top: 20px
+
+    .btn
+      min-height: 46px
+      padding: 0 26px
+      cursor: pointer
+
+      @include media(540)
+        flex: 1
+        padding: 0 16px
+
+  // ---------- Delivery method ----------
+  .method-list
+    display: grid
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+    gap: 14px
+
+    @include media(1024)
+      grid-template-columns: 1fr
+
+    @include media(768)
+      grid-template-columns: repeat(2, minmax(0, 1fr))
+
+    @include media(540)
+      grid-template-columns: 1fr
+      gap: 12px
+
+  .method
+    position: relative
+    display: block
+    cursor: pointer
+
+    input
+      position: absolute
+      width: 1px
+      height: 1px
+      opacity: 0
+
+    .method-body
+      display: flex
+      align-items: center
+      gap: 14px
+      height: 100%
+      padding: 16px 18px
+      border: 1px solid var(--gray)
+      background: var(--white)
+      transition: border-color 0.3s ease, background 0.3s ease
+
+      @include media(768)
+        gap: 12px
+        padding: 14px 16px
+
+    &:hover .method-body
+      border-color: var(--black)
+
+    .radio-dot
+      position: relative
+      flex-shrink: 0
+      width: 20px
+      height: 20px
+      border: 2px solid var(--gray)
+      border-radius: 50%
+      background: var(--white)
+      transition: border-color 0.3s ease
+
+      &::after
+        content: ""
+        position: absolute
+        top: 3px
+        right: 3px
+        bottom: 3px
+        left: 3px
+        border-radius: 50%
+        background: var(--primary)
+        transform: scale(0)
+        transition: transform 0.3s ease
+
+    input:checked + .method-body
+      border-color: var(--primary)
+      background: var(--bg)
+
+      .radio-dot
+        border-color: var(--primary)
+
+        &::after
+          transform: scale(1)
+
+    input:focus-visible + .method-body
+      box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.12)
+
+    .method-text
+      display: flex
+      flex-direction: column
+      flex: 1
+      gap: 3px
+      min-width: 0
+
+      strong
+        color: var(--black)
+        font-size: 14px
+        font-weight: 600
+
+        @include media(540)
+          font-size: 13px
+
+      small
+        color: var(--text)
+        font-size: 12px
+
+        @include media(540)
+          font-size: 11px
+
+    .method-price
+      color: var(--black)
+      font-size: 14px
+      font-weight: 600
+
+      @include media(540)
+        font-size: 13px
+
+      &.is-free
+        color: $success
+
+  // ---------- Summary ----------
+  .co-summary
+    position: sticky
+    top: calc(var(--headerheight) + 20px)
+    display: flex
+    flex-direction: column
+    gap: 16px
+    background: var(--bg)
+    min-width: 0
+    padding: 20px
+
+
+    @include media(991)
+      position: static
+
+    @include media(540)
+      gap: 14px
+
+  .box
+    padding: 24px
+    border: 1px solid var(--gray)
+
+    @include media(1024)
+      padding: 22px 20px
+
+    @include media(540)
+      padding: 20px 16px
+
+    h5
+      display: flex
+      align-items: center
+      gap: 10px
+      margin: 0
+      color: var(--black)
+      font-size: 13px
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.16em
+
+      @include media(540)
+        font-size: 12px
+        letter-spacing: 0.12em
+
+      span
+        color: var(--text)
+        font-size: 12px
+        font-weight: 400
+        text-transform: none
+        letter-spacing: 0
+
+  .box-head
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 12px
+    margin-bottom: 18px
+
+    @include media(540)
+      margin-bottom: 16px
+
+    a
+      color: var(--primary)
+      font-size: 12px
+      font-weight: 600
+      text-decoration: underline
+      text-underline-offset: 3px
+
+      @include media(540)
+        font-size: 11px
+
+  .price-box
+    position: relative
+
+    &::before
+      content: ""
+      position: absolute
+      top: -1px
+      left: 24px
+      width: 56px
+      height: 2px
+      background: var(--primary)
+
+      @include media(540)
+        left: 16px
+
+  .mini-list
+    display: flex
+    flex-direction: column
+    gap: 14px
+    margin: 0 0 16px
+    padding: 0 0 18px
+    list-style: none
+    border-bottom: 1px solid var(--gray)
+
+    li
+      display: flex
+      align-items: center
+      gap: 14px
+
+      @include media(540)
+        gap: 12px
+
+    .mini-img
+      position: relative
+      flex-shrink: 0
+      width: 56px
+
+      img
+        display: block
+        width: 100%
+        aspect-ratio: 3 / 4
+        object-fit: cover
+        object-position: top center
+        border: 1px solid var(--gray)
+        background: var(--bg)
+
+      b
+        position: absolute
+        top: -7px
+        right: -7px
+        display: grid
+        place-items: center
+        min-width: 20px
+        height: 20px
+        padding: 0 5px
+        border-radius: 999px
+        background: var(--black)
+        color: var(--white)
+        font-size: 11px
+        font-weight: 600
+
+        @include media(540)
+          min-width: 18px
+          height: 18px
+          font-size: 10px
+
+      @include media(540)
+        width: 50px
+
+    .mini-text
+      display: flex
+      flex-direction: column
+      flex: 1
+      gap: 3px
+      min-width: 0
+
+      strong
+        display: -webkit-box
+        overflow: hidden
+        color: var(--black)
+        font-size: 13px
+        font-weight: 500
+        line-height: 1.4
+        -webkit-line-clamp: 2
+        -webkit-box-orient: vertical
+
+        @include media(540)
+          font-size: 12px
+
+      small
+        color: var(--text)
+        font-size: 12px
+
+        @include media(540)
+          font-size: 11px
+
+    .mini-price
+      color: var(--black)
+      font-size: 13px
+      font-weight: 600
+
+      @include media(540)
+        font-size: 12px
+
+  .rows
+    margin: 0
+
+    .row
+      display: flex
+      align-items: baseline
+      justify-content: space-between
+      gap: 16px
+      padding: 4px 0
+      color: var(--text)
+      font-size: 14px
+
+      @include media(540)
+        gap: 12px
+        font-size: 13px
+
+      dt
+        margin: 0
+
+      dd
+        margin: 0
+        color: var(--black)
+        text-align: right
+
+        del
+          margin-right: 4px
+          color: var(--text)
+          font-size: 12px
+          opacity: 0.7
+
+        &.is-green
+          color: $success
+          font-weight: 500
+
+      &.is-green dd
+        color: $success
+
+    .row-total
+      margin-top: 10px
+      padding-top: 16px
+      border-top: 1px solid var(--gray)
+      color: var(--black)
+      font-size: 14px
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.12em
+
+      @include media(540)
+        padding-top: 14px
+        font-size: 13px
+
+      dd
+        font-size: 22px
+        font-weight: 600
+        letter-spacing: 0
+
+        @include media(540)
+          font-size: 20px
+
+  .gst-note
+    margin: 4px 0 16px
+    color: var(--text)
+    font-size: 12px
+    text-align: right
+
+    @include media(540)
+      font-size: 11px
+
+  .save-chip
+    display: flex
+    align-items: center
+    gap: 10px
+    margin: 0 0 18px
+    padding: 11px 14px
+    background: $success-bg
+    color: $success
+    font-size: 13px
+    font-weight: 600
+
+    @include media(540)
+      gap: 8px
+      padding: 10px 12px
+      font-size: 12px
+
+  .place-btn
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: 10px
+    width: 100%
+
+    @include media(991)
+      display: none
+
+    i
+      transition: transform 0.3s ease
+
+    &:hover i
+      transform: translateX(5px)
+
+  .terms-note
+    margin: 14px 0 0
+    color: var(--text)
+    font-size: 12px
+    line-height: 1.6
+    text-align: center
+
+    @include media(991)
+      margin-top: 0
+
+    @include media(540)
+      font-size: 11px
+
+    a
+      color: var(--black)
+      font-size: inherit
+      text-decoration: underline
+      text-underline-offset: 3px
+      transition: color 0.3s ease
+
+      &:hover
+        color: var(--primary)
+
+  .trust-list
+    display: grid
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+    gap: 14px 16px
+    margin: 8px 0 0
+    padding: 20px 0
+    list-style: none
+    border-top: 1px solid var(--gray)
+    border-bottom: 1px solid var(--gray)
+
+    @include media(540)
+      gap: 12px 10px
+      padding: 16px 0
+
+    li
+      display: flex
+      align-items: center
+      gap: 10px
+      color: var(--black)
+      font-size: 12px
+      font-weight: 500
+      line-height: 1.4
+
+      @include media(540)
+        gap: 8px
+        font-size: 11px
+
+      i
+        flex-shrink: 0
+        color: var(--primary)
+        font-size: 15px
+
+        @include media(540)
+          font-size: 14px
+
+  .co-help
+    display: flex
+    align-items: center
+    gap: 14px
+    padding: 14px 16px
+    background: var(--bg)
+    border: 1px solid var(--gray)
+    color: var(--text)
+    font-size: 13px
+    line-height: 1.5
+    transition: border-color 0.3s ease
+
+    @include media(540)
+      gap: 12px
+      padding: 12px 14px
+      font-size: 12px
+
+    i
+      flex-shrink: 0
+      color: $success
+      font-size: 26px
+
+      @include media(540)
+        font-size: 24px
+
+    span
+        font-size: inherit
+
+    b
+      display: block
+      color: var(--black)
+      font-weight: 600
+      font-size: inherit
+
+    &:hover
+      border-color: var(--primary)
+
+  // ---------- Mobile sticky bar ----------
+  .co-bar
+    display: none
+
+    @include media(991)
+      position: sticky
+      bottom: calc(10px + env(safe-area-inset-bottom, 0px))
+      z-index: 10
+      display: flex
+      align-items: center
+      gap: 16px
+      margin-top: 24px
+      padding: 10px 10px 10px 18px
+      background: var(--white)
+      border: 1px solid var(--gray)
+      box-shadow: rgba(60, 30, 45, 0.16) 0 12px 36px
+
+    @include media(540)
+      gap: 12px
+      margin-top: 20px
+      padding: 8px 8px 8px 14px
+
+    .bar-total
+      display: flex
+      flex-direction: column
+      flex-shrink: 0
+      gap: 3px
+
+      span
+        color: var(--text)
+        font-size: 10px
+        font-weight: 600
+        line-height: 1
+        text-transform: uppercase
+        letter-spacing: 0.16em
+
+      strong
+        color: var(--black)
+        font-size: 20px
+        font-weight: 600
+        line-height: 1.1
+
+        @include media(540)
+          font-size: 18px
+
+    .btn
+      display: flex
+      align-items: center
+      justify-content: center
+      flex: 1
+      gap: 8px
+      min-width: 0
+      white-space: nowrap
+
+      @include media(540)
+        padding-left: 12px
+        padding-right: 12px
