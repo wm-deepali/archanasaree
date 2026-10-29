@@ -19,11 +19,18 @@ return new class extends Migration {
                 ->cascadeOnDelete();
 
             $table->string('value');
+            $table->string('slug')->nullable();
+            $table->string('image')->nullable();
+            $table->string('hex_code', 20)->nullable();
 
             $table->integer('sort_order')->default(0);
 
             $table->boolean('status')->default(true);
 
+            $table->string('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
+
+            $table->unique(['attribute_id', 'slug']);
             $table->timestamps();
         });
     }

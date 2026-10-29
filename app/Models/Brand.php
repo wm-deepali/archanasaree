@@ -12,11 +12,4 @@ class Brand extends Model
         'status'
     ];
 
-    public function categories()
-    {
-        return $this->belongsToMany(
-            Category::class,
-            'brand_category'
-        );
-    }
 }

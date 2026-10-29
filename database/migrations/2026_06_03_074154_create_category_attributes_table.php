@@ -22,12 +22,13 @@ return new class extends Migration {
                 ->constrained()
                 ->cascadeOnDelete();
 
-            $table->boolean('is_required')->default(false);
-
             $table->boolean('used_for_variant')->default(false);
+            $table->boolean('price_dependent')->default(false);
+            $table->boolean('image_dependent')->default(false);
+            $table->boolean('stock_dependent')->default(false);
+            $table->boolean('sku_dependent')->default(false);
 
             $table->boolean('show_in_filter')->default(false);
-
             $table->boolean('show_on_listing')->default(false);
 
             $table->integer('sort_order')->default(0);

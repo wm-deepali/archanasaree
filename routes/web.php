@@ -5,11 +5,9 @@ use App\Http\Controllers\Admin\{
     AnnouncementController,
     AttributeController,
     AttributeValueController,
-    AwardController,
     BlogController,
     CategoryAttributeController,
     CategoryController,
-    ClientController,
     CollectionController,
     ContactBranchController,
     ContactEnquiryController,
@@ -41,10 +39,8 @@ use App\Http\Controllers\Admin\{
     ReturnReasonController,
     SeoController,
     StoredCartController,
-    SupplierEnquiryController,
     TeamController,
     TestimonialController,
-    VendorTypeController,
     OrderReturnController,
     RefundController,
     StockManagementController,
@@ -75,6 +71,13 @@ Route::middleware('maintenance.mode')->group(function () {
 
     Route::controller(FrontController::class)->group(function () {
         Route::get('/', 'home')->name('home');
+        Route::view('/categories', 'front-pages.categories')->name('categories');
+        Route::view('/cart', 'front-pages.cart')->name('cart');
+        Route::view('/checkout', 'front-pages.checkout')->name('checkout');
+        Route::view('/product-detail', 'front-pages.product-detail')->name('products.show');
+        Route::view('/products', 'front-pages.product-listing')->name('products');
+        Route::view('/thank-you', 'front-pages.thank-you')->name('thank-you');
+        Route::view('/payment', 'front-pages.payment')->name('payment');
     });
 
 });
@@ -134,9 +137,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::resource('blogs', BlogController::class)->names('blogs');
 
-
-        Route::resource('clients', ClientController::class)->names('clients');
-
         Route::resource('testimonials', TestimonialController::class)->names('testimonials');
 
         Route::resource('contact-branches', ContactBranchController::class);
@@ -148,20 +148,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('other-enquiries/export', [OtherEnquiryController::class, 'export'])->name('other-enquiries.export');
         Route::delete('other-enquiries/bulk-delete', [OtherEnquiryController::class, 'bulkDelete'])->name('other-enquiries.bulk-delete');
         Route::resource('other-enquiries', OtherEnquiryController::class);
-
-        Route::get('supplier-enquiries/export', [SupplierEnquiryController::class, 'export'])->name('supplier-enquiries.export');
-        Route::delete('supplier-enquiries/bulk-delete', [SupplierEnquiryController::class, 'bulkDelete'])->name('supplier-enquiries.bulk-delete');
-        Route::resource('supplier-enquiries', SupplierEnquiryController::class);
-
+        
         Route::resource('coupon-enquiries', CouponEnquiryController::class);
         Route::delete('coupon-enquiries/bulk-delete', [CouponEnquiryController::class, 'bulkDelete'])->name('coupon-enquiries.bulk-delete');
         Route::get('coupon-enquiries-export', [CouponEnquiryController::class, 'export'])->name('coupon-enquiries.export');
 
-        Route::resource('awards', AwardController::class);
-
         Route::resource('teams', TeamController::class);
-
-        Route::resource('vendor-types', VendorTypeController::class);
 
         Route::get('/logout', [LogoutController::class, 'logout']);
 

@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->text('meta_description')->nullable();
 
             $table->string('image')->nullable();
+            $table->string('icon')->nullable();
 
             $table->boolean('status')->default(1);
 

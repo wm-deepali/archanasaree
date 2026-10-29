@@ -819,16 +819,16 @@
                                     <td>
                                         <div class="cust-cell">
                                             <div class="cust-avatar">
-                                                @if($cart->user?->avatar)
-                                                    <img src="{{ asset('storage/' . $cart->user->avatar) }}"
-                                                        alt="{{ $cart->user->name }}">
+                                                @if($cart->customer?->avatar)
+                                                    <img src="{{ asset('storage/' . $cart->customer->avatar) }}"
+                                                        alt="{{ $cart->customer->name }}">
                                                 @else
-                                                    {{ strtoupper(substr($cart->user?->name ?? '?', 0, 2)) }}
+                                                    {{ strtoupper(substr($cart->customer?->name ?? '?', 0, 2)) }}
                                                 @endif
                                             </div>
                                             <div>
-                                                <div class="cust-name">{{ $cart->user?->name ?? '—' }}</div>
-                                                <div class="cust-email">{{ $cart->user?->email }}</div>
+                                                <div class="cust-name">{{ $cart->customer?->name ?? '—' }}</div>
+                                                <div class="cust-email">{{ $cart->customer?->email }}</div>
                                             </div>
                                         </div>
                                     </td>
@@ -889,8 +889,8 @@
 
                                     <td>
                                         <div style="display:flex;gap:6px">
-                                            @if($cart->user_id)
-                                                <a href="{{ route('admin.customers.show', $cart->user_id) }}"
+                                            @if($cart->customer_id)
+                                                <a href="{{ route('admin.customers.show', $cart->customer_id) }}"
                                                     class="action-btn view" title="View Customer">
                                                     <i class="fa fa-user"></i>
                                                 </a>

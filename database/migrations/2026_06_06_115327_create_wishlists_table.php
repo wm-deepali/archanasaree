@@ -4,15 +4,19 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('wishlists', function (Blueprint $table) {
             $table->id();
 
             // Session based
-            $table->string('session_id')->index();
+            $table->string('session_id')->nullable()->index();
+
+            $table->foreignId('customer_id')
+                ->nullable()
+                ->constrained('customers')
+                ->nullOnDelete();
 
             // Product
             $table->foreignId('product_id')
@@ -25,7 +29,8 @@ return new class extends Migration
             $table->timestamps();
 
             // Prevent duplicate wishlist entries
-            $table->unique(['session_id', 'product_id']);
+            $table->unique(['session_id', 'customer_id']);
+            $table->unique(['product_id', 'customer_id']);
         });
     }
 

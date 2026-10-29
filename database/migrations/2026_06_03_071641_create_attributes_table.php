@@ -28,6 +28,7 @@ return new class extends Migration {
             $table->boolean('has_values')->default(true);
 
             $table->boolean('status')->default(true);
+            $table->boolean('show_in_navbar')->default(false);
 
             $table->timestamps();
         });

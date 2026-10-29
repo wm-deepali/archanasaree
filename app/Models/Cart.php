@@ -8,7 +8,7 @@ class Cart extends Model
 {
     protected $fillable = [
 
-        'user_id',
+        'customer_id',
         'session_id',
 
         'total_amount',
@@ -40,7 +40,7 @@ class Cart extends Model
         );
     }
 
-    public function user()
+    public function customer()
     {
         return $this->belongsTo(
             Customer::class
@@ -85,11 +85,11 @@ class Cart extends Model
             $invoiceSetting &&
             $invoiceSetting->business_type === 'registered'
         ) {
-            if ($this->user_id) {
+            if ($this->customer_id) {
 
                 $defaultAddress = CustomerAddress::where(
                     'customer_id',
-                    $this->user_id
+                    $this->customer_id
                 )
                     ->where('is_default', 1)
                     ->first();

@@ -1563,7 +1563,6 @@
 
     /* ── Load attributes ────────────────────────────────────────── */
     /*
-     * Every category attribute is rendered here — is_selectable is a
      * FRONTEND-ONLY flag (customer-facing product page) and has no bearing
      * on what the admin sees while creating a product, so it is NOT filtered
      * out in this form.

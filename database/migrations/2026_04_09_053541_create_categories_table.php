@@ -15,16 +15,18 @@ class CreateCategoriesTable extends Migration
             $table->string('slug')->unique();
             $table->string('sub_title')->nullable();
 
+            $table->string('image')->nullable();
+            $table->string('size_chart_image')->nullable();
+
             $table->string('meta_title')->nullable();
             $table->text('meta_description')->nullable();
-
-            $table->string('image')->nullable();
 
             // 🔥 parent-child relation
             $table->unsignedBigInteger('parent_id')->nullable();
 
             $table->boolean('is_popular')->default(0);
             $table->boolean('is_featured')->default(0);
+            $table->boolean('show_in_navbar')->default(0);
             $table->boolean('status')->default(1);
             $table->integer('sort_order')->default(0);
             $table->string('added_by')->default('Admin');

@@ -16,10 +16,10 @@ class StoredCartController extends Controller
         $this->applyFilters($query, $request);
 
         // Stats — always unfiltered
-        $totalCarts = Cart::whereNotNull('user_id')->count();
-        $totalCartValue = Cart::whereNotNull('user_id')->sum('grand_total');
+        $totalCarts = Cart::whereNotNull('customer_id')->count();
+        $totalCartValue = Cart::whereNotNull('customer_id')->sum('grand_total');
         $avgCartValue = $totalCarts > 0 ? $totalCartValue / $totalCarts : 0;
-        $abandonedToday = Cart::whereNotNull('user_id')
+        $abandonedToday = Cart::whereNotNull('customer_id')
             ->whereDate('updated_at', today())
             ->count();
 
@@ -79,9 +79,9 @@ class StoredCartController extends Controller
 
                     fputcsv($handle, [
                         $cart->id,
-                        $cart->user?->name ?? '',
-                        $cart->user?->email ?? '',
-                        $cart->user?->mobile ?? '',
+                        $cart->customer?->name ?? '',
+                        $cart->customer?->email ?? '',
+                        $cart->customer?->mobile ?? '',
                         $itemCount,
                         $totalQty,
                         number_format($cart->subtotal, 2, '.', ''),
@@ -120,8 +120,8 @@ class StoredCartController extends Controller
 
     private function baseQuery()
     {
-        return Cart::with(['user', 'items.product', 'items.imageVariant', 'items.skuVariant', 'items.addons'])
-            ->whereNotNull('user_id')
+        return Cart::with(['customer', 'items.product', 'items.imageVariant', 'items.skuVariant', 'items.addons'])
+            ->whereNotNull('customer_id')
             ->where(fn($q) => $q->where('grand_total', '>', 0)
                 ->orWhere('total_amount', '>', 0));
     }
@@ -130,7 +130,7 @@ class StoredCartController extends Controller
     {
         if ($search = $request->input('search')) {
             $query->whereHas(
-                'user',
+                'customer',
                 fn($q) =>
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")

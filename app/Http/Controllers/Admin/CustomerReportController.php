@@ -227,9 +227,9 @@ class CustomerReportController extends Controller
         $signedUp = Customer::count();
         $addedToCart = DB::table('cart_items')
             ->join('carts', 'carts.id', '=', 'cart_items.cart_id')
-            ->whereNotNull('carts.user_id')
+            ->whereNotNull('carts.customer_id')
             ->distinct()
-            ->count('carts.user_id');
+            ->count('carts.customer_id');
         $purchased = $stats->count();
         $repeatPurchase = $stats->filter(fn($s) => $s->orders_count > 1)->count();
 
@@ -396,7 +396,7 @@ class CustomerReportController extends Controller
         // Standard e-commerce approximation: abandoned / (abandoned + converted).
         // Valid because Cart rows are deleted on successful checkout — a Cart
         // still sitting here with items means checkout was never completed.
-        $abandonedCartsCount = Cart::whereNotNull('user_id')
+        $abandonedCartsCount = Cart::whereNotNull('customer_id')
             ->where(fn($q) => $q->where('grand_total', '>', 0)->orWhere('total_amount', '>', 0))
             ->whereBetween('updated_at', [$start, $end])
             ->count();

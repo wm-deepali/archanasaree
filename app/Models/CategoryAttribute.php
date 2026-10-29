@@ -10,12 +10,7 @@ class CategoryAttribute extends Model
         'category_id',
         'attribute_id',
 
-        'is_required',
-
         'used_for_variant',
-
-        'is_selectable',
-
         'price_dependent',
         'image_dependent',
         'stock_dependent',
@@ -29,12 +24,8 @@ class CategoryAttribute extends Model
     ];
 
     protected $casts = [
-        'is_required'      => 'boolean',
-
+        
         'used_for_variant' => 'boolean',
-
-        'is_selectable'    => 'boolean',
-
         'price_dependent'  => 'boolean',
         'image_dependent'  => 'boolean',
         'stock_dependent'  => 'boolean',

@@ -50,7 +50,6 @@
     'admin.category-attributes.*',
     'admin.gifting-occasions.*',
     'admin.collections.*',
-    'admin.packages.*'
 ) ? 'active' : '' }}">
 
             <a href="#"><i class="fa-solid fa-layer-group"></i> Master</a>
@@ -59,8 +58,8 @@
                 <li><a href="{{ route('admin.attributes.index') }}">Attributes</a></li>
                 <li><a href="{{ route('admin.attribute-values.index') }}">Attribute Values</a></li>
                 <li><a href="{{ route('admin.category-attributes.index') }}">Attribute Mapping</a></li>
-                <li><a href="{{ route('admin.gifting-occasions.index') }}">Manage Special</a></li>
-                <li><a href="{{ route('admin.collections.index') }}">Manage Selections</a></li>
+                <li><a href="{{ route('admin.gifting-occasions.index') }}">Manage Gifting Occasions</a></li>
+                <li><a href="{{ route('admin.collections.index') }}">Manage Collections</a></li>
             </ul>
         </li>
 
@@ -117,7 +116,6 @@
     'admin.blogs.*',
     'admin.pages.*',
     'admin.announcements.*',
-    'admin.clients.*',
     'admin.testimonials.*',
     'admin.teams.*'
 ) ? 'active' : '' }}">
@@ -139,13 +137,11 @@
         <li class="{{ request()->routeIs(
     'admin.contact-enquiries.*',
     'admin.other-enquiries.*',
-    'admin.supplier-enquiries.*',
     'admin.coupon-enquiries.*'
 ) ? 'active' : '' }}">
             <a href="#"><i class="fa-solid fa-envelope"></i> Enquiries</a>
             <ul>
                 <li><a href="{{ route('admin.contact-enquiries.index') }}">Contact Us Enquiries</a></li>
-                <li><a href="{{ route('admin.supplier-enquiries.index') }}">Bulk Order Enquiries</a></li>
                 <li><a href="{{ route('admin.other-enquiries.index') }}">Other Enquiries</a></li>
                 <li><a href="{{ route('admin.coupon-enquiries.index') }}">Coupon Enquiries</a></li>
             </ul>

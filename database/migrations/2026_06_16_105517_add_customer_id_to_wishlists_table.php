@@ -10,16 +10,7 @@ return new class extends Migration
     {
         Schema::table('wishlists', function (Blueprint $table) {
 
-            $table->foreignId('customer_id')
-                ->nullable()
-                ->after('id')
-                ->constrained('customers')
-                ->nullOnDelete();
-
-            $table->unique([
-                'customer_id',
-                'product_id'
-            ]);
+          
         });
     }
 

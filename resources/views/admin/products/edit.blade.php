@@ -1865,15 +1865,7 @@
         });
     });
 
-    /*
-    |--------------------------------------------------------------------------
-    | Load attributes — accordion UI, all category attributes shown
-    |--------------------------------------------------------------------------
-    | is_selectable is a FRONTEND-ONLY (customer-facing) flag and is not
-    | filtered out here — the admin needs to see every attribute regardless.
-    | Each checkbox carries the dependency flags needed by the type-aware
-    | variant generator below.
-    */
+
     function loadAttributes(categoryId, isInitialLoad) {
         $('#attribute-container').html('');
         window.attributeUrl = "{{ url('admin/products/category-attributes') }}";

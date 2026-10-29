@@ -1,62 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>404 - Page Not Found</title>
+@extends('layouts.app')
 
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: #f9fafb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('assets/sass/other/other.css') }}" />
+@endpush
 
-        .box {
-            text-align: center;
-        }
+@section('content')
+    <section class="comman-banner error-page">
+        <div class="container">
+            <div class="error-card">
+                <span class="err-code" aria-hidden="true">404</span>
+                <span class="status">Page Not Found</span>
+                <h1>Oops! This Page Has Gone Missing</h1>
+                <p class="msg">
+                    The page you are looking for may have been moved or no longer exists.
+                </p>
 
-        h1 {
-            font-size: 120px;
-            margin: 0;
-            color: #f97316;
-        }
-
-        h2 {
-            margin: 10px 0;
-            font-size: 24px;
-        }
-
-        p {
-            color: #6b7280;
-            margin-bottom: 20px;
-        }
-
-        a {
-            padding: 12px 25px;
-            background: #f97316;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 8px;
-        }
-
-        a:hover {
-            background: #ea580c;
-        }
-    </style>
-</head>
-<body>
-
-<div class="box">
-    <h1>404</h1>
-    <h2>Oops! Page Not Found</h2>
-    <p>The page you are looking for does not exist.</p>
-
-    <a href="{{ url('/') }}">Go Home</a>
-</div>
-
-</body>
-</html>
+                <div class="btn-grp">
+                    <a href="{{ url('/') }}" class="btn btn-primary">
+                        <i class="fa-solid fa-house" aria-hidden="true"></i> Back to Home
+                    </a>
+                    <a href="{{ url('/all-products') }}" class="btn btn-outline-primary">
+                        <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i> Shop Sarees
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+@endsection

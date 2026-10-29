@@ -50,8 +50,6 @@ class CategoryAttributeController extends Controller
             'category_id'      => 'required|exists:categories,id',
             'attribute_id'     => 'required|exists:attributes,id',
 
-            'is_required'      => 'required|boolean',
-            'is_selectable'    => 'required|boolean',
             'used_for_variant' => 'required|boolean',
 
             // Checkboxes — simply absent from the request when unchecked
@@ -94,10 +92,6 @@ class CategoryAttributeController extends Controller
             'category_id'      => $request->category_id,
 
             'attribute_id'     => $request->attribute_id,
-
-            'is_required'      => $request->is_required,
-
-            'is_selectable'    => $request->is_selectable,
             
             'used_for_variant' => $isVariant,
             'price_dependent'  => $isVariant && $request->boolean('price_dependent'),
@@ -152,8 +146,6 @@ class CategoryAttributeController extends Controller
             'category_id'      => 'required|exists:categories,id',
             'attribute_id'     => 'required|exists:attributes,id',
 
-            'is_required'      => 'required|boolean',
-            'is_selectable'    => 'required|boolean',
             'used_for_variant' => 'required|boolean',
             'price_dependent'  => 'nullable|boolean',
             'image_dependent'  => 'nullable|boolean',
@@ -200,10 +192,6 @@ class CategoryAttributeController extends Controller
             'category_id'      => $request->category_id,
 
             'attribute_id'     => $request->attribute_id,
-
-            'is_required'      => $request->is_required,
-
-            'is_selectable'    => $request->is_selectable,
             
             'used_for_variant' => $isVariant,
             'price_dependent'  => $isVariant && $request->boolean('price_dependent'),

@@ -14,6 +14,9 @@ return new class extends Migration {
             $table->string('slug')->unique();
             $table->string('code')->unique();
 
+            $table->string('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
+
             $table->boolean('status')->default(1);
             $table->integer('sort_order')->default(0);
 
