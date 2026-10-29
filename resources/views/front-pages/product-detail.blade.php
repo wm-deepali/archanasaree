@@ -11,7 +11,7 @@
             <section class="product-breadcrumb">
                 <div class="container">
                     <ul class="crumb">
-                        <li><a href="index.html">Home</a></li>
+                        <li><a href="{{ route('home') }}">Home</a></li>
                         <li><i class="fa-solid fa-chevron-right"></i></li>
                         <li><a href="javascript:void(0)">Sarees</a></li>
                         <li><i class="fa-solid fa-chevron-right"></i></li>

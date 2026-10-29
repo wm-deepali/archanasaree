@@ -13,7 +13,7 @@
             <nav class="breadcrumb" aria-label="Breadcrumb">
               <ol>
                 <li>
-                  <a href="index.html">Home</a>
+                  <a href="{{ route('home') }}">Home</a>
                   <i class="fa-solid fa-chevron-right"></i>
                 </li>
                 <li aria-current="page">Privacy Policy</li>

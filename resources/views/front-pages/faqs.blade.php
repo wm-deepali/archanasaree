@@ -10,7 +10,7 @@
       <section class="faq-secA">
         <div class="container">
           <ul class="crumb">
-            <li><a href="index.html">Home</a></li>
+            <li><a href="{{ route('home') }}">Home</a></li>
             <li><i class="fa-solid fa-chevron-right"></i></li>
             <li class="current">FAQs</li>
           </ul>

@@ -330,7 +330,7 @@
                 </div>
               </div>
 
-              <a href="product-listing.html" class="continue-link">
+              <a href="{{ route('products') }}" class="continue-link">
                 <i class="fa-solid fa-arrow-left-long" aria-hidden="true"></i>
                 Continue Shopping
               </a>

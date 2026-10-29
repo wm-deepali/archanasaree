@@ -6,7 +6,6 @@
 
 @section('content')
 
-
     <main>
         <!-- ========== 1. HERO ========== -->
         <section class="listing-banner">
@@ -15,7 +14,7 @@
             </div>
             <div class="container">
                 <ul class="crumb">
-                    <li><a href="index.html">Home</a></li>
+                    <li><a href="{{ route('home') }}">Home</a></li>
                     <li><i class="fa-solid fa-chevron-right"></i></li>
                     <li><a href="javascript:void(0)">All Collections</a></li>
                     <li><i class="fa-solid fa-chevron-right"></i></li>
@@ -33,35 +32,32 @@
             </div>
         </section>
 
-        <!-- ========== 3. LISTING ========== -->
+        <!-- ========== 2. LISTING ========== -->
         <section class="listing-main" id="listingMain">
             <div class="container">
                 <input type="checkbox" id="filterToggle" class="filter-toggle" hidden />
 
-                <!-- Toolbar -->
                 <div class="listing-toolbar">
                     <p class="listing-count">
-                        Showing <b>1–24</b> of <b>128</b> products
+                        Showing <b>{{ $products->firstItem() ?? 0 }}–{{ $products->lastItem() ?? 0 }}</b>
+                        of <b>{{ $products->total() }}</b> products
                     </p>
                     <div class="listing-tools">
                         <label for="filterToggle" class="tool-btn"><i class="fa-solid fa-sliders"></i> Filter</label>
                         <div class="view-switch" aria-label="Grid view">
-                            <button type="button" class="view-btn" data-cols="3" aria-label="3 columns">
-                                <i class="fa-solid fa-table-cells-large"></i>
-                            </button>
-                            <button type="button" class="view-btn active" data-cols="4" aria-label="4 columns">
-                                <i class="fa-solid fa-table-cells"></i>
-                            </button>
+                            <button type="button" class="view-btn" data-cols="3" aria-label="3 columns"><i
+                                    class="fa-solid fa-table-cells-large"></i></button>
+                            <button type="button" class="view-btn active" data-cols="4" aria-label="4 columns"><i
+                                    class="fa-solid fa-table-cells"></i></button>
                         </div>
                         <div class="listing-sort">
                             <label for="listingSort">Sort By</label>
                             <div class="sort-box">
-                                <select id="listingSort" name="sort">
-                                    <option value="recommended">Recommended</option>
-                                    <option value="newest">Newest Arrivals</option>
-                                    <option value="sold">Best Selling</option>
-                                    <option value="low">Price: Low to High</option>
-                                    <option value="high">Price: High to Low</option>
+                                <select id="listingSort" name="sort" form="filterPanel" onchange="this.form.submit()">
+                                    @foreach (['recommended' => 'Recommended', 'newest' => 'Newest Arrivals', 'sold' => 'Best Selling', 'low' => 'Price: Low to High', 'high' => 'Price: High to Low'] as $val => $label)
+                                        <option value="{{ $val }}" @selected(request('sort', 'recommended') === $val)>{{ $label }}
+                                        </option>
+                                    @endforeach
                                 </select>
                                 <i class="fa-solid fa-chevron-down"></i>
                             </div>
@@ -72,957 +68,226 @@
                 <div class="listing-layout">
                     <label for="filterToggle" class="filter-overlay" aria-hidden="true"></label>
 
-                    <!-- ===== FILTER ===== -->
-                    <form class="listing-filter" id="filterPanel" action="#" method="get" aria-label="Product filters">
+                    <form class="listing-filter" id="filterPanel" action="{{ route('products') }}" method="get"
+                        aria-label="Product filters" novalidate>
                         <div class="f-head">
                             <div class="f-ttl">
                                 <span class="f-icon"><i class="fa-solid fa-sliders"></i></span>
                                 <h4>Filter By</h4>
                             </div>
-                            <button type="reset" class="f-clear">Clear All</button>
+                            <a href="{{ route('products') }}" class="f-clear">Clear All</a>
                             <label for="filterToggle" class="f-close" aria-label="Close filters"><i
                                     class="fa-solid fa-xmark"></i></label>
                         </div>
 
                         <div class="f-scroll">
+                            {{-- Category --}}
+                            @php $selCat = (array) request('category', []); @endphp
                             <details class="f-group" open>
                                 <summary>Category</summary>
                                 <div class="f-body f-chips">
-                                    <label class="f-chip"><input type="checkbox" name="category"
-                                            value="sarees" /><span>Sarees</span></label>
-                                    <label class="f-chip"><input type="checkbox" name="category"
-                                            value="lehengas" /><span>Lehengas</span></label>
-                                    <label class="f-chip"><input type="checkbox" name="category"
-                                            value="bridal-wear" /><span>Bridal Wear</span></label>
-                                    <label class="f-chip"><input type="checkbox" name="category"
-                                            value="party-wear" /><span>Party Wear</span></label>
-                                    <label class="f-chip"><input type="checkbox" name="category"
-                                            value="festive-wear" /><span>Festive Wear</span></label>
+                                    @foreach ($filterCategories as $c)
+                                        <label class="f-chip"><input type="checkbox" name="category[]" value="{{ $c->slug }}"
+                                                @checked(in_array($c->slug, $selCat)) /><span>{{ $c->name }}</span></label>
+                                    @endforeach
                                 </div>
                             </details>
 
+                            {{-- Price --}}
+                            @php
+                                $pMin = max($priceMin, min((int) request('price_min', $priceMin), $priceMax));
+                                $pMax = min($priceMax, max((int) request('price_max', $priceMax), $priceMin));
+                            @endphp
                             <details class="f-group" open>
                                 <summary>Price</summary>
                                 <div class="f-body">
-                                    <div class="price-range" data-min="1000" data-max="50000">
-                                        <div class="range-track">
-                                            <span class="range-fill"></span>
-                                        </div>
-                                        <input type="range" class="range-min" min="1000" max="50000" step="500" value="1000"
-                                            aria-label="Minimum price" />
-                                        <input type="range" class="range-max" min="1000" max="50000" step="500"
-                                            value="50000" aria-label="Maximum price" />
+                                    <div class="price-range" data-min="{{ $priceMin }}" data-max="{{ $priceMax }}">
+                                        <div class="range-track"><span class="range-fill"></span></div>
+                                        <input type="range" class="range-min" min="{{ $priceMin }}" max="{{ $priceMax }}"
+                                            step="500" value="{{ $pMin }}" aria-label="Minimum price" />
+                                        <input type="range" class="range-max" min="{{ $priceMin }}" max="{{ $priceMax }}"
+                                            step="500" value="{{ $pMax }}" aria-label="Maximum price" />
                                     </div>
                                     <div class="price-inputs">
                                         <label><span>Min</span><b>₹</b><input type="number" name="price_min" class="in-min"
-                                                value="1000" min="1000" max="50000" step="500" /></label>
+                                                value="{{ $pMin }}" min="{{ $priceMin }}" max="{{ $priceMax }}"
+                                                step="500" /></label>
                                         <i class="price-dash"></i>
                                         <label><span>Max</span><b>₹</b><input type="number" name="price_max" class="in-max"
-                                                value="50000" min="1000" max="50000" step="500" /></label>
+                                                value="{{ $pMax }}" min="{{ $priceMin }}" max="{{ $priceMax }}"
+                                                step="500" /></label>
                                     </div>
                                 </div>
                             </details>
 
-                            <details class="f-group" open>
-                                <summary>Color</summary>
-                                <div class="f-body f-swatches">
-                                    <label class="f-swatch" title="Red"><input type="checkbox" name="color"
-                                            value="red" /><span style="--c: #b3203c"></span></label>
-                                    <label class="f-swatch" title="Wine"><input type="checkbox" name="color"
-                                            value="wine" /><span style="--c: #5e1a33"></span></label>
-                                    <label class="f-swatch" title="Pink"><input type="checkbox" name="color"
-                                            value="pink" /><span style="--c: #e79aa8"></span></label>
-                                    <label class="f-swatch" title="Blush"><input type="checkbox" name="color"
-                                            value="blush" /><span style="--c: #f4d6d6"></span></label>
-                                    <label class="f-swatch" title="Maroon"><input type="checkbox" name="color"
-                                            value="maroon" /><span style="--c: #6e1423"></span></label>
-                                    <label class="f-swatch" title="Green"><input type="checkbox" name="color"
-                                            value="green" /><span style="--c: #1f6b4f"></span></label>
-                                    <label class="f-swatch" title="Blue"><input type="checkbox" name="color"
-                                            value="blue" /><span style="--c: #2b3a7a"></span></label>
-                                    <label class="f-swatch" title="Black"><input type="checkbox" name="color"
-                                            value="black" /><span style="--c: #222"></span></label>
-                                    <label class="f-swatch" title="Beige"><input type="checkbox" name="color"
-                                            value="beige" /><span style="--c: #d9c3a0"></span></label>
-                                    <label class="f-swatch" title="Ivory"><input type="checkbox" name="color"
-                                            value="ivory" /><span style="--c: #f3ecd9"></span></label>
-                                </div>
-                            </details>
+                            {{-- Attributes (Colour, Fabric, Size...) : show_in_filter se --}}
+                            @foreach ($filterAttributes as $attr)
+                                @php
+                                    $sel = (array) request()->input('attr.' . $attr->slug, []);
+                                    $hasHex = $attr->values->contains(fn($v) => !empty($v->hex_code));
+                                    $isSize = \Illuminate\Support\Str::contains($attr->slug, 'size');
+                                @endphp
+                                <details class="f-group" @if ($loop->first || $sel) open @endif>
+                                    <summary>{{ $attr->name }}</summary>
+                                    @if ($hasHex)
+                                        <div class="f-body f-swatches">
+                                            @foreach ($attr->values as $v)
+                                                @php $hex = $v->hex_code ? (str_starts_with($v->hex_code, '#') ? $v->hex_code : '#' . $v->hex_code) : '#cccccc'; @endphp
+                                                <label class="f-swatch" title="{{ $v->value }}"><input type="checkbox"
+                                                        name="attr[{{ $attr->slug }}][]" value="{{ $v->slug }}"
+                                                        @checked(in_array($v->slug, $sel)) /><span
+                                                        style="--c: {{ $hex }}"></span></label>
+                                            @endforeach
+                                        </div>
+                                    @elseif ($isSize)
+                                        <div class="f-body f-sizes">
+                                            @foreach ($attr->values as $v)
+                                                <label class="f-size"><input type="checkbox" name="attr[{{ $attr->slug }}][]"
+                                                        value="{{ $v->slug }}" @checked(in_array($v->slug, $sel)) /><span>{{ $v->value }}</span></label>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <div class="f-body f-chips">
+                                            @foreach ($attr->values as $v)
+                                                <label class="f-chip"><input type="checkbox" name="attr[{{ $attr->slug }}][]"
+                                                        value="{{ $v->slug }}" @checked(in_array($v->slug, $sel)) /><span>{{ $v->value }}</span></label>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                </details>
+                            @endforeach
 
-                            <details class="f-group" open>
-                                <summary>Saree Type</summary>
-                                <div class="f-body f-list">
-                                    <label class="f-check"><input type="checkbox" name="type" value="banarasi" /><span
-                                            class="f-box"></span><span class="f-text">Banarasi Silk</span></label>
-                                    <label class="f-check"><input type="checkbox" name="type" value="kanjivaram" /><span
-                                            class="f-box"></span><span class="f-text">Kanjivaram Silk</span></label>
-                                    <label class="f-check"><input type="checkbox" name="type" value="organza" /><span
-                                            class="f-box"></span><span class="f-text">Organza</span></label>
-                                    <label class="f-check"><input type="checkbox" name="type" value="chiffon" /><span
-                                            class="f-box"></span><span class="f-text">Chiffon</span></label>
-                                    <label class="f-check"><input type="checkbox" name="type" value="georgette" /><span
-                                            class="f-box"></span><span class="f-text">Georgette</span></label>
-                                    <label class="f-check"><input type="checkbox" name="type" value="chanderi" /><span
-                                            class="f-box"></span><span class="f-text">Chanderi</span></label>
-                                    <label class="f-check"><input type="checkbox" name="type" value="net" /><span
-                                            class="f-box"></span><span class="f-text">Net Sarees</span></label>
-                                    <label class="f-check"><input type="checkbox" name="type" value="cotton" /><span
-                                            class="f-box"></span><span class="f-text">Cotton Sarees</span></label>
-                                </div>
-                            </details>
+                            {{-- Sub Category (sirf jab category select ho) --}}
+                            @if ($filterSubs->isNotEmpty())
+                                @php $selSub = (array) request('sub', []); @endphp
+                                <details class="f-group" open>
+                                    <summary>Type</summary>
+                                    <div class="f-body f-list">
+                                        @foreach ($filterSubs as $s)
+                                            <label class="f-check"><input type="checkbox" name="sub[]" value="{{ $s->slug }}"
+                                                    @checked(in_array($s->slug, $selSub)) /><span class="f-box"></span><span
+                                                    class="f-text">{{ $s->name }}</span></label>
+                                        @endforeach
+                                    </div>
+                                </details>
+                            @endif
 
-                            <details class="f-group">
-                                <summary>Occasion</summary>
-                                <div class="f-body f-chips">
-                                    <label class="f-chip"><input type="checkbox" name="occasion"
-                                            value="wedding" /><span>Wedding</span></label>
-                                    <label class="f-chip"><input type="checkbox" name="occasion"
-                                            value="bridal" /><span>Bridal</span></label>
-                                    <label class="f-chip"><input type="checkbox" name="occasion"
-                                            value="reception" /><span>Reception</span></label>
-                                    <label class="f-chip"><input type="checkbox" name="occasion"
-                                            value="festive" /><span>Festive</span></label>
-                                    <label class="f-chip"><input type="checkbox" name="occasion"
-                                            value="party" /><span>Party</span></label>
-                                    <label class="f-chip"><input type="checkbox" name="occasion"
-                                            value="cocktail" /><span>Cocktail</span></label>
-                                    <label class="f-chip"><input type="checkbox" name="occasion"
-                                            value="engagement" /><span>Engagement</span></label>
-                                </div>
-                            </details>
+                            {{-- Occasion --}}
+                            @if ($filterOccasions->isNotEmpty())
+                                @php $selOcc = (array) request('occasion', []); @endphp
+                                <details class="f-group" @if ($selOcc) open @endif>
+                                    <summary>Occasion</summary>
+                                    <div class="f-body f-chips">
+                                        @foreach ($filterOccasions as $o)
+                                            <label class="f-chip"><input type="checkbox" name="occasion[]" value="{{ $o->slug }}"
+                                                    @checked(in_array($o->slug, $selOcc)) /><span>{{ $o->title }}</span></label>
+                                        @endforeach
+                                    </div>
+                                </details>
+                            @endif
 
-                            <details class="f-group">
-                                <summary>Collection</summary>
-                                <div class="f-body f-list">
-                                    <label class="f-check"><input type="checkbox" name="collection" value="new" /><span
-                                            class="f-box"></span><span class="f-text">New Arrivals</span></label>
-                                    <label class="f-check"><input type="checkbox" name="collection" value="best" /><span
-                                            class="f-box"></span><span class="f-text">Best Sellers</span></label>
-                                    <label class="f-check"><input type="checkbox" name="collection" value="featured" /><span
-                                            class="f-box"></span><span class="f-text">Featured</span></label>
-                                    <label class="f-check"><input type="checkbox" name="collection" value="wedding" /><span
-                                            class="f-box"></span><span class="f-text">Wedding
-                                            Collection</span></label>
-                                    <label class="f-check"><input type="checkbox" name="collection" value="festive" /><span
-                                            class="f-box"></span><span class="f-text">Festive
-                                            Collection</span></label>
-                                </div>
-                            </details>
+                            {{-- Collection --}}
+                            @if ($filterCollections->isNotEmpty())
+                                @php $selCol = (array) request('collection', []); @endphp
+                                <details class="f-group" @if ($selCol) open @endif>
+                                    <summary>Collection</summary>
+                                    <div class="f-body f-list">
+                                        @foreach ($filterCollections as $c)
+                                            <label class="f-check"><input type="checkbox" name="collection[]" value="{{ $c->slug }}"
+                                                    @checked(in_array($c->slug, $selCol)) /><span class="f-box"></span><span
+                                                    class="f-text">{{ $c->name }}</span></label>
+                                        @endforeach
+                                    </div>
+                                </details>
+                            @endif
 
-                            <details class="f-group">
-                                <summary>Fabric</summary>
-                                <div class="f-body f-chips">
-                                    <label class="f-chip"><input type="checkbox" name="fabric"
-                                            value="silk" /><span>Silk</span></label>
-                                    <label class="f-chip"><input type="checkbox" name="fabric"
-                                            value="organza" /><span>Organza</span></label>
-                                    <label class="f-chip"><input type="checkbox" name="fabric"
-                                            value="georgette" /><span>Georgette</span></label>
-                                    <label class="f-chip"><input type="checkbox" name="fabric"
-                                            value="chiffon" /><span>Chiffon</span></label>
-                                    <label class="f-chip"><input type="checkbox" name="fabric"
-                                            value="net" /><span>Net</span></label>
-                                    <label class="f-chip"><input type="checkbox" name="fabric"
-                                            value="cotton" /><span>Cotton</span></label>
-                                    <label class="f-chip"><input type="checkbox" name="fabric"
-                                            value="chanderi" /><span>Chanderi</span></label>
-                                </div>
-                            </details>
-
-                            <details class="f-group">
-                                <summary>Size</summary>
-                                <div class="f-body f-sizes">
-                                    <label class="f-size"><input type="checkbox" name="size"
-                                            value="xs" /><span>XS</span></label>
-                                    <label class="f-size"><input type="checkbox" name="size"
-                                            value="s" /><span>S</span></label>
-                                    <label class="f-size"><input type="checkbox" name="size"
-                                            value="m" /><span>M</span></label>
-                                    <label class="f-size"><input type="checkbox" name="size"
-                                            value="l" /><span>L</span></label>
-                                    <label class="f-size"><input type="checkbox" name="size"
-                                            value="xl" /><span>XL</span></label>
-                                    <label class="f-size"><input type="checkbox" name="size"
-                                            value="xxl" /><span>XXL</span></label>
-                                </div>
-                            </details>
-
-                            <details class="f-group">
+                            {{-- Discount --}}
+                            <details class="f-group" @if (request('discount')) open @endif>
                                 <summary>Discount</summary>
                                 <div class="f-body f-list">
-                                    <label class="f-check"><input type="radio" name="discount" value="10" /><span
-                                            class="f-box is-radio"></span><span class="f-text">10% &amp;
-                                            Above</span></label>
-                                    <label class="f-check"><input type="radio" name="discount" value="20" /><span
-                                            class="f-box is-radio"></span><span class="f-text">20% &amp;
-                                            Above</span></label>
-                                    <label class="f-check"><input type="radio" name="discount" value="30" /><span
-                                            class="f-box is-radio"></span><span class="f-text">30% &amp;
-                                            Above</span></label>
-                                    <label class="f-check"><input type="radio" name="discount" value="40" /><span
-                                            class="f-box is-radio"></span><span class="f-text">40% &amp;
-                                            Above</span></label>
+                                    @foreach ([10, 20, 30, 40] as $d)
+                                        <label class="f-check"><input type="radio" name="discount" value="{{ $d }}"
+                                                @checked(request('discount') == $d) /><span class="f-box is-radio"></span><span
+                                                class="f-text">{{ $d }}% &amp; Above</span></label>
+                                    @endforeach
                                 </div>
                             </details>
                         </div>
 
                         <div class="f-foot">
-                            <button type="reset" class="btn btn-outline-primary">
-                                Clear All
-                            </button>
-                            <button type="submit" class="btn btn-primary">
-                                Apply Filters
-                            </button>
+                            <a href="{{ route('products') }}" class="btn btn-outline-primary">Clear All</a>
+                            <button type="submit" class="btn btn-primary">Apply Filters</button>
                         </div>
                     </form>
 
-                    <!-- ===== PRODUCTS ===== -->
                     <div class="listing-content">
                         <div class="listing-grid" id="listingGrid">
-                            <div class="prod_cart">
-                                <div class="prod-img">
-                                    <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab1.png"
-                                            alt="Kanjivaram Pure Silk Saree" loading="lazy" /></a>
-                                    <span class="prod-badge">Bestseller</span>
-                                    <div class="prod-actions">
-                                        <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                            <i class="fa-regular fa-heart"></i>
-                                        </button>
-                                        <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                                            <i class="fa-regular fa-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="prod-info">
-                                    <div class="prod-meta">
-                                        <span class="prod-cat">Silk Saree</span><span class="prod-rate"><i
-                                                class="fa-solid fa-star"></i> 4.9</span>
-                                    </div>
-                                    <h5 class="prod-name">
-                                        <a href="product-detail.html">Kanjivaram Pure Silk Saree</a>
-                                    </h5>
-                                    <div class="prod-price">
-                                        <span class="price-now">₹12,999</span><del class="price-old">₹17,499</del><span
-                                            class="price-off">26% OFF</span>
-                                    </div>
-                                    <div class="prod-btns">
-                                        <button data-model=".cart-pop" type="button"
-                                            class="btn btn-outline-primary prod-cta">
-                                            Add to Cart
-                                        </button>
-                                        <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="prod_cart">
-                                <div class="prod-img">
-                                    <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab2.png"
-                                            alt="Banarasi Zari Woven Silk Saree" loading="lazy" /></a>
-                                    <span class="prod-badge">Bestseller</span>
-                                    <div class="prod-actions">
-                                        <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                            <i class="fa-regular fa-heart"></i>
-                                        </button>
-                                        <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                                            <i class="fa-regular fa-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="prod-info">
-                                    <div class="prod-meta">
-                                        <span class="prod-cat">Banarasi Saree</span><span class="prod-rate"><i
-                                                class="fa-solid fa-star"></i> 4.8</span>
-                                    </div>
-                                    <h5 class="prod-name">
-                                        <a href="product-detail.html">Banarasi Zari Woven Silk Saree</a>
-                                    </h5>
-                                    <div class="prod-price">
-                                        <span class="price-now">₹8,499</span><del class="price-old">₹11,999</del><span
-                                            class="price-off">29% OFF</span>
-                                    </div>
-                                    <div class="prod-btns">
-                                        <button data-model=".cart-pop" type="button"
-                                            class="btn btn-outline-primary prod-cta">
-                                            Add to Cart
-                                        </button>
-                                        <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="prod_cart">
-                                <div class="prod-img">
-                                    <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab3.png"
-                                            alt="Organza Floral Embroidered Saree" loading="lazy" /></a>
-                                    <span class="prod-badge">New Arrival</span>
-                                    <div class="prod-actions">
-                                        <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                            <i class="fa-regular fa-heart"></i>
-                                        </button>
-                                        <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                                            <i class="fa-regular fa-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="prod-info">
-                                    <div class="prod-meta">
-                                        <span class="prod-cat">Organza Saree</span><span class="prod-rate"><i
-                                                class="fa-solid fa-star"></i> 4.7</span>
-                                    </div>
-                                    <h5 class="prod-name">
-                                        <a href="product-detail.html">Organza Floral Embroidered Saree</a>
-                                    </h5>
-                                    <div class="prod-price">
-                                        <span class="price-now">₹6,799</span><del class="price-old">₹9,499</del><span
-                                            class="price-off">28% OFF</span>
-                                    </div>
-                                    <div class="prod-btns">
-                                        <button data-model=".cart-pop" type="button"
-                                            class="btn btn-outline-primary prod-cta">
-                                            Add to Cart
-                                        </button>
-                                        <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="prod_cart">
-                                <div class="prod-img">
-                                    <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab4.png"
-                                            alt="Handloom Chanderi Silk Saree" loading="lazy" /></a>
-                                    <span class="prod-badge">Handcrafted</span>
-                                    <div class="prod-actions">
-                                        <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                            <i class="fa-regular fa-heart"></i>
-                                        </button>
-                                        <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                                            <i class="fa-regular fa-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="prod-info">
-                                    <div class="prod-meta">
-                                        <span class="prod-cat">Chanderi Saree</span><span class="prod-rate"><i
-                                                class="fa-solid fa-star"></i> 4.8</span>
-                                    </div>
-                                    <h5 class="prod-name">
-                                        <a href="product-detail.html">Handloom Chanderi Silk Saree</a>
-                                    </h5>
-                                    <div class="prod-price">
-                                        <span class="price-now">₹9,999</span><del class="price-old">₹13,999</del><span
-                                            class="price-off">29% OFF</span>
-                                    </div>
-                                    <div class="prod-btns">
-                                        <button data-model=".cart-pop" type="button"
-                                            class="btn btn-outline-primary prod-cta">
-                                            Add to Cart
-                                        </button>
-                                        <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="prod_cart">
-                                <div class="prod-img">
-                                    <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab1.png"
-                                            alt="Embroidered Designer Lehenga Set" loading="lazy" /></a>
-                                    <span class="prod-badge">Limited Edition</span>
-                                    <div class="prod-actions">
-                                        <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                            <i class="fa-regular fa-heart"></i>
-                                        </button>
-                                        <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                                            <i class="fa-regular fa-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="prod-info">
-                                    <div class="prod-meta">
-                                        <span class="prod-cat">Designer Lehenga</span><span class="prod-rate"><i
-                                                class="fa-solid fa-star"></i> 4.7</span>
-                                    </div>
-                                    <h5 class="prod-name">
-                                        <a href="product-detail.html">Embroidered Designer Lehenga Set</a>
-                                    </h5>
-                                    <div class="prod-price">
-                                        <span class="price-now">₹24,999</span><del class="price-old">₹34,999</del><span
-                                            class="price-off">29% OFF</span>
-                                    </div>
-                                    <div class="prod-btns">
-                                        <button data-model=".cart-pop" type="button"
-                                            class="btn btn-outline-primary prod-cta">
-                                            Add to Cart
-                                        </button>
-                                        <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="prod_cart">
-                                <div class="prod-img">
-                                    <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab2.png"
-                                            alt="Velvet Bridal Lehenga" loading="lazy" /></a>
-                                    <span class="prod-badge">Bestseller</span>
-                                    <div class="prod-actions">
-                                        <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                            <i class="fa-regular fa-heart"></i>
-                                        </button>
-                                        <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                                            <i class="fa-regular fa-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="prod-info">
-                                    <div class="prod-meta">
-                                        <span class="prod-cat">Bridal Lehenga</span><span class="prod-rate"><i
-                                                class="fa-solid fa-star"></i> 4.9</span>
-                                    </div>
-                                    <h5 class="prod-name">
-                                        <a href="product-detail.html">Velvet Bridal Lehenga</a>
-                                    </h5>
-                                    <div class="prod-price">
-                                        <span class="price-now">₹38,999</span><del class="price-old">₹52,999</del><span
-                                            class="price-off">26% OFF</span>
-                                    </div>
-                                    <div class="prod-btns">
-                                        <button data-model=".cart-pop" type="button"
-                                            class="btn btn-outline-primary prod-cta">
-                                            Add to Cart
-                                        </button>
-                                        <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="prod_cart">
-                                <div class="prod-img">
-                                    <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab3.png"
-                                            alt="Sequined Reception Lehenga" loading="lazy" /></a>
-                                    <div class="prod-actions">
-                                        <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                            <i class="fa-regular fa-heart"></i>
-                                        </button>
-                                        <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                                            <i class="fa-regular fa-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="prod-info">
-                                    <div class="prod-meta">
-                                        <span class="prod-cat">Party Lehenga</span><span class="prod-rate"><i
-                                                class="fa-solid fa-star"></i> 4.6</span>
-                                    </div>
-                                    <h5 class="prod-name">
-                                        <a href="product-detail.html">Sequined Reception Lehenga</a>
-                                    </h5>
-                                    <div class="prod-price">
-                                        <span class="price-now">₹18,499</span><del class="price-old">₹25,999</del><span
-                                            class="price-off">29% OFF</span>
-                                    </div>
-                                    <div class="prod-btns">
-                                        <button data-model=".cart-pop" type="button"
-                                            class="btn btn-outline-primary prod-cta">
-                                            Add to Cart
-                                        </button>
-                                        <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="prod_cart">
-                                <div class="prod-img">
-                                    <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab4.png"
-                                            alt="Pastel Organza Lehenga" loading="lazy" /></a>
-                                    <span class="prod-badge">New Arrival</span>
-                                    <div class="prod-actions">
-                                        <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                            <i class="fa-regular fa-heart"></i>
-                                        </button>
-                                        <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                                            <i class="fa-regular fa-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="prod-info">
-                                    <div class="prod-meta">
-                                        <span class="prod-cat">Organza Lehenga</span><span class="prod-rate"><i
-                                                class="fa-solid fa-star"></i> 4.7</span>
-                                    </div>
-                                    <h5 class="prod-name">
-                                        <a href="product-detail.html">Pastel Organza Lehenga</a>
-                                    </h5>
-                                    <div class="prod-price">
-                                        <span class="price-now">₹21,299</span><del class="price-old">₹29,999</del><span
-                                            class="price-off">29% OFF</span>
-                                    </div>
-                                    <div class="prod-btns">
-                                        <button data-model=".cart-pop" type="button"
-                                            class="btn btn-outline-primary prod-cta">
-                                            Add to Cart
-                                        </button>
-                                        <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- same card copy karke 24 tak / backend loop -->
+                            @include('partials.product-cards', ['products' => $products])
                         </div>
 
-                        <nav class="listing-pagination" aria-label="Product pages">
-                            <a href="javascript:void(0)" class="pg-nav is-disabled" aria-disabled="true"><i
-                                    class="fa-solid fa-arrow-left-long"></i> Previous</a>
-                            <ul>
-                                <li>
-                                    <a href="javascript:void(0)" class="active" aria-current="page">01</a>
-                                </li>
-                                <li><a href="javascript:void(0)">02</a></li>
-                                <li><a href="javascript:void(0)">03</a></li>
-                                <li><a href="javascript:void(0)">04</a></li>
-                                <li class="dots">…</li>
-                                <li><a href="javascript:void(0)">08</a></li>
-                            </ul>
-                            <a href="javascript:void(0)" class="pg-nav">Next <i
-                                    class="fa-solid fa-arrow-right-long"></i></a>
-                        </nav>
+                        {{ $products->links('vendor.pagination.listing') }}
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ========== 4. RECENTLY VIEWED ========== -->
-        <section class="listing-recent">
-            <div class="container">
-                <div class="sec-head">
-                    <div class="heading">
-                        <h3>Recently Viewed</h3>
+        <!-- ========== 3. RECENTLY VIEWED ========== -->
+        @if ($recentlyViewed->isNotEmpty())
+            <section class="listing-recent">
+                <div class="container">
+                    <div class="sec-head">
+                        <div class="heading">
+                            <h3>Recently Viewed</h3>
+                        </div>
+                        <p>A few styles you may want to revisit.</p>
                     </div>
-                    <p>A few styles you may want to revisit.</p>
-                </div>
-                <div class="swiper-wrap">
-                    <div class="swiper fourSlider">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <div class="prod_cart">
-                                    <div class="prod-img">
-                                        <a href="product-detail.html" class="prod-link"><img
-                                                src="assets/images/home/tab1.png" alt="Kanjivaram Pure Silk Saree"
-                                                loading="lazy" /></a>
-                                        <div class="prod-actions">
-                                            <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                <i class="fa-regular fa-heart"></i>
-                                            </button>
-                                            <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                                                <i class="fa-regular fa-eye"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="prod-info">
-                                        <div class="prod-meta">
-                                            <span class="prod-cat">Silk Saree</span><span class="prod-rate"><i
-                                                    class="fa-solid fa-star"></i> 4.9</span>
-                                        </div>
-                                        <h5 class="prod-name">
-                                            <a href="product-detail.html">Kanjivaram Pure Silk Saree</a>
-                                        </h5>
-                                        <div class="prod-price">
-                                            <span class="price-now">₹12,999</span><del class="price-old">₹17,499</del><span
-                                                class="price-off">26% OFF</span>
-                                        </div>
-                                        <div class="prod-btns">
-                                            <button data-model=".cart-pop" type="button"
-                                                class="btn btn-outline-primary prod-cta">
-                                                Add to Cart
-                                            </button>
-                                            <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="prod_cart">
-                                    <div class="prod-img">
-                                        <a href="product-detail.html" class="prod-link"><img
-                                                src="assets/images/home/tab2.png" alt="Banarasi Zari Woven Silk Saree"
-                                                loading="lazy" /></a>
-                                        <div class="prod-actions">
-                                            <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                <i class="fa-regular fa-heart"></i>
-                                            </button>
-                                            <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                                                <i class="fa-regular fa-eye"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="prod-info">
-                                        <div class="prod-meta">
-                                            <span class="prod-cat">Banarasi Saree</span><span class="prod-rate"><i
-                                                    class="fa-solid fa-star"></i> 4.8</span>
-                                        </div>
-                                        <h5 class="prod-name">
-                                            <a href="product-detail.html">Banarasi Zari Woven Silk Saree</a>
-                                        </h5>
-                                        <div class="prod-price">
-                                            <span class="price-now">₹8,499</span><del class="price-old">₹11,999</del><span
-                                                class="price-off">29% OFF</span>
-                                        </div>
-                                        <div class="prod-btns">
-                                            <button data-model=".cart-pop" type="button"
-                                                class="btn btn-outline-primary prod-cta">
-                                                Add to Cart
-                                            </button>
-                                            <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="prod_cart">
-                                    <div class="prod-img">
-                                        <a href="product-detail.html" class="prod-link"><img
-                                                src="assets/images/home/tab4.png" alt="Velvet Bridal Lehenga"
-                                                loading="lazy" /></a>
-                                        <div class="prod-actions">
-                                            <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                <i class="fa-regular fa-heart"></i>
-                                            </button>
-                                            <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                                                <i class="fa-regular fa-eye"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="prod-info">
-                                        <div class="prod-meta">
-                                            <span class="prod-cat">Bridal Lehenga</span><span class="prod-rate"><i
-                                                    class="fa-solid fa-star"></i> 4.9</span>
-                                        </div>
-                                        <h5 class="prod-name">
-                                            <a href="product-detail.html">Velvet Bridal Lehenga</a>
-                                        </h5>
-                                        <div class="prod-price">
-                                            <span class="price-now">₹38,999</span><del class="price-old">₹52,999</del><span
-                                                class="price-off">26% OFF</span>
-                                        </div>
-                                        <div class="prod-btns">
-                                            <button data-model=".cart-pop" type="button"
-                                                class="btn btn-outline-primary prod-cta">
-                                                Add to Cart
-                                            </button>
-                                            <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="prod_cart">
-                                    <div class="prod-img">
-                                        <a href="product-detail.html" class="prod-link"><img
-                                                src="assets/images/home/tab2.png" alt="Soft Georgette Festive Saree"
-                                                loading="lazy" /></a>
-                                        <div class="prod-actions">
-                                            <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                <i class="fa-regular fa-heart"></i>
-                                            </button>
-                                            <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                                                <i class="fa-regular fa-eye"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="prod-info">
-                                        <div class="prod-meta">
-                                            <span class="prod-cat">Georgette Saree</span><span class="prod-rate"><i
-                                                    class="fa-solid fa-star"></i> 4.6</span>
-                                        </div>
-                                        <h5 class="prod-name">
-                                            <a href="product-detail.html">Soft Georgette Festive Saree</a>
-                                        </h5>
-                                        <div class="prod-price">
-                                            <span class="price-now">₹5,499</span><del class="price-old">₹7,499</del><span
-                                                class="price-off">27% OFF</span>
-                                        </div>
-                                        <div class="prod-btns">
-                                            <button data-model=".cart-pop" type="button"
-                                                class="btn btn-outline-primary prod-cta">
-                                                Add to Cart
-                                            </button>
-                                            <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="prod_cart">
-                                    <div class="prod-img">
-                                        <a href="product-detail.html" class="prod-link"><img
-                                                src="assets/images/home/tab4.png" alt="Ivory Zari Work Saree"
-                                                loading="lazy" /></a>
-                                        <div class="prod-actions">
-                                            <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                <i class="fa-regular fa-heart"></i>
-                                            </button>
-                                            <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                                                <i class="fa-regular fa-eye"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="prod-info">
-                                        <div class="prod-meta">
-                                            <span class="prod-cat">Silk Saree</span><span class="prod-rate"><i
-                                                    class="fa-solid fa-star"></i> 4.7</span>
-                                        </div>
-                                        <h5 class="prod-name">
-                                            <a href="product-detail.html">Ivory Zari Work Saree</a>
-                                        </h5>
-                                        <div class="prod-price">
-                                            <span class="price-now">₹11,499</span><del class="price-old">₹15,999</del><span
-                                                class="price-off">28% OFF</span>
-                                        </div>
-                                        <div class="prod-btns">
-                                            <button data-model=".cart-pop" type="button"
-                                                class="btn btn-outline-primary prod-cta">
-                                                Add to Cart
-                                            </button>
-                                            <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                                        </div>
-                                    </div>
-                                </div>
+                    <div class="swiper-wrap">
+                        <div class="swiper fourSlider">
+                            <div class="swiper-wrapper">
+                                @include('partials.product-slider', ['products' => $recentlyViewed])
                             </div>
                         </div>
-                    </div>
-                    <div class="swiper-group">
-                        <button type="button" class="btn-prev" aria-label="Previous slide">
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                        <button type="button" class="btn-next" aria-label="Next slide">
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ========== 5. YOU MAY ALSO LOVE ========== -->
-        <section class="listing-like">
-            <div class="container">
-                <div class="sec-head">
-                    <div class="heading">
-                        <h3>You May Also Love</h3>
-                    </div>
-                    <p>Discover more pieces selected to complement your style.</p>
-                </div>
-                <div class="swiper-wrap">
-                    <div class="swiper fourSlider">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <div class="prod_cart">
-                                    <div class="prod-img">
-                                        <a href="product-detail.html" class="prod-link"><img
-                                                src="assets/images/home/tab1.png" alt="Emerald Green Designer Silk Saree"
-                                                loading="lazy" /></a>
-                                        <span class="prod-badge">Limited Edition</span>
-                                        <div class="prod-actions">
-                                            <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                <i class="fa-regular fa-heart"></i>
-                                            </button>
-                                            <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                                                <i class="fa-regular fa-eye"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="prod-info">
-                                        <div class="prod-meta">
-                                            <span class="prod-cat">Designer Saree</span><span class="prod-rate"><i
-                                                    class="fa-solid fa-star"></i> 4.7</span>
-                                        </div>
-                                        <h5 class="prod-name">
-                                            <a href="product-detail.html">Emerald Green Designer Silk Saree</a>
-                                        </h5>
-                                        <div class="prod-price">
-                                            <span class="price-now">₹14,499</span><del class="price-old">₹19,999</del><span
-                                                class="price-off">28% OFF</span>
-                                        </div>
-                                        <div class="prod-btns">
-                                            <button data-model=".cart-pop" type="button"
-                                                class="btn btn-outline-primary prod-cta">
-                                                Add to Cart
-                                            </button>
-                                            <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="prod_cart">
-                                    <div class="prod-img">
-                                        <a href="product-detail.html" class="prod-link"><img
-                                                src="assets/images/home/tab3.png" alt="Sequined Reception Lehenga"
-                                                loading="lazy" /></a>
-                                        <div class="prod-actions">
-                                            <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                <i class="fa-regular fa-heart"></i>
-                                            </button>
-                                            <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                                                <i class="fa-regular fa-eye"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="prod-info">
-                                        <div class="prod-meta">
-                                            <span class="prod-cat">Party Lehenga</span><span class="prod-rate"><i
-                                                    class="fa-solid fa-star"></i> 4.6</span>
-                                        </div>
-                                        <h5 class="prod-name">
-                                            <a href="product-detail.html">Sequined Reception Lehenga</a>
-                                        </h5>
-                                        <div class="prod-price">
-                                            <span class="price-now">₹18,499</span><del class="price-old">₹25,999</del><span
-                                                class="price-off">29% OFF</span>
-                                        </div>
-                                        <div class="prod-btns">
-                                            <button data-model=".cart-pop" type="button"
-                                                class="btn btn-outline-primary prod-cta">
-                                                Add to Cart
-                                            </button>
-                                            <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="prod_cart">
-                                    <div class="prod-img">
-                                        <a href="product-detail.html" class="prod-link"><img
-                                                src="assets/images/home/tab4.png" alt="Pastel Organza Lehenga"
-                                                loading="lazy" /></a>
-                                        <span class="prod-badge">New Arrival</span>
-                                        <div class="prod-actions">
-                                            <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                <i class="fa-regular fa-heart"></i>
-                                            </button>
-                                            <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                                                <i class="fa-regular fa-eye"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="prod-info">
-                                        <div class="prod-meta">
-                                            <span class="prod-cat">Organza Lehenga</span><span class="prod-rate"><i
-                                                    class="fa-solid fa-star"></i> 4.7</span>
-                                        </div>
-                                        <h5 class="prod-name">
-                                            <a href="product-detail.html">Pastel Organza Lehenga</a>
-                                        </h5>
-                                        <div class="prod-price">
-                                            <span class="price-now">₹21,299</span><del class="price-old">₹29,999</del><span
-                                                class="price-off">29% OFF</span>
-                                        </div>
-                                        <div class="prod-btns">
-                                            <button data-model=".cart-pop" type="button"
-                                                class="btn btn-outline-primary prod-cta">
-                                                Add to Cart
-                                            </button>
-                                            <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="prod_cart">
-                                    <div class="prod-img">
-                                        <a href="product-detail.html" class="prod-link"><img
-                                                src="assets/images/home/tab1.png" alt="Kanjivaram Pure Silk Saree"
-                                                loading="lazy" /></a>
-                                        <span class="prod-badge">Bestseller</span>
-                                        <div class="prod-actions">
-                                            <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                <i class="fa-regular fa-heart"></i>
-                                            </button>
-                                            <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                                                <i class="fa-regular fa-eye"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="prod-info">
-                                        <div class="prod-meta">
-                                            <span class="prod-cat">Silk Saree</span><span class="prod-rate"><i
-                                                    class="fa-solid fa-star"></i> 4.9</span>
-                                        </div>
-                                        <h5 class="prod-name">
-                                            <a href="product-detail.html">Kanjivaram Pure Silk Saree</a>
-                                        </h5>
-                                        <div class="prod-price">
-                                            <span class="price-now">₹12,999</span><del class="price-old">₹17,499</del><span
-                                                class="price-off">26% OFF</span>
-                                        </div>
-                                        <div class="prod-btns">
-                                            <button data-model=".cart-pop" type="button"
-                                                class="btn btn-outline-primary prod-cta">
-                                                Add to Cart
-                                            </button>
-                                            <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="prod_cart">
-                                    <div class="prod-img">
-                                        <a href="product-detail.html" class="prod-link"><img
-                                                src="assets/images/home/tab2.png" alt="Banarasi Zari Woven Silk Saree"
-                                                loading="lazy" /></a>
-                                        <span class="prod-badge">Bestseller</span>
-                                        <div class="prod-actions">
-                                            <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                <i class="fa-regular fa-heart"></i>
-                                            </button>
-                                            <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                                                <i class="fa-regular fa-eye"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="prod-info">
-                                        <div class="prod-meta">
-                                            <span class="prod-cat">Banarasi Saree</span><span class="prod-rate"><i
-                                                    class="fa-solid fa-star"></i> 4.8</span>
-                                        </div>
-                                        <h5 class="prod-name">
-                                            <a href="product-detail.html">Banarasi Zari Woven Silk Saree</a>
-                                        </h5>
-                                        <div class="prod-price">
-                                            <span class="price-now">₹8,499</span><del class="price-old">₹11,999</del><span
-                                                class="price-off">29% OFF</span>
-                                        </div>
-                                        <div class="prod-btns">
-                                            <button data-model=".cart-pop" type="button"
-                                                class="btn btn-outline-primary prod-cta">
-                                                Add to Cart
-                                            </button>
-                                            <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="swiper-group">
+                            <button type="button" class="btn-prev" aria-label="Previous slide">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                            <button type="button" class="btn-next" aria-label="Next slide">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
                         </div>
                     </div>
-                    <div class="swiper-group">
-                        <button type="button" class="btn-prev" aria-label="Previous slide">
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                        <button type="button" class="btn-next" aria-label="Next slide">
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </button>
+                </div>
+            </section>
+        @endif
+
+        <!-- ========== 4. YOU MAY ALSO LOVE ========== -->
+        @if ($alsoLike->isNotEmpty())
+            <section class="listing-like">
+                <div class="container">
+                    <div class="sec-head">
+                        <div class="heading">
+                            <h3>You May Also Love</h3>
+                        </div>
+                        <p>Discover more pieces selected to complement your style.</p>
+                    </div>
+                    <div class="swiper-wrap">
+                        <div class="swiper fourSlider">
+                            <div class="swiper-wrapper">
+                                @include('partials.product-slider', ['products' => $alsoLike])
+                            </div>
+                        </div>
+                        <div class="swiper-group">
+                            <button type="button" class="btn-prev" aria-label="Previous slide">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                            <button type="button" class="btn-next" aria-label="Next slide">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        @endif
 
         <!-- ========== 6. JOURNAL ========== -->
         <section class="listing-journal">
@@ -1087,52 +352,62 @@
 @push('scripts')
     <script>
         (function () {
+            const form = document.getElementById("filterPanel");
+            if (!form) return;
+
             /* Price range */
             const box = document.querySelector(".price-range");
             if (box) {
-                const form = box.closest("form");
-                const MIN = +box.dataset.min,
-                    MAX = +box.dataset.max,
-                    GAP = 500;
-                const rMin = box.querySelector(".range-min"),
-                    rMax = box.querySelector(".range-max");
+                const MIN = +box.dataset.min, MAX = +box.dataset.max;
+                const rMin = box.querySelector(".range-min"), rMax = box.querySelector(".range-max");
                 const fill = box.querySelector(".range-fill");
-                const nMin = form.querySelector(".in-min"),
-                    nMax = form.querySelector(".in-max");
+                const nMin = form.querySelector(".in-min"), nMax = form.querySelector(".in-max");
+                const STEP = +rMin.step || 500;
+                const GAP = Math.min(STEP, Math.max(0, MAX - MIN)); // range chhoti ho to bhi lock na ho
+
+                const clamp = (v) => Math.min(MAX, Math.max(MIN, isNaN(v) ? MIN : v));
 
                 const paint = (src) => {
-                    let a = +rMin.value,
-                        b = +rMax.value;
-                    if (b - a < GAP) {
-                        src === "min" ? (a = b - GAP) : (b = a + GAP);
-                    }
+                    let a = clamp(+rMin.value), b = clamp(+rMax.value);
+                    if (b - a < GAP) { src === "min" ? (a = b - GAP) : (b = a + GAP); }
+                    a = clamp(a); b = clamp(b);
                     rMin.value = nMin.value = a;
                     rMax.value = nMax.value = b;
-                    fill.style.left = ((a - MIN) / (MAX - MIN)) * 100 + "%";
-                    fill.style.right = 100 - ((b - MIN) / (MAX - MIN)) * 100 + "%";
+                    const span = (MAX - MIN) || 1;
+                    fill.style.left = ((a - MIN) / span) * 100 + "%";
+                    fill.style.right = 100 - ((b - MIN) / span) * 100 + "%";
                 };
 
-                rMin.oninput = () => paint("min");
-                rMax.oninput = () => paint("max");
-                nMin.onchange = () => {
-                    rMin.value = nMin.value;
-                    paint("min");
-                };
-                nMax.onchange = () => {
-                    rMax.value = nMax.value;
-                    paint("max");
-                };
-                form.addEventListener("reset", () => setTimeout(paint)); // Clear All
+                rMin.addEventListener("input", () => paint("min"));
+                rMax.addEventListener("input", () => paint("max"));
+                nMin.addEventListener("input", () => { rMin.value = nMin.value; paint("min"); });
+                nMax.addEventListener("input", () => { rMax.value = nMax.value; paint("max"); });
                 paint();
+
+                // default bounds par ho to price params bhejo hi mat
+                form.addEventListener("submit", () => {
+                    if (+nMin.value <= MIN) nMin.disabled = true;
+                    if (+nMax.value >= MAX) nMax.disabled = true;
+                });
+
+                // back button par disabled inputs wapas enable
+                window.addEventListener("pageshow", () => { nMin.disabled = false; nMax.disabled = false; paint(); });
             }
+
+            /* Desktop par filter chunte hi apply (mobile par Apply button hi rahega) */
+            const desktop = window.matchMedia("(min-width: 992px)");
+            let timer;
+            form.addEventListener("change", () => {
+                if (!desktop.matches) return;
+                clearTimeout(timer);
+                timer = setTimeout(() => form.requestSubmit(), 400);
+            });
 
             /* Grid view switch */
             const grid = document.getElementById("listingGrid");
             document.querySelectorAll(".view-btn").forEach((btn) => {
                 btn.onclick = () => {
-                    document
-                        .querySelectorAll(".view-btn")
-                        .forEach((b) => b.classList.remove("active"));
+                    document.querySelectorAll(".view-btn").forEach((b) => b.classList.remove("active"));
                     btn.classList.add("active");
                     grid.classList.toggle("is-3", btn.dataset.cols === "3");
                 };

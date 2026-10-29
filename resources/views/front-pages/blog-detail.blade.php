@@ -10,7 +10,7 @@
       <section class="blogd-secA">
         <div class="container">
           <ul class="crumb">
-            <li><a href="index.html">Home</a></li>
+            <li><a href="{{ route('home') }}">Home</a></li>
             <li><i class="fa-solid fa-chevron-right"></i></li>
             <li><a href="blog.html">Blog</a></li>
             <li><i class="fa-solid fa-chevron-right"></i></li>
@@ -73,7 +73,7 @@
                 A wedding ceremony, a reception and an engagement each call for
                 a different look. Decide the event first, then the colour and
                 fabric will follow naturally. Explore our
-                <a href="category-listing.html">bridal collection</a> for ideas.
+                <a href="{{ route('categories') }}">bridal collection</a> for ideas.
               </p>
 
               <h2>2. Pick a fabric that suits you</h2>

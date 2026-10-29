@@ -399,7 +399,7 @@
                                 <div class="field-group">
                                     <label class="field-label">Name <span class="req">*</span></label>
                                     <input type="text" name="name" id="name" class="field-input" required
-                                        placeholder="e.g. Electronics">
+                                        placeholder="e.g. Sarres">
                                 </div>
 
                                 <div class="field-group">

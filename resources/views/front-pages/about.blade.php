@@ -10,7 +10,7 @@
         <section class="about-secA">
             <div class="container">
                 <ul class="crumb">
-                    <li><a href="index.html">Home</a></li>
+                    <li><a href="{{ route('home') }}">Home</a></li>
                     <li><i class="fa-solid fa-chevron-right"></i></li>
                     <li class="current">About Us</li>
                 </ul>
@@ -26,7 +26,7 @@
                             most memorable occasions.
                         </p>
                         <div class="ban-btns">
-                            <a href="category-listing.html" class="btn btn-primary">Explore Our Collection</a>
+                            <a href="{{ route('categories') }}" class="btn btn-primary">Explore Our Collection</a>
                             <a href="#aboutStory" class="btn btn-outline-primary">Discover Our Story
                                 <i class="fa-solid fa-arrow-right-long"></i></a>
                         </div>
@@ -107,7 +107,7 @@
                             Our work is to make that choice feel effortless, personal and
                             beautifully unhurried.
                         </p>
-                        <a href="category-listing.html" class="btn btn-primary">Explore Sarees <i
+                        <a href="{{ route('categories') }}" class="btn btn-primary">Explore Sarees <i
                                 class="fa-solid fa-arrow-right-long"></i></a>
                     </div>
                     <div class="who-visual">
@@ -172,7 +172,7 @@
         <section class="about-secF">
             <div class="container">
                 <div class="art-grid">
-                    <a href="category-listing.html" class="art-visual">
+                    <a href="{{ route('categories') }}" class="art-visual">
                         <img src="assets/images/home/offer2.png" alt="The art of the saree" loading="lazy" />
                     </a>
                     <div class="art-content">
@@ -211,14 +211,14 @@
                             </li>
                         </ul>
                         <div class="art-tags">
-                            <a href="product-listing.html">Banarasi</a>
-                            <a href="product-listing.html">Kanjivaram</a>
-                            <a href="product-listing.html">Organza</a>
-                            <a href="product-listing.html">Silk</a>
-                            <a href="product-listing.html">Georgette</a>
-                            <a href="product-listing.html">Chiffon</a>
-                            <a href="product-listing.html">Festive</a>
-                            <a href="product-listing.html">Bridal</a>
+                            <a href="{{ route('products') }}">Banarasi</a>
+                            <a href="{{ route('products') }}">Kanjivaram</a>
+                            <a href="{{ route('products') }}">Organza</a>
+                            <a href="{{ route('products') }}">Silk</a>
+                            <a href="{{ route('products') }}">Georgette</a>
+                            <a href="{{ route('products') }}">Chiffon</a>
+                            <a href="{{ route('products') }}">Festive</a>
+                            <a href="{{ route('products') }}">Bridal</a>
                         </div>
                     </div>
                 </div>
@@ -292,7 +292,7 @@
                     <div class="swiper fourSlider" data-mob="1.2" data-sm="2" data-lg="3" data-xl="4">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
-                                <a href="category-listing.html" class="col-card">
+                                <a href="{{ route('categories') }}" class="col-card">
                                     <img src="assets/images/home/cat1.png" alt="Premium Sarees" loading="lazy" />
                                     <div class="col-info">
                                         <h4>Premium Sarees</h4>
@@ -302,7 +302,7 @@
                                 </a>
                             </div>
                             <div class="swiper-slide">
-                                <a href="category-listing.html" class="col-card">
+                                <a href="{{ route('categories') }}" class="col-card">
                                     <img src="assets/images/home/cat2.png" alt="Designer Lehengas" loading="lazy" />
                                     <div class="col-info">
                                         <h4>Designer Lehengas</h4>
@@ -312,7 +312,7 @@
                                 </a>
                             </div>
                             <div class="swiper-slide">
-                                <a href="category-listing.html" class="col-card">
+                                <a href="{{ route('categories') }}" class="col-card">
                                     <img src="assets/images/home/cat4.png" alt="Bridal Wear" loading="lazy" />
                                     <div class="col-info">
                                         <h4>Bridal Wear</h4>
@@ -322,7 +322,7 @@
                                 </a>
                             </div>
                             <div class="swiper-slide">
-                                <a href="category-listing.html" class="col-card">
+                                <a href="{{ route('categories') }}" class="col-card">
                                     <img src="assets/images/home/cat3.png" alt="Festive and Party Wear" loading="lazy" />
                                     <div class="col-info">
                                         <h4>Festive &amp; Party Wear</h4>
@@ -357,7 +357,7 @@
                             Why shop with us? Because choosing a saree should feel as
                             beautiful as wearing one.
                         </p>
-                        <a href="category-listing.html" class="btn btn-primary">Start Exploring <i
+                        <a href="{{ route('categories') }}" class="btn btn-primary">Start Exploring <i
                                 class="fa-solid fa-arrow-right-long"></i></a>
                     </div>
                     <div class="exp-list">

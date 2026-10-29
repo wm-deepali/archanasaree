@@ -18,7 +18,7 @@
       <link rel="icon" type="image/png" href="{{ asset('storage/' . $favicon) }}">
       <link rel="shortcut icon" href="{{ asset('storage/' . $favicon) }}">
   @else
-      <link rel="icon" type="image/png" href="{{ asset('assets/img/logo.png') }}">
+      <link rel="icon" type="image/png" href="{{ asset('assets/images/logo.png') }}">
   @endif
 
   <!-- VENDOR CSS — exact same order as original -->

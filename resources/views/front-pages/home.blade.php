@@ -80,7 +80,7 @@
           <div class="swiper fourSlider">
             <div class="swiper-wrapper">
               <div class="swiper-slide">
-                <a href="category-listing.html" class="cat-card">
+                <a href="{{ route('categories') }}" class="cat-card">
                   <div class="cat-img">
                     <img src="assets/images/home/cat1.png" alt="Premium Sarees" loading="lazy" />
                   </div>
@@ -92,7 +92,7 @@
                 </a>
               </div>
               <div class="swiper-slide">
-                <a href="category-listing.html" class="cat-card">
+                <a href="{{ route('categories') }}" class="cat-card">
                   <div class="cat-img">
                     <img src="assets/images/home/cat2.png" alt="Designer Lehengas" loading="lazy" />
                   </div>
@@ -105,7 +105,7 @@
                 </a>
               </div>
               <div class="swiper-slide">
-                <a href="category-listing.html" class="cat-card">
+                <a href="{{ route('categories') }}" class="cat-card">
                   <div class="cat-img">
                     <img src="assets/images/home/cat3.png" alt="Suits" loading="lazy" />
                   </div>
@@ -120,7 +120,7 @@
                 </a>
               </div>
               <div class="swiper-slide">
-                <a href="category-listing.html" class="cat-card">
+                <a href="{{ route('categories') }}" class="cat-card">
                   <div class="cat-img">
                     <img src="assets/images/home/cat4.png" alt="Bridal Wear" loading="lazy" />
                   </div>
@@ -975,7 +975,7 @@
           <div class="swiper fourSlider" data-mob="1.4">
             <div class="swiper-wrapper">
               <div class="swiper-slide">
-                <a href="category-listing.html" class="drape-card">
+                <a href="{{ route('categories') }}" class="drape-card">
                   <div class="drape-img">
                     <img src="assets/images/home/tab1.png" alt="Bridal Saree" loading="lazy" />
                   </div>
@@ -987,7 +987,7 @@
                 </a>
               </div>
               <div class="swiper-slide">
-                <a href="category-listing.html" class="drape-card">
+                <a href="{{ route('categories') }}" class="drape-card">
                   <div class="drape-img">
                     <img src="assets/images/home/tab2.png" alt="Party Wears" loading="lazy" />
                   </div>
@@ -999,7 +999,7 @@
                 </a>
               </div>
               <div class="swiper-slide">
-                <a href="category-listing.html" class="drape-card">
+                <a href="{{ route('categories') }}" class="drape-card">
                   <div class="drape-img">
                     <img src="assets/images/home/tab3.png" alt="Cocktail Saree" loading="lazy" />
                   </div>
@@ -1011,7 +1011,7 @@
                 </a>
               </div>
               <div class="swiper-slide">
-                <a href="category-listing.html" class="drape-card">
+                <a href="{{ route('categories') }}" class="drape-card">
                   <div class="drape-img">
                     <img src="assets/images/home/tab4.png" alt="Banarsi Saree" loading="lazy" />
                   </div>
@@ -1023,7 +1023,7 @@
                 </a>
               </div>
               <div class="swiper-slide">
-                <a href="category-listing.html" class="drape-card">
+                <a href="{{ route('categories') }}" class="drape-card">
                   <div class="drape-img">
                     <img src="assets/images/home/tab1.png" alt="Net Sarees" loading="lazy" />
                   </div>
@@ -1070,8 +1070,8 @@
               stand out.
             </p>
             <div class="camp-btns">
-              <a href="category-listing.html" class="btn btn-white">Shop Lehengas</a>
-              <a href="category-listing.html" class="btn btn-outline-white">Explore Designer Collection
+              <a href="{{ route('categories') }}" class="btn btn-white">Shop Lehengas</a>
+              <a href="{{ route('categories') }}" class="btn btn-outline-white">Explore Designer Collection
                 <i class="fa-solid fa-arrow-right-long"></i></a>
             </div>
             <ul class="camp-note">
@@ -1105,7 +1105,7 @@
           <div class="swiper fourSlider">
             <div class="swiper-wrapper">
               <div class="swiper-slide">
-                <a href="category-listing.html" class="cat-card">
+                <a href="{{ route('categories') }}" class="cat-card">
                   <div class="cat-img">
                     <img src="assets/images/home/cat1.png" alt="Bridal Lehengas" loading="lazy" />
                   </div>
@@ -1119,7 +1119,7 @@
                 </a>
               </div>
               <div class="swiper-slide">
-                <a href="category-listing.html" class="cat-card">
+                <a href="{{ route('categories') }}" class="cat-card">
                   <div class="cat-img">
                     <img src="assets/images/home/cat2.png" alt="Wedding Lehengas" loading="lazy" />
                   </div>
@@ -1132,7 +1132,7 @@
                 </a>
               </div>
               <div class="swiper-slide">
-                <a href="category-listing.html" class="cat-card">
+                <a href="{{ route('categories') }}" class="cat-card">
                   <div class="cat-img">
                     <img src="assets/images/home/cat2.png" alt="Reception Lehengas" loading="lazy" />
                   </div>
@@ -1145,7 +1145,7 @@
                 </a>
               </div>
               <div class="swiper-slide">
-                <a href="category-listing.html" class="cat-card">
+                <a href="{{ route('categories') }}" class="cat-card">
                   <div class="cat-img">
                     <img src="assets/images/home/cat3.png" alt="Engagement Lehengas" loading="lazy" />
                   </div>
@@ -1158,7 +1158,7 @@
                 </a>
               </div>
               <div class="swiper-slide">
-                <a href="category-listing.html" class="cat-card">
+                <a href="{{ route('categories') }}" class="cat-card">
                   <div class="cat-img">
                     <img src="assets/images/home/cat4.png" alt="Party Lehengas" loading="lazy" />
                   </div>
@@ -1199,8 +1199,8 @@
               lehengas chosen for their beauty, detail and timeless appeal.
             </p>
             <div class="bridal-btns">
-              <a href="category-listing.html" class="btn btn-primary">Explore Bridal Wear</a>
-              <a href="category-listing.html" class="btn btn-outline-primary">Shop Bridal Lehengas</a>
+              <a href="{{ route('categories') }}" class="btn btn-primary">Explore Bridal Wear</a>
+              <a href="{{ route('categories') }}" class="btn btn-outline-primary">Shop Bridal Lehengas</a>
             </div>
             <ul class="bridal-links">
               <li><a href="javascript:void()">Bridal Sarees</a></li>
@@ -1218,7 +1218,7 @@
           <div class="swiper fourSlider">
             <div class="swiper-wrapper">
               <div class="swiper-slide">
-                <a href="product-listing.html" class="brd-card">
+                <a href="{{ route('products') }}" class="brd-card">
                   <img src="assets/images/home/tab1.png" alt="Bridal Sarees" loading="lazy" />
                   <div class="brd-info">
                     <h4>Bridal Sarees</h4>
@@ -1229,7 +1229,7 @@
                 </a>
               </div>
               <div class="swiper-slide">
-                <a href="product-listing.html" class="brd-card">
+                <a href="{{ route('products') }}" class="brd-card">
                   <img src="assets/images/home/tab2.png" alt="Bridal Lehengas" loading="lazy" />
                   <div class="brd-info">
                     <h4>Bridal Lehengas</h4>
@@ -1240,7 +1240,7 @@
                 </a>
               </div>
               <div class="swiper-slide">
-                <a href="product-listing.html" class="brd-card">
+                <a href="{{ route('products') }}" class="brd-card">
                   <img src="assets/images/home/tab3.png" alt="Reception Wear" loading="lazy" />
                   <div class="brd-info">
                     <h4>Reception Wear</h4>
@@ -1253,7 +1253,7 @@
                 </a>
               </div>
               <div class="swiper-slide">
-                <a href="product-listing.html" class="brd-card">
+                <a href="{{ route('products') }}" class="brd-card">
                   <img src="assets/images/home/tab4.png" alt="Bridesmaid Edit" loading="lazy" />
                   <div class="brd-info">
                     <h4>Bridesmaid Edit</h4>
@@ -1290,7 +1290,7 @@
           </p>
         </div>
         <div class="offer-grid">
-          <a href="category-listing.html" class="offer-card">
+          <a href="{{ route('categories') }}" class="offer-card">
             <img src="assets/images/home/offer1.jpg" alt="Welcome to Archana" loading="lazy" />
             <span class="o-badge"><b>10%</b> Off First Order</span>
             <div class="o-body">
@@ -1299,7 +1299,7 @@
               <span class="btn btn-white">Shop Now <i class="fa-solid fa-arrow-right-long"></i></span>
             </div>
           </a>
-          <a href="category-listing.html" class="offer-card">
+          <a href="{{ route('categories') }}" class="offer-card">
             <img src="assets/images/home/offer2.png" alt="Festive Favourites" loading="lazy" />
             <span class="o-badge"><b>25%</b> Off Festive</span>
             <div class="o-body">
@@ -1309,7 +1309,7 @@
                 <i class="fa-solid fa-arrow-right-long"></i></span>
             </div>
           </a>
-          <a href="category-listing.html" class="offer-card">
+          <a href="{{ route('categories') }}" class="offer-card">
             <img src="assets/images/home/offer3.avif" alt="Limited-Time Styles" loading="lazy" />
             <span class="o-badge"><b>Limited</b> Time Only</span>
             <div class="o-body">
@@ -1365,7 +1365,7 @@
     <section class="home-secJ">
       <div class="container">
         <div class="feat-grid">
-          <a href="product-listing.html" class="feat-visual">
+          <a href="{{ route('products') }}" class="feat-visual">
             <img src="assets/images/home/offer2.png" alt="The Archana Edit" loading="lazy" />
           </a>
           <div class="feat-content">
@@ -1378,7 +1378,7 @@
                 A handpicked selection of colours, silhouettes and
                 craftsmanship that capture the spirit of the season.
               </p>
-              <a href="product-listing.html" class="btn btn-primary">Explore the Edit <i
+              <a href="{{ route('products') }}" class="btn btn-primary">Explore the Edit <i
                   class="fa-solid fa-arrow-right-long"></i></a>
             </div>
             <div class="swiper-wrap">

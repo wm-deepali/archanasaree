@@ -19,11 +19,11 @@
                     </p>
 
                     <div class="btn-grp">
-                        <a href="index.html" class="btn btn-primary">
+                        <a href="{{ route('home') }}" class="btn btn-primary">
                             <i class="fa-solid fa-house" aria-hidden="true"></i> Back to
                             Home
                         </a>
-                        <a href="product-listing.html" class="btn btn-outline-primary">
+                        <a href="{{ route('products') }}" class="btn btn-outline-primary">
                             <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i> Shop
                             Sarees
                         </a>

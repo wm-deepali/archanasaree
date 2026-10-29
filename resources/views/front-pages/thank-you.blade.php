@@ -90,7 +90,7 @@
                 Order
               </a>
               <a
-                href="product-listing.html"
+                href="{{ route('products') }}"
                 id="shopBtn"
                 class="btn btn-outline-primary"
               >

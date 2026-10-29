@@ -10,7 +10,7 @@
       <section class="blog-secA">
         <div class="container">
           <ul class="crumb">
-            <li><a href="index.html">Home</a></li>
+            <li><a href="{{ route('home') }}">Home</a></li>
             <li><i class="fa-solid fa-chevron-right"></i></li>
             <li class="current">Blog</li>
           </ul>
@@ -368,10 +368,10 @@
               </p>
             </div>
             <div class="help-btns">
-              <a href="product-listing.html" class="btn btn-primary"
+              <a href="{{ route('products') }}" class="btn btn-primary"
                 >Shop Sarees</a
               >
-              <a href="category-listing.html" class="btn btn-outline-primary"
+              <a href="{{ route('categories') }}" class="btn btn-outline-primary"
                 >Explore Collections <i class="fa-solid fa-arrow-right-long"></i
               ></a>
             </div>

@@ -1272,7 +1272,7 @@
                                 <td style="padding:6px 10px;color:var(--text-hint)">Product A</td>
                                 <td style="padding:6px 10px;color:var(--text-hint)">SKU-001</td>
                                 <td style="padding:6px 10px;color:var(--text-hint)">CODE-001</td>
-                                <td style="padding:6px 10px;color:var(--text-hint)">Electronics</td>
+                                <td style="padding:6px 10px;color:var(--text-hint)">Sarres</td>
                                 <td
                                     style="padding:6px 10px;color:var(--accent);font-weight:700;background:var(--accent-light)">
                                     50</td>

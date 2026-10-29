@@ -100,7 +100,7 @@ class ProductImport implements ToCollection, WithHeadingRow
             | Excel Column:
             | categories
             | Example:
-            | Corporate Gifts, Electronics
+            | Corporate Gifts, Sarres
             */
 
             if (!empty($row['categories'])) {

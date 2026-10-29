@@ -9,6 +9,15 @@ class Product extends Model
 {
     use SoftDeletes;
 
+    public const SORT_OPTIONS = [
+        'recommended' => 'Recommended',
+        'newest' => 'New Arrivals',
+        'sold' => 'Best Selling',
+        'low' => 'Price: Low to High',
+        'high' => 'Price: High to Low',
+        'rating' => 'Customer Rating',
+    ];
+
     protected $fillable = [
 
         'category_id',
@@ -170,6 +179,39 @@ class Product extends Model
     public function keywords()
     {
         return $this->hasMany(ProductKeyword::class);
+    }
+
+    // card ke liye jo relations aur rating chahiye, ek jagah
+    public function scopeForCard($query)
+    {
+        return $query->with(['images', 'collections:id,name', 'category:id,name', 'subcategory:id,name'])
+            ->withAvg('approvedReviews as avg_rating', 'rating');
+    }
+
+    // recently viewed: product detail page se call hoga
+    public static function trackView(int $id, int $limit = 10): void
+    {
+        $ids = array_values(array_diff(session('recently_viewed', []), [$id]));
+        array_unshift($ids, $id);
+        session(['recently_viewed' => array_slice($ids, 0, $limit)]);
+    }
+
+    public function scopeOrderForListing($query, ?string $sort)
+    {
+        switch ($sort) {
+            case 'low':
+                return $query->orderBy('price');
+            case 'high':
+                return $query->orderByDesc('price');
+            case 'rating':
+                return $query->orderByDesc('avg_rating');
+            case 'sold':
+                return $query->withSum('orderDetails as sold_qty', 'quantity')->orderByDesc('sold_qty');
+            case 'newest':
+                return $query->orderByDesc('created_at');
+            default:
+                return $query->orderByDesc('id'); // recommended
+        }
     }
 
 }

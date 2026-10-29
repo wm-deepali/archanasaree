@@ -484,7 +484,7 @@ class StockManagementController extends Controller
 
             fputcsv($handle, ['ID', 'Product Name', 'SKU', 'Product Code', 'Category', 'Stock', 'Min Qty']);
 
-            fputcsv($handle, [1, 'Example Product A', 'SKU-00001', 'CODE-001', 'Electronics', 50, 5]);
+            fputcsv($handle, [1, 'Example Product A', 'SKU-00001', 'CODE-001', 'Sarres', 50, 5]);
             fputcsv($handle, [2, 'Example Product B', 'SKU-00002', 'CODE-002', 'Clothing', 100, 10]);
             fputcsv($handle, [99, 'Example Product C', 'SKU-00099', 'CODE-099', 'Footwear', 0, 3]);
 

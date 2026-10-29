@@ -71,11 +71,13 @@ Route::middleware('maintenance.mode')->group(function () {
 
     Route::controller(FrontController::class)->group(function () {
         Route::get('/', 'home')->name('home');
-        Route::view('/categories', 'front-pages.categories')->name('categories');
+        Route::get('/categories', 'categories')->name('categories');
+        Route::get('/category/{slug}', 'categoryShow')->name('category.show');
+        Route::get('/products', 'products')->name('products');
+        Route::view('/product-detail', 'front-pages.product-detail')->name('products.show');
+
         Route::view('/cart', 'front-pages.cart')->name('cart');
         Route::view('/checkout', 'front-pages.checkout')->name('checkout');
-        Route::view('/product-detail', 'front-pages.product-detail')->name('products.show');
-        Route::view('/products', 'front-pages.product-listing')->name('products');
         Route::view('/thank-you', 'front-pages.thank-you')->name('thank-you');
         Route::view('/payment', 'front-pages.payment')->name('payment');
         Route::view('/about', 'front-pages.about')->name('about');
@@ -155,7 +157,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('other-enquiries/export', [OtherEnquiryController::class, 'export'])->name('other-enquiries.export');
         Route::delete('other-enquiries/bulk-delete', [OtherEnquiryController::class, 'bulkDelete'])->name('other-enquiries.bulk-delete');
         Route::resource('other-enquiries', OtherEnquiryController::class);
-        
+
         Route::resource('coupon-enquiries', CouponEnquiryController::class);
         Route::delete('coupon-enquiries/bulk-delete', [CouponEnquiryController::class, 'bulkDelete'])->name('coupon-enquiries.bulk-delete');
         Route::get('coupon-enquiries-export', [CouponEnquiryController::class, 'export'])->name('coupon-enquiries.export');

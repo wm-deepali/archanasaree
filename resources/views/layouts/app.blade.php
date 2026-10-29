@@ -24,14 +24,14 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
   <!-- ================= Project CSS ================= -->
-  <link rel="stylesheet" href="assets/font/font.css" />
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="stylesheet" href="assets/sass/header/header.css" />
-  <link rel="stylesheet" href="assets/sass/footer/footer.css" />
-  <link rel="stylesheet" href="assets/sass/home/home.css" />
+  <link rel="stylesheet" href="{{ asset('assets/font/font.css')}}" />
+  <link rel="stylesheet" href="{{ asset('assets/css/style.css')}}" />
+  <link rel="stylesheet" href="{{ asset('assets/sass/header/header.css')}}" />
+  <link rel="stylesheet" href="{{ asset('assets/sass/footer/footer.css')}}" />
+  <link rel="stylesheet" href="{{ asset('assets/sass/home/home.css')}}" />
   <!-- ================= Animation / Popup CSS ================= -->
-  <link rel="stylesheet" href="assets/css/animate.css" />
-  <link rel="stylesheet" href="assets/css/fancybox.css" />
+  <link rel="stylesheet" href="{{ asset('assets/css/animate.css')}}" />
+  <link rel="stylesheet" href="{{ asset('assets/css/fancybox.css')}}" />
 
   @stack('styles')
 </head>
@@ -75,13 +75,29 @@
             </div>
           </div>
 
-          <a href="javascript:void(0)" class="ann-right">
-            Explore New Arrivals
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 12h18M15 6l6 6-6 6" />
-            </svg>
-          </a>
+          <!-- ===== NEW: Social media icons (ann-right ki jagah) ===== -->
+          <ul class="ann-social">
+            <li>
+              <a href="javascript:void(0)" aria-label="Facebook" title="Facebook"><i
+                  class="fa-brands fa-facebook-f"></i></a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" aria-label="Instagram" title="Instagram"><i
+                  class="fa-brands fa-instagram"></i></a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" aria-label="Pinterest" title="Pinterest"><i
+                  class="fa-brands fa-pinterest-p"></i></a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" aria-label="WhatsApp" title="WhatsApp"><i
+                  class="fa-brands fa-whatsapp"></i></a>
+            </li>
+          </ul>
+          <!-- ===== /Social media icons ===== -->
         </div>
       </div>
     </div>
@@ -95,14 +111,14 @@
               <path d="M3 6h18M3 12h18M3 18h18" />
             </svg>
           </button>
-          <a href="index.html" class="logo">
-            <img src="assets/images/logo.png" alt="Archana Saree Emporium" title="Archana Saree Emporium" />
+          <a href="{{ route('home') }}" class="logo">
+            <img src="{{ asset('assets/images/logo.png')}}" alt="Archana Saree Emporium" title="Archana Saree Emporium" />
           </a>
         </div>
 
         <div class="colB">
           <ul class="menu-list">
-            <li class="active"><a href="index.html">Home</a></li>
+            <li class="active"><a href="{{ route('home') }}">Home</a></li>
 
             <li class="hasMega">
               <a href="category-listing.html">
@@ -129,7 +145,7 @@
                     </ul>
                   </div>
                   <a href="category-listing.html" class="mega-feature">
-                    <img src="assets/images/home/cat1.png" alt="The Saree Edit" loading="lazy" />
+                    <img src="{{ asset('assets/images/home/cat1.png')}}" alt="The Saree Edit" loading="lazy" />
                     <span class="feature-text">
                       <span class="feature-label">The Saree Edit</span>
                       <span class="feature-desc">Timeless drapes for every celebration.</span>
@@ -186,7 +202,7 @@
                     </ul>
                   </div>
                   <a href="category-listing.html" class="mega-feature">
-                    <img src="assets/images/home/cat2.png" alt="The Lehenga Edit" loading="lazy" />
+                    <img src="{{ asset('assets/images/home/cat2.png')}}" alt="The Lehenga Edit" loading="lazy" />
                     <span class="feature-text">
                       <span class="feature-label">The Lehenga Edit</span>
                       <span class="feature-desc">Statement silhouettes for every celebration.</span>
@@ -202,8 +218,6 @@
                 </div>
               </div>
             </li>
-
-            <li><a href="category-listing.html">Suits</a></li>
 
             <li class="hasMega">
               <a href="category-listing.html">
@@ -247,7 +261,7 @@
                     </ul>
                   </div>
                   <a href="category-listing.html" class="mega-feature">
-                    <img src="assets/images/home/cat3.png" alt="The Bridal Edit" loading="lazy" />
+                    <img src="{{ asset('assets/images/home/cat3.png')}}" alt="The Bridal Edit" loading="lazy" />
                     <span class="feature-text">
                       <span class="feature-label">The Bridal Edit</span>
                       <span class="feature-desc">Heirloom pieces for your most special day.</span>
@@ -263,6 +277,107 @@
                 </div>
               </div>
             </li>
+
+            <!-- ===== Shop by Collection (Mega Menu, no image) ===== -->
+            <li class="hasMega">
+              <a href="category-listing.html">
+                Shop by Collection
+                <svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </a>
+              <div class="mega-menu mega-collection">
+                <div class="mega-collection-inner">
+                  <div class="mega-col">
+                    <h4>Shop by Fabrics</h4>
+                    <ul>
+                      <li><a href="product-listing.html">Mul Chanderi</a></li>
+                      <li>
+                        <a href="product-listing.html">Viscose Georgette</a>
+                      </li>
+                      <li><a href="product-listing.html">Cotton</a></li>
+                      <li><a href="product-listing.html">Pure Organza</a></li>
+                      <li><a href="product-listing.html">Linen</a></li>
+                      <li><a href="product-listing.html">Kota</a></li>
+                      <li>
+                        <a href="product-listing.html">Pure Georgette</a>
+                      </li>
+                      <li><a href="product-listing.html">Silk</a></li>
+                      <li><a href="product-listing.html">Tissue</a></li>
+                      <li><a href="product-listing.html">Chanderi</a></li>
+                    </ul>
+                  </div>
+
+                  <div class="mega-col">
+                    <h4>Shop by Color</h4>
+                    <ul>
+                      <li><a href="product-listing.html">Red</a></li>
+                      <li><a href="product-listing.html">Blue</a></li>
+                      <li><a href="product-listing.html">Green</a></li>
+                      <li><a href="product-listing.html">Yellow</a></li>
+                      <li><a href="product-listing.html">Black</a></li>
+                      <li><a href="product-listing.html">White</a></li>
+                      <li><a href="product-listing.html">Pink</a></li>
+                      <li><a href="product-listing.html">Brown</a></li>
+                      <li><a href="product-listing.html">Orange</a></li>
+                      <li><a href="product-listing.html">Purple</a></li>
+                    </ul>
+                  </div>
+
+                  <div class="mega-col">
+                    <h4>Shop by Collections</h4>
+                    <ul>
+                      <li><a href="product-listing.html">New Arrival</a></li>
+                      <li><a href="product-listing.html">Best Sellers</a></li>
+                      <li><a href="product-listing.html">Premium Wear</a></li>
+                      <li>
+                        <a href="product-listing.html">Exclusive Collection</a>
+                      </li>
+                      <li><a href="product-listing.html">Festive Sale</a></li>
+                    </ul>
+                  </div>
+
+                  <div class="mega-col">
+                    <h4>Price Range</h4>
+                    <ul>
+                      <li><a href="product-listing.html">Under ₹2,999</a></li>
+                      <li>
+                        <a href="product-listing.html">₹3,000 - ₹5,999</a>
+                      </li>
+                      <li>
+                        <a href="product-listing.html">₹6,000 - ₹9,999</a>
+                      </li>
+                      <li>
+                        <a href="product-listing.html">₹10,000 - ₹14,999</a>
+                      </li>
+                      <li>
+                        <a href="product-listing.html">₹15,000 and Above</a>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div class="mega-col">
+                    <h4>Shop by Occasions</h4>
+                    <ul>
+                      <li>
+                        <a href="product-listing.html">Elegant Ethnic Wear</a>
+                      </li>
+                      <li>
+                        <a href="product-listing.html">Office/Everyday Wear</a>
+                      </li>
+                      <li>
+                        <a href="product-listing.html">Indo-Western Collection</a>
+                      </li>
+                      <li>
+                        <a href="product-listing.html">Festive/Occasion Wear</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <!-- ===== /Shop by Collection ===== -->
 
             <li><a href="category-listing.html">New Arrivals</a></li>
             <li><a href="category-listing.html">Offers</a></li>
@@ -287,7 +402,7 @@
                 <ul class="res-list">
                   <li data-name="kanjivaram pure silk saree silk">
                     <a href="product-detail.html">
-                      <img src="assets/images/home/tab1.png" alt="Kanjivaram Pure Silk Saree" />
+                      <img src="{{ asset('assets/images/home/tab1.png')}}" alt="Kanjivaram Pure Silk Saree" />
                       <span class="res-text">
                         <b>Kanjivaram Pure Silk Saree</b>
                         <small>Silk Saree</small>
@@ -297,7 +412,7 @@
                   </li>
                   <li data-name="banarasi zari woven silk saree banarsi">
                     <a href="product-detail.html">
-                      <img src="assets/images/home/tab2.png" alt="Banarasi Zari Woven Silk Saree" />
+                      <img src="{{ asset('assets/images/home/tab2.png')}}" alt="Banarasi Zari Woven Silk Saree" />
                       <span class="res-text">
                         <b>Banarasi Zari Woven Silk Saree</b>
                         <small>Banarasi Saree</small>
@@ -307,7 +422,7 @@
                   </li>
                   <li data-name="organza floral embroidered saree">
                     <a href="product-detail.html">
-                      <img src="assets/images/home/tab3.png" alt="Organza Floral Embroidered Saree" />
+                      <img src="{{ asset('assets/images/home/tab3.png')}}" alt="Organza Floral Embroidered Saree" />
                       <span class="res-text">
                         <b>Organza Floral Embroidered Saree</b>
                         <small>Organza Saree</small>
@@ -317,7 +432,7 @@
                   </li>
                   <li data-name="velvet bridal lehenga">
                     <a href="product-detail.html">
-                      <img src="assets/images/home/tab2.png" alt="Velvet Bridal Lehenga" />
+                      <img src="{{ asset('assets/images/home/tab2.png')}}" alt="Velvet Bridal Lehenga" />
                       <span class="res-text">
                         <b>Velvet Bridal Lehenga</b>
                         <small>Bridal Lehenga</small>
@@ -327,7 +442,7 @@
                   </li>
                   <li data-name="sequined reception lehenga party">
                     <a href="product-detail.html">
-                      <img src="assets/images/home/tab3.png" alt="Sequined Reception Lehenga" />
+                      <img src="{{ asset('assets/images/home/tab3.png')}}" alt="Sequined Reception Lehenga" />
                       <span class="res-text">
                         <b>Sequined Reception Lehenga</b>
                         <small>Party Lehenga</small>
@@ -337,7 +452,7 @@
                   </li>
                   <li data-name="pastel organza lehenga">
                     <a href="product-detail.html">
-                      <img src="assets/images/home/tab4.png" alt="Pastel Organza Lehenga" />
+                      <img src="{{ asset('assets/images/home/tab4.png')}}" alt="Pastel Organza Lehenga" />
                       <span class="res-text">
                         <b>Pastel Organza Lehenga</b>
                         <small>Organza Lehenga</small>
@@ -457,7 +572,7 @@
       <div class="footer-middle">
         <div class="container">
           <div class="colA">
-            <a href="index.html" class="logo"><img src="assets/images/logo.png" alt="Archana Saree Emporium" /></a>
+            <a href="{{ route('home') }}" class="logo"><img src="{{ asset('assets/images/logo.png')}}" alt="Archana Saree Emporium" /></a>
             <span class="brand-tag">Premium Sarees · Designer Lehengas · Bridal Wear</span>
             <p class="brand-desc">
               Timeless Indian elegance, thoughtfully curated for every
@@ -485,39 +600,43 @@
           <div class="colB">
             <h5>Shop</h5>
             <ul>
-              <li><a href="javascript:void()">Sarees</a></li>
-              <li><a href="javascript:void()">Lehengas</a></li>
-              <li><a href="javascript:void()">Bridal Wear</a></li>
-              <li><a href="javascript:void()">New Arrivals</a></li>
-              <li><a href="javascript:void()">Bestsellers</a></li>
-              <li><a href="javascript:void()">Collections</a></li>
-              <li><a href="javascript:void()">Offers</a></li>
+              <li><a href="category-listing.html">Sarees</a></li>
+              <li><a href="category-listing.html">Lehengas</a></li>
+              <li><a href="category-listing.html">Bridal Wear</a></li>
+              <li><a href="category-listing.html">New Arrivals</a></li>
+              <li><a href="product-listing.html">Bestsellers</a></li>
+              <li><a href="category-listing.html">Collections</a></li>
+              <li><a href="category-listing.html">Offers</a></li>
             </ul>
           </div>
 
           <div class="colC">
             <h5>Customer Care</h5>
             <ul>
-              <li><a href="javascript:void()">Contact Us</a></li>
-              <li><a href="javascript:void()">My Account</a></li>
-              <li><a href="javascript:void()">My Orders</a></li>
-              <li><a href="javascript:void()">Wishlist</a></li>
-              <li><a href="javascript:void()">Shipping Information</a></li>
-              <li><a href="javascript:void()">Returns &amp; Exchange</a></li>
-              <li><a href="javascript:void()">FAQs</a></li>
+              <li><a href="contact.html">Contact Us</a></li>
+              <li><a href="javascript:void(0)">My Account</a></li>
+              <li><a href="javascript:void(0)">My Orders</a></li>
+              <li><a href="javascript:void(0)">Wishlist</a></li>
+              <li><a href="shipping-policy.html">Shipping Information</a></li>
+              <li>
+                <a href="returns-exchange.html">Returns &amp; Exchange</a>
+              </li>
+              <li><a href="faqs.html">FAQs</a></li>
             </ul>
           </div>
 
           <div class="colD">
             <h5>Information</h5>
             <ul>
-              <li><a href="javascript:void()">About Us</a></li>
-              <li><a href="javascript:void()">Our Story</a></li>
-              <li><a href="javascript:void()">Privacy Policy</a></li>
-              <li><a href="javascript:void()">Terms &amp; Conditions</a></li>
-              <li><a href="javascript:void()">Shipping Policy</a></li>
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="blogs.html">Blogs</a></li>
+              <li><a href="privacy-policy.html">Privacy Policy</a></li>
               <li>
-                <a href="javascript:void()">Refund &amp; Cancellation Policy</a>
+                <a href="terms-conditions.html">Terms &amp; Conditions</a>
+              </li>
+              <li><a href="shipping-policy.html">Shipping Policy</a></li>
+              <li>
+                <a href="refund-cancellation-policy.html">Refund &amp; Cancellation Policy</a>
               </li>
             </ul>
           </div>
@@ -529,8 +648,7 @@
               Get in touch with our team for assistance with products, orders
               and more.
             </p>
-            <a href="javascript:void()" class="btn btn-white">Contact Us <i
-                class="fa-solid fa-arrow-right-long"></i></a>
+            <a href="contact.html" class="btn btn-white">Contact Us <i class="fa-solid fa-arrow-right-long"></i></a>
           </div>
         </div>
       </div>
@@ -541,21 +659,25 @@
             &copy; 2026 Archana Saree Emporium. All Rights Reserved.
           </p>
           <ul class="legal">
-            <li><a href="javascript:void()">Privacy Policy</a></li>
-            <li><a href="javascript:void()">Terms &amp; Conditions</a></li>
-            <li><a href="javascript:void()">Shipping Policy</a></li>
-            <li><a href="javascript:void()">Returns &amp; Exchange</a></li>
+            <li><a href="privacy-policy.html">Privacy Policy</a></li>
+            <li>
+              <a href="terms-conditions.html">Terms &amp; Conditions</a>
+            </li>
+            <li><a href="shipping-policy.html">Shipping Policy</a></li>
+            <li>
+              <a href="returns-exchange.html">Returns &amp; Exchange</a>
+            </li>
           </ul>
           <p class="credit">
             Design &amp; Developed by
-            <a href="javascript:void()" target="_blank" rel="noopener">Web Mingo</a>.
+            <a href="javascript:void(0)" target="_blank" rel="noopener">Web Mingo</a>.
           </p>
         </div>
       </div>
     </div>
 
     <nav class="float-menu" aria-label="Quick navigation">
-      <a href="index.html" class="float-link active"><i class="fa-solid fa-house"></i><span>Home</span></a>
+      <a href="{{ route('home') }}" class="float-link active"><i class="fa-solid fa-house"></i><span>Home</span></a>
       <button type="button" class="float-link" data-model=".ham-pop" aria-label="Menu">
         <i class="fa-solid fa-bars"></i><span>Menu</span>
       </button>
@@ -566,7 +688,6 @@
       <a href="login.html" class="float-link"><i class="fa-regular fa-user"></i><span>Account</span></a>
     </nav>
   </footer>
-
   <!-- start-models -->
   <div class="model cart-pop">
     <button class="close" type="button">
@@ -584,7 +705,7 @@
       <ul class="cp-list">
         <li class="cp-item">
           <a class="cp-img" href="javascript:void(0);">
-            <img src="assets/images/home/tab1.png" alt="Zari Woven Banarasi Silk Saree" width="96" height="128"
+            <img src="{{ asset('assets/images/home/tab1.png')}}" alt="Zari Woven Banarasi Silk Saree" width="96" height="128"
               loading="lazy" />
           </a>
           <div class="cp-info">
@@ -616,7 +737,7 @@
 
         <li class="cp-item">
           <a class="cp-img" href="javascript:void(0);">
-            <img src="assets/images/home/tab2.png" alt="Organza Embroidered Party Saree" width="96" height="128"
+            <img src="{{ asset('assets/images/home/tab2.png')}}" alt="Organza Embroidered Party Saree" width="96" height="128"
               loading="lazy" />
           </a>
           <div class="cp-info">
@@ -648,7 +769,7 @@
 
         <li class="cp-item">
           <a class="cp-img" href="javascript:void(0);">
-            <img src="assets/images/home/tab4.png" alt="Georgette Printed Saree" width="96" height="128"
+            <img src="{{ asset('assets/images/home/tab4.png')}}" alt="Georgette Printed Saree" width="96" height="128"
               loading="lazy" />
           </a>
           <div class="cp-info">
@@ -715,7 +836,7 @@
 
     <div class="model-body">
       <a href="javascript:void(0);" class="pop-logo" aria-label="Archana Saree Emporium Home">
-        <img src="assets/images/logo.png" alt="" />
+        <img src="{{ asset('assets/images/logo.png')}}" alt="" />
       </a>
 
       <div class="pop-title">
@@ -841,7 +962,6 @@
       </div>
     </div>
   </div>
-  <div class="overlay"></div>
 
   <!-- ================= jQuery ================= -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
@@ -860,10 +980,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script>
 
   <!-- ================= Project JS ================= -->
-  <script type="text/javascript" src="assets/js/animate.js"></script>
-  <script type="text/javascript" src="assets/js/fancybox.js"></script>
-  <script type="text/javascript" src="assets/js/function.js"></script>
-  <script type="text/javascript" src="assets/js/main.js"></script>
+  <script type="text/javascript" src="{{ asset('assets/js/animate.js')}}"></script>
+  <script type="text/javascript" src="{{ asset('assets/js/fancybox.js')}}"></script>
+  <script type="text/javascript" src="{{ asset('assets/js/function.js')}}"></script>
+  <script type="text/javascript" src="{{ asset('assets/js/main.js')}}"></script>
 
   <script>
     new Swiper(".announce-swiper", {
