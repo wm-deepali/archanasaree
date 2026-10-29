@@ -23,11 +23,9 @@ return new class extends Migration {
 
             $table->decimal('discount_value', 10, 2);
 
-            $table->decimal('minimum_order_amount', 10, 2)
-                ->nullable();
-
-            $table->decimal('maximum_discount', 10, 2)
-                ->nullable();
+            $table->decimal('minimum_order_amount', 10, 2)->nullable();
+            $table->decimal('maximum_discount', 10, 2)->nullable();
+            $table->unsignedInteger('minimum_order_quantity')->nullable();
 
             $table->date('start_date');
 

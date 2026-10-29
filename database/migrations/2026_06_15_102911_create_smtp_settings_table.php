@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('smtp_settings', function (Blueprint $table) {
@@ -32,9 +31,14 @@ return new class extends Migration
             $table->boolean('order_confirmation')->default(true);
             $table->boolean('order_shipped')->default(true);
             $table->boolean('order_delivered')->default(true);
+            $table->boolean('order_cancelled')->default(true);
+            $table->boolean('payment_received')->default(true);
+            $table->boolean('coupon')->default(false);
+            $table->boolean('welcome')->default(true);
             $table->boolean('password_reset')->default(true);
             $table->boolean('new_order_alert')->default(true);
             $table->boolean('low_stock_alert')->default(false);
+
 
             $table->timestamps();
         });

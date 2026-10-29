@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('settings', function (Blueprint $table) {
@@ -15,7 +14,10 @@ return new class extends Migration
             // Site Identity
             $table->string('site_name')->nullable();
             $table->string('tagline')->nullable();
-            $table->string('logo')->nullable();
+            $table->string('header_logo')->nullable();
+            $table->string('footer_logo')->nullable();
+            $table->string('admin_login_logo')->nullable();
+            $table->string('admin_dashboard_logo')->nullable();
             $table->string('favicon')->nullable();
 
             // Contact
@@ -49,6 +51,7 @@ return new class extends Migration
             $table->boolean('product_reviews')->default(true);
             $table->boolean('wishlist')->default(true);
             $table->boolean('stock_alerts')->default(false);
+            $table->boolean('cod_enabled')->default(1);
 
             $table->timestamps();
         });

@@ -23,10 +23,27 @@ return new class extends Migration {
                 ->constrained()
                 ->nullOnDelete();
 
-            $table->foreignId('variant_id')
+            $table->foreignId('price_variant_id')
                 ->nullable()
                 ->constrained('product_variants')
                 ->nullOnDelete();
+
+            $table->foreignId('image_variant_id')
+                ->nullable()
+                ->constrained('product_variants')
+                ->nullOnDelete();
+
+            $table->foreignId('stock_variant_id')
+                ->nullable()
+                ->constrained('product_variants')
+                ->nullOnDelete();
+
+            $table->foreignId('sku_variant_id')
+                ->nullable()
+                ->constrained('product_variants')
+                ->nullOnDelete();
+
+            $table->json('selected_attributes')->nullable();
 
             // Snapshot
             $table->string('product_name');

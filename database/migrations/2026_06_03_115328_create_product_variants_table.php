@@ -18,6 +18,9 @@ return new class extends Migration {
                 ->constrained()
                 ->cascadeOnDelete();
 
+            $table->string('type')->default('price');
+            $table->boolean('is_available')->default(1);
+
             $table->string('sku')->nullable();
 
             $table->decimal('mrp', 12, 2)->default(0);
@@ -34,7 +37,6 @@ return new class extends Migration {
             $table->integer('stock')->default(0);
 
             $table->string('image')->nullable();
-
             $table->boolean('status')->default(true);
 
             $table->timestamps();

@@ -305,10 +305,7 @@ $(function () {
         slidesPerView: 3,
         spaceBetween: 20,
       },
-      1280: {
-        slidesPerView: 4,
-        spaceBetween: 20,
-      },
+    
     },
   });
 
@@ -542,3 +539,44 @@ $(function () {
     $box.addClass("show")
   })
 })
+function runCount($el) {
+  var end = parseFloat($el.attr("data-num")) || 0;
+  var icon = $el.attr("data-num-icon") || "";
+
+  $({ n: 0 }).animate(
+    { n: end },
+    {
+      duration: 2000,
+      easing: "swing",
+      step: function (now) {
+        $el.text(Math.floor(now).toLocaleString("en-IN") + icon);
+      },
+      complete: function () {
+        $el.text(end.toLocaleString("en-IN") + icon);
+      },
+    },
+  );
+}
+
+if ("IntersectionObserver" in window) {
+  var countObserver = new IntersectionObserver(
+    function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          runCount($(entry.target));
+          countObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.5 },
+  );
+
+  $(".countNum").each(function () {
+    countObserver.observe(this);
+  });
+} else {
+  $(".countNum").each(function () {
+    runCount($(this));
+  });
+}
+

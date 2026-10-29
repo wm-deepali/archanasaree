@@ -29,9 +29,9 @@ html
   --white: #ffffff
   --black: #1c1210
   --border: rgba(255, 255, 255, 0.08)
-  --gray: #f4f4f4
+  --gray: #8d8d8d3b
   --bg: #faf6ee
-  --dark-gray: #e7e7e5
+  --dark-gray: #f4f4f4
   --gradient-a: linear-gradient(135deg, var(--primary) 0%, #1c1210 130%)
   --gradient-b: linear-gradient(174deg, #ffffff 25%, #e6cf94 130%)
   --container: 1280px
@@ -195,7 +195,7 @@ button, label,input
 h1
     font-family: $Kugile
     font-weight: 600
-    font-size: 45px
+    font-size: 44px
     text-transform: uppercase
     line-height: 1.2
     // text-transform: uppercase
@@ -1435,7 +1435,7 @@ $btn-transition: .3s ease
     position: relative
     overflow: hidden
     aspect-ratio: 3 / 4
-    background: var(--gray)
+    background: var(--dark-gray)
 
     // light shine that sweeps across on hover
     &::before
@@ -1654,3 +1654,5 @@ $btn-transition: .3s ease
             transform: rotate(180deg)
     @include media(991)
         display: none !important
+.crumb
+    display: none

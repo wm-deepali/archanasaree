@@ -78,6 +78,13 @@ Route::middleware('maintenance.mode')->group(function () {
         Route::view('/products', 'front-pages.product-listing')->name('products');
         Route::view('/thank-you', 'front-pages.thank-you')->name('thank-you');
         Route::view('/payment', 'front-pages.payment')->name('payment');
+        Route::view('/about', 'front-pages.about')->name('about');
+        Route::view('/blog-detail', 'front-pages.blog-detail')->name('blog.show');
+        Route::view('/blogs', 'front-pages.blogs')->name('blogs');
+        Route::view('/contact', 'front-pages.contact')->name('contact');
+        Route::view('/faqs', 'front-pages.faqs')->name('faqs');
+        Route::view('/privacy-policy', 'front-pages.privacy-policy')->name('blog.show');
+
     });
 
 });

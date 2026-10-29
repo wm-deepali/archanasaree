@@ -36,6 +36,10 @@ return new class extends Migration {
             $table->longText('description')->nullable();
 
             $table->longText('delivery_returns')->nullable();
+            $table->longText('fabric_care')->nullable();
+            $table->longText('shipping_delivery')->nullable();
+            $table->longText('exchange_policy')->nullable();
+            $table->longText('customization_assistance')->nullable();
 
             $table->decimal('mrp', 12, 2)->default(0);
 

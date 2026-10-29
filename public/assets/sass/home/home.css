@@ -548,7 +548,7 @@
   height: 100%;
   padding: 12px 12px 0;
   background: var(--white);
-  border: 1px solid var(--gray);
+  border: 1px solid var(--dark-gray);
   border-radius: 999px 999px 0 0;
   color: var(--black);
   transition: all 0.5s ease;
@@ -569,7 +569,7 @@
   flex-shrink: 0;
   aspect-ratio: 3/3.7;
   border-radius: 999px 999px 0 0;
-  background: var(--gray);
+  background: var(--dark-gray);
 }
 .home-secA .cat-card .cat-img img, .home-secF .cat-card .cat-img img {
   width: 100%;
@@ -737,7 +737,7 @@
   margin: 0 0 34px;
   padding: 0;
   list-style: none;
-  border-bottom: 1px solid var(--gray);
+  border-bottom: 1px solid var(--dark-gray);
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -912,7 +912,7 @@
   overflow: hidden;
   aspect-ratio: 4/5.4;
   border-radius: 999px 999px 0 0;
-  background: var(--gray);
+  background: var(--dark-gray);
 }
 .home-secC .edit-visual .edit-photo img {
   width: 100%;
@@ -1314,7 +1314,7 @@
   overflow: hidden;
   width: 100%;
   aspect-ratio: 3/4.3;
-  background: var(--gray);
+  background: var(--dark-gray);
   color: var(--white);
 }
 @media only screen and (max-width: 768px) {
@@ -1566,7 +1566,7 @@
   flex: 1;
   width: auto;
   height: 2px;
-  background: var(--gray);
+  background: var(--dark-gray);
 }
 .home-secD .slider-foot .swiper-pagination.sliderProgress .swiper-pagination-progressbar-fill {
   background: var(--primary);
@@ -1994,7 +1994,7 @@
   overflow: hidden;
   aspect-ratio: 3/4.2;
   border-radius: 999px 999px 0 0;
-  background: var(--gray);
+  background: var(--dark-gray);
   box-shadow: rgba(0, 0, 0, 0.45) 0 30px 60px;
 }
 .home-secE .camp-visual .camp-photo img {
@@ -2069,7 +2069,7 @@
   position: relative;
   overflow: hidden;
   min-height: 560px;
-  background: var(--gray);
+  background: var(--dark-gray);
 }
 @media only screen and (max-width: 1280px) {
   .home-secG .bridal-img {
@@ -2269,7 +2269,7 @@
   margin: 0;
   padding: 22px 0 0;
   list-style: none;
-  border-top: 1px solid var(--gray);
+  border-top: 1px solid var(--dark-gray);
 }
 @media only screen and (max-width: 768px) {
   .home-secG .bridal-content .bridal-links {
@@ -2284,7 +2284,7 @@
 .home-secG .bridal-content .bridal-links li + li {
   margin-left: 18px;
   padding-left: 18px;
-  border-left: 1px solid var(--gray);
+  border-left: 1px solid var(--dark-gray);
 }
 @media only screen and (max-width: 1024px) {
   .home-secG .bridal-content .bridal-links li + li {
@@ -2341,7 +2341,7 @@
   display: block;
   overflow: hidden;
   aspect-ratio: 3/4;
-  background: var(--gray);
+  background: var(--dark-gray);
   color: var(--white);
 }
 .home-secH .brd-card img {
@@ -3050,7 +3050,7 @@
   overflow: hidden;
   min-height: 720px;
   border-radius: 999px 999px 0 0;
-  background: var(--gray);
+  background: var(--dark-gray);
 }
 @media only screen and (max-width: 1280px) {
   .home-secJ .feat-visual {
@@ -3157,7 +3157,7 @@
   position: relative;
   padding: 44px 44px 40px;
   background: var(--bg);
-  border: 1px solid var(--gray);
+  border: 1px solid var(--dark-gray);
 }
 @media only screen and (max-width: 1280px) {
   .home-secJ .feat-panel {
@@ -3324,7 +3324,7 @@
   margin: 0 0 36px;
   padding: 0;
   list-style: none;
-  border-bottom: 1px solid var(--gray);
+  border-bottom: 1px solid var(--dark-gray);
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -3563,7 +3563,7 @@
   width: 82%;
   aspect-ratio: 4/5;
   overflow: hidden;
-  background: var(--gray);
+  background: var(--dark-gray);
 }
 .home-secM .story-visual .story-main img {
   width: 100%;
@@ -3596,7 +3596,7 @@
   aspect-ratio: 1/1;
   overflow: hidden;
   border: 8px solid var(--white);
-  background: var(--gray);
+  background: var(--dark-gray);
 }
 @media only screen and (max-width: 768px) {
   .home-secM .story-visual .story-small {
@@ -3744,7 +3744,7 @@
   max-width: 820px;
   margin: 70px auto 0;
   padding: 30px 40px 30px 30px;
-  border: 1px solid var(--gray);
+  border: 1px solid var(--dark-gray);
 }
 @media only screen and (max-width: 1280px) {
   .home-secM .founder {
@@ -3788,7 +3788,7 @@
   aspect-ratio: 1/1.15;
   overflow: hidden;
   border-radius: 999px 999px 0 0;
-  background: var(--gray);
+  background: var(--dark-gray);
 }
 @media only screen and (max-width: 1024px) {
   .home-secM .founder .founder-photo {
@@ -4022,7 +4022,7 @@
   align-items: center;
   gap: 14px;
   padding-top: 20px;
-  border-top: 1px solid var(--gray);
+  border-top: 1px solid var(--dark-gray);
 }
 @media only screen and (max-width: 540px) {
   .home-secN .review-card .review-by {
@@ -4298,7 +4298,7 @@
 
 .home-secP {
   padding: 70px 0;
-  background: var(--gray);
+  background: var(--dark-gray);
 }
 @media only screen and (max-width: 1024px) {
   .home-secP {
@@ -4430,7 +4430,7 @@
   margin: 0 0 36px;
   padding: 24px 0 0;
   list-style: none;
-  border-top: 1px solid var(--gray);
+  border-top: 1px solid var(--dark-gray);
 }
 @media only screen and (max-width: 1024px) {
   .home-secP .collect-stats {
@@ -4519,7 +4519,7 @@
 .home-secP .collect-group {
   position: relative;
   padding-top: 26px;
-  border-top: 1px solid var(--gray);
+  border-top: 1px solid var(--dark-gray);
 }
 @media only screen and (max-width: 540px) {
   .home-secP .collect-group {
@@ -4651,7 +4651,7 @@
   gap: 8px;
   padding: 10px 18px;
   background: var(--white);
-  border: 1px solid var(--gray);
+  border: 1px solid var(--dark-gray);
   border-radius: 999px;
   color: var(--black);
   font-size: 14px;
@@ -4716,7 +4716,7 @@
   position: relative;
   overflow: hidden;
   aspect-ratio: 9/16;
-  background: var(--gray);
+  background: var(--dark-gray);
   color: var(--white);
   transition: transform 0.5s ease;
 }

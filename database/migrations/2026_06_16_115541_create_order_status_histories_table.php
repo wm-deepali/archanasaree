@@ -19,6 +19,8 @@ return new class extends Migration {
                 ->cascadeOnDelete();
 
             $table->string('status');
+            $table->string('previous_status')->nullable();
+            $table->string('triggered_by')->nullable();
 
             $table->text('remarks')->nullable();
 

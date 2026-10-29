@@ -16,6 +16,7 @@ return new class extends Migration
                   ->onDelete('cascade');
 
             $table->string('image');
+            $table->string('thumb')->nullable();
             $table->boolean('is_default')->default(0);
 
             $table->timestamps();

@@ -13,10 +13,12 @@ return new class extends Migration {
     {
         Schema::create('refund_transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_return_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('order_return_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('ndr_id')->nullable()->constrained('ndrs')->nullOnDelete();
             $table->foreignId('order_id')->constrained()->cascadeOnDelete();
             $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
 
+            $table->enum('status', ['completed', 'failed'])->default('completed');
             $table->enum('refund_method', ['neft_rtgs_imps', 'upi']);
             $table->string('upi_id')->nullable();
             $table->string('bank_name')->nullable();
@@ -28,6 +30,7 @@ return new class extends Migration {
             $table->string('utr_id');                    // UTR / Reference number
             $table->decimal('amount', 10, 2)->default(0);
             $table->text('remarks')->nullable();
+
             $table->string('payment_proof')->nullable(); // Storage path
 
             $table->timestamps();

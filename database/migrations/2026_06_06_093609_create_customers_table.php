@@ -18,6 +18,17 @@ return new class extends Migration {
 
             $table->string('mobile', 10)->unique();
             $table->string('alternate_mobile', 10);
+            $table->date('dob')->nullable();
+
+            $table->enum('gender', [
+                'male',
+                'female',
+                'other',
+                'prefer_not'
+            ])->nullable();
+
+            $table->string('google_id')->nullable();
+            $table->string('avatar')->nullable();
 
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('mobile_verified_at')->nullable();

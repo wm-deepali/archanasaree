@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('cart_items', function (Blueprint $table) {
@@ -20,10 +19,27 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
 
-            $table->foreignId('variant_id')
+            $table->foreignId('price_variant_id')
                 ->nullable()
                 ->constrained('product_variants')
                 ->nullOnDelete();
+
+            $table->foreignId('image_variant_id')
+                ->nullable()
+                ->constrained('product_variants')
+                ->nullOnDelete();
+
+            $table->foreignId('stock_variant_id')
+                ->nullable()
+                ->constrained('product_variants')
+                ->nullOnDelete();
+
+            $table->foreignId('sku_variant_id')
+                ->nullable()
+                ->constrained('product_variants')
+                ->nullOnDelete();
+
+            $table->json('selected_attributes')->nullable();
 
             $table->unsignedInteger('quantity');
 

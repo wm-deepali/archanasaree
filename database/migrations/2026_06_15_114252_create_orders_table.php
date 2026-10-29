@@ -85,8 +85,17 @@ return new class extends Migration {
                 'processing',
                 'shipped',
                 'delivered',
+                'ndr',
+                'rto',
                 'cancelled'
             ])->default('pending');
+
+            $table->string('tracking_number')->nullable();
+
+            $table->foreignId('courier_id')
+                ->nullable()
+                ->constrained('couriers')
+                ->nullOnDelete();
 
             $table->timestamps();
         });

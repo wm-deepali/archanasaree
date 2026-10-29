@@ -1,0 +1,1367 @@
+@import '../_var'
+
+@mixin ab-shine
+  &::before
+    content: ""
+    position: absolute
+    top: 0
+    left: -80%
+    z-index: 2
+    width: 45%
+    height: 100%
+    background: linear-gradient(100deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0) 100%)
+    transform: skewX(-18deg)
+    transition: left 0.9s ease
+    pointer-events: none
+
+.about-secA,
+.about-secB,
+.about-secC,
+.about-secD,
+.about-secF,
+.about-secG,
+.about-secH,
+.about-secI,
+.about-secJ,
+.about-secK,
+.about-secN
+  .eyebrow
+    display: block
+    margin-bottom: 14px
+    color: var(--primary)
+    font-family: $Poppins
+    font-size: 12px
+    font-weight: 600
+    text-transform: uppercase
+    letter-spacing: 0.25em
+
+    @include media(540)
+      font-size: 11px
+      letter-spacing: 0.2em
+
+.about-secB,
+.about-secC,
+.about-secD,
+.about-secF,
+.about-secG,
+.about-secH,
+.about-secI,
+.about-secJ,
+.about-secN
+  padding: 70px 0
+
+  @include media(1024)
+    padding: 60px 0
+
+  @include media(768)
+    padding: 55px 0
+
+  @include media(540)
+    padding: 50px 0
+
+.about-secA
+  padding: 60px 0 20px
+  background: var(--bg)
+
+  @include media(1024)
+    padding: 54px 0 20px
+
+  @include media(768)
+    padding: 50px 0 16px
+
+  @include media(540)
+    padding: 44px 0 10px
+
+  .crumb
+    display: flex
+    align-items: center
+    flex-wrap: wrap
+    gap: 10px
+    margin: 0 0 34px
+    padding: 0
+    list-style: none
+
+    @include media(768)
+      justify-content: center
+      margin-bottom: 28px
+
+    li
+      color: var(--black)
+      font-family: $Poppins
+      font-size: 12px
+      text-transform: uppercase
+      letter-spacing: 0.12em
+      opacity: 0.8
+
+      @include media(540)
+        font-size: 11px
+
+      a
+        color: var(--black)
+        transition: color 0.3s ease
+
+        &:hover
+          color: var(--primary)
+
+      &.current
+        color: var(--primary)
+        font-weight: 600
+        opacity: 1
+
+      i
+        font-size: 9px
+        opacity: 0.5
+
+  .ban-grid
+    display: grid
+    grid-template-columns: 7fr 4fr
+    gap: 70px
+    align-items: center
+
+    @include media(1280)
+      gap: 50px
+
+    @include media(1024)
+      gap: 36px
+
+    @include media(991)
+      grid-template-columns: 1fr
+      gap: 40px
+
+  .ban-content
+    min-width: 0
+
+    @include media(768)
+      text-align: center
+
+    .heading
+      margin-bottom: 20px
+
+      h1
+        margin: 0
+        font-size: 52px
+        line-height: 1.12
+
+        @include media(1280)
+          font-size: 46px
+
+        @include media(1024)
+          font-size: 40px
+
+        @include media(991)
+          font-size: 38px
+
+        @include media(768)
+          font-size: 34px
+
+        @include media(540)
+          font-size: 28px
+
+    .ban-desc
+      max-width: 560px
+      margin: 0 0 30px
+
+      @include media(768)
+        margin: 0 auto 26px
+
+    .ban-btns
+      display: flex
+      align-items: center
+      flex-wrap: wrap
+      gap: 16px
+
+      @include media(768)
+        justify-content: center
+        gap: 12px
+
+      @include media(540)
+        flex-direction: column
+        align-items: stretch
+
+      .btn
+        display: inline-flex
+        align-items: center
+        gap: 10px
+
+        @include media(540)
+          width: 100%
+          justify-content: center
+
+  .ban-visual
+    position: relative
+    padding: 0 18px 18px 0
+
+    @include media(991)
+      width: 100%
+      max-width: 360px
+      margin: 0 auto
+
+    @include media(540)
+      padding: 0 12px 12px 0
+
+    &::before
+      content: ""
+      position: absolute
+      top: 18px
+      left: 18px
+      right: 0
+      bottom: 0
+      border: 1px solid var(--primary)
+      border-radius: 999px 999px 0 0
+
+      @include media(540)
+        top: 12px
+        left: 12px
+
+    .ban-photo
+      position: relative
+      z-index: 1
+      overflow: hidden
+      aspect-ratio: 4 / 4.6
+      border-radius: 999px 999px 0 0
+      background: var(--dark-gray)
+
+      img
+        width: 100%
+        height: 100%
+        object-fit: cover
+        object-position: top center
+        display: block
+        transition: transform 1.4s ease
+
+      @include ct-shine
+
+    &:hover .ban-photo
+      img
+        transform: scale(1.05)
+
+      &::before
+        left: 130%
+
+    .ban-tag
+      position: absolute
+      left: 0
+      bottom: 40px
+      z-index: 2
+      padding: 11px 18px
+      background: var(--primary)
+      color: var(--white)
+      font-size: 11px
+      font-weight: 500
+      line-height: 1
+      text-transform: uppercase
+      letter-spacing: 0.2em
+
+      @include media(540)
+        bottom: 28px
+        padding: 9px 14px
+        font-size: 10px
+        letter-spacing: 0.14em
+
+.about-secC
+  background: var(--bg)
+
+  .who-grid
+    display: grid
+    grid-template-columns: 1fr 1.05fr
+    gap: 80px
+    align-items: center
+
+    @include media(1280)
+      gap: 50px
+
+    @include media(1024)
+      gap: 40px
+
+    @include media(991)
+      grid-template-columns: 1fr
+      gap: 44px
+
+    @include media(540)
+      gap: 36px
+
+  .who-content
+    min-width: 0
+
+    @include media(991)
+      order: 2
+
+    @include media(768)
+      text-align: center
+
+    .heading
+      margin-bottom: 20px
+
+    p
+      margin: 0 0 16px
+
+    .who-note
+      margin: 24px 0 30px
+      padding-left: 20px
+      border-left: 2px solid var(--secondary)
+      color: var(--black)
+      font-size: 17px
+      font-style: italic
+      line-height: 1.7
+
+      @include media(768)
+        padding: 0
+        border-left: 0
+
+      @include media(540)
+        margin: 20px 0 24px
+        font-size: 15px
+
+    .btn
+      @include media(540)
+        display: flex
+        width: 100%
+        justify-content: center
+
+      i
+        transition: transform 0.3s ease
+
+      &:hover i
+        transform: translateX(5px)
+
+  .who-visual
+    position: relative
+    padding: 0 0 60px
+
+    @include media(991)
+      order: 1
+      width: 100%
+      max-width: 560px
+      margin: 0 auto
+
+    @include media(768)
+      padding-bottom: 50px
+
+    @include media(540)
+      padding-bottom: 44px
+
+    .who-main
+      position: relative
+      width: 82%
+      margin-left: auto
+      overflow: hidden
+      aspect-ratio: 4 / 5
+      background: var(--dark-gray)
+
+      img
+        width: 100%
+        height: 100%
+        object-fit: cover
+        object-position: top center
+        display: block
+        transition: transform 1.4s ease
+
+      @include ab-shine
+
+    .who-small
+      position: absolute
+      left: 0
+      bottom: 0
+      z-index: 2
+      width: 46%
+      overflow: hidden
+      aspect-ratio: 1 / 1
+      border: 8px solid var(--bg)
+      background: var(--dark-gray)
+
+      @include media(540)
+        border-width: 6px
+
+      img
+        width: 100%
+        height: 100%
+        object-fit: cover
+        object-position: top center
+        display: block
+
+    &:hover .who-main
+      img
+        transform: scale(1.05)
+
+      &::before
+        left: 130%
+
+    .who-tag
+      position: absolute
+      top: 28px
+      right: 0
+      z-index: 3
+      padding: 11px 24px 11px 20px
+      background: var(--primary)
+      color: var(--white)
+      font-size: 11px
+      font-weight: 500
+      line-height: 1
+      text-transform: uppercase
+      letter-spacing: 0.18em
+
+      @include media(540)
+        top: 18px
+        padding: 9px 18px 9px 16px
+        font-size: 10px
+        letter-spacing: 0.14em
+
+.about-secD
+ 
+  .phi-grid
+    display: grid
+    grid-template-columns: repeat(4, minmax(0, 1fr))
+    gap: 24px
+    align-items: start
+
+    @include media(1024)
+      gap: 18px
+
+    @include media(991)
+      grid-template-columns: repeat(2, minmax(0, 1fr))
+
+    @include media(540)
+      grid-template-columns: 1fr
+      gap: 14px
+
+  .phi-card
+    position: relative
+    padding: 34px 26px 36px
+    background: var(--bg)
+    border-bottom: 2px solid var(--primary)
+    transition: all 0.4s ease
+
+    @include media(1024)
+      padding: 28px 20px 30px
+
+    @include media(768)
+      text-align: center
+
+    @include media(540)
+      padding: 26px 20px 28px
+
+    &:nth-child(even)
+      margin-top: 44px
+
+      @include media(991)
+        margin-top: 28px
+
+      @include media(540)
+        margin-top: 0
+
+    &:hover
+      transform: translateY(-6px)
+      background: var(--primary)
+
+      .phi-num
+        -webkit-text-stroke-color: var(--white)
+
+      h4
+        color: var(--white)
+
+      p
+        color: rgba(255, 255, 255, 0.85)
+
+    .phi-num
+      display: block
+      margin-bottom: 26px
+      color: transparent
+      -webkit-text-stroke: 1px var(--primary)
+      font-family: $Poppins
+      font-size: 64px
+      font-weight: 300
+      line-height: 1
+      transition: all 0.4s ease
+
+      @include media(1024)
+        font-size: 52px
+
+      @include media(540)
+        margin-bottom: 18px
+        font-size: 44px
+
+    h4
+      margin: 0 0 10px
+      transition: color 0.4s ease
+
+    p
+      margin: 0
+      transition: color 0.4s ease
+
+.about-secF
+  .art-grid
+    display: grid
+    grid-template-columns: 5fr 6fr
+    gap: 70px
+    align-items: stretch
+
+    @include media(1280)
+      gap: 44px
+
+    @include media(1024)
+      gap: 34px
+
+    @include media(991)
+      grid-template-columns: 1fr
+      gap: 40px
+
+  .art-visual
+    position: relative
+    display: block
+    overflow: hidden
+    min-height: 720px
+    border-radius: 999px 999px 0 0
+    background: var(--dark-gray)
+
+    @include media(1280)
+      min-height: 620px
+
+    @include media(1024)
+      min-height: 560px
+
+    @include media(991)
+      min-height: 0
+      aspect-ratio: 4 / 4.6
+      width: 100%
+      max-width: 520px
+      margin: 0 auto
+
+    @include media(540)
+      aspect-ratio: 4 / 5
+
+    img
+      position: absolute
+      inset: 0
+      width: 100%
+      height: 100%
+      object-fit: cover
+      object-position: top center
+      display: block
+      transition: transform 1.4s ease
+
+    &::after
+      content: ""
+      position: absolute
+      inset: 18px
+      z-index: 3
+      border: 1px solid rgba(255, 255, 255, 0.55)
+      border-radius: 999px 999px 0 0
+      pointer-events: none
+      transition: inset 0.5s ease
+
+      @include media(540)
+        inset: 10px
+
+    @include ab-shine
+
+    &:hover
+      img
+        transform: scale(1.06)
+
+      &::before
+        left: 130%
+
+      &::after
+        inset: 12px
+
+  .art-content
+    display: flex
+    flex-direction: column
+    justify-content: center
+    min-width: 0
+
+    @include media(768)
+      text-align: center
+
+    .heading
+      margin-bottom: 16px
+
+    > p
+      max-width: 520px
+      margin: 0 0 28px
+
+      @include media(768)
+        margin: 0 auto 24px
+
+  .art-list
+    display: grid
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+    gap: 0 34px
+    margin: 0 0 30px
+    padding: 0
+    list-style: none
+
+    @include media(540)
+      grid-template-columns: 1fr
+
+    li
+      padding: 14px 0
+      border-bottom: 1px solid var(--dark-gray)
+
+      b
+        display: block
+        margin-bottom: 4px
+        color: var(--primary)
+        font-family: $Poppins
+        font-size: 12px
+        font-weight: 600
+        text-transform: uppercase
+        letter-spacing: 0.16em
+
+      span
+        font-size: 14px
+        line-height: 1.6
+
+  .art-tags
+    display: flex
+    flex-wrap: wrap
+    gap: 10px 24px
+
+    @include media(768)
+      justify-content: center
+
+    a
+      padding-bottom: 4px
+      border-bottom: 1px solid transparent
+      color: var(--black)
+      font-family: $Poppins
+      font-size: 11px
+      font-weight: 500
+      text-transform: uppercase
+      letter-spacing: 0.16em
+      transition: all 0.3s ease
+
+      @include media(540)
+        font-size: 10px
+        letter-spacing: 0.12em
+
+      &::after
+        content: "\2197"
+        margin-left: 6px
+        font-size: 11px
+        opacity: 0.4
+        transition: all 0.3s ease
+
+      &:hover
+        border-color: var(--primary)
+        color: var(--primary)
+
+        &::after
+          opacity: 1
+
+.about-secG
+  background: var(--bg)
+
+  .craft-grid
+    display: grid
+    grid-template-columns: 6fr 5fr
+    gap: 70px
+    align-items: center
+
+    @include media(1280)
+      gap: 50px
+
+    @include media(1024)
+      gap: 36px
+
+    @include media(991)
+      grid-template-columns: 1fr
+      gap: 40px
+
+  .craft-visual
+    position: relative
+
+    @include media(991)
+      width: 100%
+      max-width: 560px
+      margin: 0 auto
+
+    .craft-photo
+      position: relative
+      overflow: hidden
+      aspect-ratio: 4 / 4.6
+      background: var(--dark-gray)
+
+      img
+        width: 100%
+        height: 100%
+        object-fit: cover
+        object-position: top center
+        display: block
+        transition: transform 1.6s ease
+
+      &::after
+        content: ""
+        position: absolute
+        inset: 16px
+        z-index: 3
+        border: 1px solid rgba(255, 255, 255, 0.55)
+        pointer-events: none
+        transition: inset 0.5s ease
+
+        @include media(540)
+          inset: 10px
+
+      @include ab-shine
+
+    &:hover .craft-photo
+      img
+        transform: scale(1.08)
+
+      &::before
+        left: 130%
+
+      &::after
+        inset: 10px
+
+    .craft-tag
+      position: absolute
+      right: 0
+      bottom: 40px
+      z-index: 4
+      padding: 12px 22px 12px 26px
+      background: var(--black)
+      color: var(--white)
+      font-size: 11px
+      font-weight: 500
+      line-height: 1
+      text-transform: uppercase
+      letter-spacing: 0.22em
+
+      @include media(540)
+        bottom: 28px
+        padding: 10px 16px 10px 20px
+        font-size: 10px
+        letter-spacing: 0.16em
+
+  .craft-content
+    min-width: 0
+
+    @include media(768)
+      text-align: center
+
+    .heading
+      margin-bottom: 26px
+
+      @include media(540)
+        margin-bottom: 20px
+
+  .craft-list
+    margin: 0
+    padding: 0
+    list-style: none
+
+    li
+      display: grid
+      grid-template-columns: 56px 1fr
+      gap: 20px
+      padding: 24px 0
+      border-top: 1px solid var(--dark-gray)
+      text-align: left
+
+      @include media(540)
+        grid-template-columns: 44px 1fr
+        gap: 14px
+        padding: 20px 0
+
+      &:last-child
+        border-bottom: 1px solid var(--dark-gray)
+
+      .craft-no
+        color: var(--secondary)
+        font-size: 30px
+        font-weight: 300
+        line-height: 1
+
+        @include media(540)
+          font-size: 24px
+
+      h4
+        margin: 0 0 6px
+
+      p
+        margin: 0
+
+.about-secH
+  .fourSlider
+    padding: 6px 0 10px
+
+    .swiper-slide
+      height: auto
+
+  .col-card
+    position: relative
+    display: block
+    overflow: hidden
+    aspect-ratio: 3 / 4.3
+    background: var(--dark-gray)
+    color: var(--white)
+
+    img
+      position: absolute
+      inset: 0
+      width: 100%
+      height: 100%
+      object-fit: cover
+      object-position: top center
+      display: block
+      transition: transform 1.3s ease
+
+    &::after
+      content: ""
+      position: absolute
+      inset: 0
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.45) 68%, rgba(0, 0, 0, 0.85) 100%)
+      pointer-events: none
+
+    @include ab-shine
+
+    .col-info
+      position: absolute
+      left: 0
+      right: 0
+      bottom: 0
+      z-index: 4
+      padding: 0 26px 28px
+      transition: transform 0.5s ease
+
+      @include media(540)
+        padding: 0 22px 24px
+
+      h4
+        margin: 0 0 6px
+        color: var(--white)
+
+      p
+        margin: 0 0 14px
+        color: rgba(255, 255, 255, 0.85)
+        font-size: 13px
+        line-height: 1.6
+
+      .col-link
+        display: inline-flex
+        align-items: center
+        gap: 8px
+        padding-bottom: 5px
+        border-bottom: 1px solid rgba(255, 255, 255, 0.5)
+        color: var(--white)
+        font-family: $Poppins
+        font-size: 11px
+        font-weight: 500
+        text-transform: uppercase
+        letter-spacing: 0.16em
+
+        @include media(540)
+          font-size: 10px
+          letter-spacing: 0.12em
+
+        i
+          font-size: 12px
+          transition: transform 0.3s ease
+
+    &:hover
+      &::before
+        left: 130%
+
+      img
+        transform: scale(1.07)
+
+      .col-info
+        transform: translateY(-6px)
+
+        .col-link i
+          transform: translateX(5px)
+
+.about-secI
+  background: var(--bg)
+
+  .exp-grid
+    display: grid
+    grid-template-columns: 4fr 8fr
+    gap: 80px
+    align-items: start
+
+    @include media(1280)
+      gap: 50px
+
+    @include media(1024)
+      gap: 36px
+
+    @include media(991)
+      grid-template-columns: 1fr
+      gap: 40px
+
+  .exp-intro
+    position: sticky
+    top: 110px
+
+    @include media(1024)
+      top: 90px
+
+    @include media(991)
+      position: static
+      max-width: 560px
+
+    @include media(768)
+      margin: 0 auto
+      text-align: center
+
+    .heading
+      margin-bottom: 18px
+
+    p
+      max-width: 400px
+      margin: 0 0 30px
+
+      @include media(768)
+        max-width: 100%
+
+    .btn
+      @include media(540)
+        display: flex
+        width: 100%
+        justify-content: center
+
+      i
+        transition: transform 0.3s ease
+
+      &:hover i
+        transform: translateX(5px)
+
+  .exp-list
+    display: grid
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+    padding: 1px 1px 0 0
+
+    @include media(540)
+      grid-template-columns: 1fr
+
+  .exp-item
+    margin: 0 -1px -1px 0
+    padding: 38px 32px
+    border: 1px solid var(--dark-gray)
+    transition: all 0.4s ease
+
+    @include media(1024)
+      padding: 30px 24px
+
+    @include media(768)
+      text-align: center
+
+    @include media(540)
+      padding: 28px 20px
+
+    &:hover
+      background: var(--white)
+      border-color: var(--primary)
+      position: relative
+      z-index: 1
+
+      .exp-ico
+        transform: translateY(-4px)
+
+    .exp-ico
+      display: inline-block
+      margin-bottom: 20px
+      color: var(--primary)
+      font-size: 28px
+      transition: transform 0.4s ease
+
+      @include media(540)
+        margin-bottom: 16px
+        font-size: 24px
+
+    h4
+      margin: 0 0 10px
+
+    p
+      margin: 0
+
+.about-secJ
+  .why-top
+    display: flex
+    align-items: flex-end
+    justify-content: space-between
+    gap: 40px
+    margin-bottom: 50px
+
+    @include media(1024)
+      margin-bottom: 40px
+
+    @include media(991)
+      flex-direction: column
+      align-items: flex-start
+      gap: 14px
+
+    @include media(768)
+      align-items: center
+      margin-bottom: 34px
+      text-align: center
+
+  .why-head
+    max-width: 560px
+
+    .heading
+      margin: 0
+
+  .why-sub
+    max-width: 360px
+    margin: 0
+
+    @include media(991)
+      max-width: 520px
+
+    @include media(768)
+      max-width: 100%
+
+  .why-grid
+    display: grid
+    grid-template-columns: repeat(3, minmax(0, 1fr))
+    gap: 0 44px
+
+    @include media(1280)
+      gap: 0 32px
+
+    @include media(768)
+      grid-template-columns: repeat(2, minmax(0, 1fr))
+      gap: 0 24px
+
+    @include media(540)
+      grid-template-columns: 1fr
+
+  .why-item
+    position: relative
+    padding: 30px 0 38px
+    border-top: 1px solid var(--dark-gray)
+
+    @include media(768)
+      padding: 26px 0 30px
+
+    &::before
+      content: ""
+      position: absolute
+      top: -1px
+      left: 0
+      width: 48px
+      height: 2px
+      background: var(--primary)
+      transition: width 0.5s ease
+
+    &:hover
+      &::before
+        width: 100%
+
+      .why-row i
+        transform: translateY(-3px)
+
+    .why-row
+      display: flex
+      align-items: center
+      justify-content: space-between
+      margin-bottom: 22px
+
+      i
+        color: var(--primary)
+        font-size: 26px
+        transition: transform 0.4s ease
+
+        @include media(540)
+          font-size: 22px
+
+      span
+        color: var(--secondary)
+        font-family: $Poppins
+        font-size: 12px
+        font-weight: 600
+        letter-spacing: 0.22em
+
+    h5
+      margin: 0 0 8px
+      font-size: 18px
+      font-weight: 500
+
+      @include media(540)
+        font-size: 16px
+
+    p
+      margin: 0
+      font-size: 14px
+      line-height: 1.7
+
+      @include media(540)
+        font-size: 13px
+
+.about-secK
+  position: relative
+  display: flex
+  align-items: center
+  overflow: hidden
+  min-height: 560px
+  padding: 110px 0
+  background: var(--black)
+  color: var(--white)
+  text-align: center
+
+  @include media(1024)
+    min-height: 500px
+    padding: 90px 0
+
+  @include media(768)
+    min-height: 460px
+    padding: 76px 0
+
+  @include media(540)
+    min-height: 420px
+    padding: 64px 0
+
+  .quote-bg
+    position: absolute
+    inset: 0
+    z-index: 0
+
+    img
+      width: 100%
+      height: 100%
+      object-fit: cover
+      object-position: center 20%
+      display: block
+      animation: aboutZoom 22s ease-in-out infinite alternate
+
+  &::before
+    content: ""
+    position: absolute
+    inset: 0
+    z-index: 1
+    background: rgba(10, 8, 6, 0.72)
+
+  &::after
+    content: ""
+    position: absolute
+    inset: 26px
+    z-index: 2
+    border: 1px solid rgba(255, 255, 255, 0.28)
+    pointer-events: none
+
+    @include media(1024)
+      inset: 20px
+
+    @include media(768)
+      inset: 14px
+
+    @include media(540)
+      inset: 10px
+
+  .container
+    position: relative
+    z-index: 3
+    width: 100%
+
+  .quote-box
+    max-width: 860px
+    margin: 0 auto
+
+    .quote-text
+      margin: 0 0 30px
+      color: var(--white)
+      font-size: 44px
+      font-weight: 300
+      line-height: 1.3
+
+      @include media(1280)
+        font-size: 40px
+
+      @include media(1024)
+        font-size: 34px
+
+      @include media(768)
+        font-size: 28px
+
+      @include media(540)
+        margin-bottom: 24px
+        font-size: 22px
+
+    .quote-by
+      display: inline-flex
+      align-items: center
+      gap: 16px
+      color: var(--white)
+      font-family: $Poppins
+      font-size: 12px
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.3em
+
+      @include media(540)
+        gap: 10px
+        font-size: 10px
+        letter-spacing: 0.18em
+
+      &::before,
+      &::after
+        content: ""
+        width: 36px
+        height: 1px
+        background: var(--white)
+
+        @include media(540)
+          width: 20px
+
+.about-secN
+  .news-wrap
+    display: grid
+    grid-template-columns: 1fr 1.15fr
+    background: var(--bg)
+
+    @include media(1024)
+      grid-template-columns: 1fr 1.1fr
+
+    @include media(991)
+      grid-template-columns: 1fr
+
+  .news-photo
+    position: relative
+    overflow: hidden
+    min-height: 460px
+
+    @include media(1280)
+      min-height: 400px
+
+    @include media(1024)
+      min-height: 380px
+
+    @include media(991)
+      min-height: 0
+      aspect-ratio: 16 / 10
+
+    @include media(768)
+      aspect-ratio: 16 / 10.5
+
+    @include media(540)
+      aspect-ratio: 4 / 3.4
+
+    img
+      position: absolute
+      inset: 0
+      width: 100%
+      height: 100%
+      object-fit: cover
+      object-position: top center
+      display: block
+      transition: transform 1.4s ease
+
+    @include ab-shine
+
+  &:hover .news-photo
+    img
+      transform: scale(1.04)
+
+    &::before
+      left: 130%
+
+  .news-panel
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: flex-start
+    padding: 64px 70px
+
+    @include media(1280)
+      padding: 44px
+
+    @include media(1024)
+      padding: 36px 34px
+
+    @include media(991)
+      padding: 40px 36px
+
+    @include media(768)
+      align-items: center
+      padding: 36px 30px
+      text-align: center
+
+    @include media(540)
+      padding: 32px 22px 36px
+
+  .heading
+    margin-bottom: 14px
+
+  .news-desc
+    max-width: 480px
+    margin: 0 0 38px
+
+    @include media(1024)
+      margin-bottom: 32px
+
+    @include media(768)
+      max-width: 100%
+      margin-bottom: 30px
+
+    @include media(540)
+      margin-bottom: 28px
+
+  .news-form
+    display: flex
+    align-items: flex-end
+    gap: 20px
+    width: 100%
+    max-width: 520px
+    text-align: left
+
+    @include media(1024)
+      gap: 16px
+
+    @include media(540)
+      flex-direction: column
+      align-items: stretch
+      gap: 22px
+
+    .form-group
+      flex: 1
+      min-width: 0
+
+    .btn
+      flex-shrink: 0
+
+      @include media(540)
+        width: 100%
+        justify-content: center
+
+      i
+        transition: transform 0.3s ease
+
+      &:hover i
+        transform: translateX(5px)
+
+  .news-note
+    max-width: 480px
+    margin: 18px 0 0
+    font-size: 12px
+    line-height: 1.6
+    opacity: 0.7
+
+    @include media(768)
+      max-width: 100%
+
+    @include media(540)
+      margin-top: 16px
+      font-size: 11px
+
+@keyframes aboutZoom
+  from
+    transform: scale(1)
+
+  to
+    transform: scale(1.1)
+.about-secD,
+.about-secH
+    .sec-head
+        width: 100%
+        max-width: 450px
+        margin: 0 auto 50px 
+        text-align: center
+
+
+
+.about-secA
+  padding-top: 0
+  margin: var(--headerheight) 0 0
