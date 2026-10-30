@@ -26,7 +26,6 @@ class Category extends Model
         'added_by',
         'is_featured',
         'show_in_navbar',
-        'is_sub_category',
     ];
 
     /*

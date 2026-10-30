@@ -181,6 +181,11 @@ class Product extends Model
         return $this->hasMany(ProductKeyword::class);
     }
 
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderItem::class, 'product_id');
+    }
+
     // card ke liye jo relations aur rating chahiye, ek jagah
     public function scopeForCard($query)
     {
@@ -200,18 +205,28 @@ class Product extends Model
     {
         switch ($sort) {
             case 'low':
-                return $query->orderBy('price');
+                $query->orderBy('price');
+                break;
             case 'high':
-                return $query->orderByDesc('price');
+                $query->orderByDesc('price');
+                break;
             case 'rating':
-                return $query->orderByDesc('avg_rating');
+                $query->orderByDesc('avg_rating'); // forCard() ka alias
+                break;
             case 'sold':
-                return $query->withSum('orderDetails as sold_qty', 'quantity')->orderByDesc('sold_qty');
+                if (method_exists($this, 'orderDetails')) {
+                    $query->withSum('orderDetails as sold_qty', 'quantity')->orderByDesc('sold_qty');
+                } else {
+                    $query->orderByDesc('created_at'); // relation nahi to crash ki jagah newest
+                }
+                break;
             case 'newest':
-                return $query->orderByDesc('created_at');
-            default:
-                return $query->orderByDesc('id'); // recommended
+                $query->orderByDesc('created_at');
+                break;
         }
+
+        // tie-breaker: barabar values par bhi order stable rahe
+        return $query->orderByDesc('id');
     }
 
 }

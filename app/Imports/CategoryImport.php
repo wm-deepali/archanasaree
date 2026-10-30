@@ -69,8 +69,6 @@ class CategoryImport implements ToCollection, WithHeadingRow
                 'is_popular' => !empty($row['is_popular']) ? 1 : 0,
                 'is_featured' => !empty($row['is_featured']) ? 1 : 0,
 
-                'is_sub_category' => $parentId ? 1 : 0,
-
                 'added_by' => 'admin',
 
                 'status' => $row['status'] ?? 1,

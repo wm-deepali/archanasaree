@@ -13,11 +13,13 @@
         <img src="{{ asset('assets/images/home/banner2.png')}}" alt="Sarees" />
       </div>
       <div class="container">
-        <ul class="crumb">
-          <li><a href="index.html">Home</a></li>
-          <li><i class="fa-solid fa-chevron-right"></i></li>
-          <li class="current">Sarees</li>
-        </ul>
+        @include('partials.breadcrumb', [
+          'crumbs' => [
+            ['label' => 'Home', 'url' => route('home')],
+            ['label' => 'Categories', 'url' => route('categories')],
+            ['label' => $category->name],
+          ]
+        ])
         <div class="banner-content">
           <span class="eyebrow">Sarees</span>
           <h1>Draped in Timeless Elegance</h1>
@@ -362,7 +364,7 @@
         fetch(baseUrl + '?' + params, {
           headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
         })
-          .then(r => r.json())
+          .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
           .then(d => {
             const grid = pane.querySelector('.prod-grid');
             if (append) grid.insertAdjacentHTML('beforeend', d.html); else grid.innerHTML = d.html;
@@ -373,7 +375,9 @@
             more.style.display = d.next_page ? '' : 'none';
             more.querySelector('button').dataset.next = d.next_page || '';
             more.querySelector('p').textContent = 'Showing ' + d.shown + ' of ' + d.total + ' styles';
-          });
+          })
+          .catch(err => console.error('Product load failed:', err));
+
       }
 
       /* ===== SORT: ek hi value, sab selects + popup radios sync ===== */
@@ -391,18 +395,22 @@
       }));
 
       root.querySelectorAll('.tabs').forEach(pane => {
-        pane.querySelector('.prod-sort select').addEventListener('change', e => setSort(e.target.value, pane));
         pane.querySelector('.load-more button').addEventListener('click', e => {
           const next = e.currentTarget.dataset.next;
           if (next) load(pane, next, true);
         });
       });
 
-      sortRadios.forEach(r => r.addEventListener('change', () => {
-        setSort(r.value, root.querySelector('.tabs.active'));
+      // jQuery delegated: native aur jQuery dono tarah ke change events pakadta hai
+      $(document).on('change', '.product-secB .prod-sort select', function () {
+        setSort(this.value, this.closest('.tabs'));
+      });
+
+      $(document).on('change', '.sort-pop input[name="SortBy"]', function () {
+        setSort(this.value, root.querySelector('.tabs.active'));
         const closeBtn = sortPopup.querySelector('.close');
         if (closeBtn) closeBtn.click();
-      }));
+      });
 
       /* ===== FILTER ===== */
       const priceBox = document.getElementById('catPrice');

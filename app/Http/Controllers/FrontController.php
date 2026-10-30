@@ -94,8 +94,11 @@ class FrontController extends Controller
         $recentlyViewed = $this->recentlyViewed();
         $alsoLike = $this->alsoLike(null, $recentlyViewed->pluck('id')->all());
 
+        $sortOptions = Product::SORT_OPTIONS;
+        $currentSort = in_array($request->sort, array_keys($sortOptions), true) ? $request->sort : 'recommended';
+
         return view('front-pages.product-listing', array_merge(
-            compact('products', 'recentlyViewed', 'alsoLike'),
+            compact('products', 'recentlyViewed', 'alsoLike', 'sortOptions', 'currentSort'),
             $filters->sidebar($request)
         ));
     }

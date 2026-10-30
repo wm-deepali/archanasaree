@@ -13,13 +13,23 @@
                 <img src="assets/images/home/banner2.png" alt="Archana Saree Emporium all collections" />
             </div>
             <div class="container">
-                <ul class="crumb">
-                    <li><a href="{{ route('home') }}">Home</a></li>
-                    <li><i class="fa-solid fa-chevron-right"></i></li>
-                    <li><a href="javascript:void(0)">All Collections</a></li>
-                    <li><i class="fa-solid fa-chevron-right"></i></li>
-                    <li class="current">All Products</li>
-                </ul>
+                @php
+                    $crumbSel = array_filter((array) request('category', []));
+                    $crumbCat = count($crumbSel) === 1 ? $filterCategories->firstWhere('slug', reset($crumbSel)) : null;
+
+                    $crumbs = [
+                        ['label' => 'Home', 'url' => route('home')],
+                        ['label' => 'All Collections', 'url' => route('categories')],
+                    ];
+
+                    if ($crumbCat) {
+                        $crumbs[] = ['label' => 'All Products', 'url' => route('products')];
+                        $crumbs[] = ['label' => $crumbCat->name];
+                    } else {
+                        $crumbs[] = ['label' => 'All Products'];
+                    }
+                @endphp
+                @include('partials.breadcrumb', compact('crumbs'))
                 <div class="banner-content">
                     <span class="eyebrow">All Collections</span>
                     <h1>A Curated World of Indian Elegance</h1>
@@ -53,10 +63,10 @@
                         <div class="listing-sort">
                             <label for="listingSort">Sort By</label>
                             <div class="sort-box">
-                                <select id="listingSort" name="sort" form="filterPanel" onchange="this.form.submit()">
-                                    @foreach (['recommended' => 'Recommended', 'newest' => 'Newest Arrivals', 'sold' => 'Best Selling', 'low' => 'Price: Low to High', 'high' => 'Price: High to Low'] as $val => $label)
-                                        <option value="{{ $val }}" @selected(request('sort', 'recommended') === $val)>{{ $label }}
-                                        </option>
+                                <select id="listingSort" name="sort" form="filterPanel"
+                                    onchange="this.form.requestSubmit()">
+                                    @foreach ($sortOptions as $val => $label)
+                                        <option value="{{ $val }}" @selected($currentSort === $val)>{{ $label }}</option>
                                     @endforeach
                                 </select>
                                 <i class="fa-solid fa-chevron-down"></i>
