@@ -416,21 +416,9 @@
                                                 'icon' => 'fa-square-o',
                                                 'label' => 'Button'
                                             ],
-                                            'dropdown' => [
-                                                'icon' => 'fa-caret-square-o-down',
-                                                'label' => 'Dropdown'
-                                            ],
-                                            'image' => [
-                                                'icon' => 'fa-image',
-                                                'label' => 'Image'
-                                            ],
                                             'color_swatch' => [
                                                 'icon' => 'fa-paint-brush',
                                                 'label' => 'Colour Swatch'
-                                            ],
-                                            'radio' => [
-                                                'icon' => 'fa-dot-circle-o',
-                                                'label' => 'Radio'
                                             ],
                                         ];
                                     @endphp
@@ -521,27 +509,12 @@
 
                                     <div style="margin-bottom:8px">
                                         <strong>Button</strong> —
-                                        Size, Pack Size, Quantity
-                                    </div>
-
-                                    <div style="margin-bottom:8px">
-                                        <strong>Dropdown</strong> —
-                                        Material, Paper Type, Finish
-                                    </div>
-
-                                    <div style="margin-bottom:8px">
-                                        <strong>Image</strong> —
-                                        Design Selection, Pattern Selection
+                                        Size, Quantity
                                     </div>
 
                                     <div style="margin-bottom:8px">
                                         <strong>Colour Swatch</strong> —
                                         Color Selection
-                                    </div>
-
-                                    <div>
-                                        <strong>Radio</strong> —
-                                        Yes/No, Single Choice Options
                                     </div>
 
                                 </div>

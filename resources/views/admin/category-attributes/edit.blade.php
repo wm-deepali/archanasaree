@@ -303,6 +303,8 @@
                                     </select>
                                 </div>
 
+                                @include('admin.category-attributes._dependency')
+                                
                                 <div class="dependency-group {{ !$categoryAttribute->used_for_variant ? 'is-hidden' : '' }}" id="dependencyGroup">
                                     <div class="dependency-title">Dependency</div>
                                     <div class="dependency-hint">Choose what changes when a customer selects this attribute's value.</div>
@@ -369,6 +371,48 @@
 @include('admin.footer')
 
 <script>
+
+    // Used for Variants = Yes  →  Customer Selectable apne aap Yes
+$('#usedForVariant').on('change', function () {
+    if (this.value === '1') $('#isSelectable').val('1');
+});
+
+// Parent dropdown: usi category ke, khud ko chhod ke, sirf selectable attributes
+var initParent = CA_INIT.parent, initValues = CA_INIT.values;
+
+function refreshParents() {
+    var cat = $('select[name="category_id"]').val();
+    var $p = $('#parentCa').empty().append('<option value="">— Always show —</option>');
+
+    CA_MAP.filter(function (m) {
+        return String(m.category_id) === String(cat) && m.id !== CA_SELF && m.is_selectable;
+    }).forEach(function (m) {
+        $p.append($('<option>', { value: m.id, text: m.name }));
+    });
+
+    if (initParent) { $p.val(initParent); }
+    refreshValues();
+}
+
+function refreshValues() {
+    var id = parseInt($('#parentCa').val(), 10), $box = $('#showWhenValues').empty();
+    var parent = CA_MAP.find(function (m) { return m.id === id; });
+    if (!parent) return;
+
+    $box.append('<div class="dependency-hint" style="margin-top:10px">Show this attribute when the customer selects:</div>');
+    parent.values.forEach(function (v) {
+        var checked = initValues.indexOf(v.id) !== -1 ? 'checked' : '';
+        $box.append(
+            '<label class="check-toggle"><input type="checkbox" name="show_when_value_ids[]" value="' + v.id + '" ' + checked + '>' +
+            '<span>' + $('<span>').text(v.value).html() + '</span></label>'
+        );
+    });
+}
+
+$('select[name="category_id"]').on('change', function () { initParent = null; initValues = []; refreshParents(); });
+$('#parentCa').on('change', function () { initValues = []; refreshValues(); });
+refreshParents();
+
 $(document).on('submit', '.save-form', function () {
     const btn = document.getElementById('updateBtn');
     btn.disabled = true;

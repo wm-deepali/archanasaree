@@ -953,99 +953,6 @@
         .variant-row-excluded select {
             background: #f1f2f4;
         }
-
-        /* ── Tag input (Search Suggestions) ─────────────────────────── */
-        .tag-input-wrap {
-            position: relative;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 8px 10px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            align-items: center;
-            background: var(--surface);
-            transition: border-color .15s, box-shadow .15s;
-        }
-
-        .tag-input-wrap:focus-within {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(48, 61, 137, .12);
-        }
-
-        .tag-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .tag-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--accent-light);
-            color: var(--accent);
-            border: 1px solid #c7cdf5;
-            border-radius: 20px;
-            padding: 4px 6px 4px 12px;
-            font-size: 12.5px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .tag-remove {
-            background: transparent;
-            border: none;
-            color: var(--accent);
-            cursor: pointer;
-            font-size: 14px;
-            line-height: 1;
-            padding: 2px 4px;
-            border-radius: 50%;
-        }
-
-        .tag-remove:hover {
-            background: var(--accent);
-            color: #fff;
-        }
-
-        .tag-input-field {
-            flex: 1;
-            min-width: 140px;
-            border: none;
-            outline: none;
-            font-size: 13.5px;
-            font-family: var(--font);
-            padding: 4px 0;
-            background: transparent;
-        }
-
-        .tag-suggestions-dropdown {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            margin-top: 4px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, .1);
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 50;
-            display: none;
-        }
-
-        .tag-suggestion-item {
-            padding: 8px 12px;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        .tag-suggestion-item:hover {
-            background: var(--accent-light);
-            color: var(--accent);
-        }
     </style>
 
     <div class="app-content content container-fluid">
@@ -1177,52 +1084,52 @@
                             </div>
 
                             <div class="content-tabs">
-                                <button type="button" class="content-tab-btn active"
-                                    data-tab="description">Description</button>
-                                <button type="button" class="content-tab-btn" data-tab="fabric_care">Fabric
-                                    Care</button>
+                                <button type="button" class="content-tab-btn active" data-tab="fabric_material">Fabric
+                                    &amp; Material</button>
+                                <button type="button" class="content-tab-btn" data-tab="care_instructions">Care
+                                    Instructions</button>
                                 <button type="button" class="content-tab-btn" data-tab="shipping_delivery">Shipping
                                     &amp; Delivery</button>
-                                <button type="button" class="content-tab-btn" data-tab="exchange_policy">Exchange
-                                    Policy</button>
-                                <button type="button" class="content-tab-btn"
-                                    data-tab="customization_assistance">Customization/Assistance</button>
+                                <button type="button" class="content-tab-btn" data-tab="returns_exchange">Returns &amp;
+                                    Exchange</button>
+                                <button type="button" class="content-tab-btn" data-tab="offers_how_to_avail">Offers
+                                    &amp; How to Avail</button>
                             </div>
 
                             <div class="section-card-body">
 
-                                <div class="content-tab-panel active" data-panel="description">
-                                    <textarea name="description" id="description" class="field-textarea"
-                                        style="min-height:140px">{{ old('description', $product->description) }}</textarea>
+                                <div class="content-tab-panel active" data-panel="fabric_material">
+                                    <textarea name="fabric_material" id="fabric_material"
+                                        class="field-textarea">{{ old('fabric_material', $product->fabric_material) }}</textarea>
+                                    <div class="field-hint">Fabric aur weave ke baare me ek chhota paragraph.</div>
                                 </div>
 
-                                <div class="content-tab-panel" data-panel="fabric_care">
-                                    <textarea name="fabric_care" id="fabric_care" class="field-textarea"
-                                        style="min-height:100px">{{ old('fabric_care', $product->fabric_care) }}</textarea>
+                                <div class="content-tab-panel" data-panel="care_instructions">
+                                    <textarea name="care_instructions" id="care_instructions"
+                                        class="field-textarea">{{ old('care_instructions', $product->care_instructions) }}</textarea>
+                                    <div class="field-hint">Bullet list me likho (dry clean only, iron on low heat...).
+                                    </div>
                                 </div>
 
                                 <div class="content-tab-panel" data-panel="shipping_delivery">
-                                    <textarea name="shipping_delivery" id="shipping_delivery" class="field-textarea"
-                                        style="min-height:100px">{{ old('shipping_delivery', $product->shipping_delivery) }}</textarea>
+                                    <textarea name="shipping_delivery" id="shipping_delivery"
+                                        class="field-textarea">{{ old('shipping_delivery', $product->shipping_delivery) }}</textarea>
+                                    <div class="field-hint">Khali chhodo to store ki default shipping policy dikhegi.
+                                    </div>
                                 </div>
 
-                                <div class="content-tab-panel" data-panel="exchange_policy">
-                                    <textarea name="exchange_policy" id="exchange_policy" class="field-textarea"
-                                        style="min-height:100px">{{ old('exchange_policy', $product->exchange_policy) }}</textarea>
+                                <div class="content-tab-panel" data-panel="returns_exchange">
+                                    <textarea name="returns_exchange" id="returns_exchange"
+                                        class="field-textarea">{{ old('returns_exchange', $product->returns_exchange) }}</textarea>
+                                    <div class="field-hint">Khali chhodo to store ki default return/exchange policy
+                                        dikhegi.</div>
                                 </div>
 
-                                <div class="content-tab-panel" data-panel="customization_assistance">
-                                    <textarea name="customization_assistance" id="customization_assistance"
-                                        class="field-textarea"
-                                        style="min-height:100px">{{ old('customization_assistance', $product->customization_assistance) }}</textarea>
-                                </div>
-
-                                <div class="content-tab-panel" data-panel="delivery_returns">
-                                    <textarea name="delivery_returns" id="delivery_returns" class="field-textarea"
-                                        style="min-height:100px">{{ old('delivery_returns', $product->delivery_returns) }}</textarea>
-                                    <div class="field-hint">Legacy field, kept for products that already have this
-                                        filled in — new content should go under Shipping &amp; Delivery / Exchange
-                                        Policy above.</div>
+                                <div class="content-tab-panel" data-panel="offers_how_to_avail">
+                                    <textarea name="offers_how_to_avail" id="offers_how_to_avail"
+                                        class="field-textarea">{{ old('offers_how_to_avail', $product->offers_how_to_avail) }}</textarea>
+                                    <div class="field-hint">Khali chhodo to active coupons se steps apne aap ban
+                                        jayenge.</div>
                                 </div>
 
                             </div>
@@ -1356,9 +1263,10 @@
                                     style="{{ $product->addons->count() ? '' : 'display:none' }}">
                                     <thead>
                                         <tr>
-                                            <th>Detail</th>
-                                            <th>Price</th>
-                                            <th></th>
+                                            <th style="width:28%">Detail</th>
+                                            <th>Description</th>
+                                            <th style="width:120px">Price</th>
+                                            <th style="width:40px"></th>
                                         </tr>
                                     </thead>
                                     <tbody id="addon-table-body">
@@ -1366,6 +1274,9 @@
                                             <tr id="addon-row-{{ $i }}">
                                                 <td><input type="text" name="addons[{{ $i }}][detail]" class="field-input"
                                                         value="{{ $addon->detail }}" placeholder="e.g. Gift Wrapping"></td>
+                                                <td><input type="text" name="addons[{{ $i }}][description]"
+                                                        class="field-input" value="{{ $addon->description }}"
+                                                        placeholder="Short description (optional)"></td>
                                                 <td><input type="number" step="0.01" name="addons[{{ $i }}][price]"
                                                         class="field-input" value="{{ $addon->price }}" placeholder="0.00">
                                                 </td>
@@ -1377,8 +1288,8 @@
                                 </table>
                                 <div class="field-hint" id="addon-empty-hint"
                                     style="padding:16px 20px;{{ $product->addons->count() ? 'display:none' : '' }}">
-                                    No addon options yet. An addon is an optional extra — a detail/label plus its own
-                                    price — that a customer can choose to add alongside this product.
+                                    No addon options yet. An addon is an optional extra — a detail/label, a description
+                                    and its own price — that a customer can choose to add alongside this product.
                                 </div>
                             </div>
                         </div>
@@ -1421,6 +1332,26 @@
                                     </select>
                                 </div>
                             </div>
+                            {{-- Colour customization (product-level) --}}
+                            <div style="padding:16px 20px;border-top:1px solid var(--border);">
+                                <input type="hidden" name="colour_customization" value="0">
+                                <label class="check-pill" style="margin-bottom:12px;">
+                                    <input type="checkbox" name="colour_customization" id="colour_customization"
+                                        value="1" {{ old('colour_customization', $product->colour_customization) ? 'checked' : '' }}>
+                                    <span>Colour customization available</span>
+                                </label>
+
+                                <div class="field-group" id="dye-price-wrapper"
+                                    style="margin:0;
+                                        {{ old('colour_customization', $product->colour_customization) ? '' : 'display:none' }}">
+                                    <label class="field-label">Dye Price (₹)</label>
+                                    <input type="number" step="0.01" min="0" name="dye_price" id="dye_price"
+                                        class="field-input" value="{{ old('dye_price', $product->dye_price) }}"
+                                        placeholder="0.00">
+                                    <div class="field-hint">Extra charge when the customer wants a custom colour.
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Inventory -->
@@ -1430,18 +1361,24 @@
                             </div>
                             <div class="section-card-body">
 
-                                <div class="inv-grid" style="margin-bottom:14px">
-                                    <div class="field-group" style="margin:0">
+                                <div class="field-group">
+                                    <label class="field-label">Brand</label>
+                                    <select name="brand_id" class="field-select">
+                                        <option value="">— No brand —</option>
+                                        @foreach($brands as $brand)
+                                            <option value="{{ $brand->id }}" {{ old('brand_id', $product->brand_id) == $brand->id ? 'selected' : '' }}>{{ $brand->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="inv-grid">
+                                    <div class="field-group">
                                         <label class="field-label">SKU</label>
                                         <input type="text" name="sku" class="field-input"
                                             value="{{ old('sku', $product->sku) }}">
                                     </div>
-                                    <div class="field-group" style="margin:0">
-                                        <label class="field-label">Product Code</label>
-                                        <input type="text" name="product_code" class="field-input"
-                                            value="{{ old('product_code', $product->product_code) }}">
-                                    </div>
-                                    <div class="field-group" style="margin:0">
+                                    <div class="field-group">
                                         <label class="field-label">Stock</label>
                                         <input type="number" name="stock" class="field-input"
                                             value="{{ old('stock', $product->stock) }}">
@@ -1451,26 +1388,13 @@
                                         <input type="number" name="min_qty" class="field-input"
                                             value="{{ old('min_qty', $product->min_qty) }}">
                                     </div>
+                                    <div class="field-group">
+                                        <label class="field-label">Dispatch Time</label>
+                                        <input type="text" name="delivery_time" class="field-input"
+                                            value="{{ old('delivery_time', $product->delivery_time) }}"
+                                            placeholder="e.g. 2–4 days">
+                                    </div>
                                 </div>
-
-                                <div class="field-group">
-                                    <label class="field-label">Delivery Time</label>
-                                    <input type="text" name="delivery_time" class="field-input"
-                                        value="{{ old('delivery_time', $product->delivery_time) }}"
-                                        placeholder="e.g. 3–5 business days">
-                                </div>
-
-                                <div>
-                                    <label class="check-pill">
-                                        <input type="checkbox" name="quality" {{ old('quality', $product->quality) ? 'checked' : '' }}>
-                                        <span>Quality Assurance</span>
-                                    </label>
-                                    <label class="check-pill">
-                                        <input type="checkbox" name="pan_india" {{ old('pan_india', $product->pan_india) ? 'checked' : '' }}>
-                                        <span>PAN India Delivery</span>
-                                    </label>
-                                </div>
-
                             </div>
                         </div>
 
@@ -1526,26 +1450,6 @@
                             </div>
                         </div>
 
-                        <!-- Search Suggestions -->
-                        <div class="section-card">
-                            <div class="section-card-header">
-                                <h5>Search Suggestions</h5>
-                            </div>
-                            <div class="section-card-body">
-                                <div class="field-group" style="margin:0">
-                                    <label class="field-label">Enter Suggestions</label>
-                                    <div class="tag-input-wrap" id="suggestionsWrap">
-                                        <div class="tag-list" id="suggestionsTagList"></div>
-                                        <input type="text" id="suggestionsInput" class="tag-input-field"
-                                            placeholder="Type a keyword and press space…" autocomplete="off">
-                                        <div class="tag-suggestions-dropdown" id="suggestionsDropdown"></div>
-                                    </div>
-                                    <div id="suggestionsHidden"></div>
-                                    <div class="field-hint">Press spacebar after typing a keyword to add it as a tag.
-                                        These power the header search suggestions.</div>
-                                </div>
-                            </div>
-                        </div>
 
                     </div><!-- /right column -->
 
@@ -1588,15 +1492,13 @@
     let selectedAttributeValues = @json($selectedAttributeValues);
     let existingVariantsByType = @json($existingVariantsByType);
     let storageBaseUrl = "{{ asset('storage') }}"; // ✅ matches main image asset() pattern
-    let initialSuggestions = @json($existingKeywords ?? []);
 
     CKEDITOR.config.versionCheck = false;
-    CKEDITOR.replace('description');
-    CKEDITOR.replace('fabric_care');
+    CKEDITOR.replace('fabric_material');
+    CKEDITOR.replace('care_instructions');
     CKEDITOR.replace('shipping_delivery');
-    CKEDITOR.replace('exchange_policy');
-    CKEDITOR.replace('customization_assistance');
-    CKEDITOR.replace('delivery_returns');
+    CKEDITOR.replace('returns_exchange');
+    CKEDITOR.replace('offers_how_to_avail');
 
     /* ── Content tabs ────────────────────────────────────────────── */
     $(document).on('click', '.content-tab-btn', function () {
@@ -1812,12 +1714,14 @@
     // ── Addon Options (dynamic rows, pre-filled from existing) ─────
     // Field index must not collide with the rows already rendered server-side
     // for the product's existing addons, so we start counting after them.
+    // ── Addon Options (dynamic rows, pre-filled from existing) ─────
     let addonIndex = {{ $product->addons->count() }};
 
     $(document).on('click', '#add-addon-row', function () {
         let row = `
         <tr id="addon-row-${addonIndex}">
             <td><input type="text" name="addons[${addonIndex}][detail]" class="field-input" placeholder="e.g. Gift Wrapping"></td>
+            <td><input type="text" name="addons[${addonIndex}][description]" class="field-input" placeholder="Short description (optional)"></td>
             <td><input type="number" step="0.01" name="addons[${addonIndex}][price]" class="field-input" placeholder="0.00"></td>
             <td><button type="button" class="thumb-remove" style="position:static" onclick="removeAddonRow(${addonIndex})">×</button></td>
         </tr>`;
@@ -1836,6 +1740,12 @@
         $('#addon-table').toggle(hasRows);
         $('#addon-empty-hint').toggle(!hasRows);
     }
+
+    // ── Colour customization → show/hide dye price ─────────────────
+    $(document).on('change', '#colour_customization', function () {
+        $('#dye-price-wrapper').toggle(this.checked);
+        if (!this.checked) $('#dye_price').val('');
+    });
 
     // ── Category → sub + attributes ──────────────────────────────
     $('#category_id').on('change', function () {
@@ -2223,100 +2133,6 @@
         }
     );
 
-    /* ── Search Suggestions (tag input, spacebar-to-add, with autocomplete) ── */
-    (function () {
-        const input = document.getElementById('suggestionsInput');
-        const tagList = document.getElementById('suggestionsTagList');
-        const hiddenWrap = document.getElementById('suggestionsHidden');
-        const dropdown = document.getElementById('suggestionsDropdown');
-        const wrap = document.getElementById('suggestionsWrap');
-
-        let tags = Array.isArray(initialSuggestions) ? initialSuggestions.slice() : [];
-        let fetchTimer = null;
-
-        function renderTags() {
-            tagList.innerHTML = '';
-            hiddenWrap.innerHTML = '';
-            tags.forEach(function (tag, i) {
-                tagList.insertAdjacentHTML('beforeend',
-                    `<span class="tag-chip">${tag}<button type="button" class="tag-remove" data-index="${i}">×</button></span>`);
-                hiddenWrap.insertAdjacentHTML('beforeend',
-                    `<input type="hidden" name="suggestions[]" value="${tag.replace(/"/g, '&quot;')}">`);
-            });
-        }
-
-        function addTag(value) {
-            value = value.trim();
-            if (!value) return;
-            if (tags.some(t => t.toLowerCase() === value.toLowerCase())) {
-                input.value = '';
-                dropdown.style.display = 'none';
-                return;
-            }
-            tags.push(value);
-            renderTags();
-            input.value = '';
-            dropdown.style.display = 'none';
-        }
-
-        input.addEventListener('keydown', function (e) {
-            if (e.key === ' ' || e.code === 'Space') {
-                e.preventDefault();
-                addTag(input.value);
-            } else if (e.key === 'Enter') {
-                e.preventDefault();
-                addTag(input.value);
-            } else if (e.key === 'Backspace' && input.value === '' && tags.length) {
-                tags.pop();
-                renderTags();
-            }
-        });
-
-        tagList.addEventListener('click', function (e) {
-            if (e.target.classList.contains('tag-remove')) {
-                let idx = +e.target.dataset.index;
-                tags.splice(idx, 1);
-                renderTags();
-            }
-        });
-
-        input.addEventListener('input', function () {
-            clearTimeout(fetchTimer);
-            let q = input.value.trim();
-
-            if (!q) {
-                dropdown.style.display = 'none';
-                return;
-            }
-
-            fetchTimer = setTimeout(function () {
-                $.get("{{ route('admin.products.suggestion-keywords') }}", { q: q }, function (res) {
-                    let matches = res.filter(k => !tags.some(t => t.toLowerCase() === k.toLowerCase()));
-
-                    if (matches.length) {
-                        dropdown.innerHTML = matches.map(k => `<div class="tag-suggestion-item">${k}</div>`).join('');
-                        dropdown.style.display = 'block';
-                    } else {
-                        dropdown.style.display = 'none';
-                    }
-                });
-            }, 200);
-        });
-
-        dropdown.addEventListener('click', function (e) {
-            if (e.target.classList.contains('tag-suggestion-item')) {
-                addTag(e.target.textContent);
-            }
-        });
-
-        document.addEventListener('click', function (e) {
-            if (!wrap.contains(e.target)) {
-                dropdown.style.display = 'none';
-            }
-        });
-
-        renderTags();
-    })();
 </script>
 
 @include('admin.footer')

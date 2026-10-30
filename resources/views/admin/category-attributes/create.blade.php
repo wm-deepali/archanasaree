@@ -4,161 +4,370 @@
     @include('admin.header')
 
     <style>
-    /* ── Design Tokens ──────────────────────────────────────── */
-    :root {
-        --bg:            #f1f2f4;
-        --surface:       #ffffff;
-        --border:        #e3e5e8;
-        --text-primary:  #202223;
-        --text-secondary:#6d7175;
-        --text-hint:     #8c9196;
-        --accent:        #303d89;
-        --accent-light:  #f0f1fc;
-        --green:         #007a5e;
-        --green-bg:      #e3f1ec;
-        --red:           #b22222;
-        --radius-sm:     8px;
-        --radius-md:     12px;
-        --shadow-card:   0 1px 3px rgba(0,0,0,.08), 0 0 0 1px var(--border);
-        --font:          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
+        /* ── Design Tokens ──────────────────────────────────────── */
+        :root {
+            --bg: #f1f2f4;
+            --surface: #ffffff;
+            --border: #e3e5e8;
+            --text-primary: #202223;
+            --text-secondary: #6d7175;
+            --text-hint: #8c9196;
+            --accent: #303d89;
+            --accent-light: #f0f1fc;
+            --green: #007a5e;
+            --green-bg: #e3f1ec;
+            --red: #b22222;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, .08), 0 0 0 1px var(--border);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
 
-    .create-page { background: var(--bg); padding: 24px 28px; min-height: 100vh; font-family: var(--font); color: var(--text-primary); }
-    .create-page * { box-sizing: border-box; }
+        .create-page {
+            background: var(--bg);
+            padding: 24px 28px;
+            min-height: 100vh;
+            font-family: var(--font);
+            color: var(--text-primary);
+        }
 
-    /* ── Page header ────────────────────────────────────────── */
-    .create-page-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
-    .create-page-header h1 { font-size: 20px; font-weight: 650; color: var(--text-primary); margin: 0; }
-    .crumb { font-size: 12.5px; color: var(--text-hint); margin-top: 3px; }
-    .crumb a { color: var(--accent); text-decoration: none; }
-    .crumb a:hover { text-decoration: underline; }
-    .crumb span { margin: 0 5px; }
+        .create-page * {
+            box-sizing: border-box;
+        }
 
-    /* ── Buttons ────────────────────────────────────────────── */
-    .btn-primary-dash {
-        display: inline-flex; align-items: center; gap: 6px;
-        background: var(--accent); color: #fff !important; border: none;
-        border-radius: var(--radius-sm); padding: 8px 18px;
-        font-size: 13px; font-weight: 600; cursor: pointer;
-        text-decoration: none !important; font-family: var(--font);
-        transition: background .15s, box-shadow .15s;
-        box-shadow: 0 1px 3px rgba(48,61,137,.25);
-    }
-    .btn-primary-dash:hover:not(:disabled) { background: #252f70; }
-    .btn-primary-dash:disabled { opacity: .65; cursor: not-allowed; }
+        /* ── Page header ────────────────────────────────────────── */
+        .create-page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
 
-    .btn-secondary-dash {
-        display: inline-flex; align-items: center; gap: 6px;
-        background: var(--surface); color: var(--text-primary) !important;
-        border: 1px solid var(--border); border-radius: var(--radius-sm);
-        padding: 8px 18px; font-size: 13px; font-weight: 500; cursor: pointer;
-        text-decoration: none !important; font-family: var(--font);
-        transition: background .15s;
-    }
-    .btn-secondary-dash:hover { background: var(--bg); }
+        .create-page-header h1 {
+            font-size: 20px;
+            font-weight: 650;
+            color: var(--text-primary);
+            margin: 0;
+        }
 
-    /* ── Two-column layout ──────────────────────────────────── */
-    .create-layout { display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start; }
-    @media(max-width:900px) { .create-layout { grid-template-columns: 1fr; } }
+        .crumb {
+            font-size: 12.5px;
+            color: var(--text-hint);
+            margin-top: 3px;
+        }
 
-    /* ── Section card ───────────────────────────────────────── */
-    .section-card {
-        background: var(--surface); border: 1px solid var(--border);
-        border-radius: var(--radius-md); box-shadow: var(--shadow-card);
-        overflow: hidden; margin-bottom: 16px;
-    }
-    .section-card:last-child { margin-bottom: 0; }
+        .crumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
 
-    .section-card-header {
-        padding: 14px 20px; border-bottom: 1px solid var(--border);
-        background: #fafafa;
-    }
-    .section-card-header h5 {
-        font-size: 13px; font-weight: 650; color: var(--text-primary);
-        margin: 0; letter-spacing: .01em;
-    }
+        .crumb a:hover {
+            text-decoration: underline;
+        }
 
-    .section-card-body { padding: 20px; }
+        .crumb span {
+            margin: 0 5px;
+        }
 
-    /* ── Form fields ────────────────────────────────────────── */
-    .field-group { margin-bottom: 16px; }
-    .field-group:last-child { margin-bottom: 0; }
+        /* ── Buttons ────────────────────────────────────────────── */
+        .btn-primary-dash {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--accent);
+            color: #fff !important;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 8px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none !important;
+            font-family: var(--font);
+            transition: background .15s, box-shadow .15s;
+            box-shadow: 0 1px 3px rgba(48, 61, 137, .25);
+        }
 
-    .field-label {
-        display: block; font-size: 12px; font-weight: 600;
-        color: var(--text-secondary); letter-spacing: .03em;
-        text-transform: uppercase; margin-bottom: 6px;
-    }
-    .field-label .req { color: var(--red); margin-left: 2px; }
+        .btn-primary-dash:hover:not(:disabled) {
+            background: #252f70;
+        }
 
-    .field-input, .field-select {
-        width: 100%; height: 38px; border: 1px solid var(--border);
-        border-radius: var(--radius-sm); padding: 0 12px;
-        font-size: 13.5px; color: var(--text-primary);
-        background: var(--surface); outline: none;
-        transition: border-color .15s, box-shadow .15s;
-        font-family: var(--font);
-    }
-    .field-input:focus, .field-select:focus {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 3px rgba(48,61,137,.12);
-    }
+        .btn-primary-dash:disabled {
+            opacity: .65;
+            cursor: not-allowed;
+        }
 
-    .field-hint { font-size: 11.5px; color: var(--text-hint); margin-top: 4px; }
+        .btn-secondary-dash {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--surface);
+            color: var(--text-primary) !important;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 8px 18px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none !important;
+            font-family: var(--font);
+            transition: background .15s;
+        }
 
-    /* ── Toggle rows (right column settings) ───────────────── */
-    .toggle-row {
-        display: flex; align-items: center; justify-content: space-between;
-        padding: 12px 0; border-bottom: 1px solid var(--bg);
-    }
-    .toggle-row:last-child { border-bottom: none; padding-bottom: 0; }
-    .toggle-row:first-child { padding-top: 0; }
+        .btn-secondary-dash:hover {
+            background: var(--bg);
+        }
 
-    .toggle-label { font-size: 13px; font-weight: 500; color: var(--text-primary); }
-    .toggle-sub   { font-size: 11.5px; color: var(--text-hint); margin-top: 2px; }
+        /* ── Two-column layout ──────────────────────────────────── */
+        .create-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 20px;
+            align-items: start;
+        }
 
-    .field-select-sm {
-        height: 32px; border: 1px solid var(--border); border-radius: var(--radius-sm);
-        padding: 0 28px 0 10px; font-size: 12.5px; color: var(--text-primary);
-        background: var(--surface); outline: none; font-family: var(--font);
-        transition: border-color .15s, box-shadow .15s; min-width: 90px;
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238c9196'/%3E%3C/svg%3E");
-        background-repeat: no-repeat; background-position: right 9px center;
-    }
-    .field-select-sm:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(48,61,137,.12); }
+        @media(max-width:900px) {
+            .create-layout {
+                grid-template-columns: 1fr;
+            }
+        }
 
-    /* ── Dependency checkbox group ──────────────────────────── */
-    .dependency-group {
-        margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--bg);
-    }
-    .dependency-group.is-hidden { display: none; }
-    .dependency-title { font-size: 12px; font-weight: 600; color: var(--text-secondary); letter-spacing: .03em; text-transform: uppercase; margin-bottom: 2px; }
-    .dependency-hint { font-size: 11.5px; color: var(--text-hint); margin-bottom: 10px; }
+        /* ── Section card ───────────────────────────────────────── */
+        .section-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
 
-    .check-toggle {
-        display: flex; align-items: center; gap: 10px;
-        padding: 9px 12px; border: 1.5px solid var(--border);
-        border-radius: var(--radius-sm); cursor: pointer;
-        transition: all .15s; background: var(--surface); margin-bottom: 8px;
-    }
-    .check-toggle:last-child { margin-bottom: 0; }
-    .check-toggle:hover { border-color: var(--accent); background: var(--accent-light); }
-    .check-toggle input[type="checkbox"] { accent-color: var(--accent); width: 15px; height: 15px; flex-shrink: 0; cursor: pointer; margin: 0; }
-    .check-toggle:has(input:checked) { border-color: var(--accent); background: var(--accent-light); }
-    .check-toggle span { font-size: 12.5px; color: var(--text-primary); line-height: 1.35; }
-    .dep-name { font-weight: 600; }
-    .dep-sub { color: var(--text-hint); font-size: 11.5px; display: block; margin-top: 1px; }
+        .section-card:last-child {
+            margin-bottom: 0;
+        }
 
-    /* ── Action bar ─────────────────────────────────────────── */
-    .action-bar {
-        background: var(--surface); border: 1px solid var(--border);
-        border-radius: var(--radius-md); box-shadow: var(--shadow-card);
-        padding: 14px 20px; display: flex; align-items: center;
-        justify-content: flex-end; gap: 10px; margin-top: 20px;
-    }
+        .section-card-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            background: #fafafa;
+        }
 
-    @media(max-width:768px) { .create-page { padding: 16px; } }
+        .section-card-header h5 {
+            font-size: 13px;
+            font-weight: 650;
+            color: var(--text-primary);
+            margin: 0;
+            letter-spacing: .01em;
+        }
+
+        .section-card-body {
+            padding: 20px;
+        }
+
+        /* ── Form fields ────────────────────────────────────────── */
+        .field-group {
+            margin-bottom: 16px;
+        }
+
+        .field-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: .03em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .field-label .req {
+            color: var(--red);
+            margin-left: 2px;
+        }
+
+        .field-input,
+        .field-select {
+            width: 100%;
+            height: 38px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0 12px;
+            font-size: 13.5px;
+            color: var(--text-primary);
+            background: var(--surface);
+            outline: none;
+            transition: border-color .15s, box-shadow .15s;
+            font-family: var(--font);
+        }
+
+        .field-input:focus,
+        .field-select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(48, 61, 137, .12);
+        }
+
+        .field-hint {
+            font-size: 11.5px;
+            color: var(--text-hint);
+            margin-top: 4px;
+        }
+
+        /* ── Toggle rows (right column settings) ───────────────── */
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--bg);
+        }
+
+        .toggle-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .toggle-row:first-child {
+            padding-top: 0;
+        }
+
+        .toggle-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .toggle-sub {
+            font-size: 11.5px;
+            color: var(--text-hint);
+            margin-top: 2px;
+        }
+
+        .field-select-sm {
+            height: 32px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0 28px 0 10px;
+            font-size: 12.5px;
+            color: var(--text-primary);
+            background: var(--surface);
+            outline: none;
+            font-family: var(--font);
+            transition: border-color .15s, box-shadow .15s;
+            min-width: 90px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238c9196'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 9px center;
+        }
+
+        .field-select-sm:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(48, 61, 137, .12);
+        }
+
+        /* ── Dependency checkbox group ──────────────────────────── */
+        .dependency-group {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--bg);
+        }
+
+        .dependency-group.is-hidden {
+            display: none;
+        }
+
+        .dependency-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: .03em;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .dependency-hint {
+            font-size: 11.5px;
+            color: var(--text-hint);
+            margin-bottom: 10px;
+        }
+
+        .check-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all .15s;
+            background: var(--surface);
+            margin-bottom: 8px;
+        }
+
+        .check-toggle:last-child {
+            margin-bottom: 0;
+        }
+
+        .check-toggle:hover {
+            border-color: var(--accent);
+            background: var(--accent-light);
+        }
+
+        .check-toggle input[type="checkbox"] {
+            accent-color: var(--accent);
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .check-toggle:has(input:checked) {
+            border-color: var(--accent);
+            background: var(--accent-light);
+        }
+
+        .check-toggle span {
+            font-size: 12.5px;
+            color: var(--text-primary);
+            line-height: 1.35;
+        }
+
+        .dep-name {
+            font-weight: 600;
+        }
+
+        .dep-sub {
+            color: var(--text-hint);
+            font-size: 11.5px;
+            display: block;
+            margin-top: 1px;
+        }
+
+        /* ── Action bar ─────────────────────────────────────────── */
+        .action-bar {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-card);
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        @media(max-width:768px) {
+            .create-page {
+                padding: 16px;
+            }
+        }
     </style>
 
     <div class="app-content content container-fluid">
@@ -215,7 +424,8 @@
 
                                 <div class="field-group">
                                     <label class="field-label">Sort Order</label>
-                                    <input type="number" name="sort_order" class="field-input" value="0" style="max-width:120px">
+                                    <input type="number" name="sort_order" class="field-input" value="0"
+                                        style="max-width:120px">
                                     <div class="field-hint">Lower numbers appear first.</div>
                                 </div>
 
@@ -274,7 +484,7 @@
                                 </div>
 
 
-                                 <div class="toggle-row" style="border-bottom:none">
+                                <div class="toggle-row" style="border-bottom:none">
                                     <div>
                                         <div class="toggle-label">Used for Variants</div>
                                         <div class="toggle-sub">Attribute is used to create product variants</div>
@@ -284,11 +494,13 @@
                                         <option value="1">Yes</option>
                                     </select>
                                 </div>
-                                
+
+                                @include('admin.category-attributes._dependency')
 
                                 <div class="dependency-group is-hidden" id="dependencyGroup">
                                     <div class="dependency-title">Dependency</div>
-                                    <div class="dependency-hint">Choose what changes when a customer selects this attribute's value.</div>
+                                    <div class="dependency-hint">Choose what changes when a customer selects this
+                                        attribute's value.</div>
 
                                     <label class="check-toggle">
                                         <input type="checkbox" name="price_dependent" value="1">
@@ -348,20 +560,61 @@
 @include('admin.footer')
 
 <script>
-$(document).on('submit', '.save-form', function () {
-    const btn = document.getElementById('saveBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Processing…';
-});
+    // Used for Variants = Yes  →  Customer Selectable apne aap Yes
+    $('#usedForVariant').on('change', function () {
+        if (this.value === '1') $('#isSelectable').val('1');
+    });
 
-// When hidden, uncheck everything so nothing stale gets submitted.
-function syncDependencyGroup() {
-    const isVariant = $('#usedForVariant').val() === '1';
-    $('#dependencyGroup').toggleClass('is-hidden', !isVariant);
-    if (!isVariant) {
-        $('#dependencyGroup input[type="checkbox"]').prop('checked', false);
+    // Parent dropdown: usi category ke, khud ko chhod ke, sirf selectable attributes
+    var initParent = CA_INIT.parent, initValues = CA_INIT.values;
+
+    function refreshParents() {
+        var cat = $('select[name="category_id"]').val();
+        var $p = $('#parentCa').empty().append('<option value="">— Always show —</option>');
+
+        CA_MAP.filter(function (m) {
+            return String(m.category_id) === String(cat) && m.id !== CA_SELF && m.is_selectable;
+        }).forEach(function (m) {
+            $p.append($('<option>', { value: m.id, text: m.name }));
+        });
+
+        if (initParent) { $p.val(initParent); }
+        refreshValues();
     }
-}
-$('#usedForVariant').on('change', syncDependencyGroup);
-syncDependencyGroup();
+
+    function refreshValues() {
+        var id = parseInt($('#parentCa').val(), 10), $box = $('#showWhenValues').empty();
+        var parent = CA_MAP.find(function (m) { return m.id === id; });
+        if (!parent) return;
+
+        $box.append('<div class="dependency-hint" style="margin-top:10px">Show this attribute when the customer selects:</div>');
+        parent.values.forEach(function (v) {
+            var checked = initValues.indexOf(v.id) !== -1 ? 'checked' : '';
+            $box.append(
+                '<label class="check-toggle"><input type="checkbox" name="show_when_value_ids[]" value="' + v.id + '" ' + checked + '>' +
+                '<span>' + $('<span>').text(v.value).html() + '</span></label>'
+            );
+        });
+    }
+
+    $('select[name="category_id"]').on('change', function () { initParent = null; initValues = []; refreshParents(); });
+    $('#parentCa').on('change', function () { initValues = []; refreshValues(); });
+    refreshParents();
+
+    $(document).on('submit', '.save-form', function () {
+        const btn = document.getElementById('saveBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Processing…';
+    });
+
+    // When hidden, uncheck everything so nothing stale gets submitted.
+    function syncDependencyGroup() {
+        const isVariant = $('#usedForVariant').val() === '1';
+        $('#dependencyGroup').toggleClass('is-hidden', !isVariant);
+        if (!isVariant) {
+            $('#dependencyGroup input[type="checkbox"]').prop('checked', false);
+        }
+    }
+    $('#usedForVariant').on('change', syncDependencyGroup);
+    syncDependencyGroup();
 </script>

@@ -22,22 +22,19 @@ class Product extends Model
 
         'category_id',
         'subcategory_id',
+        'brand_id',
 
         'name',
         'slug',
 
         'sku',
-        'product_code',
 
         'short_description',
-        'description',
-        'delivery_returns',
-        'fabric_care',
-
-        // ✅ new Content-tab fields
+        'fabric_material',
+        'care_instructions',
         'shipping_delivery',
-        'exchange_policy',
-        'customization_assistance',
+        'returns_exchange',
+        'offers_how_to_avail',
 
         'mrp',
         'discount_type',
@@ -49,8 +46,8 @@ class Product extends Model
 
         'delivery_time',
 
-        'quality',
-        'pan_india',
+        'colour_customization',
+        'dye_price',
 
         'meta_title',
         'meta_description',
@@ -62,8 +59,7 @@ class Product extends Model
     protected $casts = [
 
         'status' => 'boolean',
-        'quality' => 'boolean',
-        'pan_india' => 'boolean',
+        'colour_customization' => 'boolean',
 
     ];
 
@@ -176,11 +172,6 @@ class Product extends Model
         return $this->hasMany(ProductReview::class)->where('status', 'approved');
     }
 
-    public function keywords()
-    {
-        return $this->hasMany(ProductKeyword::class);
-    }
-
     public function orderDetails()
     {
         return $this->hasMany(OrderItem::class, 'product_id');
@@ -201,6 +192,12 @@ class Product extends Model
         session(['recently_viewed' => array_slice($ids, 0, $limit)]);
     }
 
+    public function getDiscountPercentAttribute(): int
+    {
+        return $this->mrp > $this->price
+            ? (int) round((($this->mrp - $this->price) / $this->mrp) * 100)
+            : 0;
+    }
     public function scopeOrderForListing($query, ?string $sort)
     {
         switch ($sort) {
@@ -227,6 +224,27 @@ class Product extends Model
 
         // tie-breaker: barabar values par bhi order stable rahe
         return $query->orderByDesc('id');
+    }
+
+    /**
+     * Customer ka pehla aisa order item jo is product ka hai, deliver ho chuka hai,
+     * aur jis par abhi tak review nahi diya gaya. Nahi mila to null.
+     */
+    public function reviewableOrderItemFor(int $customerId): ?OrderItem
+    {
+        $reviewed = ProductReview::where('customer_id', $customerId)
+            ->where('product_id', $this->id)
+            ->whereNotNull('order_item_id')
+            ->pluck('order_item_id');
+
+        return OrderItem::where('product_id', $this->id)
+            ->whereNotIn('id', $reviewed)
+            ->whereHas('order', function ($q) use ($customerId) {
+                $q->where('customer_id', $customerId)
+                    ->whereIn('status', ['delivered', 'completed']); // apne status values yahan rakho
+            })
+            ->orderBy('id')
+            ->first();
     }
 
 }

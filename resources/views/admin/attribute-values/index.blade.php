@@ -349,15 +349,6 @@
                                                         </td>
 
                                                         <td>
-                                                            @if($value->image)
-                                                                <img src="{{ asset('storage/' . $value->image) }}"
-                                                                    style="width:40px;height:40px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">
-                                                            @else
-                                                                —
-                                                            @endif
-                                                        </td>
-
-                                                        <td>
                                                             @if($value->hex_code)
                                                                                         <div style="display:flex;align-items:center;gap:8px;">
                                                                                             <span style="

@@ -22,6 +22,11 @@ return new class extends Migration {
                 ->constrained()
                 ->cascadeOnDelete();
 
+            $table->foreignId('parent_category_attribute_id')->nullable()
+                ->constrained('category_attributes')->nullOnDelete();
+            $table->json('show_when_value_ids')->nullable();
+            $table->boolean('is_selectable')->default(false);
+
             $table->boolean('used_for_variant')->default(false);
             $table->boolean('price_dependent')->default(false);
             $table->boolean('image_dependent')->default(false);

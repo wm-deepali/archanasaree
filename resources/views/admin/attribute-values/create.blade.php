@@ -363,16 +363,6 @@
                                         placeholder="e.g. Red, XL, Cotton">
                                 </div>
 
-                                <div class="field-group" id="imageWrapper" style="display:none;">
-                                    <label class="field-label">Image</label>
-
-                                    <input type="file" name="image" class="field-input" accept="image/*">
-
-                                    <div class="field-hint">
-                                        Upload image for Image type attributes.
-                                    </div>
-                                </div>
-
                                 <div class="field-group" id="hexCodeWrapper" style="display:none;">
                                     <label class="field-label">
                                         Hexa Code <span class="req">*</span>
@@ -414,12 +404,6 @@
                                             style="background:var(--accent-light);color:var(--accent);font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px">Size</span>
                                         <span style="color:var(--text-hint)">→</span>
                                         <span>XS, S, M, L, XL</span>
-                                    </div>
-                                    <div style="display:flex;align-items:center;gap:8px">
-                                        <span
-                                            style="background:var(--accent-light);color:var(--accent);font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px">Material</span>
-                                        <span style="color:var(--text-hint)">→</span>
-                                        <span>Cotton, Polyester</span>
                                     </div>
                                 </div>
                             </div>
@@ -501,13 +485,7 @@ $(document).on('submit', '.save-form', function () {
 function handleAttributeType() {
 
     let type = $('#attributeSelect option:selected').data('type');
-
-    $('#imageWrapper').hide();
     $('#hexCodeWrapper').hide();
-
-    if (type === 'image') {
-        $('#imageWrapper').show();
-    }
 
     if (type === 'color_swatch') {
         $('#hexCodeWrapper').show();

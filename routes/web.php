@@ -65,7 +65,8 @@ use App\Http\Controllers\Admin\{
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\FrontController;
-
+use App\Http\Controllers\PincodeController;
+use App\Http\Controllers\ProductReviewController;
 
 Route::middleware('maintenance.mode')->group(function () {
 
@@ -74,7 +75,7 @@ Route::middleware('maintenance.mode')->group(function () {
         Route::get('/categories', 'categories')->name('categories');
         Route::get('/category/{slug}', 'categoryShow')->name('category.show');
         Route::get('/products', 'products')->name('products');
-        Route::view('/product-detail', 'front-pages.product-detail')->name('products.show');
+        Route::get('/product/{slug}', 'productShow')->name('products.show');
 
         Route::view('/cart', 'front-pages.cart')->name('cart');
         Route::view('/checkout', 'front-pages.checkout')->name('checkout');
@@ -91,7 +92,11 @@ Route::middleware('maintenance.mode')->group(function () {
 
 });
 
+Route::get('/pincode/check', [PincodeController::class, 'check'])->middleware('throttle:30,1')->name('pincode.check');
 
+Route::post('/product/{product}/review', [ProductReviewController::class, 'store'])
+    ->middleware(['customer', 'throttle:5,1'])
+    ->name('product.review.store');
 
 // Admin Routes list
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -123,19 +128,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('gifting-occasions', GiftingOccasionController::class);
 
         // product routes
-        Route::get('/products/suggestion-keywords', [ProductController::class, 'suggestionKeywords'])->name('products.suggestion-keywords');
         Route::view('/products/media-library', 'admin.products.media-library')->name('products.media-library');
         Route::get('products/subcategories/{category}', [ProductController::class, 'subcategories'])->name('products.subcategories');
         Route::get('products/category-attributes/{category}', [ProductController::class, 'categoryAttributes'])->name('products.category-attributes');
         Route::post('/products/upload-images-zip', [ProductController::class, 'uploadImagesZip'])->name('products.images.upload');
         Route::get('/products/import', [ProductController::class, 'import'])->name('products.import');
-        Route::post('/products/import', [ProductController::class, 'importStore'])->name('products.import.store');
-        Route::get('products/import/sample', [ProductController::class, 'downloadSample'])->name('products.import.sample');
-        Route::get('products/reference/categories', [ProductController::class, 'downloadCategoryReference'])->name('products.reference.categories');
-        Route::get('products/reference/subcategories', [ProductController::class, 'downloadSubCategoryReference'])->name('products.reference.subcategories');
-        Route::get('products/reference/brands', [ProductController::class, 'downloadBrandReference'])->name('products.reference.brands');
-        Route::get('products/reference/occasions', [ProductController::class, 'downloadOccasionReference'])->name('products.reference.occasions');
-        Route::get('products/reference/customizations', [ProductController::class, 'downloadCustomizationReference'])->name('products.reference.customizations');
         Route::resource('products', ProductController::class)->names('products');
 
         Route::resource('customizations', CustomizationController::class);

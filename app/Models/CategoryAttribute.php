@@ -10,6 +10,10 @@ class CategoryAttribute extends Model
         'category_id',
         'attribute_id',
 
+        'is_selectable',
+        'parent_category_attribute_id',
+        'show_when_value_ids',
+
         'used_for_variant',
         'price_dependent',
         'image_dependent',
@@ -24,15 +28,17 @@ class CategoryAttribute extends Model
     ];
 
     protected $casts = [
-        
-        'used_for_variant' => 'boolean',
-        'price_dependent'  => 'boolean',
-        'image_dependent'  => 'boolean',
-        'stock_dependent'  => 'boolean',
-        'sku_dependent'    => 'boolean',
 
-        'show_in_filter'   => 'boolean',
-        'show_on_listing'  => 'boolean',
+        'used_for_variant' => 'boolean',
+        'price_dependent' => 'boolean',
+        'image_dependent' => 'boolean',
+        'stock_dependent' => 'boolean',
+        'sku_dependent' => 'boolean',
+
+        'show_in_filter' => 'boolean',
+        'show_on_listing' => 'boolean',
+        'is_selectable' => 'boolean',
+        'show_when_value_ids' => 'array',
     ];
 
     public function category()
@@ -80,6 +86,16 @@ class CategoryAttribute extends Model
         return $this->resolveMode('sku_dependent');
     }
 
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_category_attribute_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(self::class, 'parent_category_attribute_id');
+    }
+
     /**
      * Does this attribute participate in variant generation at all —
      * i.e. is it selectable AND drives at least one of price/image/stock/sku?
@@ -96,7 +112,7 @@ class CategoryAttribute extends Model
 
     protected function resolveMode(string $field): string
     {
-        if (! $this->{$field}) {
+        if (!$this->{$field}) {
             return 'none';
         }
 

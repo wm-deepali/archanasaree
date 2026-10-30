@@ -13,7 +13,8 @@ return new class extends Migration
             $table->foreignId('product_id')
                 ->constrained('products')
                 ->cascadeOnDelete();
-            $table->string('detail');           // e.g. "Gift Wrapping"
+            $table->string('detail'); 
+            $table->string('description')->nullable();
             $table->decimal('price', 10, 2)->default(0);
             $table->timestamps();
         });

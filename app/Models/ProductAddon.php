@@ -9,6 +9,7 @@ class ProductAddon extends Model
     protected $fillable = [
         'product_id',
         'detail',
+        'description',
         'price',
     ];
 

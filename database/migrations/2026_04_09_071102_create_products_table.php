@@ -23,23 +23,22 @@ return new class extends Migration {
                 ->constrained('categories')
                 ->nullOnDelete();
 
+            $table->foreignId('brand_id')->nullable()->constrained('brands')->nullOnDelete();
+
             $table->string('name');
 
             $table->string('slug')->unique();
 
             $table->string('sku')->nullable();
 
-            $table->string('product_code')->nullable();
-
             $table->text('short_description')->nullable();
 
-            $table->longText('description')->nullable();
-
-            $table->longText('delivery_returns')->nullable();
-            $table->longText('fabric_care')->nullable();
-            $table->longText('shipping_delivery')->nullable();
-            $table->longText('exchange_policy')->nullable();
-            $table->longText('customization_assistance')->nullable();
+            /* ── Content: detail page ke accordions ── */
+            $table->longText('fabric_material')->nullable();       // Fabric & Material
+            $table->longText('care_instructions')->nullable();     // Care Instructions
+            $table->longText('shipping_delivery')->nullable();     // Shipping & Delivery (khali ho to store default)
+            $table->longText('returns_exchange')->nullable();      // Returns & Exchange (khali ho to store default)
+            $table->longText('offers_how_to_avail')->nullable();   // Offers & How to Avail (khali ho to coupons se auto)
 
             $table->decimal('mrp', 12, 2)->default(0);
 
@@ -58,9 +57,8 @@ return new class extends Migration {
 
             $table->string('delivery_time')->nullable();
 
-            $table->boolean('quality')->default(false);
-
-            $table->boolean('pan_india')->default(false);
+            $table->boolean('colour_customization')->default(false);
+            $table->decimal('dye_price', 10, 2)->nullable();
 
             $table->string('meta_title')->nullable();
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Coupon;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Traits\LogsApiCalls;
@@ -124,6 +125,122 @@ class FrontController extends Controller
         return Product::visible()->forCard()
             ->when($excludeCategoryId, fn($q) => $q->where('category_id', '!=', $excludeCategoryId))
             ->when($excludeIds, fn($q) => $q->whereNotIn('id', $excludeIds))
+            ->inRandomOrder()
+            ->limit($limit)
+            ->get();
+    }
+
+    public function productShow(Request $request, $slug)
+    {
+        $product = Product::where('slug', $slug)
+            ->where('status', 1)
+            ->with([
+                'images',
+                'category',
+                'subcategory',
+                'collections:id,name',
+                'attributeValues.attribute:id,name',
+                'attributeValues.value:id,value',
+                'occasions:id,title',
+                'addons',
+            ])
+            ->withAvg('approvedReviews as avg_rating', 'rating')
+            ->withCount('approvedReviews as reviews_count')
+            ->firstOrFail();
+
+        // Product Details: attribute-wise rows (multi-select values comma se)
+        $specs = $product->attributeValues
+            ->filter(fn($av) => $av->attribute && $av->value)
+            ->groupBy('attribute_id')
+            ->map(fn($rows) => [
+                'name' => $rows->first()->attribute->name,
+                'values' => $rows->pluck('value.value')->implode(', '),
+            ])
+            ->values();
+
+        // default image pehle, phir upload order
+        $gallery = $product->images
+            ->sortBy([['is_default', 'desc'], ['id', 'asc']])
+            ->values();
+
+        $coupons = Coupon::available()
+            ->orderByDesc('discount_value')
+            ->limit(3)
+            ->get();
+
+        // Recently viewed: trackView se PEHLE lo, aur current product hata do
+        $recentlyViewed = $this->recentlyViewed()
+            ->reject(fn($p) => $p->id === $product->id)
+            ->values();
+
+        $related = $this->relatedProducts($product);
+
+        // ── Reviews (sirf approved) ──
+        $reviewSort = in_array($request->review_sort, ['highest', 'lowest'], true) ? $request->review_sort : 'recent';
+
+        $reviewQuery = $product->approvedReviews()->with(['customer:id,name', 'images']);
+
+        match ($reviewSort) {
+            'highest' => $reviewQuery->orderByDesc('rating')->orderByDesc('id'),
+            'lowest' => $reviewQuery->orderBy('rating')->orderByDesc('id'),
+            default => $reviewQuery->orderByDesc('id'),
+        };
+
+        $reviews = $reviewQuery->limit(30)->get();
+
+        // star-wise counts: [5 => n, 4 => n, ...]
+        $ratingCounts = $product->approvedReviews()
+            ->selectRaw('rating, COUNT(*) as c')
+            ->groupBy('rating')
+            ->pluck('c', 'rating');
+
+        $photoReviews = $reviews->filter(fn($r) => $r->images->isNotEmpty())->values();
+        $fiveStarReviews = $reviews->where('rating', 5)->values();
+        $customerPhotos = $reviews->flatMap(fn($r) => $r->images)->values();
+
+        // ── Review form state ──
+        // guest | can_review | already_reviewed | not_purchased
+        $customer = auth('customer')->user();
+        $reviewState = 'guest';
+
+        if ($customer) {
+            if ($product->reviewableOrderItemFor($customer->id)) {
+                $reviewState = 'can_review';
+            } elseif ($product->reviews()->where('customer_id', $customer->id)->exists()) {
+                $reviewState = 'already_reviewed';
+            } else {
+                $reviewState = 'not_purchased';
+            }
+        }
+
+        Product::trackView($product->id);
+
+        return view('front-pages.product-detail', compact(
+            'product',
+            'gallery',
+            'coupons',
+            'specs',
+            'related',
+            'recentlyViewed',
+            'reviews',
+            'reviewSort',
+            'ratingCounts',
+            'photoReviews',
+            'fiveStarReviews',
+            'customerPhotos',
+            'reviewState'
+        ));
+    }
+
+    /** Same subcategory wale pehle, phir same category ke baaki; current product exclude */
+    private function relatedProducts(Product $product, int $limit = 8)
+    {
+        return Product::visible()->forCard()
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->when($product->subcategory_id, function ($q) use ($product) {
+                $q->orderByRaw('subcategory_id = ? desc', [$product->subcategory_id]);
+            })
             ->inRandomOrder()
             ->limit($limit)
             ->get();

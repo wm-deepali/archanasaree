@@ -11,10 +11,6 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\CategoryAttribute;
 use Illuminate\Support\Facades\Storage;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\ProductImport;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use ZipArchive;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Models\ProductImage;
@@ -171,10 +167,14 @@ class ProductController extends Controller
             ->orderBy('sort_order')
             ->get();
 
+        // ✅ Brand dropdown (Inventory card)
+        $brands = Brand::orderBy('name')->get();
+
         return view('admin.products.create', compact(
             'categories',
             'occasions',
-            'collections'
+            'collections',
+            'brands'
         ));
 
     }
@@ -212,6 +212,7 @@ class ProductController extends Controller
     {
         $request->validate([
             'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'nullable|exists:brands,id',
             'name' => 'required|string|max:255',
             'mrp' => 'nullable|numeric|min:0',
             'discount' => 'nullable|numeric|min:0',
@@ -220,15 +221,19 @@ class ProductController extends Controller
             'stock' => 'nullable|integer|min:0',
             'min_qty' => 'nullable|integer|min:1',
             'sku' => 'nullable|string|max:255',
-            'product_code' => 'nullable|string|max:255',
             'images.*' => 'nullable|image|max:2048',
 
-            // ✅ new: videos + addon options
+            // ✅ colour customization (product-level)
+            'colour_customization' => 'nullable|boolean',
+            'dye_price' => 'nullable|numeric|min:0',
+
+            // ✅ videos + addon options
             'videos.*' => 'nullable|mimes:mp4,webm,mov,avi|max:20480',
             'addons.*.detail' => 'nullable|string|max:255',
+            'addons.*.description' => 'nullable|string|max:1000',
             'addons.*.price' => 'nullable|numeric|min:0',
 
-            // ✅ new: multiple images per image-type variant
+            // ✅ multiple images per image-type variant
             'variants_image.*.images.*' => 'nullable|image|max:2048',
         ]);
 
@@ -237,22 +242,23 @@ class ProductController extends Controller
 
         try {
 
+            $colourCustomization = $request->boolean('colour_customization');
+
             $product = Product::create([
                 'category_id' => $request->category_id,
                 'subcategory_id' => $request->subcategory_id,
+                'brand_id' => $request->brand_id ?: null,
                 'name' => $request->name,
                 'slug' => $request->slug
                     ? $this->generateUniqueSlug($request->slug)
                     : $this->generateUniqueSlug($request->name),
-                'short_description' => $request->short_description,
-                'description' => $request->description,
-                'delivery_returns' => $request->delivery_returns,
-                'fabric_care' => $request->fabric_care,
 
-                // ✅ new Content-tab fields
+                'short_description' => $request->short_description,
+                'fabric_material' => $request->fabric_material,
+                'care_instructions' => $request->care_instructions,
                 'shipping_delivery' => $request->shipping_delivery,
-                'exchange_policy' => $request->exchange_policy,
-                'customization_assistance' => $request->customization_assistance,
+                'returns_exchange' => $request->returns_exchange,
+                'offers_how_to_avail' => $request->offers_how_to_avail,
 
                 // ✅ blank MRP/Discount/Price never get inserted as '' into decimal columns
                 'mrp' => $request->mrp !== null && $request->mrp !== '' ? $request->mrp : 0,
@@ -263,11 +269,13 @@ class ProductController extends Controller
                 'sku' => $request->sku,
                 'stock' => $request->stock !== null && $request->stock !== '' ? $request->stock : 0,
                 'min_qty' => $request->min_qty !== null && $request->min_qty !== '' ? $request->min_qty : 1,
-                'product_code' => $request->product_code,
                 'delivery_time' => $request->delivery_time,
 
-                'quality' => $request->has('quality'),
-                'pan_india' => $request->has('pan_india'),
+                // ✅ dye price only makes sense when colour customization is on
+                'colour_customization' => $colourCustomization,
+                'dye_price' => $colourCustomization && $request->filled('dye_price')
+                    ? $request->dye_price
+                    : null,
 
                 'meta_title' => $request->meta_title,
                 'meta_description' => $request->meta_description,
@@ -338,18 +346,9 @@ class ProductController extends Controller
                     ProductAddon::create([
                         'product_id' => $product->id,
                         'detail' => $addon['detail'],
-                        'price' => $addon['price'] !== null && $addon['price'] !== '' ? $addon['price'] : 0,
+                        'description' => $addon['description'] ?? null,
+                        'price' => isset($addon['price']) && $addon['price'] !== '' ? $addon['price'] : 0,
                     ]);
-                }
-            }
-
-
-            if ($request->filled('suggestions')) {
-                foreach ($request->suggestions as $keyword) {
-                    $keyword = trim($keyword);
-                    if ($keyword !== '') {
-                        $product->keywords()->create(['keyword' => $keyword]);
-                    }
                 }
             }
 
@@ -541,7 +540,8 @@ class ProductController extends Controller
             ->orderBy('sort_order')
             ->get();
 
-        $existingKeywords = $product->keywords->pluck('keyword')->toArray();
+        // ✅ Brand dropdown (Inventory card)
+        $brands = Brand::orderBy('name')->get();
 
         return view(
             'admin.products.edit',
@@ -555,7 +555,7 @@ class ProductController extends Controller
                 'occasions',
                 'existingVariantsByType',
                 'collections',
-                'existingKeywords'
+                'brands',
             )
         );
     }
@@ -565,6 +565,7 @@ class ProductController extends Controller
 
         $request->validate([
             'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'nullable|exists:brands,id',
             'name' => 'required|string|max:255',
             'mrp' => 'nullable|numeric|min:0',
             'discount' => 'nullable|numeric|min:0',
@@ -573,15 +574,19 @@ class ProductController extends Controller
             'stock' => 'nullable|integer|min:0',
             'min_qty' => 'nullable|integer|min:1',
             'sku' => 'nullable|string|max:255',
-            'product_code' => 'nullable|string|max:255',
             'images.*' => 'nullable|image|max:2048',
 
-            // ✅ new: videos + addon options
+            // ✅ colour customization (product-level)
+            'colour_customization' => 'nullable|boolean',
+            'dye_price' => 'nullable|numeric|min:0',
+
+            // ✅ videos + addon options
             'videos.*' => 'nullable|mimes:mp4,webm,mov,avi|max:20480',
             'addons.*.detail' => 'nullable|string|max:255',
+            'addons.*.description' => 'nullable|string|max:1000',
             'addons.*.price' => 'nullable|numeric|min:0',
 
-            // ✅ new: multiple images per image-type variant + per-image delete
+            // ✅ multiple images per image-type variant + per-image delete
             'variants_image.*.images.*' => 'nullable|image|max:2048',
             'delete_variant_images.*' => 'nullable|integer',
         ]);
@@ -589,23 +594,23 @@ class ProductController extends Controller
 
         try {
 
+            $colourCustomization = $request->boolean('colour_customization');
+
             $product->update([
 
                 'category_id' => $request->category_id,
                 'subcategory_id' => $request->subcategory_id,
+                'brand_id' => $request->brand_id ?: null,
 
                 'name' => $request->name,
                 'slug' => $this->resolveSlugOnUpdate($product, $request->slug, $request->name),
 
                 'short_description' => $request->short_description,
-                'description' => $request->description,
-                'delivery_returns' => $request->delivery_returns,
-                'fabric_care' => $request->fabric_care,
-
-                // ✅ new Content-tab fields
+                'fabric_material' => $request->fabric_material,
+                'care_instructions' => $request->care_instructions,
                 'shipping_delivery' => $request->shipping_delivery,
-                'exchange_policy' => $request->exchange_policy,
-                'customization_assistance' => $request->customization_assistance,
+                'returns_exchange' => $request->returns_exchange,
+                'offers_how_to_avail' => $request->offers_how_to_avail,
 
                 // ✅ blank MRP/Discount/Price never get written as '' into decimal columns
                 'mrp' => $request->mrp !== null && $request->mrp !== '' ? $request->mrp : 0,
@@ -616,11 +621,13 @@ class ProductController extends Controller
                 'sku' => $request->sku,
                 'stock' => $request->stock !== null && $request->stock !== '' ? $request->stock : 0,
                 'min_qty' => $request->min_qty !== null && $request->min_qty !== '' ? $request->min_qty : 1,
-                'product_code' => $request->product_code,
                 'delivery_time' => $request->delivery_time,
 
-                'quality' => $request->has('quality'),
-                'pan_india' => $request->has('pan_india'),
+                // ✅ dye price only makes sense when colour customization is on
+                'colour_customization' => $colourCustomization,
+                'dye_price' => $colourCustomization && $request->filled('dye_price')
+                    ? $request->dye_price
+                    : null,
 
                 'meta_title' => $request->meta_title,
                 'meta_description' => $request->meta_description,
@@ -748,7 +755,7 @@ class ProductController extends Controller
             /*
             |--------------------------------------------------------------------------
             | Addon Options (SYNC — replace the full set each save, since rows
-            | have no stable identity of their own beyond detail/price)
+            | have no stable identity of their own beyond detail/description/price)
             |--------------------------------------------------------------------------
             */
 
@@ -765,22 +772,11 @@ class ProductController extends Controller
                     ProductAddon::create([
                         'product_id' => $product->id,
                         'detail' => $addon['detail'],
-                        'price' => $addon['price'] !== null && $addon['price'] !== '' ? $addon['price'] : 0,
+                        'description' => $addon['description'] ?? null,
+                        'price' => isset($addon['price']) && $addon['price'] !== '' ? $addon['price'] : 0,
                     ]);
                 }
             }
-
-            $product->keywords()->delete();
-
-            if ($request->filled('suggestions')) {
-                foreach ($request->suggestions as $keyword) {
-                    $keyword = trim($keyword);
-                    if ($keyword !== '') {
-                        $product->keywords()->create(['keyword' => $keyword]);
-                    }
-                }
-            }
-
 
             /*
             |--------------------------------------------------------------------------
@@ -1156,23 +1152,6 @@ class ProductController extends Controller
 
         // Only regenerate + check uniqueness if it actually changed.
         return $this->generateUniqueSlug($source, $product->id);
-    }
-
-    public function suggestionKeywords(Request $request)
-    {
-        $query = trim($request->get('q', ''));
-
-        if ($query === '') {
-            return response()->json([]);
-        }
-
-        $keywords = \App\Models\ProductKeyword::where('keyword', 'like', "%{$query}%")
-            ->distinct()
-            ->orderBy('keyword')
-            ->limit(15)
-            ->pluck('keyword');
-
-        return response()->json($keywords);
     }
 
 }

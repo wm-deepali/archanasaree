@@ -10,15 +10,20 @@
         <div class="product-detail-page">
             <section class="product-breadcrumb">
                 <div class="container">
-                    <ul class="crumb">
-                        <li><a href="{{ route('home') }}">Home</a></li>
-                        <li><i class="fa-solid fa-chevron-right"></i></li>
-                        <li><a href="javascript:void(0)">Sarees</a></li>
-                        <li><i class="fa-solid fa-chevron-right"></i></li>
-                        <li><a href="javascript:void(0)">Banarasi Sarees</a></li>
-                        <li><i class="fa-solid fa-chevron-right"></i></li>
-                        <li class="current">Zari Woven Banarasi Silk Saree</li>
-                    </ul>
+                    @php
+                        $crumbs = [
+                            ['label' => 'Home', 'url' => route('home')],
+                            ['label' => $product->category->name, 'url' => route('category.show', $product->category->slug)],
+                        ];
+                        if ($product->subcategory) {
+                            $crumbs[] = [
+                                'label' => $product->subcategory->name,
+                                'url' => route('products', ['category' => [$product->category->slug], 'sub' => [$product->subcategory->slug]]),
+                            ];
+                        }
+                        $crumbs[] = ['label' => $product->name];
+                    @endphp
+                    @include('partials.breadcrumb', compact('crumbs'))
                 </div>
             </section>
 
@@ -26,107 +31,86 @@
                 <div class="container">
                     <div class="product-layout">
                         <div class="product-gallery">
+                            @php
+                                $badge = $product->collections->first()?->name;
+                                $imgs = $gallery->isNotEmpty()
+                                    ? $gallery->map(fn($g) => [
+                                        'full' => asset('storage/' . $g->image),
+                                        'thumb' => asset('storage/' . ($g->thumb ?? $g->image)),
+                                    ])
+                                    : collect([['full' => asset('assets/images/home/tab1.png'), 'thumb' => asset('assets/images/home/tab1.png')]]);
+                            @endphp
+
                             <div class="gallery-main">
-                                <span class="gallery-tag">Bestseller</span>
+                                @if ($badge)
+                                    <span class="gallery-tag">{{ $badge }}</span>
+                                @endif
                                 <div class="swiper product-gallery-swiper">
                                     <div class="swiper-wrapper">
-                                        <div class="swiper-slide">
-                                            <div class="gallery-img">
-                                                <a href="assets/images/home/tab1.png" class="glightbox"
-                                                    data-gallery="product">
-                                                    <img src="assets/images/home/tab1.png"
-                                                        alt="Zari Woven Banarasi Silk Saree front view"
-                                                        fetchpriority="high" />
-                                                </a>
+                                        @foreach ($imgs as $i => $img)
+                                            <div class="swiper-slide">
+                                                <div class="gallery-img">
+                                                    <a href="{{ $img['full'] }}" class="glightbox" data-gallery="product">
+                                                        <img src="{{ $img['full'] }}"
+                                                            alt="{{ $product->name }} - image {{ $i + 1 }}" @if ($i === 0)
+                                                            fetchpriority="high" @else loading="lazy" @endif />
+                                                    </a>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="gallery-img">
-                                                <a href="assets/images/home/tab2.png" class="glightbox"
-                                                    data-gallery="product">
-                                                    <img src="assets/images/home/tab2.png" alt="Banarasi saree drape view"
-                                                        loading="lazy" />
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="gallery-img">
-                                                <a href="assets/images/home/tab3.png" class="glightbox"
-                                                    data-gallery="product">
-                                                    <img src="assets/images/home/tab3.png"
-                                                        alt="Banarasi saree border detail" loading="lazy" />
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="gallery-img">
-                                                <a href="assets/images/home/tab4.png" class="glightbox"
-                                                    data-gallery="product">
-                                                    <img src="assets/images/home/tab4.png" alt="Banarasi saree pallu"
-                                                        loading="lazy" />
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="gallery-img">
-                                                <a href="assets/images/home/offer2.png" class="glightbox"
-                                                    data-gallery="product">
-                                                    <img src="assets/images/home/offer2.png"
-                                                        alt="Banarasi saree styled look" loading="lazy" />
-                                                </a>
-                                            </div>
-                                        </div>
+                                        @endforeach
                                     </div>
                                 </div>
-                                <button type="button" class="gallery-zoom" aria-label="Zoom image">
-                                    <i class="fa-solid fa-expand"></i>
-                                </button>
-                                <button type="button" class="g-prev" aria-label="Previous image">
-                                    <i class="fa-solid fa-chevron-left"></i>
-                                </button>
-                                <button type="button" class="g-next" aria-label="Next image">
-                                    <i class="fa-solid fa-chevron-right"></i>
-                                </button>
+                                <button type="button" class="gallery-zoom" aria-label="Zoom image"><i
+                                        class="fa-solid fa-expand"></i></button>
+                                <button type="button" class="g-prev" aria-label="Previous image"><i
+                                        class="fa-solid fa-chevron-left"></i></button>
+                                <button type="button" class="g-next" aria-label="Next image"><i
+                                        class="fa-solid fa-chevron-right"></i></button>
                                 <div class="gallery-counter"></div>
                             </div>
+
                             <div class="swiper product-thumb-swiper">
                                 <div class="swiper-wrapper">
-                                    <div class="swiper-slide">
-                                        <img src="assets/images/home/tab1.png" alt="Thumbnail 1" loading="lazy" />
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <img src="assets/images/home/tab2.png" alt="Thumbnail 2" loading="lazy" />
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <img src="assets/images/home/tab3.png" alt="Thumbnail 3" loading="lazy" />
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <img src="assets/images/home/tab4.png" alt="Thumbnail 4" loading="lazy" />
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <img src="assets/images/home/offer2.png" alt="Thumbnail 5" loading="lazy" />
-                                    </div>
+                                    @foreach ($imgs as $i => $img)
+                                        <div class="swiper-slide">
+                                            <img src="{{ $img['thumb'] }}" alt="{{ $product->name }} thumbnail {{ $i + 1 }}"
+                                                loading="lazy" />
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
 
                         <div class="product-info">
                             <div class="info-top">
-                                <span class="info-cat">Banarasi Saree</span>
-                                <h1>Zari Woven Banarasi Silk Saree</h1>
+                                <span class="info-cat">{{ $product->subcategory->name ?? $product->category->name }}</span>
+                                <h1>{{ $product->name }}</h1>
                                 <div class="info-rate">
-                                    <span class="rate-pill"><i class="fa-solid fa-star"></i> 4.8</span>
-                                    <a href="#reviews" class="rate-count">124 Reviews</a>
-                                    <span class="info-sku">SKU: ASE-BNR-0142</span>
+                                    @if ($product->reviews_count)
+                                        <span class="rate-pill"><i class="fa-solid fa-star"></i>
+                                            {{ number_format($product->avg_rating, 1) }}</span>
+                                        <a href="#reviews" class="rate-count">{{ $product->reviews_count }}
+                                            {{ Str::plural('Review', $product->reviews_count) }}</a>
+                                    @else
+                                        <a href="#reviews" class="rate-count">No reviews yet</a>
+                                    @endif
+                                    @if ($product->sku)
+                                        <span class="info-sku">SKU: {{ $product->sku }}</span>
+                                    @endif
                                 </div>
                             </div>
 
                             <div class="price-block">
-                                <span class="price-now">₹8,499</span>
-                                <del class="price-old">₹11,999</del>
-                                <span class="price-off">29% OFF</span>
+                                <span class="price-now">₹{{ number_format($product->price) }}</span>
+                                @if ($product->discount_percent > 0)
+                                    <del class="price-old">₹{{ number_format($product->mrp) }}</del>
+                                    <span class="price-off">{{ $product->discount_percent }}% OFF</span>
+                                @endif
                                 <p class="price-tax">
-                                    Inclusive of all taxes · You save ₹3,500
+                                    Inclusive of all taxes
+                                    @if ($product->discount_percent > 0)
+                                        · You save ₹{{ number_format($product->mrp - $product->price) }}
+                                    @endif
                                 </p>
                             </div>
 
@@ -136,44 +120,36 @@
                                 <em>Only 3 pieces left in this colour</em>
                             </p>
 
-                            <div class="product-offers">
-                                <div class="offers-head">
-                                    <h5>Offers &amp; Coupons</h5>
-                                    <a href="javascript:void(0)">How to Avail</a>
-                                </div>
-                                <div class="offer-row">
-                                    <span class="offer-ico"><i class="fa-solid fa-tag"></i></span>
-                                    <div class="offer-text">
-                                        <b>Exclusive Offer</b>
-                                        <p>Get an additional 10% off on prepaid orders.</p>
+                            @if ($coupons->isNotEmpty())
+                                <div class="product-offers">
+                                    <div class="offers-head">
+                                        <h5>Offers &amp; Coupons</h5>
+                                        <a href="javascript:void(0)">How to Avail</a>
                                     </div>
-                                    <button type="button" class="offer-copy" data-code="ARCHANA10">
-                                        ARCHANA10 <i class="fa-regular fa-copy"></i>
-                                    </button>
-                                </div>
-                                <div class="offer-row">
-                                    <span class="offer-ico"><i class="fa-solid fa-building-columns"></i></span>
-                                    <div class="offer-text">
-                                        <b>Bank Offer</b>
-                                        <p>
-                                            Flat ₹500 off on selected bank cards on orders above
-                                            ₹7,999.
-                                        </p>
-                                    </div>
-                                </div>
 
-                                <p class="offer-tnc">
-                                    Offers are applied at checkout. Only one coupon can be used
-                                    per order. Terms &amp; conditions apply.
-                                </p>
-                            </div>
+                                    @foreach ($coupons as $coupon)
+                                        <div class="offer-row">
+                                            <span class="offer-ico"><i class="fa-solid fa-tag"></i></span>
+                                            <div class="offer-text">
+                                                <b>Coupon Offer</b>
+                                                <p>{{ $coupon->offer_text }}</p>
+                                            </div>
+                                            <button type="button" class="offer-copy" data-code="{{ $coupon->code }}">
+                                                {{ $coupon->code }} <i class="fa-regular fa-copy"></i>
+                                            </button>
+                                        </div>
+                                    @endforeach
 
-                            <p class="info-desc">
-                                A timeless Banarasi silk saree crafted for celebrations,
-                                featuring intricate zari work, a graceful drape and a richly
-                                detailed border. Designed for weddings, festive occasions and
-                                elegant evening gatherings.
-                            </p>
+                                    <p class="offer-tnc">
+                                        Offers are applied at checkout. Only one coupon can be used
+                                        per order. Terms &amp; conditions apply.
+                                    </p>
+                                </div>
+                            @endif
+
+                            @if (!empty($product->short_description))
+                                <p class="info-desc">{{ $product->short_description }}</p>
+                            @endif
 
                             <div class="product-options">
                                 <div class="opt-group">
@@ -251,65 +227,70 @@
                                     </div>
                                 </div>
 
-                                <div class="opt-group">
-                                    <div class="opt-head">
-                                        <span>Add-ons:</span><b class="opt-value">Optional</b>
+                                @if ($product->addons->isNotEmpty())
+                                    <div class="opt-group">
+                                        <div class="opt-head">
+                                            <span>Add-ons:</span><b class="opt-value">Optional</b>
+                                        </div>
+                                        <div class="opt-addons">
+                                            @foreach ($product->addons as $addon)
+                                                <label class="opt-check">
+                                                    <input type="checkbox" name="addons[]" value="{{ $addon->id }}"
+                                                        data-price="{{ (float) $addon->price }}" />
+                                                    <span class="oc-text">
+                                                        <b>{{ $addon->detail }}</b>
+                                                        @if (!empty($addon->description))
+                                                            <em>{{ $addon->description }}</em>
+                                                        @endif
+                                                    </span>
+                                                    <strong>
+                                                        {{ $addon->price > 0 ? '+ ₹' . number_format($addon->price) : 'Free' }}
+                                                    </strong>
+                                                </label>
+                                            @endforeach
+                                        </div>
                                     </div>
-                                    <div class="opt-addons">
-                                        <label class="opt-check">
-                                            <input type="checkbox" name="addon" value="fall-pico" />
-                                            <span class="oc-text"><b>Fall &amp; Pico</b><em>Stitched and ready to
-                                                    drape</em></span>
-                                            <strong>+ ₹250</strong>
-                                        </label>
-                                        <label class="opt-check">
-                                            <input type="checkbox" name="addon" value="petticoat" />
-                                            <span class="oc-text"><b>Matching Petticoat</b><em>Cotton, drawstring
-                                                    waist</em></span>
-                                            <strong>+ ₹399</strong>
-                                        </label>
-                                    </div>
-                                </div>
+                                @endif
                             </div>
 
                             <div class="product-delivery">
                                 <div class="del-head">
                                     <i class="fa-solid fa-location-dot"></i><b>Check Delivery</b>
                                 </div>
-                                <form class="pin-form" action="#" method="post">
+                                <form class="pin-form" id="pinForm" action="{{ route('pincode.check') }}" method="get">
                                     <input type="text" name="pincode" inputmode="numeric" maxlength="6"
-                                        placeholder="Enter your pincode" value="110001" aria-label="Pincode" />
+                                        placeholder="Enter your pincode" aria-label="Pincode" />
                                     <button type="submit">Check</button>
                                 </form>
-                                <p class="pin-result">
-                                    <i class="fa-solid fa-circle-check"></i> Delivery available.
-                                    Estimated delivery in 3–5 business days.
-                                </p>
+                                <p class="pin-result" id="pinResult" style="display:none"></p>
+
                                 <ul class="del-steps">
                                     <li>
                                         <i class="fa-solid fa-bag-shopping"></i>
                                         <b>Order Placed</b>
                                         <span>Today</span>
                                     </li>
-                                    <li>
-                                        <i class="fa-solid fa-box"></i>
-                                        <b>Dispatched</b>
-                                        <span>In 2–4 days</span>
-                                    </li>
-                                    <li>
+                                    @if ($product->delivery_time)
+                                        <li>
+                                            <i class="fa-solid fa-box"></i>
+                                            <b>Dispatched</b>
+                                            <span>In {{ $product->delivery_time }}</span>
+                                        </li>
+                                    @endif
+                                    <li id="stepDelivered" style="display:none">
                                         <i class="fa-solid fa-house-circle-check"></i>
                                         <b>Delivered</b>
-                                        <span>In 3–7 days</span>
+                                        <span id="stepDeliveredText"></span>
                                     </li>
                                 </ul>
                                 <ul class="del-points">
                                     <li>
-                                        <i class="fa-solid fa-hand-holding-dollar"></i> Cash on
-                                        Delivery available at your pincode
+                                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                                        Multiple Payment Options Available
                                     </li>
                                     <li>
-                                        <i class="fa-solid fa-arrow-right-arrow-left"></i> Easy
-                                        7-day return &amp; exchange
+                                        <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                                        Easy No Return &amp; exchange
                                     </li>
                                 </ul>
                             </div>
@@ -386,158 +367,131 @@
                             </div>
 
                             <div class="product-details">
+                                @php
+                                    $filled = fn($html) => trim(str_replace('&nbsp;', ' ', strip_tags((string) $html))) !== '';
+
+                                    // product me khali ho to Settings ki default policy
+                                    $shipping = $filled($product->shipping_delivery) ? $product->shipping_delivery : ($general->default_shipping_policy ?? null);
+                                    $returns = $filled($product->returns_exchange) ? $product->returns_exchange : ($general->default_exchange_policy ?? null);
+
+                                    $occasionNames = $product->occasions->pluck('title')->implode(', ');
+                                @endphp
+
                                 <div class="accordion-wrapper">
-                                    <div class="accordion-item">
-                                        <div class="accordion-header">
-                                            <h5>Product Details</h5>
-                                            <span class="accordion-icon">+</span>
-                                        </div>
-                                        <div class="accordion-content">
-                                            <ul class="spec-list">
-                                                <li><span>Fabric</span><b>Pure Banarasi Silk</b></li>
-                                                <li><span>Saree Length</span><b>5.5 Metres</b></li>
-                                                <li><span>Blouse Piece</span><b>Included</b></li>
-                                                <li>
-                                                    <span>Weave</span><b>Traditional Banarasi Weave</b>
-                                                </li>
-                                                <li><span>Work</span><b>Zari / Woven Detail</b></li>
-                                                <li>
-                                                    <span>Occasion</span><b>Wedding, Festive, Reception</b>
-                                                </li>
-                                                <li><span>Country of Origin</span><b>India</b></li>
-                                            </ul>
-                                        </div>
-                                    </div>
 
-                                    <div class="accordion-item">
-                                        <div class="accordion-header">
-                                            <h5>Fabric &amp; Material</h5>
-                                            <span class="accordion-icon">+</span>
+                                    {{-- Product Details: attributes se auto --}}
+                                    @if ($specs->isNotEmpty() || $occasionNames)
+                                        <div class="accordion-item">
+                                            <div class="accordion-header">
+                                                <h5>Product Details</h5>
+                                                <span class="accordion-icon">+</span>
+                                            </div>
+                                            <div class="accordion-content">
+                                                <ul class="spec-list">
+                                                    @foreach ($specs as $spec)
+                                                        <li><span>{{ $spec['name'] }}</span><b>{{ $spec['values'] }}</b></li>
+                                                    @endforeach
+                                                    @if ($occasionNames)
+                                                        <li><span>Occasion</span><b>{{ $occasionNames }}</b></li>
+                                                    @endif
+                                                </ul>
+                                            </div>
                                         </div>
-                                        <div class="accordion-content">
-                                            <p>
-                                                Woven in pure Banarasi silk with a soft lustre and a
-                                                rich, structured fall. The zari is interlaced into the
-                                                fabric, giving the border and pallu a refined,
-                                                long-lasting shine.
-                                            </p>
-                                        </div>
-                                    </div>
+                                    @endif
 
-                                    <div class="accordion-item">
-                                        <div class="accordion-header">
-                                            <h5>Saree Specifications</h5>
-                                            <span class="accordion-icon">+</span>
+                                    @if ($filled($product->fabric_material))
+                                        <div class="accordion-item">
+                                            <div class="accordion-header">
+                                                <h5>Fabric &amp; Material</h5>
+                                                <span class="accordion-icon">+</span>
+                                            </div>
+                                            <div class="accordion-content">
+                                                <div class="rich-text">{!! $product->fabric_material !!}</div>
+                                            </div>
                                         </div>
-                                        <div class="accordion-content">
-                                            <ul class="spec-list">
-                                                <li><span>Saree Length</span><b>5.5 Metres</b></li>
-                                                <li><span>Blouse Length</span><b>0.8 Metres</b></li>
-                                                <li><span>Border</span><b>Woven Zari Border</b></li>
-                                                <li><span>Pallu</span><b>Detailed Zari Pallu</b></li>
-                                                <li>
-                                                    <span>Fall &amp; Pico</span><b>Optional Add-on</b>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                    @endif
 
-                                    <div class="accordion-item">
-                                        <div class="accordion-header">
-                                            <h5>Care Instructions</h5>
-                                            <span class="accordion-icon">+</span>
+                                    @if ($filled($product->care_instructions))
+                                        <div class="accordion-item">
+                                            <div class="accordion-header">
+                                                <h5>Care Instructions</h5>
+                                                <span class="accordion-icon">+</span>
+                                            </div>
+                                            <div class="accordion-content">
+                                                <div class="rich-text">{!! $product->care_instructions !!}</div>
+                                            </div>
                                         </div>
-                                        <div class="accordion-content">
-                                            <ul class="info-points">
-                                                <li>Dry clean only to protect the zari and silk.</li>
-                                                <li>
-                                                    Store in a soft muslin cloth, away from direct
-                                                    sunlight.
-                                                </li>
-                                                <li>Do not wring or use harsh detergents.</li>
-                                                <li>Iron on low heat from the reverse side.</li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                    @endif
 
-                                    <div class="accordion-item">
-                                        <div class="accordion-header">
-                                            <h5>Shipping &amp; Delivery</h5>
-                                            <span class="accordion-icon">+</span>
+                                    @if ($filled($shipping) || $product->delivery_time)
+                                        <div class="accordion-item">
+                                            <div class="accordion-header">
+                                                <h5>Shipping &amp; Delivery</h5>
+                                                <span class="accordion-icon">+</span>
+                                            </div>
+                                            <div class="accordion-content">
+                                                @if ($product->delivery_time)
+                                                    <p><b>Dispatch:</b> {{ $product->delivery_time }}</p>
+                                                @endif
+                                                @if ($filled($shipping))
+                                                    <div class="rich-text">{!! $shipping !!}</div>
+                                                @endif
+                                            </div>
                                         </div>
-                                        <div class="accordion-content">
-                                            <ul class="info-points with-icon">
-                                                <li>
-                                                    <i class="fa-solid fa-truck"></i> Free shipping
-                                                    above ₹2,999.
-                                                </li>
-                                                <li>
-                                                    <i class="fa-solid fa-box"></i> Dispatch: 2–4
-                                                    working days.
-                                                </li>
-                                                <li>
-                                                    <i class="fa-solid fa-clock"></i> Estimated
-                                                    delivery: 3–7 working days depending on location.
-                                                </li>
-                                                <li>
-                                                    <i class="fa-solid fa-hand-holding-dollar"></i> Cash
-                                                    on Delivery available on selected pincodes.
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                    @endif
 
-                                    <div class="accordion-item">
-                                        <div class="accordion-header">
-                                            <h5>Returns &amp; Exchange</h5>
-                                            <span class="accordion-icon">+</span>
+                                    @if ($filled($returns))
+                                        <div class="accordion-item">
+                                            <div class="accordion-header">
+                                                <h5>Returns &amp; Exchange</h5>
+                                                <span class="accordion-icon">+</span>
+                                            </div>
+                                            <div class="accordion-content">
+                                                <div class="rich-text">{!! $returns !!}</div>
+                                            </div>
                                         </div>
-                                        <div class="accordion-content">
-                                            <p>
-                                                <b>Easy Returns &amp; Exchange.</b> Eligible products
-                                                can be returned or exchanged within 7 days of
-                                                delivery, unused and with tags intact. Stitched
-                                                blouses and add-ons are not eligible.
-                                            </p>
-                                            <a href="javascript:void(0)" class="policy-link">View Return Policy
-                                                <i class="fa-solid fa-arrow-right-long"></i></a>
-                                        </div>
-                                    </div>
+                                    @endif
 
-                                    <div class="accordion-item">
-                                        <div class="accordion-header">
-                                            <h5>Offers &amp; How to Avail</h5>
-                                            <span class="accordion-icon">+</span>
+                                    {{-- Offers: product ka apna text, nahi to coupons se auto steps --}}
+                                    @if ($filled($product->offers_how_to_avail) || $coupons->isNotEmpty())
+                                        <div class="accordion-item" id="offers-accordion">
+                                            <div class="accordion-header">
+                                                <h5>Offers &amp; How to Avail</h5>
+                                                <span class="accordion-icon">+</span>
+                                            </div>
+                                            <div class="accordion-content">
+                                                @if ($filled($product->offers_how_to_avail))
+                                                    <div class="rich-text">{!! $product->offers_how_to_avail !!}</div>
+                                                @else
+                                                    <ul class="info-points">
+                                                        <li>Add the product to your bag and proceed to checkout.</li>
+                                                        @foreach ($coupons as $coupon)
+                                                            <li>Enter the coupon code <b>{{ $coupon->code }}</b> in the coupon box.
+                                                                {{ $coupon->offer_text }}
+                                                            </li>
+                                                        @endforeach
+                                                        <li>Offers cannot be combined and may change without notice.</li>
+                                                    </ul>
+                                                @endif
+                                            </div>
                                         </div>
-                                        <div class="accordion-content">
-                                            <ul class="info-points">
-                                                <li>
-                                                    Add the saree to your bag and proceed to checkout.
-                                                </li>
-                                                <li>
-                                                    Enter the coupon code ARCHANA10 in the coupon box.
-                                                </li>
-                                                <li>
-                                                    Choose a prepaid payment method to see the extra 10%
-                                                    off applied.
-                                                </li>
-                                                <li>
-                                                    Bank offers appear on the payment step for eligible
-                                                    cards.
-                                                </li>
-                                                <li>
-                                                    Offers cannot be combined and may change without
-                                                    notice.
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                    @endif
+
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
+
+            @php
+                $reviewTotal = (int) $product->reviews_count;
+                $tabs = collect([
+                    ['label' => 'All', 'count' => $reviewTotal, 'items' => $reviews, 'gid' => 'rv-all'],
+                    ['label' => 'With Photos', 'count' => $photoReviews->count(), 'items' => $photoReviews, 'gid' => 'rv-photo'],
+                    ['label' => '5 Star', 'count' => (int) ($ratingCounts[5] ?? 0), 'items' => $fiveStarReviews, 'gid' => 'rv-five'],
+                ])->filter(fn($t) => $t['items']->isNotEmpty())->values();
+            @endphp
 
             <section class="product-reviews" id="reviews">
                 <div class="container">
@@ -549,46 +503,32 @@
                     </div>
 
                     <div class="review-summary">
-                        <div class="rs-score">
-                            <b>4.8</b><span>/ 5</span>
-                            <div class="rs-stars">
-                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                    class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                    class="fa-solid fa-star"></i>
+                        @if ($reviewTotal > 0)
+                            <div class="rs-score">
+                                <b>{{ number_format($product->avg_rating, 1) }}</b><span>/ 5</span>
+                                <div class="rs-stars">
+                                    @for ($s = 1; $s <= 5; $s++)
+                                        <i class="{{ $s <= round($product->avg_rating) ? 'fa-solid' : 'fa-regular' }} fa-star"></i>
+                                    @endfor
+                                </div>
+                                <p>Based on {{ $reviewTotal }} {{ Str::plural('review', $reviewTotal) }}</p>
                             </div>
-                            <p>Based on 124 reviews</p>
-                        </div>
-                        <ul class="rs-bars">
-                            <li>
-                                <span>5 <i class="fa-solid fa-star"></i></span>
-                                <div class="bar"><i style="width: 82%"></i></div>
-                                <em>102</em>
-                            </li>
-                            <li>
-                                <span>4 <i class="fa-solid fa-star"></i></span>
-                                <div class="bar"><i style="width: 12%"></i></div>
-                                <em>15</em>
-                            </li>
-                            <li>
-                                <span>3 <i class="fa-solid fa-star"></i></span>
-                                <div class="bar"><i style="width: 4%"></i></div>
-                                <em>5</em>
-                            </li>
-                            <li>
-                                <span>2 <i class="fa-solid fa-star"></i></span>
-                                <div class="bar"><i style="width: 1%"></i></div>
-                                <em>1</em>
-                            </li>
-                            <li>
-                                <span>1 <i class="fa-solid fa-star"></i></span>
-                                <div class="bar"><i style="width: 1%"></i></div>
-                                <em>1</em>
-                            </li>
-                        </ul>
+                            <ul class="rs-bars">
+                                @for ($star = 5; $star >= 1; $star--)
+                                    @php $c = (int) ($ratingCounts[$star] ?? 0); @endphp
+                                    <li>
+                                        <span>{{ $star }} <i class="fa-solid fa-star"></i></span>
+                                        <div class="bar"><i style="width: {{ round(($c / $reviewTotal) * 100) }}%"></i></div>
+                                        <em>{{ $c }}</em>
+                                    </li>
+                                @endfor
+                            </ul>
+                        @endif
                         <div class="rs-cta">
                             <p>
-                                Bought this saree? Share your experience and photos with other
-                                customers.
+                                {{ $reviewTotal > 0
+        ? 'Bought this product? Share your experience and photos with other customers.'
+        : 'Be the first to review this product and help other customers.' }}
                             </p>
                             <button type="button" class="btn btn-primary write-review" data-model=".review-pop">
                                 Write a Review
@@ -596,921 +536,144 @@
                         </div>
                     </div>
 
-                    <div class="review-photos">
-                        <h5>Customer Photos <span>(38)</span></h5>
-                        <div class="rp-grid">
-                            <a href="assets/images/home/tab1.png" class="rp-item glightbox"
-                                data-gallery="customer-photos"><img src="assets/images/home/tab1.png" alt="Customer photo 1"
-                                    loading="lazy" /></a>
-                            <a href="assets/images/home/tab2.png" class="rp-item glightbox"
-                                data-gallery="customer-photos"><img src="assets/images/home/tab2.png" alt="Customer photo 2"
-                                    loading="lazy" /></a>
-                            <a href="assets/images/home/tab3.png" class="rp-item glightbox"
-                                data-gallery="customer-photos"><img src="assets/images/home/tab3.png" alt="Customer photo 3"
-                                    loading="lazy" /></a>
-                            <a href="assets/images/home/tab4.png" class="rp-item glightbox"
-                                data-gallery="customer-photos"><img src="assets/images/home/tab4.png" alt="Customer photo 4"
-                                    loading="lazy" /></a>
-                            <a href="assets/images/home/offer2.png" class="rp-item glightbox"
-                                data-gallery="customer-photos"><img src="assets/images/home/offer2.png"
-                                    alt="Customer photo 5" loading="lazy" /></a>
-                            <a href="assets/images/home/tab1.png" class="rp-item more glightbox"
-                                data-gallery="customer-photos"><img src="assets/images/home/tab1.png"
-                                    alt="More customer photos" loading="lazy" /><span>+33</span></a>
+                    @if ($customerPhotos->isNotEmpty())
+                        <div class="review-photos">
+                            <h5>Customer Photos <span>({{ $customerPhotos->count() }})</span></h5>
+                            <div class="rp-grid">
+                                @foreach ($customerPhotos->take(6) as $i => $ph)
+                                    @php $more = $customerPhotos->count() - 6; @endphp
+                                    <a href="{{ asset('storage/' . $ph->image) }}"
+                                        class="rp-item glightbox {{ ($i === 5 && $more > 0) ? 'more' : '' }}"
+                                        data-gallery="customer-photos">
+                                        <img src="{{ asset('storage/' . $ph->image) }}" alt="Customer photo {{ $i + 1 }}"
+                                            loading="lazy" />
+                                        @if ($i === 5 && $more > 0)
+                                            <span>+{{ $more }}</span>
+                                        @endif
+                                    </a>
+                                @endforeach
+                                {{-- 6 se zyada photos: baaki lightbox me hidden links --}}
+                                @foreach ($customerPhotos->slice(6) as $ph)
+                                    <a href="{{ asset('storage/' . $ph->image) }}" class="glightbox" data-gallery="customer-photos"
+                                        hidden></a>
+                                @endforeach
+                            </div>
                         </div>
-                    </div>
+                    @endif
 
-                    <div class="review-sort">
-                        <select aria-label="Sort reviews">
-                            <option>Most Recent</option>
-                            <option>Most Helpful</option>
-                            <option>Highest Rating</option>
-                            <option>Lowest Rating</option>
-                        </select>
-                    </div>
+                    @if ($tabs->isNotEmpty())
+                        <div class="review-sort">
+                            <select aria-label="Sort reviews"
+                                onchange="window.location = '?review_sort=' + this.value + '#reviews'">
+                                <option value="recent" {{ $reviewSort === 'recent' ? 'selected' : '' }}>Most Recent</option>
+                                <option value="highest" {{ $reviewSort === 'highest' ? 'selected' : '' }}>Highest Rating
+                                </option>
+                                <option value="lowest" {{ $reviewSort === 'lowest' ? 'selected' : '' }}>Lowest Rating</option>
+                            </select>
+                        </div>
 
-                    <ul class="tab-nav">
-                        <li data-tab="1" class="active">All (124)</li>
-                        <li data-tab="2">With Photos (38)</li>
-                        <li data-tab="3">5 Star (102)</li>
-                    </ul>
+                        <ul class="tab-nav">
+                            @foreach ($tabs as $i => $t)
+                                <li data-tab="{{ $i + 1 }}" class="{{ $i === 0 ? 'active' : '' }}">
+                                    {{ $t['label'] }} ({{ $t['count'] }})
+                                </li>
+                            @endforeach
+                        </ul>
 
-                    <div class="tab-nav-content">
-                        <div class="tabs active" data-tab="1">
-                            <div class="swiper-wrap">
-                                <div class="swiper reviewSlider">
-                                    <div class="swiper-wrapper">
-                                        <div class="swiper-slide">
-                                            <div class="rv-card">
-                                                <div class="rv-top">
-                                                    <span class="rv-avatar">PS</span>
-                                                    <div>
-                                                        <h5>Priya Sharma</h5>
-                                                        <span class="rv-verified"><i class="fa-solid fa-circle-check"></i>
-                                                            Verified Purchase</span>
-                                                    </div>
-                                                </div>
-                                                <div class="rv-stars">
-                                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i>
-                                                </div>
-                                                <h6>Beautiful saree and even better in person</h6>
-                                                <p>
-                                                    The zari detailing is elegant and the fabric drapes
-                                                    beautifully. I wore it to my cousin's wedding and
-                                                    received so many compliments. The packaging was also
-                                                    very neat.
-                                                </p>
-                                                <div class="rv-photos">
-                                                    <a href="assets/images/home/tab1.png" class="glightbox"
-                                                        data-gallery="rv-a1"><img src="assets/images/home/tab1.png"
-                                                            alt="Review photo" loading="lazy" /></a>
-                                                    <a href="assets/images/home/tab3.png" class="glightbox"
-                                                        data-gallery="rv-a1"><img src="assets/images/home/tab3.png"
-                                                            alt="Review photo" loading="lazy" /></a>
-                                                </div>
-                                                <div class="rv-foot">
-                                                    <span class="rv-date">October 2026</span>
-                                                    <button type="button" class="rv-helpful">
-                                                        <i class="fa-regular fa-thumbs-up"></i> Helpful
-                                                        (12)
-                                                    </button>
-                                                </div>
+                        <div class="tab-nav-content">
+                            @foreach ($tabs as $i => $t)
+                                <div class="tabs {{ $i === 0 ? 'active' : '' }}" data-tab="{{ $i + 1 }}">
+                                    <div class="swiper-wrap">
+                                        <div class="swiper reviewSlider">
+                                            <div class="swiper-wrapper">
+                                                @include('partials.review-slides', ['items' => $t['items'], 'gid' => $t['gid']])
                                             </div>
                                         </div>
-                                        <div class="swiper-slide">
-                                            <div class="rv-card">
-                                                <div class="rv-top">
-                                                    <span class="rv-avatar">NK</span>
-                                                    <div>
-                                                        <h5>Neha Kapoor</h5>
-                                                        <span class="rv-verified"><i class="fa-solid fa-circle-check"></i>
-                                                            Verified Purchase</span>
-                                                    </div>
-                                                </div>
-                                                <div class="rv-stars">
-                                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i>
-                                                </div>
-                                                <h6>Rich colour, exactly like the photos</h6>
-                                                <p>
-                                                    I was worried the wine shade would look different,
-                                                    but it matches the pictures perfectly. The pallu is
-                                                    heavy and graceful, and the blouse piece is generous
-                                                    enough for a proper fitting.
-                                                </p>
-                                                <div class="rv-photos">
-                                                    <a href="assets/images/home/tab2.png" class="glightbox"
-                                                        data-gallery="rv-a2"><img src="assets/images/home/tab2.png"
-                                                            alt="Review photo" loading="lazy" /></a>
-                                                </div>
-                                                <div class="rv-foot">
-                                                    <span class="rv-date">October 2026</span>
-                                                    <button type="button" class="rv-helpful">
-                                                        <i class="fa-regular fa-thumbs-up"></i> Helpful
-                                                        (8)
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="rv-card">
-                                                <div class="rv-top">
-                                                    <span class="rv-avatar">AV</span>
-                                                    <div>
-                                                        <h5>Ananya Verma</h5>
-                                                        <span class="rv-verified"><i class="fa-solid fa-circle-check"></i>
-                                                            Verified Purchase</span>
-                                                    </div>
-                                                </div>
-                                                <div class="rv-stars">
-                                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-regular fa-star"></i>
-                                                </div>
-                                                <h6>Lovely weave, delivery was quick</h6>
-                                                <p>
-                                                    The weave is fine and the border looks very rich. It
-                                                    arrived within four days to Lucknow. I added the
-                                                    fall and pico option and it came perfectly finished.
-                                                </p>
-                                                <div class="rv-foot">
-                                                    <span class="rv-date">September 2026</span>
-                                                    <button type="button" class="rv-helpful">
-                                                        <i class="fa-regular fa-thumbs-up"></i> Helpful
-                                                        (5)
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="rv-card">
-                                                <div class="rv-top">
-                                                    <span class="rv-avatar">RM</span>
-                                                    <div>
-                                                        <h5>Ritu Malhotra</h5>
-                                                        <span class="rv-verified"><i class="fa-solid fa-circle-check"></i>
-                                                            Verified Purchase</span>
-                                                    </div>
-                                                </div>
-                                                <div class="rv-stars">
-                                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i>
-                                                </div>
-                                                <h6>Perfect for festive evenings</h6>
-                                                <p>
-                                                    Bought this for Diwali and it was the highlight of
-                                                    my look. Soft to touch, not too heavy to carry, and
-                                                    the zari has not lost its shine even after a long
-                                                    evening.
-                                                </p>
-                                                <div class="rv-photos">
-                                                    <a href="assets/images/home/tab4.png" class="glightbox"
-                                                        data-gallery="rv-a4"><img src="assets/images/home/tab4.png"
-                                                            alt="Review photo" loading="lazy" /></a>
-                                                    <a href="assets/images/home/offer2.png" class="glightbox"
-                                                        data-gallery="rv-a4"><img src="assets/images/home/offer2.png"
-                                                            alt="Review photo" loading="lazy" /></a>
-                                                    <a href="assets/images/home/tab2.png" class="glightbox"
-                                                        data-gallery="rv-a4"><img src="assets/images/home/tab2.png"
-                                                            alt="Review photo" loading="lazy" /></a>
-                                                </div>
-                                                <div class="rv-foot">
-                                                    <span class="rv-date">September 2026</span>
-                                                    <button type="button" class="rv-helpful">
-                                                        <i class="fa-regular fa-thumbs-up"></i> Helpful
-                                                        (9)
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="rv-card">
-                                                <div class="rv-top">
-                                                    <span class="rv-avatar">SA</span>
-                                                    <div>
-                                                        <h5>Simran Arora</h5>
-                                                        <span class="rv-verified"><i class="fa-solid fa-circle-check"></i>
-                                                            Verified Purchase</span>
-                                                    </div>
-                                                </div>
-                                                <div class="rv-stars">
-                                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i>
-                                                </div>
-                                                <h6>Worth every rupee</h6>
-                                                <p>
-                                                    I have shopped from Archana for years and this saree
-                                                    keeps up the same quality. The team also helped me
-                                                    with styling tips over a call, which was a lovely
-                                                    touch.
-                                                </p>
-                                                <div class="rv-foot">
-                                                    <span class="rv-date">August 2026</span>
-                                                    <button type="button" class="rv-helpful">
-                                                        <i class="fa-regular fa-thumbs-up"></i> Helpful
-                                                        (4)
-                                                    </button>
-                                                </div>
-                                            </div>
+                                        <div class="swiper-group">
+                                            <button type="button" class="btn-prev" aria-label="Previous slide">
+                                                <i class="fa-solid fa-arrow-right"></i>
+                                            </button>
+                                            <button type="button" class="btn-next" aria-label="Next slide">
+                                                <i class="fa-solid fa-arrow-right"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="swiper-group">
-                                    <button type="button" class="btn-prev" aria-label="Previous slide">
-                                        <i class="fa-solid fa-arrow-right"></i>
-                                    </button>
-                                    <button type="button" class="btn-next" aria-label="Next slide">
-                                        <i class="fa-solid fa-arrow-right"></i>
-                                    </button>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
-
-                        <div class="tabs" data-tab="2">
-                            <div class="swiper-wrap">
-                                <div class="swiper reviewSlider">
-                                    <div class="swiper-wrapper">
-                                        <div class="swiper-slide">
-                                            <div class="rv-card">
-                                                <div class="rv-top">
-                                                    <span class="rv-avatar">PS</span>
-                                                    <div>
-                                                        <h5>Priya Sharma</h5>
-                                                        <span class="rv-verified"><i class="fa-solid fa-circle-check"></i>
-                                                            Verified Purchase</span>
-                                                    </div>
-                                                </div>
-                                                <div class="rv-stars">
-                                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i>
-                                                </div>
-                                                <h6>Beautiful saree and even better in person</h6>
-                                                <p>
-                                                    The zari detailing is elegant and the fabric drapes
-                                                    beautifully. I wore it to my cousin's wedding and
-                                                    received so many compliments. The packaging was also
-                                                    very neat.
-                                                </p>
-                                                <div class="rv-photos">
-                                                    <a href="assets/images/home/tab1.png" class="glightbox"
-                                                        data-gallery="rv-b1"><img src="assets/images/home/tab1.png"
-                                                            alt="Review photo" loading="lazy" /></a>
-                                                    <a href="assets/images/home/tab3.png" class="glightbox"
-                                                        data-gallery="rv-b1"><img src="assets/images/home/tab3.png"
-                                                            alt="Review photo" loading="lazy" /></a>
-                                                </div>
-                                                <div class="rv-foot">
-                                                    <span class="rv-date">October 2026</span>
-                                                    <button type="button" class="rv-helpful">
-                                                        <i class="fa-regular fa-thumbs-up"></i> Helpful
-                                                        (12)
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="rv-card">
-                                                <div class="rv-top">
-                                                    <span class="rv-avatar">NK</span>
-                                                    <div>
-                                                        <h5>Neha Kapoor</h5>
-                                                        <span class="rv-verified"><i class="fa-solid fa-circle-check"></i>
-                                                            Verified Purchase</span>
-                                                    </div>
-                                                </div>
-                                                <div class="rv-stars">
-                                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i>
-                                                </div>
-                                                <h6>Rich colour, exactly like the photos</h6>
-                                                <p>
-                                                    I was worried the wine shade would look different,
-                                                    but it matches the pictures perfectly. The pallu is
-                                                    heavy and graceful, and the blouse piece is generous
-                                                    enough for a proper fitting.
-                                                </p>
-                                                <div class="rv-photos">
-                                                    <a href="assets/images/home/tab2.png" class="glightbox"
-                                                        data-gallery="rv-b2"><img src="assets/images/home/tab2.png"
-                                                            alt="Review photo" loading="lazy" /></a>
-                                                </div>
-                                                <div class="rv-foot">
-                                                    <span class="rv-date">October 2026</span>
-                                                    <button type="button" class="rv-helpful">
-                                                        <i class="fa-regular fa-thumbs-up"></i> Helpful
-                                                        (8)
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="rv-card">
-                                                <div class="rv-top">
-                                                    <span class="rv-avatar">RM</span>
-                                                    <div>
-                                                        <h5>Ritu Malhotra</h5>
-                                                        <span class="rv-verified"><i class="fa-solid fa-circle-check"></i>
-                                                            Verified Purchase</span>
-                                                    </div>
-                                                </div>
-                                                <div class="rv-stars">
-                                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i>
-                                                </div>
-                                                <h6>Perfect for festive evenings</h6>
-                                                <p>
-                                                    Bought this for Diwali and it was the highlight of
-                                                    my look. Soft to touch, not too heavy to carry, and
-                                                    the zari has not lost its shine even after a long
-                                                    evening.
-                                                </p>
-                                                <div class="rv-photos">
-                                                    <a href="assets/images/home/tab4.png" class="glightbox"
-                                                        data-gallery="rv-b3"><img src="assets/images/home/tab4.png"
-                                                            alt="Review photo" loading="lazy" /></a>
-                                                    <a href="assets/images/home/offer2.png" class="glightbox"
-                                                        data-gallery="rv-b3"><img src="assets/images/home/offer2.png"
-                                                            alt="Review photo" loading="lazy" /></a>
-                                                    <a href="assets/images/home/tab2.png" class="glightbox"
-                                                        data-gallery="rv-b3"><img src="assets/images/home/tab2.png"
-                                                            alt="Review photo" loading="lazy" /></a>
-                                                </div>
-                                                <div class="rv-foot">
-                                                    <span class="rv-date">September 2026</span>
-                                                    <button type="button" class="rv-helpful">
-                                                        <i class="fa-regular fa-thumbs-up"></i> Helpful
-                                                        (9)
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-group">
-                                    <button type="button" class="btn-prev" aria-label="Previous slide">
-                                        <i class="fa-solid fa-arrow-right"></i>
-                                    </button>
-                                    <button type="button" class="btn-next" aria-label="Next slide">
-                                        <i class="fa-solid fa-arrow-right"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="tabs" data-tab="3">
-                            <div class="swiper-wrap">
-                                <div class="swiper reviewSlider">
-                                    <div class="swiper-wrapper">
-                                        <div class="swiper-slide">
-                                            <div class="rv-card">
-                                                <div class="rv-top">
-                                                    <span class="rv-avatar">PS</span>
-                                                    <div>
-                                                        <h5>Priya Sharma</h5>
-                                                        <span class="rv-verified"><i class="fa-solid fa-circle-check"></i>
-                                                            Verified Purchase</span>
-                                                    </div>
-                                                </div>
-                                                <div class="rv-stars">
-                                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i>
-                                                </div>
-                                                <h6>Beautiful saree and even better in person</h6>
-                                                <p>
-                                                    The zari detailing is elegant and the fabric drapes
-                                                    beautifully. I wore it to my cousin's wedding and
-                                                    received so many compliments. The packaging was also
-                                                    very neat.
-                                                </p>
-                                                <div class="rv-photos">
-                                                    <a href="assets/images/home/tab1.png" class="glightbox"
-                                                        data-gallery="rv-c1"><img src="assets/images/home/tab1.png"
-                                                            alt="Review photo" loading="lazy" /></a>
-                                                    <a href="assets/images/home/tab3.png" class="glightbox"
-                                                        data-gallery="rv-c1"><img src="assets/images/home/tab3.png"
-                                                            alt="Review photo" loading="lazy" /></a>
-                                                </div>
-                                                <div class="rv-foot">
-                                                    <span class="rv-date">October 2026</span>
-                                                    <button type="button" class="rv-helpful">
-                                                        <i class="fa-regular fa-thumbs-up"></i> Helpful
-                                                        (12)
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="rv-card">
-                                                <div class="rv-top">
-                                                    <span class="rv-avatar">NK</span>
-                                                    <div>
-                                                        <h5>Neha Kapoor</h5>
-                                                        <span class="rv-verified"><i class="fa-solid fa-circle-check"></i>
-                                                            Verified Purchase</span>
-                                                    </div>
-                                                </div>
-                                                <div class="rv-stars">
-                                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i>
-                                                </div>
-                                                <h6>Rich colour, exactly like the photos</h6>
-                                                <p>
-                                                    I was worried the wine shade would look different,
-                                                    but it matches the pictures perfectly. The pallu is
-                                                    heavy and graceful, and the blouse piece is generous
-                                                    enough for a proper fitting.
-                                                </p>
-                                                <div class="rv-photos">
-                                                    <a href="assets/images/home/tab2.png" class="glightbox"
-                                                        data-gallery="rv-c2"><img src="assets/images/home/tab2.png"
-                                                            alt="Review photo" loading="lazy" /></a>
-                                                </div>
-                                                <div class="rv-foot">
-                                                    <span class="rv-date">October 2026</span>
-                                                    <button type="button" class="rv-helpful">
-                                                        <i class="fa-regular fa-thumbs-up"></i> Helpful
-                                                        (8)
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="rv-card">
-                                                <div class="rv-top">
-                                                    <span class="rv-avatar">RM</span>
-                                                    <div>
-                                                        <h5>Ritu Malhotra</h5>
-                                                        <span class="rv-verified"><i class="fa-solid fa-circle-check"></i>
-                                                            Verified Purchase</span>
-                                                    </div>
-                                                </div>
-                                                <div class="rv-stars">
-                                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i>
-                                                </div>
-                                                <h6>Perfect for festive evenings</h6>
-                                                <p>
-                                                    Bought this for Diwali and it was the highlight of
-                                                    my look. Soft to touch, not too heavy to carry, and
-                                                    the zari has not lost its shine even after a long
-                                                    evening.
-                                                </p>
-                                                <div class="rv-photos">
-                                                    <a href="assets/images/home/tab4.png" class="glightbox"
-                                                        data-gallery="rv-c3"><img src="assets/images/home/tab4.png"
-                                                            alt="Review photo" loading="lazy" /></a>
-                                                    <a href="assets/images/home/offer2.png" class="glightbox"
-                                                        data-gallery="rv-c3"><img src="assets/images/home/offer2.png"
-                                                            alt="Review photo" loading="lazy" /></a>
-                                                    <a href="assets/images/home/tab2.png" class="glightbox"
-                                                        data-gallery="rv-c3"><img src="assets/images/home/tab2.png"
-                                                            alt="Review photo" loading="lazy" /></a>
-                                                </div>
-                                                <div class="rv-foot">
-                                                    <span class="rv-date">September 2026</span>
-                                                    <button type="button" class="rv-helpful">
-                                                        <i class="fa-regular fa-thumbs-up"></i> Helpful
-                                                        (9)
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="rv-card">
-                                                <div class="rv-top">
-                                                    <span class="rv-avatar">SA</span>
-                                                    <div>
-                                                        <h5>Simran Arora</h5>
-                                                        <span class="rv-verified"><i class="fa-solid fa-circle-check"></i>
-                                                            Verified Purchase</span>
-                                                    </div>
-                                                </div>
-                                                <div class="rv-stars">
-                                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                                        class="fa-solid fa-star"></i>
-                                                </div>
-                                                <h6>Worth every rupee</h6>
-                                                <p>
-                                                    I have shopped from Archana for years and this saree
-                                                    keeps up the same quality. The team also helped me
-                                                    with styling tips over a call, which was a lovely
-                                                    touch.
-                                                </p>
-                                                <div class="rv-foot">
-                                                    <span class="rv-date">August 2026</span>
-                                                    <button type="button" class="rv-helpful">
-                                                        <i class="fa-regular fa-thumbs-up"></i> Helpful
-                                                        (4)
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-group">
-                                    <button type="button" class="btn-prev" aria-label="Previous slide">
-                                        <i class="fa-solid fa-arrow-right"></i>
-                                    </button>
-                                    <button type="button" class="btn-next" aria-label="Next slide">
-                                        <i class="fa-solid fa-arrow-right"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @endif
                 </div>
             </section>
 
-            <section class="related-products">
-                <div class="container">
-                    <div class="sec-head">
-                        <span class="eyebrow">Complete the Look</span>
-                        <div class="heading">
-                            <h3>You May Also Love</h3>
+            @if ($related->isNotEmpty())
+                <section class="related-products">
+                    <div class="container">
+                        <div class="sec-head">
+                            <span class="eyebrow">Complete the Look</span>
+                            <div class="heading">
+                                <h3>You May Also Love</h3>
+                            </div>
+                            <p>Discover more pieces selected to complement your style.</p>
                         </div>
-                        <p>Discover more pieces selected to complement your style.</p>
-                    </div>
-                    <div class="swiper-wrap">
-                        <div class="swiper relatedProductSlider">
-                            <div class="swiper-wrapper">
-                                <div class="swiper-slide">
-                                    <div class="prod_cart">
-                                        <div class="prod-img">
-                                            <a href="javascript:void(0)" class="prod-link"><img
-                                                    src="assets/images/home/tab2.png" alt="Organza Embroidered Party Saree"
-                                                    loading="lazy" /></a><span class="prod-badge">Bestseller</span>
-                                            <div class="prod-actions">
-                                                <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                    <i class="fa-regular fa-heart"></i></button><button type="button"
-                                                    class="act-btn quick-btn" aria-label="Quick view">
-                                                    <i class="fa-regular fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="prod-info">
-                                            <div class="prod-meta">
-                                                <span class="prod-cat">Organza Saree</span><span class="prod-rate"><i
-                                                        class="fa-solid fa-star"></i> 4.7</span>
-                                            </div>
-                                            <h5 class="prod-name">
-                                                <a href="javascript:void(0)">Organza Embroidered Party Saree</a>
-                                            </h5>
-                                            <div class="prod-price">
-                                                <span class="price-now">₹6,299</span><del
-                                                    class="price-old">₹8,999</del><span class="price-off">30% OFF</span>
-                                            </div>
-                                            <button type="button" class="btn btn-outline-primary prod-cta">
-                                                Add to Bag
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="prod_cart">
-                                        <div class="prod-img">
-                                            <a href="javascript:void(0)" class="prod-link"><img
-                                                    src="assets/images/home/tab3.png" alt="Kanjivaram Pure Silk Saree"
-                                                    loading="lazy" /></a><span class="prod-badge">Bestseller</span>
-                                            <div class="prod-actions">
-                                                <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                    <i class="fa-regular fa-heart"></i></button><button type="button"
-                                                    class="act-btn quick-btn" aria-label="Quick view">
-                                                    <i class="fa-regular fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="prod-info">
-                                            <div class="prod-meta">
-                                                <span class="prod-cat">Silk Saree</span><span class="prod-rate"><i
-                                                        class="fa-solid fa-star"></i> 4.9</span>
-                                            </div>
-                                            <h5 class="prod-name">
-                                                <a href="javascript:void(0)">Kanjivaram Pure Silk Saree</a>
-                                            </h5>
-                                            <div class="prod-price">
-                                                <span class="price-now">₹12,999</span><del
-                                                    class="price-old">₹17,499</del><span class="price-off">26% OFF</span>
-                                            </div>
-                                            <button type="button" class="btn btn-outline-primary prod-cta">
-                                                Add to Bag
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="prod_cart">
-                                        <div class="prod-img">
-                                            <a href="javascript:void(0)" class="prod-link"><img
-                                                    src="assets/images/home/tab4.png" alt="Embroidered Designer Saree"
-                                                    loading="lazy" /></a><span class="prod-badge">New Arrival</span>
-                                            <div class="prod-actions">
-                                                <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                    <i class="fa-regular fa-heart"></i></button><button type="button"
-                                                    class="act-btn quick-btn" aria-label="Quick view">
-                                                    <i class="fa-regular fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="prod-info">
-                                            <div class="prod-meta">
-                                                <span class="prod-cat">Designer Saree</span><span class="prod-rate"><i
-                                                        class="fa-solid fa-star"></i> 4.8</span>
-                                            </div>
-                                            <h5 class="prod-name">
-                                                <a href="javascript:void(0)">Embroidered Designer Saree</a>
-                                            </h5>
-                                            <div class="prod-price">
-                                                <span class="price-now">₹9,999</span><del
-                                                    class="price-old">₹13,999</del><span class="price-off">29% OFF</span>
-                                            </div>
-                                            <button type="button" class="btn btn-outline-primary prod-cta">
-                                                Add to Bag
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="prod_cart">
-                                        <div class="prod-img">
-                                            <a href="javascript:void(0)" class="prod-link"><img
-                                                    src="assets/images/home/tab1.png" alt="Georgette Printed Saree"
-                                                    loading="lazy" /></a>
-                                            <div class="prod-actions">
-                                                <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                    <i class="fa-regular fa-heart"></i></button><button type="button"
-                                                    class="act-btn quick-btn" aria-label="Quick view">
-                                                    <i class="fa-regular fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="prod-info">
-                                            <div class="prod-meta">
-                                                <span class="prod-cat">Georgette Saree</span><span class="prod-rate"><i
-                                                        class="fa-solid fa-star"></i> 4.6</span>
-                                            </div>
-                                            <h5 class="prod-name">
-                                                <a href="javascript:void(0)">Georgette Printed Saree</a>
-                                            </h5>
-                                            <div class="prod-price">
-                                                <span class="price-now">₹4,799</span><del
-                                                    class="price-old">₹6,499</del><span class="price-off">26% OFF</span>
-                                            </div>
-                                            <button type="button" class="btn btn-outline-primary prod-cta">
-                                                Add to Bag
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="prod_cart">
-                                        <div class="prod-img">
-                                            <a href="javascript:void(0)" class="prod-link"><img
-                                                    src="assets/images/home/tab2.png" alt="Red Bridal Silk Saree"
-                                                    loading="lazy" /></a><span class="prod-badge">Bestseller</span>
-                                            <div class="prod-actions">
-                                                <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                    <i class="fa-regular fa-heart"></i></button><button type="button"
-                                                    class="act-btn quick-btn" aria-label="Quick view">
-                                                    <i class="fa-regular fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="prod-info">
-                                            <div class="prod-meta">
-                                                <span class="prod-cat">Bridal Saree</span><span class="prod-rate"><i
-                                                        class="fa-solid fa-star"></i> 4.8</span>
-                                            </div>
-                                            <h5 class="prod-name">
-                                                <a href="javascript:void(0)">Red Bridal Silk Saree</a>
-                                            </h5>
-                                            <div class="prod-price">
-                                                <span class="price-now">₹24,999</span><del
-                                                    class="price-old">₹34,999</del><span class="price-off">29% OFF</span>
-                                            </div>
-                                            <button type="button" class="btn btn-outline-primary prod-cta">
-                                                Add to Bag
-                                            </button>
-                                        </div>
-                                    </div>
+                        <div class="swiper-wrap">
+                            <div class="swiper relatedProductSlider">
+                                <div class="swiper-wrapper">
+                                    @include('partials.product-slider', ['products' => $related])
                                 </div>
                             </div>
-                        </div>
-                        <div class="swiper-group">
-                            <button type="button" class="btn-prev" aria-label="Previous slide">
-                                <i class="fa-solid fa-arrow-right"></i>
-                            </button>
-                            <button type="button" class="btn-next" aria-label="Next slide">
-                                <i class="fa-solid fa-arrow-right"></i>
-                            </button>
+                            <div class="swiper-group">
+                                <button type="button" class="btn-prev" aria-label="Previous slide">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </button>
+                                <button type="button" class="btn-next" aria-label="Next slide">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            @endif
 
-            <section class="recently-viewed">
-                <div class="container">
-                    <div class="sec-head">
-                        <span class="eyebrow">Welcome Back</span>
-                        <div class="heading">
-                            <h3>Recently Viewed</h3>
+            @if ($recentlyViewed->isNotEmpty())
+                <section class="recently-viewed">
+                    <div class="container">
+                        <div class="sec-head">
+                            <span class="eyebrow">Welcome Back</span>
+                            <div class="heading">
+                                <h3>Recently Viewed</h3>
+                            </div>
+                            <p>A few styles you may want to revisit.</p>
                         </div>
-                        <p>A few styles you may want to revisit.</p>
-                    </div>
-                    <div class="swiper-wrap">
-                        <div class="swiper recentlyViewedSlider">
-                            <div class="swiper-wrapper">
-                                <div class="swiper-slide">
-                                    <div class="prod_cart">
-                                        <div class="prod-img">
-                                            <a href="javascript:void(0)" class="prod-link"><img
-                                                    src="assets/images/home/tab1.png" alt="Kanjivaram Pure Silk Saree"
-                                                    loading="lazy" /></a>
-                                            <div class="prod-actions">
-                                                <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                    <i class="fa-regular fa-heart"></i></button><button type="button"
-                                                    class="act-btn quick-btn" aria-label="Quick view">
-                                                    <i class="fa-regular fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="prod-info">
-                                            <div class="prod-meta">
-                                                <span class="prod-cat">Silk Saree</span><span class="prod-rate"><i
-                                                        class="fa-solid fa-star"></i> 4.9</span>
-                                            </div>
-                                            <h5 class="prod-name">
-                                                <a href="javascript:void(0)">Kanjivaram Pure Silk Saree</a>
-                                            </h5>
-                                            <div class="prod-price">
-                                                <span class="price-now">₹12,999</span><del
-                                                    class="price-old">₹17,499</del><span class="price-off">26% OFF</span>
-                                            </div>
-                                            <button type="button" class="btn btn-outline-primary prod-cta">
-                                                Add to Bag
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="prod_cart">
-                                        <div class="prod-img">
-                                            <a href="javascript:void(0)" class="prod-link"><img
-                                                    src="assets/images/home/tab2.png" alt="Organza Embroidered Party Saree"
-                                                    loading="lazy" /></a>
-                                            <div class="prod-actions">
-                                                <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                    <i class="fa-regular fa-heart"></i></button><button type="button"
-                                                    class="act-btn quick-btn" aria-label="Quick view">
-                                                    <i class="fa-regular fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="prod-info">
-                                            <div class="prod-meta">
-                                                <span class="prod-cat">Organza Saree</span><span class="prod-rate"><i
-                                                        class="fa-solid fa-star"></i> 4.7</span>
-                                            </div>
-                                            <h5 class="prod-name">
-                                                <a href="javascript:void(0)">Organza Embroidered Party Saree</a>
-                                            </h5>
-                                            <div class="prod-price">
-                                                <span class="price-now">₹6,299</span><del
-                                                    class="price-old">₹8,999</del><span class="price-off">30% OFF</span>
-                                            </div>
-                                            <button type="button" class="btn btn-outline-primary prod-cta">
-                                                Add to Bag
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="prod_cart">
-                                        <div class="prod-img">
-                                            <a href="javascript:void(0)" class="prod-link"><img
-                                                    src="assets/images/home/tab3.png" alt="Red Bridal Silk Saree"
-                                                    loading="lazy" /></a>
-                                            <div class="prod-actions">
-                                                <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                    <i class="fa-regular fa-heart"></i></button><button type="button"
-                                                    class="act-btn quick-btn" aria-label="Quick view">
-                                                    <i class="fa-regular fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="prod-info">
-                                            <div class="prod-meta">
-                                                <span class="prod-cat">Bridal Saree</span><span class="prod-rate"><i
-                                                        class="fa-solid fa-star"></i> 4.8</span>
-                                            </div>
-                                            <h5 class="prod-name">
-                                                <a href="javascript:void(0)">Red Bridal Silk Saree</a>
-                                            </h5>
-                                            <div class="prod-price">
-                                                <span class="price-now">₹24,999</span><del
-                                                    class="price-old">₹34,999</del><span class="price-off">29% OFF</span>
-                                            </div>
-                                            <button type="button" class="btn btn-outline-primary prod-cta">
-                                                Add to Bag
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="prod_cart">
-                                        <div class="prod-img">
-                                            <a href="javascript:void(0)" class="prod-link"><img
-                                                    src="assets/images/home/tab4.png" alt="Embroidered Designer Lehenga Set"
-                                                    loading="lazy" /></a>
-                                            <div class="prod-actions">
-                                                <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                    <i class="fa-regular fa-heart"></i></button><button type="button"
-                                                    class="act-btn quick-btn" aria-label="Quick view">
-                                                    <i class="fa-regular fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="prod-info">
-                                            <div class="prod-meta">
-                                                <span class="prod-cat">Designer Lehenga</span><span class="prod-rate"><i
-                                                        class="fa-solid fa-star"></i> 4.8</span>
-                                            </div>
-                                            <h5 class="prod-name">
-                                                <a href="javascript:void(0)">Embroidered Designer Lehenga Set</a>
-                                            </h5>
-                                            <div class="prod-price">
-                                                <span class="price-now">₹18,999</span><del
-                                                    class="price-old">₹26,999</del><span class="price-off">30% OFF</span>
-                                            </div>
-                                            <button type="button" class="btn btn-outline-primary prod-cta">
-                                                Add to Bag
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="prod_cart">
-                                        <div class="prod-img">
-                                            <a href="javascript:void(0)" class="prod-link"><img
-                                                    src="assets/images/home/tab1.png" alt="Georgette Printed Saree"
-                                                    loading="lazy" /></a>
-                                            <div class="prod-actions">
-                                                <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                                                    <i class="fa-regular fa-heart"></i></button><button type="button"
-                                                    class="act-btn quick-btn" aria-label="Quick view">
-                                                    <i class="fa-regular fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="prod-info">
-                                            <div class="prod-meta">
-                                                <span class="prod-cat">Georgette Saree</span><span class="prod-rate"><i
-                                                        class="fa-solid fa-star"></i> 4.6</span>
-                                            </div>
-                                            <h5 class="prod-name">
-                                                <a href="javascript:void(0)">Georgette Printed Saree</a>
-                                            </h5>
-                                            <div class="prod-price">
-                                                <span class="price-now">₹4,799</span><del
-                                                    class="price-old">₹6,499</del><span class="price-off">26% OFF</span>
-                                            </div>
-                                            <button type="button" class="btn btn-outline-primary prod-cta">
-                                                Add to Bag
-                                            </button>
-                                        </div>
-                                    </div>
+                        <div class="swiper-wrap">
+                            <div class="swiper recentlyViewedSlider">
+                                <div class="swiper-wrapper">
+                                    @include('partials.product-slider', ['products' => $recentlyViewed])
                                 </div>
                             </div>
-                        </div>
-                        <div class="swiper-group">
-                            <button type="button" class="btn-prev" aria-label="Previous slide">
-                                <i class="fa-solid fa-arrow-right"></i>
-                            </button>
-                            <button type="button" class="btn-next" aria-label="Next slide">
-                                <i class="fa-solid fa-arrow-right"></i>
-                            </button>
+                            <div class="swiper-group">
+                                <button type="button" class="btn-prev" aria-label="Previous slide">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </button>
+                                <button type="button" class="btn-next" aria-label="Next slide">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            @endif
 
             <div class="product-sticky-bar" aria-hidden="true">
                 <div class="sb-product">
-                    <img src="assets/images/home/tab1.png" alt="Zari Woven Banarasi Silk Saree" loading="lazy" />
+                    <img src="{{ $imgs->first()['thumb'] }}" alt="{{ $product->name }}" loading="lazy" />
                     <div class="sb-text">
-                        <b>Zari Woven Banarasi Silk Saree</b>
-                        <span><strong>₹8,499</strong> <em>29% OFF</em></span>
+                        <b>{{ $product->name }}</b>
+                        <span>
+                            <strong>₹{{ number_format($product->price) }}</strong>
+                            @if ($product->discount_percent > 0)
+                                <em>{{ $product->discount_percent }}% OFF</em>
+                            @endif
+                        </span>
                     </div>
                 </div>
                 <div class="sb-actions">
@@ -1542,58 +705,59 @@
         <div class="model-body">
             <div class="title">
                 <h4>Write a Review</h4>
-                <p>Zari Woven Banarasi Silk Saree</p>
+                <p>{{ $product->name }}</p>
             </div>
-            <form class="form review-form" action="#" method="post" enctype="multipart/form-data">
-                <div class="rf-rate">
-                    <span>Your Rating</span>
-                    <div class="rate-input">
-                        <input type="radio" name="rating" id="rate5" value="5" />
-                        <label for="rate5" aria-label="5 stars"><i class="fa-solid fa-star"></i></label>
-                        <input type="radio" name="rating" id="rate4" value="4" />
-                        <label for="rate4" aria-label="4 stars"><i class="fa-solid fa-star"></i></label>
-                        <input type="radio" name="rating" id="rate3" value="3" />
-                        <label for="rate3" aria-label="3 stars"><i class="fa-solid fa-star"></i></label>
-                        <input type="radio" name="rating" id="rate2" value="2" />
-                        <label for="rate2" aria-label="2 stars"><i class="fa-solid fa-star"></i></label>
-                        <input type="radio" name="rating" id="rate1" value="1" />
-                        <label for="rate1" aria-label="1 star"><i class="fa-solid fa-star"></i></label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input type="text" id="rvTitle" name="title" placeholder=" " required />
-                    <label for="rvTitle">Review Title</label>
-                </div>
-                <div class="form-group">
-                    <textarea id="rvText" name="review" placeholder=" " required></textarea>
-                    <label for="rvText">Your Review</label>
-                </div>
-                <div class="rf-row">
-                    <div class="form-group">
-                        <input type="text" id="rvName" name="name" placeholder=" " required />
-                        <label for="rvName">Your Name</label>
+
+            @if ($reviewState === 'can_review')
+                <form class="form review-form" id="reviewForm" action="{{ route('product.review.store', $product->id) }}"
+                    method="post" enctype="multipart/form-data">
+                    @csrf
+                    <div class="rf-rate">
+                        <span>Your Rating</span>
+                        <div class="rate-input">
+                            <input type="radio" name="rating" id="rate5" value="5" />
+                            <label for="rate5" aria-label="5 stars"><i class="fa-solid fa-star"></i></label>
+                            <input type="radio" name="rating" id="rate4" value="4" />
+                            <label for="rate4" aria-label="4 stars"><i class="fa-solid fa-star"></i></label>
+                            <input type="radio" name="rating" id="rate3" value="3" />
+                            <label for="rate3" aria-label="3 stars"><i class="fa-solid fa-star"></i></label>
+                            <input type="radio" name="rating" id="rate2" value="2" />
+                            <label for="rate2" aria-label="2 stars"><i class="fa-solid fa-star"></i></label>
+                            <input type="radio" name="rating" id="rate1" value="1" />
+                            <label for="rate1" aria-label="1 star"><i class="fa-solid fa-star"></i></label>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <input type="email" id="rvEmail" name="email" placeholder=" " required />
-                        <label for="rvEmail">Email Address</label>
+                        <input type="text" id="rvTitle" name="title" placeholder=" " maxlength="150" required />
+                        <label for="rvTitle">Review Title</label>
                     </div>
-                </div>
-                <div class="rf-upload">
-                    <label class="upload-box" for="rvPhotos">
-                        <i class="fa-regular fa-image"></i>
-                        <b>Choose Photos <em>(optional)</em></b>
-                        <span>Up to 5 photos · JPG or PNG · max 5MB each</span>
-                        <input type="file" id="rvPhotos" name="photos[]" accept="image/*" multiple />
-                    </label>
-                    <div class="upload-preview"></div>
-                </div>
-                <div class="rf-submit">
-                    <button type="submit" class="btn btn-primary">Submit Review</button>
-                    <p>
-                        Your email will not be published. Reviews appear after approval.
-                    </p>
-                </div>
-            </form>
+                    <div class="form-group">
+                        <textarea id="rvText" name="review" placeholder=" " minlength="10" maxlength="2000" required></textarea>
+                        <label for="rvText">Your Review</label>
+                    </div>
+                    <div class="rf-upload">
+                        <label class="upload-box" for="rvPhotos">
+                            <i class="fa-regular fa-image"></i>
+                            <b>Choose Photos <em>(optional)</em></b>
+                            <span>Up to 5 photos · JPG, PNG or WEBP · max 5MB each</span>
+                            <input type="file" id="rvPhotos" name="photos[]" accept="image/*" multiple />
+                        </label>
+                        <div class="upload-preview"></div>
+                    </div>
+                    <p class="rf-msg" id="rvMsg" style="display:none;margin:0 0 12px"></p>
+                    <div class="rf-submit">
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                        <p>Reviews appear after approval.</p>
+                    </div>
+                </form>
+            @elseif ($reviewState === 'guest')
+                <p>Please log in to write a review. Only customers who purchased this product can review it.</p>
+                <a href="{{ route('login') }}" class="btn btn-primary">Log in</a>
+            @elseif ($reviewState === 'already_reviewed')
+                <p>You have already reviewed this product. Thank you for your feedback!</p>
+            @else
+                <p>Only customers who have purchased and received this product can write a review.</p>
+            @endif
         </div>
     </div>
 
@@ -1723,6 +887,7 @@
                 "recentlyViewedSlider:.recently-viewed",
             ].forEach(function (s) {
                 var p = s.split(":");
+                if (!document.querySelector("." + p[0])) return;
                 new Swiper("." + p[0], {
                     slidesPerView: 2,
                     spaceBetween: 12,
@@ -1775,6 +940,119 @@
             });
         });
 
+        $('#pinForm').on('submit', function (e) {
+            e.preventDefault();
+
+            var $form = $(this),
+                $res = $('#pinResult'),
+                $btn = $form.find('button'),
+                pin = $.trim($form.find('input[name="pincode"]').val());
+
+            function show(ok, html) {
+                $res.html('<i class="fa-solid ' + (ok ? 'fa-circle-check' : 'fa-circle-xmark') + '"></i> ' + html)
+                    .css('color', ok ? '' : '#b22222').show();
+            }
+
+            if (!/^\d{6}$/.test(pin)) {
+                $('#stepDelivered').hide();
+                return show(false, 'Please enter a valid 6-digit pincode.');
+            }
+
+            $btn.prop('disabled', true).text('Checking...');
+
+            $.getJSON($form.attr('action'), { pincode: pin })
+                .done(function (r) {
+                    if (r.status) {
+                        var place = [r.district, r.state].filter(Boolean).join(', ');
+                        show(true, 'Delivery available' + (place ? ' to ' + $('<span>').text(place).html() : '') + '.');
+                        if (r.eta) {
+                            $('#stepDeliveredText').text('In ' + r.eta);
+                            $('#stepDelivered').show();
+                        } else {
+                            $('#stepDelivered').hide();
+                        }
+                    } else {
+                        $('#stepDelivered').hide();
+                        show(false, $('<span>').text(r.message).html());
+                    }
+                })
+                .fail(function (xhr) {
+                    $('#stepDelivered').hide();
+                    show(false, xhr.status === 429
+                        ? 'Too many attempts. Please try again in a minute.'
+                        : 'Could not check right now. Please try again.');
+                })
+                .always(function () {
+                    $btn.prop('disabled', false).text('Check');
+                });
+        });
+
+        $('#rvPhotos').on('change', function () {
+            var files = Array.from(this.files), $p = $(this).closest('.rf-upload').find('.upload-preview');
+            $p.empty();
+            if (files.length > 5) {
+                this.value = '';
+                return $('#rvMsg').text('You can upload up to 5 photos.').css('color', '#b22222').show();
+            }
+            files.forEach(function (f) {
+                $p.append($('<img>', { src: URL.createObjectURL(f), alt: 'Preview', width: 56, height: 56, css: { objectFit: 'cover', borderRadius: 6, marginRight: 6 } }));
+            });
+        });
+
+        $('#reviewForm').on('submit', function (e) {
+            e.preventDefault();
+
+            var $f = $(this), $btn = $f.find('button[type=submit]'), $msg = $('#rvMsg');
+
+            if (!$f.find('input[name="rating"]:checked').length) {
+                return $msg.text('Please select a rating.').css('color', '#b22222').show();
+            }
+
+            $btn.prop('disabled', true).text('Submitting...');
+            $msg.hide();
+
+            $.ajax({
+                url: $f.attr('action'),
+                method: 'POST',
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                dataType: 'json'
+            }).done(function (r) {
+                $f.find('.rf-rate, .form-group, .rf-upload, .rf-submit').hide();
+                $msg.text(r.message).css('color', '').show();
+                $('.write-review').prop('disabled', true).text('Review Submitted');
+            }).fail(function (xhr) {
+                var m = 'Could not submit right now. Please try again.';
+                if (xhr.status === 401) m = 'Please log in to write a review.';
+                else if (xhr.status === 429) m = 'Too many attempts. Please try again in a minute.';
+                else if (xhr.responseJSON) {
+                    m = xhr.responseJSON.message || m;
+                    if (xhr.responseJSON.errors) m = Object.values(xhr.responseJSON.errors)[0][0];
+                }
+                $msg.text(m).css('color', '#b22222').show();
+                $btn.prop('disabled', false).text('Submit Review');
+            });
+        });
+
+        $(document).on('click', '.offer-copy', function () {
+            var $b = $(this), html = $b.html();
+            navigator.clipboard.writeText($b.data('code')).then(function () {
+                $b.text('Copied!');
+                setTimeout(function () { $b.html(html); }, 1500);
+            });
+        });
+
+        $(document).on('click', '.offers-head a', function (e) {
+            e.preventDefault();
+            var $item = $('#offers-accordion');
+            if (!$item.length) return;
+            $('html, body').animate({ scrollTop: $item.offset().top - 120 }, 300);
+            if ($item.find('.accordion-content').outerHeight() < 5) {
+                $item.find('.accordion-header').trigger('click');
+            }
+        });
+
         GLightbox({ selector: ".glightbox", touchNavigation: true, loop: true });
 
         $(".gallery-zoom").on("click", function () {
@@ -1782,5 +1060,6 @@
                 "click",
             );
         });
+
     </script>
 @endpush

@@ -391,10 +391,7 @@
                     @php
                         $typeIcons = [
                             'button' => 'fa-square-o',
-                            'dropdown' => 'fa-caret-square-o-down',
-                            'image' => 'fa-image',
                             'color_swatch' => 'fa-paint-brush',
-                            'radio' => 'fa-dot-circle-o',
                         ];
                         $currentIcon = $typeIcons[$attribute->type] ?? 'fa-tag';
                     @endphp
@@ -514,27 +511,12 @@
 
                                     <div style="margin-bottom:8px">
                                         <strong>Button</strong> —
-                                        Best for Size, Pack Size, Quantity etc.
-                                    </div>
-
-                                    <div style="margin-bottom:8px">
-                                        <strong>Dropdown</strong> —
-                                        Best for Material, Paper Type, Finish etc.
-                                    </div>
-
-                                    <div style="margin-bottom:8px">
-                                        <strong>Image</strong> —
-                                        Best for Design, Pattern or Style selection.
+                                        Best for Size, Quantity etc.
                                     </div>
 
                                     <div style="margin-bottom:8px">
                                         <strong>Colour Swatch</strong> —
                                         Best for Colour selection.
-                                    </div>
-
-                                    <div>
-                                        <strong>Radio</strong> —
-                                        Best for simple single-choice options.
                                     </div>
 
                                 </div>

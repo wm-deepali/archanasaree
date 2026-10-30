@@ -411,23 +411,6 @@
                                         value="{{ old('value', $attributeValue->value) }}" required>
                                 </div>
 
-                                <div class="field-group" id="imageWrapper" style="display:none;">
-                                    <label class="field-label">Image</label>
-
-                                    @if(!empty($attributeValue->image))
-                                        <div style="margin-bottom:10px;">
-                                            <img src="{{ asset('storage/' . $attributeValue->image) }}"
-                                                style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid #ddd;">
-                                        </div>
-                                    @endif
-
-                                    <input type="file" name="image" class="field-input" accept="image/*">
-
-                                    <div class="field-hint">
-                                        Upload image for Image type attributes.
-                                    </div>
-                                </div>
-
                                 <div class="field-group" id="hexCodeWrapper" style="display:none;">
                                     <label class="field-label">
                                         Hexa Code <span class="req">*</span>
@@ -560,12 +543,7 @@
 
         let type = $('select[name="attribute_id"] option:selected').data('type');
 
-        $('#imageWrapper').hide();
         $('#hexCodeWrapper').hide();
-
-        if (type === 'image') {
-            $('#imageWrapper').show();
-        }
 
         if (type === 'color_swatch') {
             $('#hexCodeWrapper').show();
