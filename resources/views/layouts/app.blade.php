@@ -1,4 +1,8 @@
 <!doctype html>
+@php
+  $authCustomer = auth('customer')->user();
+  $dashUrl = Route::has('user.dashboard.index') ? route('user.dashboard.index') : null;
+@endphp
 <html lang="en">
 
 <head>
@@ -474,44 +478,55 @@
           </div>
 
           <div class="account-wrapper">
-            <a href="javascript:void(0)" class="action-link account-btn" aria-label="Account">
-              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5"
-                stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="8" r="4.2" />
-                <path d="M4 21c0-4.4 3.6-7.5 8-7.5s8 3.1 8 7.5" />
-              </svg>
-            </a>
+            @if ($authCustomer)
+              <a href="{{ $dashUrl ?? 'javascript:void(0)' }}" class="action-link account-btn" aria-label="Account">
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="4.2" />
+                  <path d="M4 21c0-4.4 3.6-7.5 8-7.5s8 3.1 8 7.5" />
+                </svg>
+              </a>
 
-            <div class="account-drop">
-              <div class="acc-profile">
-                <span class="acc-avatar">A</span>
-                <div class="acc-info">
-                  <h6>Aarav Mehta</h6>
-                  <p>aarav@example.com</p>
+              <div class="account-drop">
+                <div class="acc-profile">
+                  <span class="acc-avatar">{{ mb_strtoupper(mb_substr($authCustomer->name, 0, 1)) }}</span>
+                  <div class="acc-info">
+                    <h6>{{ $authCustomer->name }}</h6>
+                    <p>{{ $authCustomer->email }}</p>
+                  </div>
                 </div>
+
+                <ul class="acc-list">
+                  @if ($dashUrl)
+                    <li><a href="{{ $dashUrl }}"><i class="fa-solid fa-truck-fast"></i> Track Order</a></li>
+                    <li><a href="{{ $dashUrl }}"><i class="fa-solid fa-box-open"></i> My Orders</a></li>
+                  @endif
+                  @if (Route::has('wishlist'))
+                    <li><a href="{{ route('wishlist') }}"><i class="fa-regular fa-heart"></i> My Wishlist</a></li>
+                  @endif
+                  @if ($dashUrl)
+                    <li><a href="{{ $dashUrl }}"><i class="fa-regular fa-user"></i> My Profile</a></li>
+                  @endif
+                  <li class="acc-out">
+                    <a href="javascript:void(0)" onclick="document.getElementById('customerLogoutForm').submit()">
+                      <i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+                  </li>
+                </ul>
+
+                <form id="customerLogoutForm" method="POST" action="{{ route('user.logout') }}" hidden>@csrf</form>
               </div>
-
-              <ul class="acc-list">
-                <li>
-                  <a href="javascript:void(0)"><i class="fa-solid fa-truck-fast"></i> Track Order</a>
-                </li>
-                <li>
-                  <a href="javascript:void(0)"><i class="fa-solid fa-box-open"></i> My Orders</a>
-                </li>
-                <li>
-                  <a href="javascript:void(0)"><i class="fa-regular fa-heart"></i> My Wishlist</a>
-                </li>
-                <li>
-                  <a href="javascript:void(0)"><i class="fa-regular fa-user"></i> My Profile</a>
-                </li>
-                <li class="acc-out">
-                  <a href="javascript:void(0)"><i class="fa-solid fa-right-from-bracket"></i> Sign
-                    Out</a>
-                </li>
-              </ul>
-            </div>
+            @else
+              {{-- Guest: the icon opens the login / register modal --}}
+              <button type="button" class="action-link account-btn" data-model=".login-pop"
+                aria-label="Login or register">
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="4.2" />
+                  <path d="M4 21c0-4.4 3.6-7.5 8-7.5s8 3.1 8 7.5" />
+                </svg>
+              </button>
+            @endif
           </div>
-
           <button data-model=".login-pop" class="action-link" aria-label="Wishlist">
             <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5"
               stroke-linecap="round" stroke-linejoin="round">
@@ -687,14 +702,24 @@
           class="f-count">0</b></a>
       <a href="{{ route('cart') }}" class="float-link"><i class="fa-solid fa-bag-shopping"></i><span>Bag</span><b
           class="f-count cart-count">{{ $cartCount }}</b></a>
-      <a href="login.html" class="float-link"><i class="fa-regular fa-user"></i><span>Account</span></a>
+      @if ($authCustomer)
+        <a href="{{ $dashUrl ?? 'javascript:void(0)' }}" class="float-link"><i
+            class="fa-regular fa-user"></i><span>Account</span></a>
+      @else
+        <button type="button" class="float-link" data-model=".login-pop" aria-label="Login"><i
+            class="fa-regular fa-user"></i><span>Login</span></button>
+      @endif
     </nav>
   </footer>
 
   <!-- start-models -->
   <div class="model cart-pop">
-    <button class="close" type="button">...</button>
-
+    <button class="close" type="button">
+      <p>Close</p>
+      <svg width="20" height="20" viewBox="0 0 26 26" fill="none">
+        <path d="M0.5 0.5L25.5 25.5M0.5 25.5L25.5 0.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
     <div class="model-body" id="miniCart">
       @include('layouts.mini-cart')
     </div>
@@ -772,7 +797,7 @@
         <div class="tabs" data-tab="pop-register">
           <form class="form pop-form" novalidate>
             <div class="form-group">
-              <input type="text" id="popRegName" name="full_name" placeholder=" " autocomplete="name" />
+              <input type="text" id="popRegName" name="name" placeholder=" " autocomplete="name" />
               <label for="popRegName">Full Name</label>
             </div>
 
@@ -962,6 +987,65 @@
       });
     });
   </script>
+
+  <script>
+    $(function () {
+      var LOGIN_URL = @json(route('checkout.ajax-login')),
+        REGISTER_URL = @json(route('checkout.ajax-register')),
+        GOOGLE_URL = @json(route('user.google.login')),
+        CSRF = @json(csrf_token());
+
+      function errText(xhr) {
+        var j = xhr.responseJSON || {};
+        if (xhr.status === 422 && j.errors) return Object.values(j.errors)[0][0];
+        if (j.message) return j.message;
+        if (xhr.status === 419) return 'Your session expired. Please refresh the page.';
+        if (xhr.status === 429) return 'Too many attempts. Please try again in a minute.';
+        return 'Something went wrong. Please try again.';
+      }
+
+      $(document).on('submit', '.login-pop .pop-form', function (e) {
+        e.preventDefault();
+
+        var $f = $(this),
+          $btn = $f.find('.pop-submit'),
+          isLogin = $f.closest('.tabs').data('tab') === 'pop-login';
+
+        $f.find('.pop-err').remove();
+        $btn.prop('disabled', true);
+
+        $.ajax({
+          url: isLogin ? LOGIN_URL : REGISTER_URL,
+          method: 'POST',
+          data: $f.serialize() + '&_token=' + encodeURIComponent(CSRF),
+          dataType: 'json'
+        }).done(function () {
+          window.location.reload(); // new session and token, and the guest cart is already merged
+        }).fail(function (xhr) {
+          $btn.prop('disabled', false);
+          $('<p class="pop-err">').text(errText(xhr)).insertBefore($btn);
+        });
+      });
+
+      // Google: come back to the same page
+      $(document).on('click', '.login-pop .pop-google', function () {
+        window.location.href = GOOGLE_URL + '?redirect=' + encodeURIComponent(window.location.href);
+      });
+    });
+  </script>
+
+  @if (session('open_auth'))
+    <script>
+      $(function () {
+        setTimeout(function () {
+          var tab = document.querySelector('.login-pop .tab-nav li[data-tab="pop-{{ session('open_auth') === 'register' ? 'register' : 'login' }}"]'),
+            open = document.querySelector('[data-model=".login-pop"]');
+          if (tab) tab.click();
+          if (open) open.click();
+        }, 300);
+      });
+    </script>
+  @endif
 
   @stack('scripts')
 

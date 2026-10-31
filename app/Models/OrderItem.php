@@ -86,4 +86,33 @@ class OrderItem extends Model
         return $this->hasOne(ProductReview::class);
     }
 
+    /**
+     * Cart thumbnail: image-variant's default image, else the product's
+     * default image, else a placeholder. Load imageVariant.images and
+     * product.images first to avoid extra queries.
+     */
+    public function getDisplayImageAttribute(): string
+    {
+        $variant = $this->imageVariant;
+
+        if ($variant) {
+            $img = $variant->images->firstWhere('is_default', 1) ?? $variant->images->first();
+
+            if ($img) {
+                return asset('storage/' . ($img->thumb ?? $img->image));
+            }
+
+            if ($variant->image) {
+                return asset('storage/' . $variant->image);
+            }
+        }
+
+        $images = $this->product?->images ?? collect();
+        $img = $images->firstWhere('is_default', 1) ?? $images->first();
+
+        return $img
+            ? asset('storage/' . ($img->thumb ?? $img->image))
+            : asset('assets/images/home/tab1.png');
+    }
+
 }

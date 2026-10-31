@@ -380,75 +380,11 @@ class CartController extends Controller
             ->get();
 
         $freeShip = $this->freeShippingProgress($cart);
-        $summary = $this->priceSummary($cart);
+        $summary = \App\Services\CartSummary::for($cart);
 
         return view('front-pages.cart', compact('cart', 'offers', 'freeShip', 'summary'));
     }
 
-    private function priceSummary(?Cart $cart): array
-    {
-        $items = $cart?->items ?? collect();
-
-        $totalMrp = 0.0;
-        $sellTotal = 0.0;
-        $dyeTotal = 0.0;
-        $addonLines = [];
-
-        foreach ($items as $item) {
-            if (!$item->product) {
-                continue;
-            }
-
-            $qty = (int) $item->quantity;
-            $unit = (float) $item->price;
-            $mrp = (float) (($item->priceVariant->mrp ?? $item->product->mrp) ?: $unit);
-
-            $totalMrp += max($mrp, $unit) * $qty;
-            $sellTotal += $unit * $qty;
-            $dyeTotal += (float) $item->dye_charge * $qty;
-
-            foreach ($item->addons as $addon) {
-                if ($addon->price > 0) {
-                    $addonLines[$addon->detail] = ($addonLines[$addon->detail] ?? 0) + ($addon->price * $qty);
-                }
-            }
-        }
-
-        $coupon = $cart && $cart->coupon_code ? (float) $cart->discount : 0.0;
-        $mrpDiscount = max(0, $totalMrp - $sellTotal);
-
-        // Tax is only a separate line when it is added on top (exclusive GST)
-        $invoice = \App\Models\InvoiceSetting::first();
-        $taxExclusive = $invoice
-            && $invoice->business_type === 'registered'
-            && $invoice->tax_type === 'exclusive'
-            && (float) ($cart->tax_amount ?? 0) > 0;
-
-        // Shipping: charge comes from the cart; `known` tells "Free" apart from "zone not known yet"
-        $shippingCharge = (float) ($cart->shipping_charge ?? 0);
-        $shippingKnown = true;
-
-        if ($cart && $items->isNotEmpty() && $shippingCharge <= 0) {
-            $taxable = max(0, (float) $items->sum('total') - $coupon);
-            $calc = \App\Services\ShippingCalculator::forCart($cart, $taxable);
-            $shippingKnown = (bool) $calc['known'];
-        }
-
-        return [
-            'count' => (int) $items->sum('quantity'),
-            'total_mrp' => $totalMrp,
-            'mrp_discount' => $mrpDiscount,
-            'addons' => $addonLines,
-            'dye' => $dyeTotal,
-            'coupon_code' => $cart?->coupon_code,
-            'coupon' => $coupon,
-            'tax' => $taxExclusive ? (float) $cart->tax_amount : 0.0,
-            'shipping' => $shippingCharge,
-            'shipping_known' => $shippingKnown,
-            'total' => (float) ($cart->grand_total ?? 0),
-            'saved' => $mrpDiscount + $coupon,
-        ];
-    }
 
     /**
      * Free-delivery progress. Same basis the calculator uses: items total minus

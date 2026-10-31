@@ -40,6 +40,13 @@ return new class extends Migration {
 
             $table->string('pincode', 20)->nullable();
 
+            $table->string('billing_name')->nullable();
+            $table->text('billing_address_line_1')->nullable();
+            $table->text('billing_address_line_2')->nullable();
+            $table->unsignedBigInteger('billing_state_id')->nullable();
+            $table->unsignedBigInteger('billing_city_id')->nullable();
+            $table->string('billing_pincode', 20)->nullable();
+
             // Coupon
             $table->string('coupon_code')->nullable();
 

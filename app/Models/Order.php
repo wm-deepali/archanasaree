@@ -24,6 +24,13 @@ class Order extends Model
         'city_id',
         'pincode',
 
+        'billing_name',
+        'billing_address_line_1',
+        'billing_address_line_2',
+        'billing_state_id',
+        'billing_city_id',
+        'billing_pincode',
+
         'coupon_code',
 
         'subtotal',
@@ -54,6 +61,16 @@ class Order extends Model
         'tracking_number',
         'courier_id'
     ];
+
+    public function billingState()
+    {
+        return $this->belongsTo(\App\Models\State::class, 'billing_state_id');
+    }
+
+    public function billingCity()
+    {
+        return $this->belongsTo(\App\Models\City::class, 'billing_city_id');
+    }
 
     public function customer()
     {

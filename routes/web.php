@@ -80,8 +80,6 @@ Route::middleware('maintenance.mode')->group(function () {
         Route::get('/products', 'products')->name('products');
         Route::get('/product/{slug}', 'productShow')->name('products.show');
 
-        Route::view('/thank-you', 'front-pages.thank-you')->name('thank-you');
-        Route::view('/payment', 'front-pages.payment')->name('payment');
         Route::view('/about', 'front-pages.about')->name('about');
         Route::view('/blog-detail', 'front-pages.blog-detail')->name('blog.show');
         Route::view('/blogs', 'front-pages.blogs')->name('blogs');
@@ -107,6 +105,8 @@ Route::middleware('maintenance.mode')->group(function () {
     Route::post('/checkout/ajax-login', [CustomerAuthController::class, 'ajaxLogin'])->middleware('throttle:10,1')->name('checkout.ajax-login');
     Route::post('/checkout/ajax-register', [CustomerAuthController::class, 'ajaxRegister'])->middleware('throttle:10,1')->name('checkout.ajax-register');
     Route::post('/checkout/track-step', [CheckoutController::class, 'trackStep'])->middleware('throttle:30,1')->name('checkout.track-step');
+    Route::get('/states/{state}/cities', [CheckoutController::class, 'cities'])->name('state.cities');
+
 
     // customer login routes
     Route::get('/user/google', [CustomerAuthController::class, 'redirectToGoogle'])->name('user.google.login');
@@ -119,10 +119,12 @@ Route::middleware('maintenance.mode')->group(function () {
     // Yeh sab login ke baad hi
     Route::middleware('customer')->group(function () {
         Route::post('/address/store', [CheckoutController::class, 'storeAddress'])->name('address.store');
+        Route::put('/address/{id}', [CheckoutController::class, 'updateAddress'])->name('address.update');
         Route::post('/checkout/change-default-address', [CheckoutController::class, 'changeDefaultAddress'])->name('checkout.change-default-address');
         Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place-order');
         Route::post('/payment/razorpay/success', [CheckoutController::class, 'razorpaySuccess'])->name('checkout.razorpay.success');
         Route::get('/order-success/{order}', [CheckoutController::class, 'orderSuccess'])->name('order.success');
+        Route::post('/user/logout', [CustomerAuthController::class, 'logout'])->name('user.logout');
     });
 
 });

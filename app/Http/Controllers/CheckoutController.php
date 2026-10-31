@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\City;
 use App\Models\Order;
 use Razorpay\Api\Api;
 use App\Models\State;
@@ -11,6 +12,7 @@ use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use App\Models\PaymentSetting;
 use App\Models\CustomerAddress;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Services\StockAlertService;
 use Illuminate\Support\Facades\Log;
@@ -26,26 +28,33 @@ class CheckoutController extends Controller
 
     public function checkout()
     {
-        $customer = auth('customer')->user(); // guest ke liye null
+        $customer = auth('customer')->user(); // null for guests
 
-        $cartQuery = Cart::with([
-            'items.product.images',
-            'items.product.category',
-            'items.priceVariant',
-            'items.addons',
-        ]);
+        $cartQuery = Cart::query();
 
         $cart = $customer
-            ? $cartQuery->where('user_id', $customer->id)->first()
-            : $cartQuery->where('session_id', session()->getId())->whereNull('user_id')->first();
+            ? $cartQuery->where('customer_id', $customer->id)->first()
+            : $cartQuery->where('session_id', session()->getId())->whereNull('customer_id')->first();
 
-        if (!$cart || $cart->items->isEmpty()) {
+        if (!$cart || !$cart->items()->exists()) {
             return redirect()->route('cart')->with('error', 'Your cart is empty.');
         }
 
+        // Totals use the current default address (GST + shipping zone)
         $cart->recalculateTotals();
         $cart->refresh();
-        CartTracker::track('checkout_viewed', $cart, [], 30); // refresh par duplicate nahi
+
+        // Load relations AFTER refresh(), because refresh() drops loaded relations
+        $cart->load([
+            'items.product.images',
+            'items.product.category',
+            'items.priceVariant',
+            'items.stockVariant',
+            'items.imageVariant.images',
+            'items.addons',
+        ]);
+
+        CartTracker::track('checkout_viewed', $cart, [], 30); // no duplicate on refresh
 
         $addresses = $customer
             ? $customer->addresses()->with(['state', 'city'])->orderByDesc('is_default')->get()
@@ -57,57 +66,111 @@ class CheckoutController extends Controller
 
         $beginCheckoutScript = \App\Services\Tracking\PixelTracker::beginCheckoutScript($cart);
 
+        $summary = \App\Services\CartSummary::for($cart);
+
+        $codEnabled = (bool) optional(Setting::first())->cod_enabled;
+
         return view(
             'front-pages.checkout',
-            compact('cart', 'customer', 'addresses', 'defaultAddress', 'states', 'beginCheckoutScript')
+            compact('cart', 'customer', 'addresses', 'defaultAddress', 'states', 'beginCheckoutScript', 'summary', 'codEnabled')
         );
     }
 
-    public function storeAddress(Request $request)
+    public function cities(State $state)
     {
-        $customer = auth('customer')->user();
+        return response()->json(
+            City::where('state_id', $state->id)->orderBy('name')->get(['id', 'name'])
+        );
+    }
 
-        $validated = $request->validate([
+    private function addressRules(Request $request): array
+    {
+        return [
             'name' => 'required|string|max:255',
             'email' => 'required|email',
             'phone' => ['required', 'regex:/^[6-9]\d{9}$/'],
             'address_line_1' => 'required|string|max:255',
             'address_line_2' => 'nullable|string|max:255',
             'state_id' => 'required|exists:states,id',
-            'city_id' => 'required|exists:cities,id',
+            'city_id' => ['required', Rule::exists('cities', 'id')->where('state_id', $request->state_id)],
             'pincode' => ['required', 'regex:/^\d{6}$/'],
-            'address_type' => 'nullable|in:home,office',
-        ], [
+            'address_type' => 'nullable|in:home,office,other',
+        ];
+    }
+
+    private function addressMessages(): array
+    {
+        return [
+            'email.required' => 'Please enter your email in the Contact section.',
+            'email.email' => 'Please enter a valid email in the Contact section.',
             'phone.regex' => 'Enter a valid 10 digit mobile number.',
             'pincode.regex' => 'Enter a valid 6 digit pincode.',
-        ]);
+            'state_id.required' => 'Please select a state.',
+            'city_id.required' => 'Please select a city.',
+            'city_id.exists' => 'Please select a city from the chosen state.',
+            'address_line_1.required' => 'Please enter your house / flat number.',
+        ];
+    }
 
-        DB::transaction(function () use ($customer, $validated) {
+    public function storeAddress(Request $request)
+    {
+        $customer = auth('customer')->user();
 
-            CustomerAddress::where('customer_id', $customer->id)
-                ->update(['is_default' => 0]);
+        $v = $request->validate($this->addressRules($request), $this->addressMessages());
+
+        DB::transaction(function () use ($customer, $v) {
+            // a new address becomes the default, because GST and shipping use the default address
+            CustomerAddress::where('customer_id', $customer->id)->update(['is_default' => 0]);
 
             CustomerAddress::create([
                 'customer_id' => $customer->id,
-                'name' => $validated['name'],
-                'email' => $validated['email'],
-                'phone' => $validated['phone'],
-                'address_line_1' => $validated['address_line_1'],
-                'address_line_2' => $validated['address_line_2'] ?? null,
+                'name' => $v['name'],
+                'email' => $v['email'],
+                'phone' => $v['phone'],
+                'address_line_1' => $v['address_line_1'],
+                'address_line_2' => $v['address_line_2'] ?? null,
                 'country' => 'India',
-                'state_id' => $validated['state_id'],
-                'city_id' => $validated['city_id'],
-                'pincode' => $validated['pincode'],
-                'address_type' => $validated['address_type'] ?? 'home',
+                'state_id' => $v['state_id'],
+                'city_id' => $v['city_id'],
+                'pincode' => $v['pincode'],
+                'address_type' => $v['address_type'] ?? 'home',
                 'is_default' => 1,
             ]);
         });
 
-        $cart = Cart::where('user_id', $customer->id)->first();
+        Cart::where('customer_id', $customer->id)->first()?->recalculateTotals();
 
-        if ($cart) {
-            $cart->recalculateTotals();
-        }
+        return response()->json(['success' => true]);
+    }
+
+    public function updateAddress(Request $request, $id)
+    {
+        $customer = auth('customer')->user();
+
+        $address = CustomerAddress::where('customer_id', $customer->id)->findOrFail($id);
+
+        $v = $request->validate($this->addressRules($request), $this->addressMessages());
+
+        DB::transaction(function () use ($customer, $address, $v, $request) {
+            $address->update([
+                'name' => $v['name'],
+                'email' => $v['email'],
+                'phone' => $v['phone'],
+                'address_line_1' => $v['address_line_1'],
+                'address_line_2' => $v['address_line_2'] ?? null,
+                'state_id' => $v['state_id'],
+                'city_id' => $v['city_id'],
+                'pincode' => $v['pincode'],
+                'address_type' => $v['address_type'] ?? 'home',
+            ]);
+
+            if ($request->boolean('is_default')) {
+                CustomerAddress::where('customer_id', $customer->id)->update(['is_default' => 0]);
+                $address->update(['is_default' => 1]);
+            }
+        });
+
+        Cart::where('customer_id', $customer->id)->first()?->recalculateTotals();
 
         return response()->json(['success' => true]);
     }
@@ -131,7 +194,7 @@ class CheckoutController extends Controller
             $address->update(['is_default' => 1]);
         });
 
-        $cart = Cart::where('user_id', $customer->id)->first();
+        $cart = Cart::where('customer_id', $customer->id)->first();
 
         if ($cart) {
             $cart->recalculateTotals();
@@ -158,6 +221,25 @@ class CheckoutController extends Controller
             ]);
         }
 
+        $billingSame = $request->boolean('billing_same', true);
+
+        if (!$billingSame) {
+            $request->validate([
+                'bill_name' => 'required|string|max:255',
+                'bill_address_line_1' => 'required|string|max:255',
+                'bill_address_line_2' => 'nullable|string|max:255',
+                'bill_state_id' => 'required|exists:states,id',
+                'bill_city_id' => ['required', Rule::exists('cities', 'id')->where('state_id', $request->bill_state_id)],
+                'bill_pincode' => ['required', 'regex:/^\d{6}$/'],
+            ], [
+                'bill_name.required' => 'Please enter the billing name.',
+                'bill_address_line_1.required' => 'Please enter the billing house / flat number.',
+                'bill_state_id.required' => 'Please select the billing state.',
+                'bill_city_id.required' => 'Please select the billing city.',
+                'bill_pincode.regex' => 'Enter a valid 6 digit billing pincode.',
+            ]);
+        }
+
         $address = null;
 
         /* Existing Address */
@@ -169,15 +251,7 @@ class CheckoutController extends Controller
         /* Create Address If Not Exists */
         if (!$address) {
 
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|email',
-                'phone' => 'required',
-                'address_line_1' => 'required',
-                'state_id' => 'required|exists:states,id',
-                'city_id' => 'required|exists:cities,id',
-                'pincode' => 'required',
-            ]);
+            $request->validate($this->addressRules($request), $this->addressMessages());
 
             CustomerAddress::where('customer_id', $customer->id)
                 ->update(['is_default' => 0]);
@@ -193,13 +267,31 @@ class CheckoutController extends Controller
                 'state_id' => $request->state_id,
                 'city_id' => $request->city_id,
                 'pincode' => $request->pincode,
-                'address_type' => 'home',
+                'address_type' => $request->address_type ?? 'home',
                 'is_default' => 1,
             ]);
         }
 
+        $billing = $billingSame
+            ? [
+                'billing_name' => $address->name,
+                'billing_address_line_1' => $address->address_line_1,
+                'billing_address_line_2' => $address->address_line_2,
+                'billing_state_id' => $address->state_id,
+                'billing_city_id' => $address->city_id,
+                'billing_pincode' => $address->pincode,
+            ]
+            : [
+                'billing_name' => $request->bill_name,
+                'billing_address_line_1' => $request->bill_address_line_1,
+                'billing_address_line_2' => $request->bill_address_line_2,
+                'billing_state_id' => $request->bill_state_id,
+                'billing_city_id' => $request->bill_city_id,
+                'billing_pincode' => $request->bill_pincode,
+            ];
+
         /* Hamesha latest address ke hisaab se GST recalc */
-        $cart = Cart::where('user_id', $customer->id)->first();
+        $cart = Cart::where('customer_id', $customer->id)->first();
 
         if ($cart) {
             $cart->recalculateTotals();
@@ -209,7 +301,7 @@ class CheckoutController extends Controller
             'items.product',
             'items.addons',
         ])
-            ->where('user_id', $customer->id)
+            ->where('customer_id', $customer->id)
             ->first();
 
         if (!$cart || $cart->items->count() == 0) {
@@ -246,6 +338,9 @@ class CheckoutController extends Controller
                 'discount' => $cart->discount,
                 'tax_amount' => $cart->tax_amount,
                 'grand_total' => $cart->grand_total,
+
+                'shipping_charge' => $cart->shipping_charge,
+                ...$billing,
 
                 'gst_type' => $cart->gst_type,
 
@@ -499,7 +594,7 @@ class CheckoutController extends Controller
             }
 
             /* Clear Cart */
-            $cart = Cart::where('user_id', $order->customer_id)->first();
+            $cart = Cart::where('customer_id', $order->customer_id)->first();
 
             if ($cart) {
                 $cart->items()->delete();
@@ -562,7 +657,7 @@ class CheckoutController extends Controller
 
     public function orderSuccess($id)
     {
-        $order = Order::with(['items', 'state', 'city'])
+        $order = Order::with(['items.product', 'items.imageVariant', 'items.addons', 'state', 'city'])
             ->where('customer_id', auth('customer')->id())
             ->findOrFail($id);
 
@@ -890,8 +985,8 @@ class CheckoutController extends Controller
         $customer = auth('customer')->user();
 
         $cart = $customer
-            ? Cart::where('user_id', $customer->id)->first()
-            : Cart::where('session_id', session()->getId())->whereNull('user_id')->first();
+            ? Cart::where('customer_id', $customer->id)->first()
+            : Cart::where('session_id', session()->getId())->whereNull('customer_id')->first();
 
         CartTracker::track($request->step, $cart, [], 30);
 

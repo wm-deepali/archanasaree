@@ -15,28 +15,54 @@ class CustomerAuthController extends Controller
 {
     public function registerForm(Request $request)
     {
-        if (Auth::guard('customer')->check()) {
-            return redirect()->route('user.dashboard.index');
-        }
-
-        if ($request->filled('redirect')) {
-            session(['url.intended' => $request->redirect]);
-        }
-
-        return view('user.register');
+        return $this->openAuthModal($request, 'register');
     }
 
     public function loginForm(Request $request)
     {
+        return $this->openAuthModal($request, 'login');
+    }
+
+    // There are no login pages: send the visitor back and let the layout open the modal
+    private function openAuthModal(Request $request, string $tab)
+    {
         if (Auth::guard('customer')->check()) {
-            return redirect()->route('user.dashboard.index');
+            return redirect()->route('home');
         }
 
-        if ($request->filled('redirect')) {
-            session(['url.intended' => $request->redirect]);
-        }
+        $back = $this->safeUrl($request->input('redirect')) ?? route('home');
+        session(['url.intended' => $back]);
 
-        return view('user.login');
+        return redirect($back)->with('open_auth', $tab);
+    }
+
+    // Same-site URLs only, so ?redirect= can't be used as an open redirect
+    private function safeUrl(?string $url): ?string
+    {
+        if (!$url)
+            return null;
+        if (str_starts_with($url, '/') && !str_starts_with($url, '//'))
+            return url($url);
+        $base = url('/');
+        return ($url === $base || str_starts_with($url, $base . '/')) ? $url : null;
+    }
+
+    // Fallback when there is no intended URL
+    private function afterAuthUrl(): string
+    {
+        return \Illuminate\Support\Facades\Route::has('user.dashboard.index')
+            ? route('user.dashboard.index')
+            : route('home');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::guard('customer')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('home');
     }
 
     public function register(Request $request)
@@ -79,7 +105,7 @@ class CustomerAuthController extends Controller
 
         $request->session()->regenerate();
 
-        $cart = Cart::where('user_id', $customer->id)->first();
+        $cart = Cart::where('customer_id', $customer->id)->first();
 
         CartTracker::linkToCustomer($customer->id, $cart?->id);
         CartTracker::track('signup', $cart, [], 0, $customer->id);
@@ -87,7 +113,7 @@ class CustomerAuthController extends Controller
         // Sends the customer back to wherever they came from (e.g. the cart
         // page) instead of always landing on the dashboard after signup.
         return redirect()
-            ->intended(route('user.dashboard.index'))
+            ->intended($this->afterAuthUrl())
             ->with('success', 'Registration completed successfully.')
             ->with('fire_signup_event', 'email_password'); // 👈 new — blade fires Pixel/GA sign_up on this flash
     }
@@ -114,13 +140,13 @@ class CustomerAuthController extends Controller
 
             $request->session()->regenerate();
 
-            $cart = Cart::where('user_id', $customer->id)->first();
+            $cart = Cart::where('customer_id', $customer->id)->first();
 
             CartTracker::linkToCustomer($customer->id, $cart?->id);
             CartTracker::track('login', $cart, [], 0, $customer->id);
 
             return redirect()
-                ->intended(route('user.dashboard.index'))
+                ->intended($this->afterAuthUrl())
                 ->with('success', 'Login successful.')
                 ->with('fire_login_event', true);
         }
@@ -159,7 +185,7 @@ class CustomerAuthController extends Controller
         $this->mergeGuestCart($customer, $guestSessionId);
         $this->mergeGuestWishlist($customer, $guestSessionId);
 
-        $cart = Cart::where('user_id', $customer->id)->first();
+        $cart = Cart::where('customer_id', $customer->id)->first();
 
         CartTracker::linkToCustomer($customer->id, $cart?->id);
         CartTracker::track($isNewCustomer ? 'signup' : 'login', $cart, [], 0, $customer->id);
@@ -173,21 +199,11 @@ class CustomerAuthController extends Controller
         return redirect()->intended(route('home'));
     }
 
-    public function logout(Request $request)
-    {
-        Auth::guard('customer')->logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect()->route('user.login');
-    }
-
     private function mergeGuestCart(Customer $customer, $guestSessionId)
     {
         $guestCart = Cart::with('items.addons')
             ->where('session_id', $guestSessionId)
-            ->whereNull('user_id')
+            ->whereNull('customer_id')
             ->first();
 
         if (!$guestCart) {
@@ -196,7 +212,7 @@ class CustomerAuthController extends Controller
 
         $userCart = Cart::firstOrCreate(
             [
-                'user_id' => $customer->id
+                'customer_id' => $customer->id
             ],
             [
                 'session_id' => $guestSessionId,
@@ -316,10 +332,14 @@ class CustomerAuthController extends Controller
 
     public function ajaxLogin(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
+        $data = $request->validate([
+            'login_id' => ['required', 'string'],
             'password' => ['required'],
         ]);
+
+        $login = trim($data['login_id']);
+        $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'mobile';
+        $credentials = [$field => $login, 'password' => $data['password']];
 
         // attempt() se PEHLE capture
         $guestSessionId = session()->getId();
@@ -333,7 +353,7 @@ class CustomerAuthController extends Controller
 
             $request->session()->regenerate();
 
-            $cart = Cart::where('user_id', $customer->id)->first();
+            $cart = Cart::where('customer_id', $customer->id)->first();
 
             CartTracker::linkToCustomer($customer->id, $cart?->id);
             CartTracker::track('login', $cart, [], 0, $customer->id);
@@ -362,6 +382,7 @@ class CustomerAuthController extends Controller
                 'name' => ['required', 'max:100', 'regex:/^[A-Za-z\s]+$/'],
                 'email' => ['required', 'email', 'unique:customers,email'],
                 'mobile' => ['required', 'regex:/^[6-9]\d{9}$/', 'unique:customers,mobile'],
+                'alternate_mobile' => ['nullable', 'regex:/^[6-9]\d{9}$/', 'different:mobile'],
                 'password' => ['required', 'min:8', 'confirmed'],
             ],
             [
@@ -388,7 +409,7 @@ class CustomerAuthController extends Controller
 
         $request->session()->regenerate();
 
-        $cart = Cart::where('user_id', $customer->id)->first();
+        $cart = Cart::where('customer_id', $customer->id)->first();
 
         CartTracker::linkToCustomer($customer->id, $cart?->id);
         CartTracker::track('signup', $cart, [], 0, $customer->id);
@@ -407,8 +428,8 @@ class CustomerAuthController extends Controller
     // Google button modal mein bhi hai, isliye redirect remember karna hai
     public function redirectToGoogle(Request $request)
     {
-        if ($request->filled('redirect')) {
-            session(['url.intended' => $request->redirect]);
+        if ($url = $this->safeUrl($request->input('redirect'))) {
+            session(['url.intended' => $url]);
         }
 
         return Socialite::driver('google')->redirect();

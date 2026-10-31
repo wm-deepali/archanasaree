@@ -83,6 +83,7 @@
                       $extras = $addons->filter(fn($a) => $a->price > 0)
                         ->map(fn($a) => '+ ₹' . number_format($a->price) . ' ' . $a->detail)
                         ->all();
+                        
                       if ($dye > 0) {
                         $extras[] = '+ ₹' . number_format($dye) . ' colour customization';
                       }
