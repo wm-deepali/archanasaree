@@ -112,7 +112,8 @@
             </svg>
           </button>
           <a href="{{ route('home') }}" class="logo">
-            <img src="{{ asset('assets/images/logo.png')}}" alt="Archana Saree Emporium" title="Archana Saree Emporium" />
+            <img src="{{ asset('assets/images/logo.png')}}" alt="Archana Saree Emporium"
+              title="Archana Saree Emporium" />
           </a>
         </div>
 
@@ -525,7 +526,7 @@
               <path d="M5 8h14l-1 12.5H6L5 8z" />
               <path d="M8.5 8V6.5a3.5 3.5 0 017 0V8" />
             </svg>
-            <span class="count">0</span>
+            <span class="count cart-count">{{ $cartCount }}</span>
           </button>
         </div>
       </div>
@@ -572,7 +573,8 @@
       <div class="footer-middle">
         <div class="container">
           <div class="colA">
-            <a href="{{ route('home') }}" class="logo"><img src="{{ asset('assets/images/logo.png')}}" alt="Archana Saree Emporium" /></a>
+            <a href="{{ route('home') }}" class="logo"><img src="{{ asset('assets/images/logo.png')}}"
+                alt="Archana Saree Emporium" /></a>
             <span class="brand-tag">Premium Sarees · Designer Lehengas · Bridal Wear</span>
             <p class="brand-desc">
               Timeless Indian elegance, thoughtfully curated for every
@@ -683,146 +685,18 @@
       </button>
       <a href="wishlist.html" class="float-link"><i class="fa-regular fa-heart"></i><span>Wishlist</span><b
           class="f-count">0</b></a>
-      <a href="cart.html" class="float-link"><i class="fa-solid fa-bag-shopping"></i><span>Bag</span><b
-          class="f-count">0</b></a>
+      <a href="{{ route('cart') }}" class="float-link"><i class="fa-solid fa-bag-shopping"></i><span>Bag</span><b
+          class="f-count cart-count">{{ $cartCount }}</b></a>
       <a href="login.html" class="float-link"><i class="fa-regular fa-user"></i><span>Account</span></a>
     </nav>
   </footer>
+
   <!-- start-models -->
   <div class="model cart-pop">
-    <button class="close" type="button">
-      <p>Close</p>
-      <svg width="20" height="20" viewBox="0 0 26 26" fill="none">
-        <path d="M0.5 0.5L25.5 25.5M0.5 25.5L25.5 0.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
-    </button>
+    <button class="close" type="button">...</button>
 
-    <div class="model-body">
-      <div class="cp-head">
-        <h3>My Bag <span>3 items</span></h3>
-      </div>
-
-      <ul class="cp-list">
-        <li class="cp-item">
-          <a class="cp-img" href="javascript:void(0);">
-            <img src="{{ asset('assets/images/home/tab1.png')}}" alt="Zari Woven Banarasi Silk Saree" width="96" height="128"
-              loading="lazy" />
-          </a>
-          <div class="cp-info">
-            <span class="cp-cat">Banarasi Saree</span>
-            <h4 class="cp-name">
-              <a href="javascript:void(0);">Zari Woven Banarasi Silk Saree</a>
-            </h4>
-            <span class="cp-variant">Wine · Stitched Blouse M · Fall &amp; Pico</span>
-            <div class="cp-price">
-              <strong>₹8,499</strong><del>₹11,999</del><span class="cp-off">29% off</span>
-            </div>
-            <div class="cp-actions">
-              <div class="qty" role="group" aria-label="Quantity for Zari Woven Banarasi Silk Saree">
-                <button type="button" class="qty-minus" aria-label="Decrease quantity">
-                  <i class="fa-solid fa-minus" aria-hidden="true"></i>
-                </button>
-                <input type="text" inputmode="numeric" value="1" aria-label="Quantity" />
-                <button type="button" class="qty-plus" aria-label="Increase quantity">
-                  <i class="fa-solid fa-plus" aria-hidden="true"></i>
-                </button>
-              </div>
-              <button type="button" class="cp-remove">
-                <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
-                Remove
-              </button>
-            </div>
-          </div>
-        </li>
-
-        <li class="cp-item">
-          <a class="cp-img" href="javascript:void(0);">
-            <img src="{{ asset('assets/images/home/tab2.png')}}" alt="Organza Embroidered Party Saree" width="96" height="128"
-              loading="lazy" />
-          </a>
-          <div class="cp-info">
-            <span class="cp-cat">Organza Saree</span>
-            <h4 class="cp-name">
-              <a href="javascript:void(0);">Organza Embroidered Party Saree</a>
-            </h4>
-            <span class="cp-variant">Pink · Unstitched Blouse Piece</span>
-            <div class="cp-price">
-              <strong>₹6,299</strong><del>₹8,999</del><span class="cp-off">30% off</span>
-            </div>
-            <div class="cp-actions">
-              <div class="qty" role="group" aria-label="Quantity for Organza Embroidered Party Saree">
-                <button type="button" class="qty-minus" aria-label="Decrease quantity">
-                  <i class="fa-solid fa-minus" aria-hidden="true"></i>
-                </button>
-                <input type="text" inputmode="numeric" value="1" aria-label="Quantity" />
-                <button type="button" class="qty-plus" aria-label="Increase quantity">
-                  <i class="fa-solid fa-plus" aria-hidden="true"></i>
-                </button>
-              </div>
-              <button type="button" class="cp-remove">
-                <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
-                Remove
-              </button>
-            </div>
-          </div>
-        </li>
-
-        <li class="cp-item">
-          <a class="cp-img" href="javascript:void(0);">
-            <img src="{{ asset('assets/images/home/tab4.png')}}" alt="Georgette Printed Saree" width="96" height="128"
-              loading="lazy" />
-          </a>
-          <div class="cp-info">
-            <span class="cp-cat">Georgette Saree</span>
-            <h4 class="cp-name">
-              <a href="javascript:void(0);">Georgette Printed Saree</a>
-            </h4>
-            <span class="cp-variant">Green · Unstitched Blouse Piece</span>
-            <div class="cp-price">
-              <strong>₹4,799</strong><del>₹6,499</del><span class="cp-off">26% off</span>
-            </div>
-            <div class="cp-actions">
-              <div class="qty" role="group" aria-label="Quantity for Georgette Printed Saree">
-                <button type="button" class="qty-minus" aria-label="Decrease quantity">
-                  <i class="fa-solid fa-minus" aria-hidden="true"></i>
-                </button>
-                <input type="text" inputmode="numeric" value="1" aria-label="Quantity" />
-                <button type="button" class="qty-plus" aria-label="Increase quantity">
-                  <i class="fa-solid fa-plus" aria-hidden="true"></i>
-                </button>
-              </div>
-              <button type="button" class="cp-remove">
-                <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
-                Remove
-              </button>
-            </div>
-          </div>
-        </li>
-      </ul>
-
-      <!-- empty state: bag khali ho to ise dikhao, .cp-list aur .cp-foot hide karo -->
-      <div class="cp-empty" hidden>
-        <span class="cp-empty-icon"><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i></span>
-        <h4>Your bag is empty</h4>
-        <p>Explore our latest sarees, lehengas and bridal wear.</p>
-        <a href="/all-products" class="btn btn-primary">Shop Sarees</a>
-      </div>
-
-      <div class="cp-foot">
-        <div class="cp-total">
-          <span>Subtotal</span>
-          <strong>₹19,597</strong>
-        </div>
-        <p class="cp-note">
-          <i class="fa-solid fa-truck-fast" aria-hidden="true"></i>
-          You have unlocked FREE shipping. Coupons and blouse stitching
-          charges are applied at checkout.
-        </p>
-        <div class="cp-btns">
-          <a href="cart.html" class="btn btn-outline-primary">View Bag</a>
-          <a href="checkout.html" class="btn btn-primary">Checkout</a>
-        </div>
-      </div>
+    <div class="model-body" id="miniCart">
+      @include('layouts.mini-cart')
     </div>
   </div>
 
@@ -1047,6 +921,47 @@
     })();
   </script>
 
+  <script>
+    $(function () {
+      var QTY_URL = @json(route('cart.update.quantity')),
+        REMOVE_URL = @json(route('cart.remove', ['id' => '__ID__'])),
+        CSRF = @json(csrf_token()),
+        busy = false;
+
+      function miniRun($li, url, data) {
+        if (busy) return;
+        busy = true;
+        $li.addClass('is-updating');
+        $('#miniCartMsg').hide();
+
+        $.ajax({ url: url, method: 'POST', data: $.extend({ _token: CSRF }, data), dataType: 'json' })
+          .done(function (r) {
+            if (r.mini_cart_html) $('#miniCart').html(r.mini_cart_html);
+            if (r.cart_count !== undefined) $('.cart-count').text(r.cart_count);
+            $(document).trigger('cart:changed', [r]);
+            // the cart page itself has to redraw too
+            if ($('#cartList').length) window.location.reload();
+          })
+          .fail(function (xhr) {
+            $li.removeClass('is-updating');
+            var m = xhr.status === 419 ? 'Your session expired. Please refresh the page.'
+              : (xhr.responseJSON && xhr.responseJSON.message) || 'Could not update your bag. Please try again.';
+            $('#miniCartMsg').text(m).show();
+          })
+          .always(function () { busy = false; });
+      }
+
+      $(document).on('click', '.cp-item .qty-plus, .cp-item .qty-minus', function () {
+        var $li = $(this).closest('.cp-item');
+        miniRun($li, QTY_URL, { item_id: $li.data('id'), action: $(this).hasClass('qty-plus') ? 'plus' : 'minus' });
+      });
+
+      $(document).on('click', '.cp-item .cp-remove', function () {
+        var $li = $(this).closest('.cp-item');
+        miniRun($li, REMOVE_URL.replace('__ID__', $li.data('id')), { _method: 'DELETE' });
+      });
+    });
+  </script>
 
   @stack('scripts')
 

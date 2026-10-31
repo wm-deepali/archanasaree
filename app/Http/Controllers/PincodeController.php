@@ -39,6 +39,7 @@ class PincodeController extends Controller
             'district' => $row->city?->name ?? $row->district,
             'state' => $row->state?->name,
             'eta' => $row->delivery_days ? $row->delivery_days . ' days' : null,
+            'eta_date' => $row->delivery_days ? now()->addDays($row->delivery_days)->format('D, j M') : null,
         ]);
     }
 }

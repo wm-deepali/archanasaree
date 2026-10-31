@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
+use App\Models\CartActivity;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -15,22 +16,64 @@ class StoredCartController extends Controller
 
         $this->applyFilters($query, $request);
 
-        // Stats — always unfiltered
-        $totalCarts = Cart::whereNotNull('customer_id')->count();
-        $totalCartValue = Cart::whereNotNull('customer_id')->sum('grand_total');
+        // Stats: always unfiltered (guest + logged-in dono)
+        $totalCarts = $this->statsQuery()->count();
+        $totalCartValue = $this->statsQuery()->sum('grand_total');
         $avgCartValue = $totalCarts > 0 ? $totalCartValue / $totalCarts : 0;
-        $abandonedToday = Cart::whereNotNull('customer_id')
-            ->whereDate('updated_at', today())
-            ->count();
+        $abandonedToday = $this->statsQuery()->whereDate('updated_at', today())->count();
+        $guestCarts = $this->statsQuery()->whereNull('user_id')->count();
 
         $carts = $query->paginate(25)->withQueryString();
+
+        // Har cart ka tracked journey (stage dikhane ke liye)
+        $activityMap = CartActivity::whereIn('cart_id', $carts->pluck('id'))
+            ->orderBy('created_at')
+            ->get()
+            ->groupBy('cart_id');
 
         return view('admin.customers.stored-carts', compact(
             'carts',
             'totalCarts',
             'totalCartValue',
             'avgCartValue',
-            'abandonedToday'
+            'abandonedToday',
+            'guestCarts',
+            'activityMap'
+        ));
+    }
+
+    public function show(Cart $cart)
+    {
+        $cart->load([
+            'user',
+            'items.product',
+            'items.imageVariant',
+            'items.skuVariant',
+            'items.addons',
+        ]);
+
+        // Is cart se jude saare visitors (same browser ki poori history)
+        $visitorIds = CartActivity::where('cart_id', $cart->id)
+            ->pluck('visitor_id')
+            ->unique()
+            ->values();
+
+        $activities = CartActivity::where(function ($q) use ($cart, $visitorIds) {
+            $q->where('cart_id', $cart->id);
+
+            if ($visitorIds->isNotEmpty()) {
+                $q->orWhereIn('visitor_id', $visitorIds);
+            }
+        })
+            ->orderBy('created_at')
+            ->get();
+
+        $firstByEvent = $activities->groupBy('event')->map->first();
+
+        return view('admin.customers.stored-cart-detail', compact(
+            'cart',
+            'activities',
+            'firstByEvent'
         ));
     }
 
@@ -48,7 +91,6 @@ class StoredCartController extends Controller
             // BOM for Excel UTF-8 compatibility
             fwrite($handle, "\xEF\xBB\xBF");
 
-            // Header row
             fputcsv($handle, [
                 'Cart ID',
                 'Customer Name',
@@ -67,7 +109,6 @@ class StoredCartController extends Controller
                 'Cart Age (Days)',
             ]);
 
-            // Stream in chunks of 200 to avoid memory issues
             $query->chunk(200, function ($carts) use ($handle) {
                 foreach ($carts as $cart) {
                     $items = $cart->items;
@@ -79,9 +120,9 @@ class StoredCartController extends Controller
 
                     fputcsv($handle, [
                         $cart->id,
-                        $cart->customer?->name ?? '',
-                        $cart->customer?->email ?? '',
-                        $cart->customer?->mobile ?? '',
+                        $cart->user?->name ?? 'Guest',
+                        $cart->user?->email ?? '',
+                        $cart->user?->mobile ?? '',
                         $itemCount,
                         $totalQty,
                         number_format($cart->subtotal, 2, '.', ''),
@@ -92,7 +133,7 @@ class StoredCartController extends Controller
                         $cart->gst_type ?? '',
                         $productNames,
                         $cart->updated_at->format('d M Y h:i A'),
-                        $cart->updated_at->diffInDays(now()),
+                        (int) $cart->updated_at->diffInDays(now()),
                     ]);
                 }
             });
@@ -118,10 +159,15 @@ class StoredCartController extends Controller
 
     // ── Shared helpers ────────────────────────────────────────────────────────
 
+    private function statsQuery()
+    {
+        return Cart::where(fn($q) => $q->where('grand_total', '>', 0)
+            ->orWhere('total_amount', '>', 0));
+    }
+
     private function baseQuery()
     {
-        return Cart::with(['customer', 'items.product', 'items.imageVariant', 'items.skuVariant', 'items.addons'])
-            ->whereNotNull('customer_id')
+        return Cart::with(['user', 'items.product', 'items.imageVariant', 'items.skuVariant', 'items.addons'])
             ->where(fn($q) => $q->where('grand_total', '>', 0)
                 ->orWhere('total_amount', '>', 0));
     }
@@ -130,11 +176,19 @@ class StoredCartController extends Controller
     {
         if ($search = $request->input('search')) {
             $query->whereHas(
-                'customer',
+                'user',
                 fn($q) =>
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")
             );
+        }
+
+        if ($type = $request->input('type')) {
+            if ($type === 'guest') {
+                $query->whereNull('user_id');
+            } elseif ($type === 'customer') {
+                $query->whereNotNull('user_id');
+            }
         }
 
         if ($age = $request->input('cart_age')) {

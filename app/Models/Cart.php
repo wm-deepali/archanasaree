@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ShippingCalculator;
 use Illuminate\Database\Eloquent\Model;
 
 class Cart extends Model
@@ -19,6 +20,7 @@ class Cart extends Model
         'subtotal',
         'discount',
         'tax_amount',
+        'shipping_charge',
 
         'gst_type',
 
@@ -167,6 +169,15 @@ class Cart extends Model
             }
         }
 
+        // Shipping: on top of the payable amount, not taxed. Unknown zone
+        // (guest / no default address) adds nothing yet; empty cart adds nothing.
+        $shippingCharge = 0;
+
+        if ($subtotal > 0) {
+            $shipping = ShippingCalculator::forCart($this, (float) $taxableAmount);
+            $shippingCharge = $shipping['known'] ? $shipping['charge'] : 0;
+        }
+
         $this->update([
 
             'subtotal' => round($displaySubtotal, 2),
@@ -183,9 +194,10 @@ class Cart extends Model
             'igst_amount' => $igstAmount,
 
             'tax_amount' => round($taxAmount, 2),
+            'shipping_charge' => round($shippingCharge, 2),
 
-            'grand_total' => round($grandTotal, 2),
-            'total_amount' => round($grandTotal, 2),
+            'grand_total' => round($grandTotal + $shippingCharge, 2),
+            'total_amount' => round($grandTotal, 2), // before shipping
         ]);
     }
 

@@ -199,7 +199,7 @@
                                     </li>
                                     <li>
                                         <i class="fa-solid fa-arrow-right-arrow-left"></i>
-                                        Easy No Return &amp; exchange
+                                        No Return &amp; exchange
                                     </li>
                                 </ul>
                             </div>
@@ -220,13 +220,10 @@
                                     </button>
                                 </div>
                                 <div class="act-btns">
-                                    <button type="button" data-model=".cart-pop" class="btn btn-outline-primary">
-                                        Add to Bag
-                                    </button>
-                                    <a href="cart.html" type="button" class="btn btn-primary">
-                                        Buy Now
-                                    </a>
+                                    <button type="button" class="btn btn-outline-primary js-add-cart">Add to Bag</button>
+                                    <button type="button" class="btn btn-primary js-buy-now">Buy Now</button>
                                 </div>
+                                <p class="cart-msg" id="cartMsg" style="display:none"></p>
                             </div>
 
                             <ul class="product-benefits">
@@ -595,10 +592,8 @@
                             <i class="fa-solid fa-plus"></i>
                         </button>
                     </div>
-                    <button type="button" class="btn btn-outline-primary">
-                        Add to Bag
-                    </button>
-                    <button type="button" class="btn btn-primary">Buy Now</button>
+                    <button type="button" class="btn btn-outline-primary js-add-cart">Add to Bag</button>
+                    <button type="button" class="btn btn-primary js-buy-now">Buy Now</button>
                 </div>
             </div>
         </div>
@@ -743,14 +738,6 @@
                         1025: { slidesPerView: 4, spaceBetween: 24 },
                     },
                 });
-            });
-
-            // ── Quantity (main + sticky bar stay in sync) ──
-            $(document).on("click", ".qty-plus, .qty-minus", function () {
-                var $i = $(this).siblings(".qty-input"),
-                    v = parseInt($i.val(), 10) || 1;
-                v = $(this).hasClass("qty-plus") ? v + 1 : Math.max(1, v - 1);
-                $(".qty-input").val(v);
             });
 
             // ── Sticky bar ──

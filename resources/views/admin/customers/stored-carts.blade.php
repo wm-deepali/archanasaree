@@ -26,634 +26,104 @@
             --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
-        .list-page {
-            background: var(--bg);
-            padding: 24px 28px;
-            min-height: 100vh;
-            font-family: var(--font);
-            color: var(--text-primary);
-        }
+        .list-page { background: var(--bg); padding: 24px 28px; min-height: 100vh; font-family: var(--font); color: var(--text-primary); }
+        .list-page * { box-sizing: border-box; }
+        .list-page-header { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+        .list-page-header h1 { font-size: 20px; font-weight: 650; color: var(--text-primary); margin: 0; }
+        .page-title-row { display: flex; align-items: center; gap: 10px; }
+        .page-title-badge { display: inline-flex; align-items: center; gap: 5px; background: var(--orange-bg); color: var(--orange); border: 1px solid rgba(200, 75, 0, .2); border-radius: 20px; font-size: 11.5px; font-weight: 700; padding: 3px 10px; letter-spacing: .02em; }
+        .page-title-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--orange); animation: blink 1.6s ease-in-out infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1 } 50% { opacity: .3 } }
+        .crumb { font-size: 12.5px; color: var(--text-hint); margin-top: 3px; }
+        .crumb a { color: var(--accent); text-decoration: none; }
+        .crumb a:hover { text-decoration: underline; }
+        .crumb span { margin: 0 5px; }
 
-        .list-page * {
-            box-sizing: border-box;
-        }
+        .stat-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+        @media(max-width:800px) { .stat-strip { grid-template-columns: repeat(2, 1fr); } }
+        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px 18px; box-shadow: var(--shadow-card); }
+        .stat-label { font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--text-hint); margin-bottom: 6px; }
+        .stat-value { font-size: 22px; font-weight: 700; color: var(--text-primary); line-height: 1; }
+        .stat-sub { font-size: 11.5px; color: var(--text-hint); margin-top: 4px; }
 
-        .list-page-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
+        .btn-primary-dash { display: inline-flex; align-items: center; gap: 6px; background: var(--accent); color: #fff !important; border: none; border-radius: var(--radius-sm); padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none !important; font-family: var(--font); transition: background .15s; box-shadow: 0 1px 3px rgba(48, 61, 137, .25); white-space: nowrap; }
+        .btn-primary-dash:hover { background: #252f70; }
+        .btn-secondary-dash { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); color: var(--text-primary) !important; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 16px; font-size: 13px; font-weight: 500; cursor: pointer; text-decoration: none !important; font-family: var(--font); transition: background .15s; white-space: nowrap; }
+        .btn-secondary-dash:hover { background: var(--bg); }
 
-        .list-page-header h1 {
-            font-size: 20px;
-            font-weight: 650;
-            color: var(--text-primary);
-            margin: 0;
-        }
+        .list-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-card); overflow: hidden; }
+        .filter-bar { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+        .filter-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+        .filter-group { display: flex; flex-direction: column; gap: 5px; }
+        .filter-group label { font-size: 12px; font-weight: 600; color: var(--text-secondary); letter-spacing: .03em; text-transform: uppercase; }
+        .filter-control { height: 36px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0 11px; font-size: 13px; color: var(--text-primary); background: var(--surface); outline: none; transition: border-color .15s, box-shadow .15s; font-family: var(--font); min-width: 140px; }
+        .filter-control:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(48, 61, 137, .12); }
+        .filter-control-wide { min-width: 240px; }
+        .filter-actions { display: flex; gap: 8px; }
+        .search-wrap { position: relative; }
+        .search-wrap .filter-control { padding-left: 32px; }
+        .search-wrap .search-ico { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-hint); font-size: 12px; pointer-events: none; }
 
-        .page-title-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .page-title-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: var(--orange-bg);
-            color: var(--orange);
-            border: 1px solid rgba(200, 75, 0, .2);
-            border-radius: 20px;
-            font-size: 11.5px;
-            font-weight: 700;
-            padding: 3px 10px;
-            letter-spacing: .02em;
-        }
-
-        .page-title-badge::before {
-            content: '';
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--orange);
-            animation: blink 1.6s ease-in-out infinite;
-        }
-
-        @keyframes blink {
-
-            0%,
-            100% {
-                opacity: 1
-            }
-
-            50% {
-                opacity: .3
-            }
-        }
-
-        .crumb {
-            font-size: 12.5px;
-            color: var(--text-hint);
-            margin-top: 3px;
-        }
-
-        .crumb a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        .crumb a:hover {
-            text-decoration: underline;
-        }
-
-        .crumb span {
-            margin: 0 5px;
-        }
-
-        .stat-strip {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 14px;
-            margin-bottom: 20px;
-        }
-
-        @media(max-width:800px) {
-            .stat-strip {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        .stat-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 16px 18px;
-            box-shadow: var(--shadow-card);
-        }
-
-        .stat-label {
-            font-size: 11.5px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: .04em;
-            color: var(--text-hint);
-            margin-bottom: 6px;
-        }
-
-        .stat-value {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--text-primary);
-            line-height: 1;
-        }
-
-        .stat-sub {
-            font-size: 11.5px;
-            color: var(--text-hint);
-            margin-top: 4px;
-        }
-
-        .btn-primary-dash {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--accent);
-            color: #fff !important;
-            border: none;
-            border-radius: var(--radius-sm);
-            padding: 8px 16px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none !important;
-            font-family: var(--font);
-            transition: background .15s;
-            box-shadow: 0 1px 3px rgba(48, 61, 137, .25);
-            white-space: nowrap;
-        }
-
-        .btn-primary-dash:hover {
-            background: #252f70;
-        }
-
-        .btn-secondary-dash {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--surface);
-            color: var(--text-primary) !important;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 8px 16px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            text-decoration: none !important;
-            font-family: var(--font);
-            transition: background .15s;
-            white-space: nowrap;
-        }
-
-        .btn-secondary-dash:hover {
-            background: var(--bg);
-        }
-
-        .list-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-card);
-            overflow: hidden;
-        }
-
-        .filter-bar {
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .filter-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            align-items: flex-end;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .filter-group label {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            letter-spacing: .03em;
-            text-transform: uppercase;
-        }
-
-        .filter-control {
-            height: 36px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 0 11px;
-            font-size: 13px;
-            color: var(--text-primary);
-            background: var(--surface);
-            outline: none;
-            transition: border-color .15s, box-shadow .15s;
-            font-family: var(--font);
-            min-width: 140px;
-        }
-
-        .filter-control:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(48, 61, 137, .12);
-        }
-
-        .filter-control-wide {
-            min-width: 240px;
-        }
-
-        .filter-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .search-wrap {
-            position: relative;
-        }
-
-        .search-wrap .filter-control {
-            padding-left: 32px;
-        }
-
-        .search-wrap .search-ico {
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-hint);
-            font-size: 12px;
-            pointer-events: none;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .data-table thead tr {
-            background: #fafafa;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .data-table thead th {
-            padding: 10px 16px;
-            font-size: 11px;
-            font-weight: 650;
-            text-transform: uppercase;
-            letter-spacing: .05em;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            text-align: left;
-        }
-
-        .data-table tbody tr {
-            border-bottom: 1px solid var(--border);
-            transition: background .12s;
-        }
-
-        .data-table tbody tr:last-child {
-            border-bottom: none;
-        }
-
-        .data-table tbody tr:hover {
-            background: #fafbfc;
-        }
-
-        .data-table td {
-            padding: 13px 16px;
-            font-size: 13px;
-            color: var(--text-primary);
-            vertical-align: middle;
-        }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table thead tr { background: #fafafa; border-bottom: 1px solid var(--border); }
+        .data-table thead th { padding: 10px 16px; font-size: 11px; font-weight: 650; text-transform: uppercase; letter-spacing: .05em; color: var(--text-secondary); white-space: nowrap; text-align: left; }
+        .data-table tbody tr { border-bottom: 1px solid var(--border); transition: background .12s; }
+        .data-table tbody tr:last-child { border-bottom: none; }
+        .data-table tbody tr:hover { background: #fafbfc; }
+        .data-table td { padding: 13px 16px; font-size: 13px; color: var(--text-primary); vertical-align: middle; }
 
         /* expanded row */
-        .expanded-row {
-            display: none;
-            background: #fafbfc;
-        }
+        .expanded-row { display: none; background: #fafbfc; }
+        .expanded-row.open { display: table-row; }
+        .expanded-inner { padding: 12px 20px 16px 72px; }
+        .expanded-items-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+        .expanded-item { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; min-width: 220px; flex: 1; }
+        .expanded-item-thumb { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border); flex-shrink: 0; }
+        .expanded-item-thumb-ph { width: 40px; height: 40px; border-radius: 6px; background: var(--bg); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-hint); flex-shrink: 0; }
+        .expanded-item-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+        .expanded-item-meta { font-size: 11.5px; color: var(--text-hint); margin-top: 2px; }
+        .expanded-item-price { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-left: auto; white-space: nowrap; }
 
-        .expanded-row.open {
-            display: table-row;
-        }
+        .id-chip { display: inline-block; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 2px 8px; font-size: 11.5px; font-family: 'SF Mono', 'Fira Mono', monospace; color: var(--text-secondary); }
 
-        .expanded-inner {
-            padding: 12px 20px 16px 72px;
-        }
+        .cust-cell { display: flex; align-items: center; gap: 10px; }
+        .cust-avatar { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; background: var(--accent-light); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--accent); text-transform: uppercase; }
+        .cust-avatar img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; display: block; }
+        .cust-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+        .cust-email { font-size: 11.5px; color: var(--text-hint); margin-top: 1px; }
 
-        .expanded-items-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 8px;
-        }
+        .cart-items-preview { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .cart-thumb { width: 36px; height: 36px; border-radius: var(--radius-sm); object-fit: cover; border: 1px solid var(--border); flex-shrink: 0; }
+        .cart-thumb-placeholder { width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--bg); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-hint); font-size: 13px; flex-shrink: 0; }
+        .cart-more-badge { width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--accent-light); border: 1px solid rgba(48, 61, 137, .2); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--accent); flex-shrink: 0; }
+        .cart-item-names { font-size: 12px; color: var(--text-secondary); margin-top: 4px; line-height: 1.5; }
+        .cart-value { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+        .cart-value-sub { font-size: 11.5px; color: var(--text-hint); margin-top: 2px; }
 
-        .expanded-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 8px 12px;
-            min-width: 220px;
-            flex: 1;
-        }
+        .age-pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 600; }
+        .age-fresh { background: var(--green-bg); color: var(--green); }
+        .age-warm { background: var(--amber-bg); color: var(--amber); }
+        .age-cold { background: var(--orange-bg); color: var(--orange); }
+        .age-dead { background: var(--red-bg); color: var(--red); }
 
-        .expanded-item-thumb {
-            width: 40px;
-            height: 40px;
-            border-radius: 6px;
-            object-fit: cover;
-            border: 1px solid var(--border);
-            flex-shrink: 0;
-        }
+        .action-btn { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); cursor: pointer; text-decoration: none; transition: all .15s; font-size: 12px; }
+        .action-btn:hover { background: var(--bg); color: var(--text-primary); }
+        .action-btn.view:hover { background: var(--accent-light); color: var(--accent); border-color: rgba(48, 61, 137, .25); }
+        .action-btn.danger:hover { background: var(--red-bg); color: var(--red); border-color: #f5c0c0; }
+        .toggle-btn.open { background: var(--accent-light); color: var(--accent); border-color: rgba(48, 61, 137, .25); }
+        .toggle-btn.open .fa { transform: rotate(90deg); }
+        .fa { transition: transform .2s; }
 
-        .expanded-item-thumb-ph {
-            width: 40px;
-            height: 40px;
-            border-radius: 6px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-hint);
-            flex-shrink: 0;
-        }
+        .empty-state { text-align: center; padding: 56px 24px; }
+        .empty-icon-wrap { width: 56px; height: 56px; border-radius: 50%; background: var(--accent-light); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 22px; }
+        .empty-state h6 { font-size: 14px; font-weight: 650; color: var(--text-primary); margin: 0 0 6px; }
+        .empty-state p { font-size: 13px; color: var(--text-hint); margin: 0; }
 
-        .expanded-item-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
+        .pagination-bar { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+        .pagination-info { font-size: 12.5px; color: var(--text-hint); }
+        .alert-success { background: var(--green-bg); color: var(--green); border: 1px solid #b2d8cd; border-radius: var(--radius-sm); padding: 10px 16px; font-size: 13px; font-weight: 500; margin-bottom: 16px; }
 
-        .expanded-item-meta {
-            font-size: 11.5px;
-            color: var(--text-hint);
-            margin-top: 2px;
-        }
-
-        .expanded-item-price {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-left: auto;
-            white-space: nowrap;
-        }
-
-        .id-chip {
-            display: inline-block;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 2px 8px;
-            font-size: 11.5px;
-            font-family: 'SF Mono', 'Fira Mono', monospace;
-            color: var(--text-secondary);
-        }
-
-        .cust-cell {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .cust-avatar {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            background: var(--accent-light);
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--accent);
-            text-transform: uppercase;
-        }
-
-        .cust-avatar img {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .cust-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .cust-email {
-            font-size: 11.5px;
-            color: var(--text-hint);
-            margin-top: 1px;
-        }
-
-        .cart-items-preview {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .cart-thumb {
-            width: 36px;
-            height: 36px;
-            border-radius: var(--radius-sm);
-            object-fit: cover;
-            border: 1px solid var(--border);
-            flex-shrink: 0;
-        }
-
-        .cart-thumb-placeholder {
-            width: 36px;
-            height: 36px;
-            border-radius: var(--radius-sm);
-            background: var(--bg);
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-hint);
-            font-size: 13px;
-            flex-shrink: 0;
-        }
-
-        .cart-more-badge {
-            width: 36px;
-            height: 36px;
-            border-radius: var(--radius-sm);
-            background: var(--accent-light);
-            border: 1px solid rgba(48, 61, 137, .2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--accent);
-            flex-shrink: 0;
-        }
-
-        .cart-item-names {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-top: 4px;
-            line-height: 1.5;
-        }
-
-        .cart-value {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .cart-value-sub {
-            font-size: 11.5px;
-            color: var(--text-hint);
-            margin-top: 2px;
-        }
-
-        .age-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 11.5px;
-            font-weight: 600;
-        }
-
-        .age-fresh {
-            background: var(--green-bg);
-            color: var(--green);
-        }
-
-        .age-warm {
-            background: var(--amber-bg);
-            color: var(--amber);
-        }
-
-        .age-cold {
-            background: var(--orange-bg);
-            color: var(--orange);
-        }
-
-        .age-dead {
-            background: var(--red-bg);
-            color: var(--red);
-        }
-
-        .action-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 30px;
-            height: 30px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-            background: var(--surface);
-            color: var(--text-secondary);
-            cursor: pointer;
-            text-decoration: none;
-            transition: all .15s;
-            font-size: 12px;
-        }
-
-        .action-btn:hover {
-            background: var(--bg);
-            color: var(--text-primary);
-        }
-
-        .action-btn.view:hover {
-            background: var(--accent-light);
-            color: var(--accent);
-            border-color: rgba(48, 61, 137, .25);
-        }
-
-        .action-btn.danger:hover {
-            background: var(--red-bg);
-            color: var(--red);
-            border-color: #f5c0c0;
-        }
-
-        .toggle-btn.open {
-            background: var(--accent-light);
-            color: var(--accent);
-            border-color: rgba(48, 61, 137, .25);
-        }
-
-        .toggle-btn.open .fa {
-            transform: rotate(90deg);
-        }
-
-        .fa {
-            transition: transform .2s;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 56px 24px;
-        }
-
-        .empty-icon-wrap {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: var(--accent-light);
-            margin: 0 auto 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent);
-            font-size: 22px;
-        }
-
-        .empty-state h6 {
-            font-size: 14px;
-            font-weight: 650;
-            color: var(--text-primary);
-            margin: 0 0 6px;
-        }
-
-        .empty-state p {
-            font-size: 13px;
-            color: var(--text-hint);
-            margin: 0;
-        }
-
-        .pagination-bar {
-            padding: 14px 20px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .pagination-info {
-            font-size: 12.5px;
-            color: var(--text-hint);
-        }
-
-        .alert-success {
-            background: var(--green-bg);
-            color: var(--green);
-            border: 1px solid #b2d8cd;
-            border-radius: var(--radius-sm);
-            padding: 10px 16px;
-            font-size: 13px;
-            font-weight: 500;
-            margin-bottom: 16px;
-        }
-
-        @media(max-width:768px) {
-            .list-page {
-                padding: 16px;
-            }
-        }
+        @media(max-width:768px) { .list-page { padding: 16px; } }
     </style>
 
     <div class="app-content content container-fluid">
@@ -689,7 +159,7 @@
                 <div class="stat-card">
                     <div class="stat-label">Total Stored Carts</div>
                     <div class="stat-value">{{ number_format($totalCarts) }}</div>
-                    <div class="stat-sub">Customers with items saved</div>
+                    <div class="stat-sub">Guest + logged-in carts</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Total Cart Value</div>
@@ -724,6 +194,14 @@
                                 </div>
                             </div>
                             <div class="filter-group">
+    <label>Type</label>
+    <select name="type" class="filter-control">
+        <option value="">All</option>
+        <option value="guest" @selected(request('type') === 'guest')>Guest</option>
+        <option value="customer" @selected(request('type') === 'customer')>Logged-in</option>
+    </select>
+</div>
+                            <div class="filter-group">
                                 <label>Cart Age</label>
                                 <select name="cart_age" class="filter-control">
                                     <option value="">All Time</option>
@@ -742,8 +220,7 @@
                                 <select name="sort_by" class="filter-control">
                                     <option value="updated_at"
                                         @selected(request('sort_by', 'updated_at') === 'updated_at')>Last Updated</option>
-                                    <option value="grand_total" @selected(request('sort_by') === 'grand_total')>Cart Value
-                                        ↓</option>
+                                    <option value="grand_total" @selected(request('sort_by') === 'grand_total')>Cart Value ↓</option>
                                 </select>
                             </div>
                             <div class="filter-actions">
@@ -771,6 +248,7 @@
                                 <th style="width:130px">Cart Value</th>
                                 <th style="width:120px">Last Updated</th>
                                 <th style="width:120px">Cart Age</th>
+                                <th style="min-width:150px">Reached</th>
                                 <th style="width:80px">Actions</th>
                             </tr>
                         </thead>
@@ -783,10 +261,18 @@
                                     $moreCount = max(0, $items->count() - 2);
                                     $itemNames = $items->map(fn($i) => optional($i->product)->name ?? 'Unknown')->implode(', ');
 
-                                    // Cart age label
-                                    $diffMins = $cart->updated_at->diffInMinutes(now());
-                                    $diffHours = $cart->updated_at->diffInHours(now());
-                                    $diffDays = $cart->updated_at->diffInDays(now());
+                                    // Customer info (with fallbacks for different column names)
+                                    $u = $cart->user;
+                                    $custName = $u?->name
+                                        ?: trim(($u?->first_name ?? '') . ' ' . ($u?->last_name ?? ''));
+                                    $custName = $custName ?: '—';
+                                    $custContact = $u?->email ?: ($u?->mobile ?? $u?->phone ?? '');
+                                    $custInitials = $custName !== '—' ? strtoupper(mb_substr($custName, 0, 2)) : '?';
+
+                                    // Cart age label (Carbon 3 returns floats, so cast to int)
+                                    $diffMins = (int) $cart->updated_at->diffInMinutes(now());
+                                    $diffHours = (int) $cart->updated_at->diffInHours(now());
+                                    $diffDays = (int) $cart->updated_at->diffInDays(now());
                                     if ($diffMins < 60) {
                                         $ageClass = 'age-fresh';
                                         $ageLabel = $diffMins . 'm ago';
@@ -803,6 +289,26 @@
                                         $ageClass = 'age-dead';
                                         $ageLabel = $diffDays . 'd ago';
                                     }
+
+                                    $acts = $activityMap[$cart->id] ?? collect();
+$firstAct = $acts->first();
+$reached = $acts->map(fn($a) => \App\Models\CartActivity::EVENTS[$a->event]['rank'] ?? 0)->max() ?? 0;
+$stageLabel = match (true) {
+    $reached >= 5 => 'Payment Started',
+    $reached >= 4 => 'Logged In',
+    $reached >= 3 => 'Login Prompt',
+    $reached >= 2 => 'Opened Checkout',
+    $reached >= 1 => 'Added to Cart',
+    default => 'Not tracked',
+};
+
+if (!$u) {
+    $custName = 'Guest';
+    $custInitials = 'G';
+    $custContact = $firstAct
+        ? trim(($firstAct->city ? $firstAct->city . ' · ' : '') . ucfirst($firstAct->device_type ?? ''))
+        : 'Not logged in';
+}
                                 @endphp
 
                                 {{-- Main row --}}
@@ -819,53 +325,51 @@
                                     <td>
                                         <div class="cust-cell">
                                             <div class="cust-avatar">
-                                                @if($cart->customer?->avatar)
-                                                    <img src="{{ asset('storage/' . $cart->customer->avatar) }}"
-                                                        alt="{{ $cart->customer->name }}">
+                                                @if($u?->avatar)
+                                                    <img src="{{ asset('storage/' . $u->avatar) }}" alt="{{ $custName }}">
                                                 @else
-                                                    {{ strtoupper(substr($cart->customer?->name ?? '?', 0, 2)) }}
+                                                    {{ $custInitials }}
                                                 @endif
                                             </div>
                                             <div>
-                                                <div class="cust-name">{{ $cart->customer?->name ?? '—' }}</div>
-                                                <div class="cust-email">{{ $cart->customer?->email }}</div>
+                                                <div class="cust-name">{{ $custName }}</div>
+                                                <div class="cust-email">{{ $custContact }}</div>
                                             </div>
                                         </div>
                                     </td>
 
+                                    {{-- Items column (nested <td> removed) --}}
                                     <td>
                                         <div class="cart-items-preview">
-                                            <td>
-    <div class="cart-items-preview">
-        @foreach($previewItems as $item)
-            @php
-                // Thumbnail: image variant > product thumbnail > null
-                $previewThumb = null;
-                if ($item->imageVariant && $item->imageVariant->image) {
-                    $previewThumb = $item->imageVariant->image;
-                } elseif ($item->product) {
-                    $previewThumb = $item->product->thumbnail;
-                }
-            @endphp
-            @if($previewThumb)
-                <img src="{{ asset('storage/' . $previewThumb) }}" class="cart-thumb"
-                    alt="{{ optional($item->product)->name }}">
-            @else
-                <div class="cart-thumb-placeholder">
-                    <i class="fa fa-image"></i>
-                </div>
-            @endif
-        @endforeach
-        @if($moreCount > 0)
-            <div class="cart-more-badge">+{{ $moreCount }}</div>
-        @endif
-    </div>
-    @if($itemNames)
-        <div class="cart-item-names">
-            {{ \Illuminate\Support\Str::limit($itemNames, 50) }}
-        </div>
-    @endif
-</td>
+                                            @foreach($previewItems as $item)
+                                                @php
+                                                    // Thumbnail: image variant > product thumbnail > null
+                                                    $previewThumb = null;
+                                                    if ($item->imageVariant && $item->imageVariant->image) {
+                                                        $previewThumb = $item->imageVariant->image;
+                                                    } elseif ($item->product) {
+                                                        $previewThumb = $item->product->thumbnail;
+                                                    }
+                                                @endphp
+                                                @if($previewThumb)
+                                                    <img src="{{ asset('storage/' . $previewThumb) }}" class="cart-thumb"
+                                                        alt="{{ optional($item->product)->name }}">
+                                                @else
+                                                    <div class="cart-thumb-placeholder">
+                                                        <i class="fa fa-image"></i>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                            @if($moreCount > 0)
+                                                <div class="cart-more-badge">+{{ $moreCount }}</div>
+                                            @endif
+                                        </div>
+                                        @if($itemNames)
+                                            <div class="cart-item-names">
+                                                {{ \Illuminate\Support\Str::limit($itemNames, 50) }}
+                                            </div>
+                                        @endif
+                                    </td>
 
                                     <td>
                                         <span style="font-weight:700;color:var(--text-primary)">{{ $totalQty }}</span>
@@ -886,15 +390,25 @@
                                             <i class="fa fa-clock-o"></i> {{ $ageLabel }}
                                         </span>
                                     </td>
-
+<td>
+    <span class="age-pill {{ $reached >= 4 ? 'age-fresh' : ($reached >= 2 ? 'age-warm' : 'age-cold') }}">
+        {{ $stageLabel }}
+    </span>
+    @if($firstAct)
+        <div class="cart-value-sub">{{ ucfirst($firstAct->device_type) }} · {{ $firstAct->browser }}</div>
+    @endif
+</td>
                                     <td>
                                         <div style="display:flex;gap:6px">
-                                            @if($cart->customer_id)
-                                                <a href="{{ route('admin.customers.show', $cart->customer_id) }}"
+                                            @if($cart->user_id)
+                                                <a href="{{ route('admin.customers.show', $cart->user_id) }}"
                                                     class="action-btn view" title="View Customer">
                                                     <i class="fa fa-user"></i>
                                                 </a>
                                             @endif
+                                            <a href="{{ route('admin.stored-carts.show', $cart->id) }}" class="action-btn view" title="View Journey">
+    <i class="fa fa-eye"></i>
+</a>
                                             <form action="{{ route('admin.stored-carts.destroy', $cart->id) }}"
                                                 method="POST" onsubmit="return confirm('Clear this cart?')"
                                                 style="margin:0">
@@ -910,7 +424,7 @@
 
                                 {{-- Expanded items row --}}
                                 <tr class="expanded-row" id="expand-{{ $cart->id }}">
-                                    <td colspan="9" style="padding:0">
+                                    <td colspan="10" style="padding:0">
                                         <div class="expanded-inner">
                                             <div
                                                 style="font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text-hint);margin-bottom:8px">
@@ -991,7 +505,7 @@
 
                             @empty
                                 <tr>
-                                    <td colspan="9">
+                                    <td colspan="10">
                                         <div class="empty-state">
                                             <div class="empty-icon-wrap">
                                                 <i class="fa fa-shopping-cart"></i>

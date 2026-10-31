@@ -46,6 +46,7 @@ return new class extends Migration {
             // Amounts
             $table->decimal('subtotal', 12, 2)->default(0);
             $table->decimal('discount', 12, 2)->default(0);
+            $table->decimal('shipping_charge', 10, 2)->default(0);
             $table->decimal('tax_amount', 12, 2)->default(0);
             $table->decimal('grand_total', 12, 2)->default(0);
 

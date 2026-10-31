@@ -56,8 +56,8 @@
                 </div>
                 <div class="cc-row">
                     <label for="customColourNote">Shade name / note</label>
-                    <input type="text" id="customColourNote" name="custom_colour_note" maxlength="150"
-                        placeholder="e.g. Deep wine, match the attached photo" disabled />
+                    <input type="text" id="customColourNote" name="custom_colour_note" maxlength="38"
+                        placeholder="e.g. Deep wine" disabled />
                 </div>
                 <p class="opt-note">
                     Dyed products are made to order and cannot be returned or exchanged.

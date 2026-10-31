@@ -5,8 +5,13 @@
         var D = window.PRODUCT_OPTIONS,
             G = D.groups,
             TYPES = ['price', 'image', 'stock', 'sku'],
+            CART_URL = @json(route('cart.add')),
+            CHECKOUT_URL = @json(route('checkout')),
+            CSRF = @json(csrf_token()),
             byCa = {},
-            cur = { price: D.base.price, mrp: D.base.mrp },
+            cur = { price: D.base.price, mrp: D.base.mrp, stock: D.base.stock },
+            busy = false,
+            redirecting = false,
             lastImgKey = D.base.images.map(function (i) { return i.full; }).join('|');
 
         G.forEach(function (g) {
@@ -162,6 +167,15 @@
             $em.text(off + '% OFF').toggle(off > 0);
         }
 
+        // ── Quantity (main + sticky bar share one value) ──
+        function qtyVal() {
+            return parseInt($('.qty-input').first().val(), 10) || D.minQty;
+        }
+
+        function setQty(v) {
+            $('.qty-input').val(v);
+        }
+
         function render() {
             var p = find('price'), s = find('stock'), k = find('sku'), im = find('image');
 
@@ -170,14 +184,21 @@
             paintPrice();
 
             var stock = s ? s.stock : D.base.stock,
-                inStock = s ? s.ok : stock > 0,
+                // stock-type variants exist: a combination without a row is unavailable
+                inStock = hasVariants('stock') ? !!(s && s.ok) : stock > 0,
                 low = inStock && stock > 0 && stock <= D.lowStock,
                 $sl = $('#stockLine').toggleClass('is-out', !inStock);
+
+            cur.stock = inStock ? stock : 0;
+
             $sl.find('b').text(inStock ? 'In Stock' : 'Out of Stock');
             $sl.find('em').text(low ? 'Only ' + stock + ' left' : '').toggle(low);
             $('.act-btns .btn, .sb-actions .btn')
                 .toggleClass('disabled', !inStock)
                 .attr('aria-disabled', !inStock);
+
+            // stock dropped below the chosen quantity
+            if (cur.stock > 0 && qtyVal() > cur.stock) setQty(Math.max(D.minQty, cur.stock));
 
             var sku = k && k.sku ? k.sku : D.base.sku;
             $('#infoSku').text(sku ? 'SKU: ' + sku : '').toggle(!!sku);
@@ -204,6 +225,101 @@
             $('.custom-colour-group .opt-value').text(on ? 'Selected' : 'Optional');
         }
 
+        // ── Cart ──
+        function showMsg(text, ok) {
+            var $m = $('#cartMsg');
+            $m.stop(true, true).text(text).css('color', ok ? '' : '#b22222').show();
+            if (ok) setTimeout(function () { $m.fadeOut(); }, 4000);
+        }
+
+        function payload() {
+            var data = {
+                _token: CSRF,
+                product_id: D.id,
+                quantity: qtyVal(),
+                selected_values: [],
+                addon_ids: []
+            };
+
+            // hidden / unavailable groups are disabled, so they are skipped
+            $('.opt-group input[name^="attr["]:checked:not(:disabled)').each(function () {
+                data.selected_values.push(parseInt(this.value, 10));
+            });
+
+            TYPES.forEach(function (t) {
+                var v = find(t);
+                if (v && v.id) data[t + '_variant_id'] = v.id;
+            });
+
+            $('input[name="addons[]"]:checked').each(function () {
+                data.addon_ids.push(parseInt(this.value, 10));
+            });
+
+            if ($('#customColour').is(':checked')) {
+                var hex = $('#customColourHex').val(),
+                    note = $.trim($('#customColourNote').val());
+                data.custom_colour_code = (hex + (note ? ' - ' + note : '')).substring(0, 50);
+            }
+
+            return data;
+        }
+
+        // Swap mini cart + counts. Selectors are the hooks the layout needs to have.
+        function applyCart(r) {
+            if (r.mini_cart_html) $('#miniCart, [data-mini-cart]').first().html(r.mini_cart_html);
+            if (r.cart_count !== undefined) $('.cart-count, [data-cart-count]').text(r.cart_count);
+        }
+
+        function openMiniCart(msg) {
+            var $t = $('[data-model=".cart-pop"]').not('.js-add-cart, .js-buy-now').first();
+            if ($t.length) {
+                $('#cartMsg').hide();
+                $t.trigger('click');
+            } else {
+                showMsg(msg || 'Added to your bag.', true);
+            }
+        }
+
+        function failMessage(xhr) {
+            var m = 'Could not add to bag right now. Please try again.';
+            if (xhr.status === 419) m = 'Your session expired. Please refresh the page and try again.';
+            else if (xhr.status === 429) m = 'Too many attempts. Please try again in a minute.';
+            else if (xhr.responseJSON) {
+                m = xhr.responseJSON.message || m;
+                if (xhr.responseJSON.errors) m = Object.values(xhr.responseJSON.errors)[0][0];
+            }
+            return m;
+        }
+
+        function addToCart($btn, buyNow) {
+            if (busy || $btn.hasClass('disabled')) return;
+
+            busy = true;
+            var label = $btn.html();
+            $btn.addClass('is-loading').text(buyNow ? 'Please wait...' : 'Adding...');
+            $('#cartMsg').hide();
+
+            $.ajax({ url: CART_URL, method: 'POST', data: payload(), dataType: 'json' })
+                .done(function (r) {
+                    applyCart(r);
+                    $(document).trigger('cart:added', [r]);
+
+                    if (buyNow) {
+                        redirecting = true;
+                        window.location.href = CHECKOUT_URL;
+                        return;
+                    }
+                    openMiniCart(r.message);
+                })
+                .fail(function (xhr) {
+                    showMsg(failMessage(xhr), false);
+                })
+                .always(function () {
+                    busy = false;
+                    if (!redirecting) $btn.removeClass('is-loading').html(label);
+                });
+        }
+
         $(document).on('change', '.opt-group input[name^="attr["]', update);
         $(document).on('change', 'input[name="addons[]"]', paintPrice);
         $(document).on('change', '#customColour', function () {
@@ -211,6 +327,23 @@
             paintPrice();
         });
 
+        $(document).on('click', '.qty-plus, .qty-minus', function () {
+            var v = qtyVal();
+            if ($(this).hasClass('qty-plus')) {
+                if (cur.stock && v + 1 > cur.stock) {
+                    return showMsg('Only ' + cur.stock + ' units available.', false);
+                }
+                v++;
+            } else {
+                v = Math.max(D.minQty, v - 1);
+            }
+            setQty(v);
+        });
+
+        $(document).on('click', '.js-add-cart', function () { addToCart($(this), false); });
+        $(document).on('click', '.js-buy-now', function () { addToCart($(this), true); });
+
+        setQty(D.minQty);
         toggleCustomColour();
         update();
     });

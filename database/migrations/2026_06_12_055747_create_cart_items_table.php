@@ -40,7 +40,8 @@ return new class extends Migration {
                 ->nullOnDelete();
 
             $table->json('selected_attributes')->nullable();
-
+            $table->string('custom_colour_code', 50)->nullable();
+            $table->decimal('dye_charge', 10, 2)->default(0);
             $table->unsignedInteger('quantity');
 
             $table->decimal(

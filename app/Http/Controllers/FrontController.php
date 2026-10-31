@@ -339,7 +339,7 @@ class FrontController extends Controller
                     $row = ['images' => $imgs, 'ok' => $ok];
             }
 
-            $variants[$v->type][$key] = $row;
+            $variants[$v->type][$key] = $row + ['id' => $v->id];
         }
 
         $baseImages = $gallery->isNotEmpty()
@@ -358,6 +358,8 @@ class FrontController extends Controller
             $groups,
             [
                 'name' => $product->name,
+                'id' => $product->id,
+                'minQty' => max(1, (int) $product->min_qty),
                 'groups' => $groups,
                 'variants' => array_map(fn($a) => (object) $a, $variants),
                 'base' => [

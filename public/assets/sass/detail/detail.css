@@ -2690,3 +2690,13 @@
     width: 100%;
   }
 }
+
+.cart-msg {
+  margin: 10px 0 0;
+  font-size: 13px;
+}
+
+.btn.is-loading {
+  opacity: .7;
+  pointer-events: none;
+}

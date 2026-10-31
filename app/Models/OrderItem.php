@@ -28,10 +28,13 @@ class OrderItem extends Model
 
         'price',
         'total',
+        'custom_colour_code',
+        'dye_charge'
     ];
 
     protected $casts = [
         'selected_attributes' => 'array',
+        'dye_charge' => 'float'
     ];
 
     public function order()

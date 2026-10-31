@@ -3,49 +3,51 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\InvoiceSetting;
-use App\Models\State;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use App\Models\City;
-use App\Models\SmtpSetting;
-use App\Models\PaymentSetting;
+use App\Models\State;
 use App\Models\Setting;
 use App\Models\Courier;
+use App\Models\SmtpSetting;
+use App\Models\ShippingSlab;
+use Illuminate\Http\Request;
 use App\Models\GoogleSetting;
+use App\Models\PaymentSetting;
+use App\Models\InvoiceSetting;
+use App\Models\ShippingSetting;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class AdminSettingController extends Controller
 {
     // ðŸ”¹ Show form
     public function index(Request $request)
     {
-        $invoice_setting = InvoiceSetting::first();
+        $states = State::all();
+        $general = Setting::first();
         $smtp = SmtpSetting::first();
         $payment = PaymentSetting::first();
-        $general = Setting::first();
-        $states = State::all();
         $couriers = Courier::latest()->get();
+        $shipping = ShippingSetting::first();
+        $google_setting = GoogleSetting::current();
+        $invoice_setting = InvoiceSetting::first();
         $activeTab = $request->tab ?? 'general';
-        
-         $google_setting = GoogleSetting::current(); // 👈 new
 
         return view(
             'admin.admin-settings.index',
             compact(
-                'invoice_setting',
                 'smtp',
                 'payment',
                 'general',
                 'states',
                 'couriers',
+                'shipping',
+                'activeTab',
                 'google_setting',
-                'activeTab'
+                'invoice_setting',
             )
         );
     }
 
-    // ðŸ”¹ Save settings
     public function invoiceSettingStore(Request $request)
     {
         $rules = [
@@ -116,7 +118,6 @@ class AdminSettingController extends Controller
             ->with('success', 'Invoice & GST settings updated successfully.');
     }
 
-    // ðŸ”¥ Generate Invoice Number (SAFE VERSION)
     public static function generateInvoiceNumber()
     {
         return DB::transaction(function () {
@@ -363,7 +364,7 @@ class AdminSettingController extends Controller
                 'Courier deleted successfully.'
             );
     }
-    
+
     public function googleSettingStore(Request $request)
     {
         $request->validate([
@@ -420,5 +421,86 @@ class AdminSettingController extends Controller
             ->route('admin.admin-setting.index', ['tab' => 'tracking'])
             ->with('success', 'Tracking settings saved successfully.');
     }
-    
+
+
+    public function shippingSettingStore(Request $request)
+    {
+        $validated = $request->validate([
+            'shipping_type' => 'required|in:order_value,weight,pcs',
+            'free_delivery_threshold' => 'nullable|numeric|min:0',
+
+            // Weight (grams)
+            'min_weight' => 'nullable|integer|min:0',
+            'weight_step' => 'nullable|in:100,200,250,500,1000',
+            'weight_local_charge' => 'nullable|numeric|min:0',
+            'weight_local_extra' => 'nullable|numeric|min:0',
+            'weight_state_charge' => 'nullable|numeric|min:0',
+            'weight_state_extra' => 'nullable|numeric|min:0',
+            'weight_inter_charge' => 'nullable|numeric|min:0',
+            'weight_inter_extra' => 'nullable|numeric|min:0',
+
+            // Pcs
+            'min_pcs' => 'nullable|integer|min:1',
+            'pcs_local_charge' => 'nullable|numeric|min:0',
+            'pcs_local_extra' => 'nullable|numeric|min:0',
+            'pcs_state_charge' => 'nullable|numeric|min:0',
+            'pcs_state_extra' => 'nullable|numeric|min:0',
+            'pcs_inter_charge' => 'nullable|numeric|min:0',
+            'pcs_inter_extra' => 'nullable|numeric|min:0',
+
+            // Order value slabs
+            'slabs' => 'nullable|array',
+            'slabs.*.min' => 'nullable|numeric|min:0',
+            'slabs.*.max' => 'nullable|numeric|min:0',
+            'slabs.*.local' => 'nullable|numeric|min:0',
+            'slabs.*.state' => 'nullable|numeric|min:0',
+            'slabs.*.inter' => 'nullable|numeric|min:0',
+        ]);
+
+        $slabs = $validated['slabs'] ?? [];
+        unset($validated['slabs']);
+
+        // Non-nullable DB columns: empty input = 0 / default
+        foreach (['weight', 'pcs'] as $m) {
+            foreach (['local', 'state', 'inter'] as $z) {
+                $validated["{$m}_{$z}_charge"] = $validated["{$m}_{$z}_charge"] ?? 0;
+                $validated["{$m}_{$z}_extra"] = $validated["{$m}_{$z}_extra"] ?? 0;
+            }
+        }
+        $validated['weight_step'] = $validated['weight_step'] ?? 500;
+
+        // Slab sanity check: max must be greater than min
+        foreach ($slabs as $s) {
+            if (isset($s['min'], $s['max']) && $s['max'] !== '' && (float) $s['max'] < (float) $s['min']) {
+                return back()
+                    ->withInput()
+                    ->withErrors(['slabs' => 'Maximum order value cannot be less than minimum order value.']);
+            }
+        }
+
+        DB::transaction(function () use ($validated, $slabs) {
+            ShippingSetting::updateOrCreate(['id' => 1], $validated);
+
+            ShippingSlab::query()->delete();   // was: ShippingSlab::truncate();
+
+            foreach ($slabs as $s) {
+                if (!isset($s['min']) || $s['min'] === '') {
+                    continue;
+                }
+
+                ShippingSlab::create([
+                    'min_order_value' => $s['min'],
+                    'max_order_value' => ($s['max'] ?? '') !== '' ? $s['max'] : null,
+                    'local_charge' => $s['local'] ?? 0,
+                    'state_charge' => $s['state'] ?? 0,
+                    'inter_charge' => $s['inter'] ?? 0,
+                ]);
+            }
+        });
+
+        return redirect()
+            ->route('admin.admin-setting.index', ['tab' => 'shipping'])
+            ->with('success', 'Shipping settings saved successfully.');
+    }
+
 }

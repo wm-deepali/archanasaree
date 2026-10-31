@@ -63,9 +63,12 @@ use App\Http\Controllers\Admin\{
 };
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\PincodeController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\CustomerAuthController;
 use App\Http\Controllers\ProductReviewController;
 
 Route::middleware('maintenance.mode')->group(function () {
@@ -77,8 +80,6 @@ Route::middleware('maintenance.mode')->group(function () {
         Route::get('/products', 'products')->name('products');
         Route::get('/product/{slug}', 'productShow')->name('products.show');
 
-        Route::view('/cart', 'front-pages.cart')->name('cart');
-        Route::view('/checkout', 'front-pages.checkout')->name('checkout');
         Route::view('/thank-you', 'front-pages.thank-you')->name('thank-you');
         Route::view('/payment', 'front-pages.payment')->name('payment');
         Route::view('/about', 'front-pages.about')->name('about');
@@ -90,20 +91,49 @@ Route::middleware('maintenance.mode')->group(function () {
 
     });
 
+    Route::get('/pincode/check', [PincodeController::class, 'check'])->middleware('throttle:30,1')->name('pincode.check');
+    Route::post('/product/{product}/review', [ProductReviewController::class, 'store'])->middleware(['customer', 'throttle:5,1'])->name('product.review.store');
+
+    // cart routes
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::get('/cart', [CartController::class, 'cart'])->name('cart');
+    Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/cart/update-quantity', [CartController::class, 'updateQuantity'])->name('cart.update.quantity');
+    Route::post('/cart/apply-coupon', [CartController::class, 'applyCoupon'])->name('cart.apply.coupon');
+    Route::post('/cart/remove-coupon', [CartController::class, 'removeCoupon'])->name('cart.remove.coupon');
+
+    // checkout routes
+    Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout/ajax-login', [CustomerAuthController::class, 'ajaxLogin'])->middleware('throttle:10,1')->name('checkout.ajax-login');
+    Route::post('/checkout/ajax-register', [CustomerAuthController::class, 'ajaxRegister'])->middleware('throttle:10,1')->name('checkout.ajax-register');
+    Route::post('/checkout/track-step', [CheckoutController::class, 'trackStep'])->middleware('throttle:30,1')->name('checkout.track-step');
+
+    // customer login routes
+    Route::get('/user/google', [CustomerAuthController::class, 'redirectToGoogle'])->name('user.google.login');
+    Route::get('/user/google/callback', [CustomerAuthController::class, 'handleGoogleCallback']);
+    Route::get('/user/register', [CustomerAuthController::class, 'registerForm'])->name('user.register');
+    Route::post('/user/register', [CustomerAuthController::class, 'register'])->name('user.register.store');
+    Route::get('/user/login', [CustomerAuthController::class, 'loginForm'])->name('user.login');
+    Route::post('/user/login', [CustomerAuthController::class, 'login'])->name('user.login.store');
+
+    // Yeh sab login ke baad hi
+    Route::middleware('customer')->group(function () {
+        Route::post('/address/store', [CheckoutController::class, 'storeAddress'])->name('address.store');
+        Route::post('/checkout/change-default-address', [CheckoutController::class, 'changeDefaultAddress'])->name('checkout.change-default-address');
+        Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place-order');
+        Route::post('/payment/razorpay/success', [CheckoutController::class, 'razorpaySuccess'])->name('checkout.razorpay.success');
+        Route::get('/order-success/{order}', [CheckoutController::class, 'orderSuccess'])->name('order.success');
+    });
+
 });
 
-Route::get('/pincode/check', [PincodeController::class, 'check'])->middleware('throttle:30,1')->name('pincode.check');
 
-Route::post('/product/{product}/review', [ProductReviewController::class, 'store'])
-    ->middleware(['customer', 'throttle:5,1'])
-    ->name('product.review.store');
+
 
 // Admin Routes list
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::get('/get-cities', [AdminSettingController::class, 'getCities'])->name('get-cities');
-
-
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(['auth', 'admin.timeout'])->group(function () {
@@ -279,6 +309,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/settings/courier/store', [AdminSettingController::class, 'courierStore'])->name('couriers.store');
         Route::delete('/settings/courier/{courier}', [AdminSettingController::class, 'courierDelete'])->name('couriers.delete');
         Route::post('admin-setting/google-setting', [AdminSettingController::class, 'googleSettingStore'])->name('admin-setting.google-setting');
+        Route::post('/admin-setting/shipping', [AdminSettingController::class, 'shippingSettingStore'])->name('admin-setting.shipping.store');
 
         Route::get('/security/system-logs', [SystemLogController::class, 'index'])->name('security.system-logs');
 
@@ -323,11 +354,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('stored-carts', [StoredCartController::class, 'index'])->name('stored-carts.index');
         Route::delete('stored-carts/{cart}', [StoredCartController::class, 'destroy'])->name('stored-carts.destroy');
         Route::get('stored-carts/export', [StoredCartController::class, 'export'])->name('stored-carts.export');
-
-
+        Route::get('stored-carts/{cart}', [StoredCartController::class, 'show'])->whereNumber('cart')->name('stored-carts.show');
 
         Route::resource('return-reasons', ReturnReasonController::class)->names('return-reasons');
-
 
         Route::get('order-returns', [OrderReturnController::class, 'index'])->name('order-returns.index');
         Route::get('order-returns/export', [OrderReturnController::class, 'export'])->name('order-returns.export');
