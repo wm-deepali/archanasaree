@@ -7,6 +7,7 @@ use App\Models\Coupon;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Traits\LogsApiCalls;
+use App\Models\CategoryAttribute;
 use App\Services\ProductFilterService;
 
 class FrontController extends Controller
@@ -139,16 +140,17 @@ class FrontController extends Controller
                 'category',
                 'subcategory',
                 'collections:id,name',
-                'attributeValues.attribute:id,name',
-                'attributeValues.value:id,value',
+                'attributeValues.attribute:id,name,type',
+                'attributeValues.value',
                 'occasions:id,title',
                 'addons',
+                'variants.values',
+                'variants.images',
             ])
             ->withAvg('approvedReviews as avg_rating', 'rating')
             ->withCount('approvedReviews as reviews_count')
             ->firstOrFail();
 
-        // Product Details: attribute-wise rows (multi-select values comma se)
         $specs = $product->attributeValues
             ->filter(fn($av) => $av->attribute && $av->value)
             ->groupBy('attribute_id')
@@ -158,7 +160,6 @@ class FrontController extends Controller
             ])
             ->values();
 
-        // default image pehle, phir upload order
         $gallery = $product->images
             ->sortBy([['is_default', 'desc'], ['id', 'asc']])
             ->values();
@@ -168,7 +169,6 @@ class FrontController extends Controller
             ->limit(3)
             ->get();
 
-        // Recently viewed: trackView se PEHLE lo, aur current product hata do
         $recentlyViewed = $this->recentlyViewed()
             ->reject(fn($p) => $p->id === $product->id)
             ->values();
@@ -188,7 +188,6 @@ class FrontController extends Controller
 
         $reviews = $reviewQuery->limit(30)->get();
 
-        // star-wise counts: [5 => n, 4 => n, ...]
         $ratingCounts = $product->approvedReviews()
             ->selectRaw('rating, COUNT(*) as c')
             ->groupBy('rating')
@@ -199,7 +198,6 @@ class FrontController extends Controller
         $customerPhotos = $reviews->flatMap(fn($r) => $r->images)->values();
 
         // ── Review form state ──
-        // guest | can_review | already_reviewed | not_purchased
         $customer = auth('customer')->user();
         $reviewState = 'guest';
 
@@ -212,6 +210,9 @@ class FrontController extends Controller
                 $reviewState = 'not_purchased';
             }
         }
+
+        // ── Product options (selectable attributes + variant map) ──
+        [$optionGroups, $optionData] = $this->productOptionData($product, $gallery);
 
         Product::trackView($product->id);
 
@@ -228,8 +229,147 @@ class FrontController extends Controller
             'photoReviews',
             'fiveStarReviews',
             'customerPhotos',
-            'reviewState'
+            'reviewState',
+            'optionGroups',
+            'optionData'
         ));
+    }
+
+    /**
+     * Selectable attribute groups + variant lookup maps for the detail page.
+     * Variant key = sorted attribute_value ids (of that type's dependent attributes) joined by "-".
+     */
+    private function productOptionData(Product $product, $gallery): array
+    {
+        $catIds = array_filter([$product->category_id, $product->subcategory_id]);
+
+        // subcategory ki rule category rule par priority, phir attribute-wise unique
+        $rules = CategoryAttribute::whereIn('category_id', $catIds)
+            ->where('is_selectable', 1)
+            ->where('status', 1)
+            ->get()
+            ->sortBy(fn($ca) => $ca->category_id == $product->subcategory_id ? 0 : 1)
+            ->unique('attribute_id')
+            ->sortBy('sort_order')
+            ->values();
+
+        $byAttr = $product->attributeValues
+            ->filter(fn($av) => $av->attribute && $av->value)
+            ->groupBy('attribute_id');
+
+        $groups = [];
+        foreach ($rules as $ca) {
+            $rows = $byAttr->get($ca->attribute_id);
+            if (!$rows) {
+                continue;
+            }
+
+            $values = $rows->pluck('value')
+                ->unique('id')
+                ->filter(fn($v) => $v->status)
+                ->sortBy('sort_order')
+                ->values();
+
+            if ($values->isEmpty()) {
+                continue;
+            }
+
+            $attr = $rows->first()->attribute;
+
+            $groups[] = [
+                'ca_id' => $ca->id,
+                'attribute_id' => $ca->attribute_id,
+                'name' => $attr->name,
+                'type' => $attr->type, // button | color_swatch
+                'parent' => $ca->parent_category_attribute_id,
+                'show_when' => array_map('intval', $ca->show_when_value_ids ?? []),
+                'dep' => [
+                    'price' => (bool) $ca->price_dependent,
+                    'image' => (bool) $ca->image_dependent,
+                    'stock' => (bool) $ca->stock_dependent,
+                    'sku' => (bool) $ca->sku_dependent,
+                ],
+                'values' => $values->map(fn($v) => [
+                    'id' => $v->id,
+                    'name' => $v->value,
+                    'hex' => $v->hex_code,
+                ])->all(),
+            ];
+        }
+
+        $variants = ['price' => [], 'image' => [], 'stock' => [], 'sku' => []];
+
+        foreach ($product->variants as $v) {
+            if (!isset($variants[$v->type])) {
+                continue;
+            }
+
+            $key = $v->values->pluck('attribute_value_id')->map(fn($i) => (int) $i)->sort()->implode('-');
+            if ($key === '') {
+                continue;
+            }
+
+            $ok = $v->status && $v->is_available !== false;
+
+            switch ($v->type) {
+                case 'price':
+                    $row = [
+                        'price' => (float) $v->price,
+                        'mrp' => (float) ($v->mrp ?: $v->price),
+                        'ok' => $ok,
+                    ];
+                    break;
+                case 'stock':
+                    $row = ['stock' => (int) $v->stock, 'ok' => $ok && $v->stock > 0];
+                    break;
+                case 'sku':
+                    $row = ['sku' => $v->sku, 'ok' => $ok];
+                    break;
+                default: // image
+                    $imgs = $v->images
+                        ->sortBy([['is_default', 'desc'], ['id', 'asc']])
+                        ->map(fn($i) => [
+                            'full' => asset('storage/' . $i->image),
+                            'thumb' => asset('storage/' . ($i->thumb ?? $i->image)),
+                        ])->values()->all();
+
+                    if (!$imgs && $v->image) {
+                        $imgs = [['full' => asset('storage/' . $v->image), 'thumb' => asset('storage/' . $v->image)]];
+                    }
+                    $row = ['images' => $imgs, 'ok' => $ok];
+            }
+
+            $variants[$v->type][$key] = $row;
+        }
+
+        $baseImages = $gallery->isNotEmpty()
+            ? $gallery->map(fn($g) => [
+                'full' => asset('storage/' . $g->image),
+                'thumb' => asset('storage/' . ($g->thumb ?? $g->image)),
+            ])->values()->all()
+            : [
+                [
+                    'full' => asset('assets/images/home/tab1.png'),
+                    'thumb' => asset('assets/images/home/tab1.png'),
+                ]
+            ];
+
+        return [
+            $groups,
+            [
+                'name' => $product->name,
+                'groups' => $groups,
+                'variants' => array_map(fn($a) => (object) $a, $variants),
+                'base' => [
+                    'price' => (float) $product->price,
+                    'mrp' => (float) ($product->mrp ?: $product->price),
+                    'stock' => (int) $product->stock,
+                    'sku' => $product->sku,
+                    'images' => $baseImages,
+                ],
+                'lowStock' => 5,
+            ]
+        ];
     }
 
     /** Same subcategory wale pehle, phir same category ke baaki; current product exclude */

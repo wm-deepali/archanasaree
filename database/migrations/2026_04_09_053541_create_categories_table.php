@@ -16,7 +16,7 @@ class CreateCategoriesTable extends Migration
             $table->string('sub_title')->nullable();
 
             $table->string('image')->nullable();
-            $table->string('size_chart_image')->nullable();
+            $table->longText('size_chart')->nullable();
 
             $table->string('meta_title')->nullable();
             $table->text('meta_description')->nullable();

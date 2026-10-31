@@ -112,11 +112,33 @@ class CategoryController extends Controller
         return $path;
     }
 
+    /**
+     * Editor-empty check: "<p><br></p>" and similar count as empty,
+     * but a table with no text is still kept.
+     */
+    private function cleanRichText(?string $html): ?string
+    {
+        $html = trim((string) $html);
+
+        if ($html === '') {
+            return null;
+        }
+
+        $text = trim(str_replace('&nbsp;', ' ', strip_tags($html)));
+
+        if ($text === '' && !preg_match('/<(table|img)\b/i', $html)) {
+            return null;
+        }
+
+        return $html;
+    }
+
     // ✅ Store
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'size_chart' => 'nullable|string',
         ]);
 
         $image = null;
@@ -128,18 +150,6 @@ class CategoryController extends Controller
                 'categories',
                 400,
                 80
-            );
-        }
-
-        $sizeChartImage = null;
-
-        if ($request->hasFile('size_chart_image')) {
-            // Displayed larger/zoomed (~707x943 on frontend) -> keep bigger, higher quality
-            $sizeChartImage = $this->compressAndStore(
-                $request->file('size_chart_image'),
-                'categories/size-charts',
-                1000,
-                85
             );
         }
 
@@ -155,7 +165,7 @@ class CategoryController extends Controller
             'meta_title' => $request->meta_title,
             'meta_description' => $request->meta_description,
             'image' => $image,
-            'size_chart_image' => $sizeChartImage,
+            'size_chart' => $this->cleanRichText($request->size_chart),
 
             // ✅ FIXED
             'parent_id' => $request->parent_id ?: null,
@@ -200,6 +210,7 @@ class CategoryController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
+            'size_chart' => 'nullable|string',
         ]);
 
         $image = $category->image;
@@ -218,25 +229,6 @@ class CategoryController extends Controller
             );
         }
 
-        $sizeChartImage = $category->size_chart_image;
-
-        if ($request->hasFile('size_chart_image')) {
-
-            if (
-                $category->size_chart_image &&
-                Storage::disk('public')->exists($category->size_chart_image)
-            ) {
-                Storage::disk('public')->delete($category->size_chart_image);
-            }
-
-            $sizeChartImage = $this->compressAndStore(
-                $request->file('size_chart_image'),
-                'categories/size-charts',
-                1000,
-                85
-            );
-        }
-
         $category->update([
             'name' => $request->name,
             'sub_title' => $request->sub_title,
@@ -249,7 +241,7 @@ class CategoryController extends Controller
             'meta_title' => $request->meta_title,
             'meta_description' => $request->meta_description,
             'image' => $image,
-            'size_chart_image' => $sizeChartImage,
+            'size_chart' => $this->cleanRichText($request->size_chart),
 
             // ✅ FIXED
             'parent_id' => $request->parent_id ?: null,
@@ -273,10 +265,6 @@ class CategoryController extends Controller
 
         if ($category->image && Storage::disk('public')->exists($category->image)) {
             Storage::disk('public')->delete($category->image);
-        }
-
-        if ($category->size_chart_image && Storage::disk('public')->exists($category->size_chart_image)) {
-            Storage::disk('public')->delete($category->size_chart_image);
         }
 
         $category->delete();

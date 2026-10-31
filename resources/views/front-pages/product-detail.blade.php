@@ -6,6 +6,15 @@
 
 @section('content')
 
+    @php
+        $hasText = fn($html) => trim(str_replace('&nbsp;', ' ', strip_tags((string) $html))) !== ''
+            || preg_match('/<(table|img)\b/i', (string) $html);
+
+        $sizeChart = $hasText($product->subcategory?->size_chart)
+            ? $product->subcategory->size_chart
+            : ($hasText($product->category->size_chart) ? $product->category->size_chart : null);
+    @endphp
+
     <main>
         <div class="product-detail-page">
             <section class="product-breadcrumb">
@@ -95,29 +104,29 @@
                                         <a href="#reviews" class="rate-count">No reviews yet</a>
                                     @endif
                                     @if ($product->sku)
-                                        <span class="info-sku">SKU: {{ $product->sku }}</span>
+                                        <span class="info-sku" id="infoSku" @if (!$product->sku) style="display:none"
+                                        @endif>SKU: {{ $product->sku }}</span>
                                     @endif
                                 </div>
                             </div>
 
                             <div class="price-block">
-                                <span class="price-now">₹{{ number_format($product->price) }}</span>
-                                @if ($product->discount_percent > 0)
-                                    <del class="price-old">₹{{ number_format($product->mrp) }}</del>
-                                    <span class="price-off">{{ $product->discount_percent }}% OFF</span>
-                                @endif
+                                <span class="price-now" id="priceNow">₹{{ number_format($product->price) }}</span>
+                                <del class="price-old" id="priceOld" @if ($product->discount_percent <= 0)
+                                style="display:none" @endif>₹{{ number_format($product->mrp) }}</del>
+                                <span class="price-off" id="priceOff" @if ($product->discount_percent <= 0)
+                                style="display:none" @endif>{{ $product->discount_percent }}% OFF</span>
                                 <p class="price-tax">
                                     Inclusive of all taxes
-                                    @if ($product->discount_percent > 0)
-                                        · You save ₹{{ number_format($product->mrp - $product->price) }}
-                                    @endif
+                                    <span id="priceSave">@if ($product->discount_percent > 0) · You save
+                                    ₹{{ number_format($product->mrp - $product->price) }} @endif</span>
                                 </p>
                             </div>
 
-                            <p class="info-stock">
+                            <p class="info-stock" id="stockLine">
                                 <i class="fa-solid fa-circle"></i>
-                                <b>In Stock</b>
-                                <em>Only 3 pieces left in this colour</em>
+                                <b>{{ $product->stock > 0 ? 'In Stock' : 'Out of Stock' }}</b>
+                                <em style="display:none"></em>
                             </p>
 
                             @if ($coupons->isNotEmpty())
@@ -151,107 +160,7 @@
                                 <p class="info-desc">{{ $product->short_description }}</p>
                             @endif
 
-                            <div class="product-options">
-                                <div class="opt-group">
-                                    <div class="opt-head">
-                                        <span>Color:</span><b class="opt-value" id="colorName">Wine</b>
-                                    </div>
-                                    <div class="opt-swatches">
-                                        <label class="opt-swatch" title="Wine"><input type="radio" name="color" value="wine"
-                                                data-name="Wine" checked /><span style="--c: #5e1a33"></span></label>
-                                        <label class="opt-swatch" title="Maroon"><input type="radio" name="color"
-                                                value="maroon" data-name="Maroon" /><span
-                                                style="--c: #6e1423"></span></label>
-                                        <label class="opt-swatch" title="Red"><input type="radio" name="color" value="red"
-                                                data-name="Red" /><span style="--c: #b3203c"></span></label>
-                                        <label class="opt-swatch" title="Pink"><input type="radio" name="color" value="pink"
-                                                data-name="Pink" /><span style="--c: #e79aa8"></span></label>
-                                        <label class="opt-swatch" title="Green"><input type="radio" name="color"
-                                                value="green" data-name="Green" /><span style="--c: #1f6b4f"></span></label>
-                                        <label class="opt-swatch" title="Teal"><input type="radio" name="color" value="teal"
-                                                data-name="Teal" /><span style="--c: #0f5c5c"></span></label>
-                                        <label class="opt-swatch" title="Ivory"><input type="radio" name="color"
-                                                value="ivory" data-name="Ivory" /><span style="--c: #f3ecd9"></span></label>
-                                    </div>
-                                </div>
-
-                                <div class="opt-group">
-                                    <div class="opt-head">
-                                        <span>Size:</span><b class="opt-value">Free Size</b>
-                                    </div>
-                                    <div class="opt-chips">
-                                        <label class="opt-chip"><input type="radio" name="size" value="free"
-                                                checked /><span>Free Size</span></label>
-                                    </div>
-                                    <p class="opt-note">
-                                        Standard saree length of 5.5 metres with an unstitched
-                                        blouse piece.
-                                    </p>
-                                </div>
-
-                                <div class="opt-group blouse-group">
-                                    <div class="opt-head">
-                                        <span>Blouse:</span><b class="opt-value">Choose an option</b>
-                                        <button type="button" class="size-guide" data-model=".size-pop">
-                                            <i class="fa-solid fa-ruler"></i> Size Guide
-                                        </button>
-                                    </div>
-                                    <div class="opt-cards">
-                                        <label class="opt-card">
-                                            <input type="radio" name="blouse" value="unstitched" checked />
-                                            <span><b>Unstitched Piece</b><em>Included · Free</em></span>
-                                        </label>
-                                        <label class="opt-card">
-                                            <input type="radio" name="blouse" value="stitched" />
-                                            <span><b>Stitched to Size</b><em>+ ₹499 · Ready in 5–7 days</em></span>
-                                        </label>
-                                    </div>
-                                    <div class="blouse-sizes">
-                                        <p class="opt-sub">Select Blouse Size</p>
-                                        <div class="opt-chips">
-                                            <label class="opt-chip"><input type="radio" name="blouse-size"
-                                                    value="s" /><span>S</span></label>
-                                            <label class="opt-chip"><input type="radio" name="blouse-size" value="m"
-                                                    checked /><span>M</span></label>
-                                            <label class="opt-chip"><input type="radio" name="blouse-size"
-                                                    value="l" /><span>L</span></label>
-                                            <label class="opt-chip"><input type="radio" name="blouse-size"
-                                                    value="xl" /><span>XL</span></label>
-                                            <label class="opt-chip"><input type="radio" name="blouse-size"
-                                                    value="xxl" /><span>XXL</span></label>
-                                        </div>
-                                        <p class="opt-note">
-                                            Stitched blouses are made to standard size and cannot be
-                                            returned once stitched.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                @if ($product->addons->isNotEmpty())
-                                    <div class="opt-group">
-                                        <div class="opt-head">
-                                            <span>Add-ons:</span><b class="opt-value">Optional</b>
-                                        </div>
-                                        <div class="opt-addons">
-                                            @foreach ($product->addons as $addon)
-                                                <label class="opt-check">
-                                                    <input type="checkbox" name="addons[]" value="{{ $addon->id }}"
-                                                        data-price="{{ (float) $addon->price }}" />
-                                                    <span class="oc-text">
-                                                        <b>{{ $addon->detail }}</b>
-                                                        @if (!empty($addon->description))
-                                                            <em>{{ $addon->description }}</em>
-                                                        @endif
-                                                    </span>
-                                                    <strong>
-                                                        {{ $addon->price > 0 ? '+ ₹' . number_format($addon->price) : 'Free' }}
-                                                    </strong>
-                                                </label>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
+                            @include('partials.product-options')
 
                             <div class="product-delivery">
                                 <div class="del-head">
@@ -761,77 +670,22 @@
         </div>
     </div>
 
-    <div class="model size-pop">
-        <button type="button" class="close" aria-label="Close size guide">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                <path d="M5 5l14 14M19 5L5 19" />
-            </svg>
-        </button>
-        <div class="model-body">
-            <div class="title">
-                <h4>Blouse Size Guide</h4>
-                <p>
-                    Measurements in inches. Choose the size closest to your body
-                    measurements.
-                </p>
+    @if ($sizeChart)
+        <div class="model size-pop">
+            <button type="button" class="close" aria-label="Close size chart">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M5 5l14 14M19 5L5 19" />
+                </svg>
+            </button>
+            <div class="model-body">
+                <div class="title">
+                    <h4>Size Chart</h4>
+                    <p>{{ $product->subcategory->name ?? $product->category->name }}</p>
+                </div>
+                <div class="rich-text sizechart-content">{!! $sizeChart !!}</div>
             </div>
-            <div class="size-table-wrap">
-                <table class="size-table">
-                    <thead>
-                        <tr>
-                            <th>Size</th>
-                            <th>Bust</th>
-                            <th>Waist</th>
-                            <th>Shoulder</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>S</td>
-                            <td>34</td>
-                            <td>28</td>
-                            <td>14</td>
-                        </tr>
-                        <tr>
-                            <td>M</td>
-                            <td>36</td>
-                            <td>30</td>
-                            <td>14.5</td>
-                        </tr>
-                        <tr>
-                            <td>L</td>
-                            <td>38</td>
-                            <td>32</td>
-                            <td>15</td>
-                        </tr>
-                        <tr>
-                            <td>XL</td>
-                            <td>40</td>
-                            <td>34</td>
-                            <td>15.5</td>
-                        </tr>
-                        <tr>
-                            <td>XXL</td>
-                            <td>42</td>
-                            <td>36</td>
-                            <td>16</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <ul class="size-tips">
-                <li><b>Bust:</b> measure around the fullest part of your chest.</li>
-                <li>
-                    <b>Waist:</b> measure around the narrowest part of your waist.
-                </li>
-                <li>
-                    <b>Shoulder:</b> measure from one shoulder point to the other across
-                    the back.
-                </li>
-                <li>Between two sizes? Choose the larger size.</li>
-            </ul>
         </div>
-    </div>
+    @endif
 
 @endsection
 
@@ -846,14 +700,15 @@
                 };
             };
 
-            var thumbs = new Swiper(".product-thumb-swiper", {
+            // ── Gallery (handles exposed for variant image swap) ──
+            window.productThumbs = new Swiper(".product-thumb-swiper", {
                 spaceBetween: 10,
                 slidesPerView: 4.2,
                 watchSlidesProgress: true,
                 breakpoints: { 541: { slidesPerView: 5 } },
             });
 
-            new Swiper(".product-gallery-swiper", {
+            window.productGallery = new Swiper(".product-gallery-swiper", {
                 navigation: {
                     nextEl: ".g-next",
                     prevEl: ".g-prev",
@@ -869,19 +724,10 @@
                         return ("0" + n).slice(-2);
                     },
                 },
-                thumbs: { swiper: thumbs },
+                thumbs: { swiper: window.productThumbs },
             });
 
-            new Swiper(".reviewSlider", {
-                slidesPerView: 1.1,
-                spaceBetween: 14,
-                navigation: nav(".product-reviews"),
-                breakpoints: {
-                    541: { slidesPerView: 2, spaceBetween: 18 },
-                    1025: { slidesPerView: 3, spaceBetween: 24 },
-                },
-            });
-
+            // ── Related / Recently viewed sliders ──
             [
                 "relatedProductSlider:.related-products",
                 "recentlyViewedSlider:.recently-viewed",
@@ -899,10 +745,7 @@
                 });
             });
 
-            $(".opt-swatch input").on("change", function () {
-                $("#colorName").text($(this).data("name"));
-            });
-
+            // ── Quantity (main + sticky bar stay in sync) ──
             $(document).on("click", ".qty-plus, .qty-minus", function () {
                 var $i = $(this).siblings(".qty-input"),
                     v = parseInt($i.val(), 10) || 1;
@@ -910,6 +753,7 @@
                 $(".qty-input").val(v);
             });
 
+            // ── Sticky bar ──
             var bar = document.querySelector(".product-sticky-bar"),
                 target = document.querySelector(".product-actions");
             if (bar && target && "IntersectionObserver" in window) {
@@ -923,6 +767,7 @@
             }
         });
 
+        // ── Review sliders (one per tab, own arrows) ──
         $(".reviewSlider").each(function () {
             var $wrap = $(this).closest(".swiper-wrap");
             new Swiper(this, {
@@ -940,6 +785,7 @@
             });
         });
 
+        // ── Pincode check ──
         $('#pinForm').on('submit', function (e) {
             e.preventDefault();
 
@@ -987,6 +833,7 @@
                 });
         });
 
+        // ── Review photo preview ──
         $('#rvPhotos').on('change', function () {
             var files = Array.from(this.files), $p = $(this).closest('.rf-upload').find('.upload-preview');
             $p.empty();
@@ -999,6 +846,7 @@
             });
         });
 
+        // ── Review submit ──
         $('#reviewForm').on('submit', function (e) {
             e.preventDefault();
 
@@ -1035,6 +883,7 @@
             });
         });
 
+        // ── Coupon copy ──
         $(document).on('click', '.offer-copy', function () {
             var $b = $(this), html = $b.html();
             navigator.clipboard.writeText($b.data('code')).then(function () {
@@ -1043,6 +892,7 @@
             });
         });
 
+        // ── "How to Avail" scrolls to + opens the offers accordion ──
         $(document).on('click', '.offers-head a', function (e) {
             e.preventDefault();
             var $item = $('#offers-accordion');
@@ -1053,13 +903,13 @@
             }
         });
 
-        GLightbox({ selector: ".glightbox", touchNavigation: true, loop: true });
+        // ── Lightbox (handle exposed so variant image swap can reload it) ──
+        window.productLightbox = GLightbox({ selector: ".glightbox", touchNavigation: true, loop: true });
 
         $(".gallery-zoom").on("click", function () {
-            $(".product-gallery-swiper .swiper-slide-active .glightbox").trigger(
-                "click",
-            );
+            $(".product-gallery-swiper .swiper-slide-active .glightbox").trigger("click");
         });
-
     </script>
+
+    @include('partials.product-options-js')
 @endpush

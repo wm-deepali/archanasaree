@@ -343,6 +343,18 @@
             box-shadow: 0 0 0 3px rgba(48, 61, 137, .12);
         }
 
+        /* ── Rich text editor (size chart) ──────────────────────── */
+        .note-editor.note-frame {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            box-shadow: none;
+        }
+
+        .note-editor .note-toolbar {
+            background: #fafafa;
+            border-bottom: 1px solid var(--border);
+        }
+
         /* ── Action bar (sticky bottom) ─────────────────────────── */
         .action-bar {
             background: var(--surface);
@@ -363,6 +375,8 @@
             }
         }
     </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.css">
 
     <div class="app-content content container-fluid">
         <div class="create-page">
@@ -439,6 +453,20 @@
                             </div>
                         </div>
 
+                        <!-- Size Chart -->
+                        <div class="section-card">
+                            <div class="section-card-header">
+                                <h5>Size Chart</h5>
+                            </div>
+                            <div class="section-card-body">
+                                <div class="field-group">
+                                    <textarea name="size_chart" id="size_chart" class="field-textarea"></textarea>
+                                    <div class="field-hint">Add a table or text with measurements. Shown to customers on
+                                        products in this category.</div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- SEO -->
                         <div class="section-card">
                             <div class="section-card-header">
@@ -489,41 +517,8 @@
                                         </button>
                                     </div>
                                 </div>
-
-                                <div style="margin-top:20px;border-top:1px solid #e5e5e5;padding-top:20px">
-
-                                    <label class="field-label">Size Chart Image</label>
-
-                                    <div class="file-upload-area" id="sizeChartUploadArea">
-                                        <input type="file" name="size_chart_image" accept="image/*" id="sizeChartInput">
-
-                                        <div class="upload-icon">
-                                            <i class="fa fa-table"></i>
-                                        </div>
-
-                                        <p>Upload Size Chart</p>
-                                        <small>PNG, JPG, WEBP</small>
-                                    </div>
-
-                                    <div id="sizeChartPreview" style="display:none;margin-top:12px;text-align:center">
-
-                                        <img id="sizeChartPreviewImg" src=""
-                                            style="max-width:100%;border-radius:8px;border:1px solid #ddd;">
-
-                                        <div style="margin-top:8px">
-                                            <button type="button" onclick="clearSizeChart()"
-                                                style="font-size:12px;color:red;background:none;border:none;cursor:pointer;">
-                                                <i class="fa fa-times"></i> Remove
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                </div>
-
                             </div>
                         </div>
-
-
 
                         <!-- Settings -->
                         <div class="section-card">
@@ -600,7 +595,22 @@
 
 @include('admin.footer')
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.js"></script>
 <script>
+    // Size chart rich text editor
+    $('#size_chart').summernote({
+        height: 280,
+        placeholder: 'Add size chart table or measurements…',
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link']],
+            ['view', ['codeview']]
+        ]
+    });
+
     // Auto-generate slug from name
     let manualSlug = false;
 
@@ -634,34 +644,4 @@
         document.getElementById('imagePreview').style.display = 'none';
         document.getElementById('uploadArea').style.display = 'block';
     }
-
-    document.getElementById('sizeChartInput').addEventListener('change', function () {
-
-        const file = this.files[0];
-
-        if (!file) return;
-
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-
-            document.getElementById('sizeChartPreviewImg').src = e.target.result;
-
-            document.getElementById('sizeChartPreview').style.display = 'block';
-
-            document.getElementById('sizeChartUploadArea').style.display = 'none';
-        };
-
-        reader.readAsDataURL(file);
-    });
-
-    function clearSizeChart() {
-
-        document.getElementById('sizeChartInput').value = '';
-
-        document.getElementById('sizeChartPreview').style.display = 'none';
-
-        document.getElementById('sizeChartUploadArea').style.display = 'block';
-    }
-
 </script>
