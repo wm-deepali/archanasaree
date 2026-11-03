@@ -51,7 +51,8 @@
               <div class="co-row">
                 <h2 class="co-title"><span class="num">1</span> Contact</h2>
                 @if (!$customer)
-                  <p class="co-aside">Have an account? <a href="{{ route('user.login', ['redirect' => url()->current()]) }}">Log in</a></p>
+                  <p class="co-aside">Have an account? <a
+                      href="{{ route('user.login', ['redirect' => url()->current()]) }}">Log in</a></p>
                 @endif
               </div>
               <div class="fields">
@@ -514,8 +515,7 @@
               <label for="coLoginId">Email or Mobile Number</label>
             </div>
             <div class="form-group">
-              <input type="password" id="coLoginPass" name="password" placeholder=" "
-                autocomplete="current-password" />
+              <input type="password" id="coLoginPass" name="password" placeholder=" " autocomplete="current-password" />
               <label for="coLoginPass">Password</label>
             </div>
             <button type="submit" class="btn btn-primary pop-submit">Login &amp; Continue</button>
@@ -555,8 +555,8 @@
                 <label for="coRegMobile">Mobile Number</label>
               </div>
               <div class="form-group">
-                <input type="tel" id="coRegAlt" name="alternate_mobile" placeholder=" " inputmode="numeric"
-                  maxlength="10" autocomplete="off" />
+                <input type="tel" id="coRegAlt" name="alternate_mobile" placeholder=" " inputmode="numeric" maxlength="10"
+                  autocomplete="off" />
                 <label for="coRegAlt">Alternate (optional)</label>
               </div>
             </div>
@@ -610,6 +610,7 @@
         RZP_OK_URL = @json(route('checkout.razorpay.success')),
         LOGIN_URL = @json(route('checkout.ajax-login')),
         REGISTER_URL = @json(route('checkout.ajax-register')),
+        TRACK_URL = @json(route('checkout.track-step')),
         GOOGLE_URL = @json(route('user.google.login')),
         DEFAULT_ID = @json($selectedId),
         GUEST_SUBTOTAL = @json((float) $summaryItems->sum('total')),
@@ -625,6 +626,11 @@
 
       function showMsg(text, ok) {
         $('#addrMsg').toggleClass('is-ok', !!ok).text(text).show()[0].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+
+      // Fire-and-forget: tracking fail ho to checkout par asar nahi padna chahiye
+      function trackStep(step) {
+        $.post(TRACK_URL, { _token: CSRF, step: step });
       }
 
       function failText(xhr) {
@@ -829,6 +835,7 @@
         if (IS_GUEST) {
           pendingOrder = order.data;
           $('#addrMsg').hide();
+          trackStep('login_prompt');
           openAuthModal();
           return;
         }

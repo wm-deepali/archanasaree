@@ -64,7 +64,7 @@
     </style>
 
     @php
-        $u = $cart->user;
+        $u = $cart->customer;
         $isGuest = !$u;
         $first = $activities->first();
         $last = $activities->last();

@@ -4,23 +4,23 @@ namespace App\Traits;
 
 use App\Models\Cart;
 use App\Models\Order;
-use App\Models\Setting;  
+use App\Models\Setting;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Services\Tracking\CartTracker;
 
 trait FinalizesOrderPayment
 {
-
-
     protected function sendOrderEmails(Order $order): void
     {
         $order->loadMissing([
-    'items.product',
-    'items.addons',
-    'items.imageVariant',
-    'items.skuVariant',
-    'state',
-    'city',
-]);
+            'items.product',
+            'items.addons',
+            'items.imageVariant',
+            'items.skuVariant',
+            'state',
+            'city',
+        ]);
 
         /*
          |--------------------------------------------------------------------------
@@ -31,7 +31,7 @@ trait FinalizesOrderPayment
 
         foreach ($order->items as $item) {
 
-            // Thumbnail: image variant > product default image > null (matches admin blade)
+            // Thumbnail: image variant > product default image > null
             $thumb = null;
             if ($item->imageVariant && $item->imageVariant->image) {
                 $thumb = asset('storage/' . $item->imageVariant->image);
@@ -43,7 +43,7 @@ trait FinalizesOrderPayment
                 ? "<img src='{$thumb}' alt='{$item->product_name}' style='width:56px;height:56px;object-fit:cover;border-radius:4px;border:1px solid #d0d8d7;display:block;'>"
                 : "<span style='display:block;width:56px;height:56px;background:#e8efee;border-radius:4px;border:1px solid #d0d8d7;'></span>";
 
-            // Variant label from selected_attributes snapshot (same logic as admin blade)
+            // Variant label from selected_attributes snapshot
             $variantLabel = null;
             if (!empty($item->selected_attributes)) {
                 $variantLabel = collect($item->selected_attributes)
@@ -68,9 +68,22 @@ trait FinalizesOrderPayment
                 ? "<div style='font-size:11px;color:#7a9e9c;'>SKU: {$sku}</div>"
                 : '';
 
-            // Addons — list each one and fold into the line total
-            $addonsTotal = $item->addons->sum('price');
-            $lineTotal = ($item->price * $item->quantity) + $addonsTotal;
+            // Custom colour code + per-unit dye charge (snapshot from order item)
+            $dyeCharge = (float) $item->dye_charge;
+
+            $colourHtml = '';
+            if ($item->custom_colour_code) {
+                $colourHtml = "<div style='font-size:11px;color:#7a9e9c;'>Custom Colour Code: " . e($item->custom_colour_code);
+
+                if ($dyeCharge > 0) {
+                    $colourHtml .= " (+₹" . number_format($dyeCharge, 2) . "/pc dye charge)";
+                }
+
+                $colourHtml .= "</div>";
+            }
+
+            // order_items.total already = qty × (price + addons + dye)
+            $lineTotal = $item->total;
 
             $addonsHtml = '';
             if ($item->addons->isNotEmpty()) {
@@ -88,6 +101,7 @@ trait FinalizesOrderPayment
             <div style='font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:3px;'>{$item->product_name}</div>
             {$variantHtml}
             {$skuHtml}
+            {$colourHtml}
             <div style='font-size:11px;color:#7a9e9c;'>Qty: {$item->quantity}</div>
             {$addonsHtml}
         </div>
@@ -97,6 +111,7 @@ trait FinalizesOrderPayment
     </div>
 ";
         }
+
         /*
         |--------------------------------------------------------------------------
         | Order Summary HTML
@@ -184,6 +199,7 @@ trait FinalizesOrderPayment
             </div>
         </div>
     ";
+
         /*
         |--------------------------------------------------------------------------
         | Shipping Address HTML
@@ -211,7 +227,6 @@ trait FinalizesOrderPayment
         |--------------------------------------------------------------------------
         */
         $variables = [
-
             '{customer_name}' => $order->customer_name,
 
             '{order_number}' => $order->order_number,
@@ -229,11 +244,7 @@ trait FinalizesOrderPayment
             '{shipping_address}' => $shippingAddress,
         ];
 
-        /*
-        |--------------------------------------------------------------------------
-        | Customer - Order Confirmed
-        |--------------------------------------------------------------------------
-        */
+        // Customer - Order Confirmed
         \App\Services\Email\EmailDispatcher::send(
             'order-confirmed',
             $order->customer_email,
@@ -241,11 +252,7 @@ trait FinalizesOrderPayment
             $order->customer_name
         );
 
-        /*
-        |--------------------------------------------------------------------------
-        | Customer - Payment Received
-        |--------------------------------------------------------------------------
-        */
+        // Customer - Payment Received
         if ($order->payment_status === 'paid') {
 
             \App\Services\Email\EmailDispatcher::send(
@@ -260,11 +267,7 @@ trait FinalizesOrderPayment
             );
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Admin - New Order Alert
-        |--------------------------------------------------------------------------
-        */
+        // Admin - New Order Alert
         $adminEmail = Setting::first()?->admin_email;
 
         if ($adminEmail) {
@@ -298,11 +301,11 @@ trait FinalizesOrderPayment
                     $product,
                     $item->quantity,
                     'order',
-                    $order,               // reference — links history entry to this order
-                    null,                 // no admin user, this is a customer action
-                    null,                 // no note
-                    true,                 // allowNegative: true so an order never fails due to stock race
-                    $item->stockVariant   // null if this item has no stock-type variant → falls back to product stock
+                    $order,
+                    null,
+                    null,
+                    true,                 // allowNegative: order should never fail due to stock race
+                    $item->stockVariant
                 );
             } catch (\Exception $e) {
                 // Log but don't block the order — stock can be corrected manually
@@ -324,14 +327,20 @@ trait FinalizesOrderPayment
      * Marks a Razorpay order as paid. Safe to call from both the browser
      * callback and the webhook. Returns the Order if THIS call processed it,
      * or null if it was already paid.
+     *
+     * $request is passed only from the browser callback (for Meta CAPI ip/UA/fbp/fbc).
+     * From the webhook it stays null.
      */
     protected function finalizeRazorpayPayment(
         int $orderId,
         string $paymentId,
         ?string $signature,
         string $triggeredBy,
-        ?int $customerId = null
+        ?int $customerId = null,
+        ?Request $request = null
     ): ?Order {
+        $cart = null;
+
         DB::beginTransaction();
 
         try {
@@ -388,7 +397,8 @@ trait FinalizesOrderPayment
                 app(\App\Services\InvoiceService::class)->createIfAuto($order);
             }
 
-            $cart = Cart::where('user_id', $order->customer_id)->first();
+            // Clear cart (customer_id, same as CheckoutController)
+            $cart = Cart::where('customer_id', $order->customer_id)->first();
             if ($cart) {
                 $cart->items()->delete();
                 $cart->delete();
@@ -415,7 +425,31 @@ trait FinalizesOrderPayment
             throw $e;
         }
 
-               try {
+        /* Post-commit side effects: none of these should fail the payment */
+
+        try {
+            CartTracker::track('order_placed', $cart, [
+                'order_number' => $order->order_number,
+                'method' => 'razorpay',
+                'amount' => (float) $order->grand_total,
+            ]);
+        } catch (\Throwable $e) {
+            \Log::warning("CartTracker failed for order {$order->id}: " . $e->getMessage());
+        }
+
+        try {
+            \App\Jobs\SendMetaCapiPurchase::dispatchAfterResponse(
+                $order->id,
+                $request?->ip(),
+                $request?->userAgent(),
+                $request?->cookie('_fbp'),
+                $request?->cookie('_fbc'),
+            );
+        } catch (\Throwable $e) {
+            \Log::warning("Meta CAPI dispatch failed for order {$order->id}: " . $e->getMessage());
+        }
+
+        try {
             $this->sendOrderEmails($order);
         } catch (\Throwable $e) {
             \Log::warning("Order emails failed for order {$order->id}: " . $e->getMessage());
@@ -423,5 +457,4 @@ trait FinalizesOrderPayment
 
         return $order;
     }
-
 }

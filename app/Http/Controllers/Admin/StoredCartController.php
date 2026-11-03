@@ -21,7 +21,7 @@ class StoredCartController extends Controller
         $totalCartValue = $this->statsQuery()->sum('grand_total');
         $avgCartValue = $totalCarts > 0 ? $totalCartValue / $totalCarts : 0;
         $abandonedToday = $this->statsQuery()->whereDate('updated_at', today())->count();
-        $guestCarts = $this->statsQuery()->whereNull('user_id')->count();
+        $guestCarts = $this->statsQuery()->whereNull('customer_id')->count();
 
         $carts = $query->paginate(25)->withQueryString();
 
@@ -45,7 +45,7 @@ class StoredCartController extends Controller
     public function show(Cart $cart)
     {
         $cart->load([
-            'user',
+            'customer',
             'items.product',
             'items.imageVariant',
             'items.skuVariant',
@@ -120,9 +120,9 @@ class StoredCartController extends Controller
 
                     fputcsv($handle, [
                         $cart->id,
-                        $cart->user?->name ?? 'Guest',
-                        $cart->user?->email ?? '',
-                        $cart->user?->mobile ?? '',
+                        $cart->customer?->name ?? 'Guest',
+                        $cart->customer?->email ?? '',
+                        $cart->customer?->mobile ?? '',
                         $itemCount,
                         $totalQty,
                         number_format($cart->subtotal, 2, '.', ''),
@@ -167,7 +167,7 @@ class StoredCartController extends Controller
 
     private function baseQuery()
     {
-        return Cart::with(['user', 'items.product', 'items.imageVariant', 'items.skuVariant', 'items.addons'])
+        return Cart::with(['customer', 'items.product', 'items.imageVariant', 'items.skuVariant', 'items.addons'])
             ->where(fn($q) => $q->where('grand_total', '>', 0)
                 ->orWhere('total_amount', '>', 0));
     }
@@ -176,7 +176,7 @@ class StoredCartController extends Controller
     {
         if ($search = $request->input('search')) {
             $query->whereHas(
-                'user',
+                'customer',
                 fn($q) =>
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")
@@ -185,9 +185,9 @@ class StoredCartController extends Controller
 
         if ($type = $request->input('type')) {
             if ($type === 'guest') {
-                $query->whereNull('user_id');
+                $query->whereNull('customer_id');
             } elseif ($type === 'customer') {
-                $query->whereNotNull('user_id');
+                $query->whereNotNull('customer_id');
             }
         }
 

@@ -47,7 +47,7 @@ class RazorpayWebhookController extends Controller
             switch ($event) {
                 case 'payment.captured':
                 case 'order.paid':
-                    // Amount must match what we asked Razorpay to charge
+                    // Amount must match what we asked Razorpay to charge (same formula as placeOrder)
                     if (isset($payment['amount']) && (int) $payment['amount'] !== (int) round($order->grand_total * 100)) {
                         \Log::warning("Razorpay webhook: amount mismatch for order {$order->id}");
                         $this->logPayment([
@@ -58,11 +58,14 @@ class RazorpayWebhookController extends Controller
                             'amount' => ($payment['amount'] ?? 0) / 100,
                             'method' => $payment['method'] ?? null,
                             'status' => 'failed',
+                            'customer_name' => $order->customer_name,
+                            'customer_email' => $order->customer_email,
                             'error_message' => 'Webhook amount mismatch',
                         ]);
                         break;
                     }
 
+                    // Idempotent: returns null if the browser callback already processed it
                     $this->finalizeRazorpayPayment(
                         $order->id,
                         $payment['id'] ?? '',
@@ -73,6 +76,8 @@ class RazorpayWebhookController extends Controller
 
                 case 'payment.failed':
                     if ($order->payment_status !== 'paid') {
+                        $errorCode = $payment['error_code'] ?? null;
+
                         $this->logPayment([
                             'order_id' => $order->id,
                             'order_number' => $order->order_number,
@@ -84,7 +89,7 @@ class RazorpayWebhookController extends Controller
                             'customer_name' => $order->customer_name,
                             'customer_email' => $order->customer_email,
                             'error_message' => $payment['error_description'] ?? 'Payment failed',
-                            'meta' => $payment['error_code'] ?? null ? ['error_code' => $payment['error_code']] : null,
+                            'meta' => $errorCode ? ['error_code' => $errorCode] : null,
                         ]);
                     }
                     break;

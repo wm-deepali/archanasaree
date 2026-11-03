@@ -262,7 +262,7 @@
                                     $itemNames = $items->map(fn($i) => optional($i->product)->name ?? 'Unknown')->implode(', ');
 
                                     // Customer info (with fallbacks for different column names)
-                                    $u = $cart->user;
+                                    $u = $cart->customer;
                                     $custName = $u?->name
                                         ?: trim(($u?->first_name ?? '') . ' ' . ($u?->last_name ?? ''));
                                     $custName = $custName ?: '—';
@@ -400,8 +400,8 @@ if (!$u) {
 </td>
                                     <td>
                                         <div style="display:flex;gap:6px">
-                                            @if($cart->user_id)
-                                                <a href="{{ route('admin.customers.show', $cart->user_id) }}"
+                                            @if($cart->customer_id)
+                                                <a href="{{ route('admin.customers.show', $cart->customer_id) }}"
                                                     class="action-btn view" title="View Customer">
                                                     <i class="fa fa-user"></i>
                                                 </a>
