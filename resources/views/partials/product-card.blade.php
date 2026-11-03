@@ -1,10 +1,10 @@
 @php
-    $img    = $product->images->firstWhere('is_default', 1) ?? $product->images->first();
+    $img = $product->images->firstWhere('is_default', 1) ?? $product->images->first();
     $imgSrc = $img ? asset('storage/' . ($img->thumb ?? $img->image)) : asset('assets/images/home/tab1.png');
-    $off    = $product->mrp > $product->price
-                ? round((($product->mrp - $product->price) / $product->mrp) * 100) : 0;
-    $badge  = $product->collections->first()?->name;
-    $url    = route('products.show', ['slug' => $product->slug]);
+    $off = $product->mrp > $product->price
+        ? round((($product->mrp - $product->price) / $product->mrp) * 100) : 0;
+    $badge = $product->collections->first()?->name;
+    $url = route('products.show', ['slug' => $product->slug]);
 @endphp
 <div class="prod_cart">
     <div class="prod-img">
@@ -39,8 +39,8 @@
             @endif
         </div>
         <div class="prod-btns">
-            <button data-model=".cart-pop" data-id="{{ $product->id }}" type="button"
-                class="btn btn-outline-primary prod-cta">Add to Cart</button>
+            <button type="button" class="btn btn-outline-primary prod-cta js-card-add" data-id="{{ $product->id }}">Add
+                to Cart</button>
             <a href="{{ $url }}" class="btn btn-primary prod-cta">Buy Now</a>
         </div>
     </div>

@@ -91,18 +91,23 @@ class CartController extends Controller
         // Listing-page add (no variant ids sent): pick a default in-stock combination
         if (!$request->filled('stock_variant_id') && $product->variants->isNotEmpty()) {
 
-            $stockVariants = $product->variants->where('type', 'stock');
+            $usable = fn($v) => $v->status && $v->is_available !== false;
 
-            $defaultStockVariant = $stockVariants->firstWhere('stock', '>', 0)
-                ?? $stockVariants->first();
+            $stockVariants = $product->variants->where('type', 'stock')->filter($usable);
 
-            if ($defaultStockVariant) {
+            if ($stockVariants->isNotEmpty()) {
+
+                $defaultStockVariant = $stockVariants->first(fn($v) => $v->stock >= $minQty);
+
+                if (!$defaultStockVariant) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Product is out of stock.'
+                    ], 422);
+                }
 
                 $defaultValueIds = $defaultStockVariant->values
-                    ->pluck('attribute_value_id')
-                    ->sort()
-                    ->values()
-                    ->toArray();
+                    ->pluck('attribute_value_id')->map(fn($i) => (int) $i)->sort()->values()->all();
 
                 $request->merge([
                     'stock_variant_id' => $defaultStockVariant->id,
@@ -110,17 +115,17 @@ class CartController extends Controller
                 ]);
 
                 foreach (['price', 'image', 'sku'] as $type) {
-
+                    // a variant of this type applies if ALL its values are inside the default selection;
+                    // prefer the most specific one (most values)
                     $match = $product->variants
                         ->where('type', $type)
-                        ->first(function ($variant) use ($defaultValueIds) {
-                            $ids = $variant->values
-                                ->pluck('attribute_value_id')
-                                ->sort()
-                                ->values()
-                                ->toArray();
-                            return $ids === $defaultValueIds;
-                        });
+                        ->filter($usable)
+                        ->filter(function ($variant) use ($defaultValueIds) {
+                            $ids = $variant->values->pluck('attribute_value_id')->map(fn($i) => (int) $i)->all();
+                            return $ids && empty(array_diff($ids, $defaultValueIds));
+                        })
+                        ->sortByDesc(fn($v) => $v->values->count())
+                        ->first();
 
                     if ($match) {
                         $request->merge([$type . '_variant_id' => $match->id]);

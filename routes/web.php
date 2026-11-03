@@ -70,6 +70,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CustomerAuthController;
 use App\Http\Controllers\ProductReviewController;
+use App\Http\Controllers\UserDashboardController;
 
 Route::middleware('maintenance.mode')->group(function () {
 
@@ -124,6 +125,12 @@ Route::middleware('maintenance.mode')->group(function () {
         Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place-order');
         Route::post('/payment/razorpay/success', [CheckoutController::class, 'razorpaySuccess'])->name('checkout.razorpay.success');
         Route::get('/order-success/{order}', [CheckoutController::class, 'orderSuccess'])->name('order.success');
+        Route::get('/user/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard.index');
+        Route::get('/my-orders/{order}/invoice', [UserDashboardController::class, 'invoiceDownload'])->name('account.orders.invoice');
+        Route::post('/profile/update', [UserDashboardController::class, 'updateProfile'])->name('account.profile.update');
+        Route::post('/profile/address', [UserDashboardController::class, 'storeAddress'])->name('account.address.store');
+        Route::put('/profile/address/{address}', [UserDashboardController::class, 'updateAddress'])->name('account.address.update');
+        Route::delete('/profile/address/{address}', [UserDashboardController::class, 'deleteAddress'])->name('account.address.delete');
         Route::post('/user/logout', [CustomerAuthController::class, 'logout'])->name('user.logout');
     });
 

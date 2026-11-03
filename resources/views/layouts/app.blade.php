@@ -1047,6 +1047,7 @@
     </script>
   @endif
 
+  @include('partials.card-cart-js')
   @stack('scripts')
 
 </body>

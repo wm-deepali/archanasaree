@@ -1,0 +1,2435 @@
+@import '../_var'
+
+$success: #2e7d32
+$success-bg: rgba(46, 125, 50, 0.07)
+$danger: #c62828
+$danger-bg: rgba(198, 40, 40, 0.07)
+$info: #1d4ed8
+$info-bg: rgba(29, 78, 216, 0.08)
+$warn: #b7791f
+$warn-bg: rgba(183, 121, 31, 0.12)
+
+.dash-secA
+  margin-top: calc(var(--headerheight) + 50px)
+
+  @include media(1280)
+    margin-top: calc(var(--headerheight) + 46px)
+
+  @include media(1024)
+    margin-top: calc(var(--headerheight) + 40px)
+
+  @include media(991)
+    margin-top: calc(var(--headerheight) + 36px)
+
+  @include media(768)
+    margin-top: calc(var(--headerheight) + 30px)
+
+  @include media(540)
+    margin-top: calc(var(--headerheight) + 24px)
+
+  padding-bottom: 70px
+
+  @include media(1280)
+    padding-bottom: 66px
+
+  @include media(1024)
+    padding-bottom: 60px
+
+  @include media(991)
+    padding-bottom: 56px
+
+  @include media(768)
+    padding-bottom: 50px
+
+  @include media(540)
+    padding-bottom: 40px
+
+  .breadcrumb
+    display: flex
+    align-items: center
+    flex-wrap: wrap
+    gap: 10px
+
+    @include media(540)
+      gap: 6px
+
+    margin-bottom: 26px
+
+    @include media(1024)
+      margin-bottom: 24px
+
+    @include media(768)
+      justify-content: center
+      margin-bottom: 20px
+
+    @include media(540)
+      margin-bottom: 16px
+
+    color: var(--text)
+    font-size: 13px
+
+    @include media(768)
+      font-size: 12px
+
+    @include media(540)
+      font-size: 11px
+
+    a
+      color: var(--text)
+      transition: color 0.3s ease
+
+      &:hover
+        color: var(--primary)
+
+    i
+      font-size: 10px
+
+    .current
+      color: var(--black)
+      font-weight: 600
+
+  .dash-layout
+    display: grid
+    grid-template-columns: 290px minmax(0, 1fr)
+
+    @include media(1280)
+      grid-template-columns: 260px minmax(0, 1fr)
+
+    @include media(1024)
+      grid-template-columns: minmax(0, 1fr)
+
+    grid-template-areas: "user main" "nav main" "logout main" "rest main"
+
+    @include media(1024)
+      grid-template-areas: "user" "nav" "main" "logout"
+
+    grid-template-rows: auto auto auto 1fr
+
+    @include media(1024)
+      grid-template-rows: auto
+
+    column-gap: 30px
+
+    @include media(1280)
+      column-gap: 24px
+
+    align-items: start
+
+  .user-card
+    grid-area: user
+    display: flex
+    align-items: center
+
+    @include media(768)
+      justify-content: center
+
+    gap: 14px
+
+    @include media(1280)
+      gap: 12px
+
+    padding: 22px
+
+    @include media(1280)
+      padding: 20px
+
+    @include media(768)
+      padding: 18px
+
+    @include media(540)
+      padding: 16px
+
+    border: 1px solid var(--gray)
+    border-bottom: 0
+    background: var(--white)
+
+    .meta
+      min-width: 0
+
+      @include media(768)
+        text-align: center
+
+      h4
+        margin: 0 0 3px
+        overflow: hidden
+        color: var(--black)
+        font-size: 16px
+
+        @include media(768)
+          font-size: 15px
+
+        @include media(540)
+          font-size: 14px
+
+        font-weight: 600
+        text-overflow: ellipsis
+        white-space: nowrap
+
+      p
+        margin: 0
+        overflow: hidden
+        color: var(--text)
+        font-size: 13px
+
+        @include media(768)
+          font-size: 12px
+
+        @include media(540)
+          font-size: 11px
+
+        text-overflow: ellipsis
+        white-space: nowrap
+
+  .avatar
+    display: grid
+    place-items: center
+    flex-shrink: 0
+    width: 56px
+    height: 56px
+
+    @include media(768)
+      width: 52px
+      height: 52px
+
+    @include media(540)
+      width: 46px
+      height: 46px
+
+    overflow: hidden
+    border: 1px solid var(--gray)
+    border-radius: 50%
+    background: var(--bg)
+    color: var(--primary)
+    font-size: 22px
+
+    @include media(768)
+      font-size: 20px
+
+    @include media(540)
+      font-size: 18px
+
+    font-weight: 600
+    line-height: 1
+    text-transform: uppercase
+
+    img
+      display: block
+      width: 100%
+      height: 100%
+      object-fit: cover
+
+    &.lg
+      width: 84px
+      height: 84px
+      font-size: 32px
+
+      @include media(1024)
+        width: 78px
+        height: 78px
+        font-size: 30px
+
+      @include media(768)
+        width: 72px
+        height: 72px
+        font-size: 28px
+
+      @include media(540)
+        width: 62px
+        height: 62px
+        font-size: 24px
+
+  .tab-nav
+    grid-area: nav
+    display: grid
+    gap: 4px
+    margin: 0
+    padding: 12px
+
+    @include media(540)
+      padding: 10px
+
+    border: 1px solid var(--gray)
+    border-bottom: 0
+    background: var(--white)
+    list-style: none
+
+    @include media(1024)
+      display: flex
+      flex-wrap: nowrap
+      gap: 8px
+      max-width: 100%
+      overflow-x: auto
+      border-bottom: 1px solid var(--gray)
+      scrollbar-width: none
+
+      &::-webkit-scrollbar
+        display: none
+
+    li
+      display: flex
+      align-items: center
+
+      @include media(768)
+        justify-content: center
+
+      gap: 12px
+
+      @include media(1280)
+        gap: 10px
+
+      @include media(540)
+        gap: 8px
+
+      padding: 12px 14px
+
+      @include media(1280)
+        padding: 11px 12px
+
+      @include media(1024)
+        padding: 10px 16px
+
+      @include media(768)
+        padding: 10px 14px
+
+      @include media(540)
+        padding: 9px 12px
+
+      border: 1px solid transparent
+
+      @include media(1024)
+        border-color: var(--gray)
+
+      color: var(--text)
+      font-size: 13px
+
+      @include media(1024)
+        font-size: 12px
+
+      @include media(540)
+        font-size: 11px
+
+      font-weight: 500
+      text-transform: uppercase
+      letter-spacing: 0.1em
+
+      @include media(1280)
+        letter-spacing: 0.06em
+
+      cursor: pointer
+      transition: all 0.3s ease
+
+      @include media(1024)
+        flex: none
+        white-space: nowrap
+
+      i
+        width: 18px
+        font-size: 14px
+
+        @include media(540)
+          width: 14px
+          font-size: 12px
+
+        text-align: center
+
+      .count
+        min-width: 22px
+        height: 22px
+        margin-left: auto
+
+        @include media(1024)
+          margin-left: 4px
+
+        padding: 0 6px
+        border-radius: 999px
+        background: var(--bg)
+        color: var(--black)
+        font-size: 11px
+
+        @include media(540)
+          font-size: 10px
+
+        font-weight: 600
+        letter-spacing: 0
+        line-height: 22px
+        text-align: center
+
+      &:hover
+        background: var(--bg)
+        color: var(--primary)
+
+      &.active
+        border-color: var(--primary)
+        background: var(--primary)
+        color: var(--white)
+
+        .count
+          background: rgba(255, 255, 255, 0.22)
+          color: var(--white)
+
+  .logout-btn
+    grid-area: logout
+    display: flex
+    align-items: center
+
+    @include media(768)
+      justify-content: center
+
+    gap: 12px
+    padding: 16px 26px
+
+    @include media(768)
+      padding: 15px 20px
+
+    @include media(540)
+      width: 100%
+      padding: 14px 16px
+
+    border: 1px solid var(--gray)
+    background: var(--white)
+    color: $danger
+    font-size: 13px
+
+    @include media(540)
+      font-size: 12px
+
+    font-weight: 600
+    text-transform: uppercase
+    letter-spacing: 0.12em
+    transition: background 0.3s ease
+
+    @include media(1024)
+      margin-top: 24px
+
+    @include media(540)
+      margin-top: 18px
+
+    i
+      width: 18px
+      font-size: 14px
+      text-align: center
+
+    &:hover
+      background: $danger-bg
+
+  .tab-nav-content
+    grid-area: main
+    min-width: 0
+
+    @include media(1024)
+      margin-top: 24px
+
+    @include media(540)
+      margin-top: 18px
+
+    .tabs
+      display: none
+      min-width: 0
+
+      &.active
+        display: block
+        animation: dashTabFade 0.35s ease
+
+  .dash-panel
+    min-width: 0
+    margin-bottom: 22px
+
+    @include media(540)
+      margin-bottom: 18px
+
+    padding: 26px 28px 30px
+
+    @include media(1280)
+      padding: 24px 24px 28px
+
+    @include media(1024)
+      padding: 22px 20px 26px
+
+    @include media(768)
+      padding: 20px 18px 24px
+
+    @include media(540)
+      padding: 18px 16px 22px
+
+    border: 1px solid var(--gray)
+    background: var(--white)
+
+  .panel-head
+    display: flex
+    align-items: center
+    justify-content: space-between
+
+    @include media(768)
+      justify-content: center
+      text-align: center
+
+    gap: 16px
+
+    @include media(540)
+      gap: 10px
+
+    margin-bottom: 22px
+
+    @include media(540)
+      margin-bottom: 16px
+
+    padding-bottom: 16px
+
+    @include media(540)
+      padding-bottom: 12px
+
+    border-bottom: 1px solid var(--gray)
+
+    @include media(540)
+      flex-wrap: wrap
+
+    h3
+      display: flex
+      align-items: center
+
+      @include media(768)
+        justify-content: center
+
+      gap: 12px
+
+      @include media(540)
+        gap: 10px
+
+      margin: 0
+      color: var(--black)
+      font-size: 13px
+
+      @include media(540)
+        font-size: 12px
+
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.16em
+
+      @include media(540)
+        letter-spacing: 0.12em
+
+      i
+        color: var(--primary)
+        font-size: 15px
+
+        @include media(540)
+          font-size: 14px
+
+      .muted
+        color: var(--text)
+        font-size: 12px
+
+        @include media(540)
+          font-size: 11px
+
+        font-weight: 400
+        text-transform: none
+        letter-spacing: 0
+
+  .panel-link
+    display: inline-flex
+    align-items: center
+    gap: 10px
+    padding-bottom: 6px
+    border-bottom: 1px solid var(--black)
+    color: var(--black)
+    font-size: 11px
+
+    @include media(540)
+      font-size: 10px
+
+    font-weight: 500
+    text-transform: uppercase
+    letter-spacing: 0.16em
+
+    @include media(540)
+      letter-spacing: 0.1em
+
+    cursor: pointer
+    transition: all 0.3s ease
+
+    i
+      font-size: 12px
+      transition: transform 0.3s ease
+
+    &:hover
+      border-color: var(--primary)
+      color: var(--primary)
+
+      i
+        transform: translateX(4px)
+
+  .btn-sm
+    min-height: 40px
+
+    @include media(768)
+      min-height: 38px
+
+    @include media(540)
+      min-height: 36px
+
+    padding: 0 18px
+
+    @include media(768)
+      padding: 0 14px
+
+    @include media(540)
+      padding: 0 12px
+
+    font-size: 12px
+
+    @include media(540)
+      font-size: 11px
+
+    cursor: pointer
+
+    i
+      margin-right: 6px
+
+    &:hover
+      span
+        color: var(--white)
+
+  .status
+    display: inline-flex
+    align-items: center
+    gap: 7px
+    padding: 6px 12px
+
+    @include media(540)
+      padding: 5px 10px
+
+    border-radius: 999px
+    font-size: 12px
+
+    @include media(768)
+      font-size: 11px
+
+    @include media(540)
+      font-size: 10px
+
+    font-weight: 600
+    line-height: 1.2
+    white-space: nowrap
+
+    &::before
+      content: ""
+      width: 6px
+      height: 6px
+      border-radius: 50%
+      background: currentColor
+
+    &.processing
+      background: $warn-bg
+      color: $warn
+
+    &.shipped
+      background: $info-bg
+      color: $info
+
+    &.processing { background:#fff5cc; color:#916a00; }
+
+    &.delivered
+      background: $success-bg
+      color: $success
+
+    &.cancelled
+      background: $danger-bg
+      color: $danger
+
+  .empty-state
+    padding: 40px 20px
+
+    @include media(768)
+      padding: 34px 16px
+
+    @include media(540)
+      padding: 28px 10px
+
+    text-align: center
+
+    > i
+      margin-bottom: 14px
+      color: var(--primary)
+      font-size: 36px
+
+      @include media(540)
+        font-size: 30px
+
+    h4
+      margin: 0 0 8px
+      color: var(--black)
+      font-size: 20px
+
+      @include media(768)
+        font-size: 18px
+
+      @include media(540)
+        font-size: 17px
+
+    p
+      margin: 0 0 20px
+      color: var(--text)
+      font-size: 14px
+
+      @include media(768)
+        font-size: 13px
+
+      @include media(540)
+        font-size: 12px
+
+    &.wish-empty
+      display: none
+
+  .welcome
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 24px
+    margin-bottom: 22px
+
+    @include media(540)
+      margin-bottom: 18px
+
+    padding: 34px 36px
+
+    @include media(1280)
+      padding: 30px
+
+    @include media(1024)
+      padding: 28px 26px
+
+    @include media(768)
+      padding: 26px 22px
+
+    @include media(540)
+      padding: 22px 16px
+
+    background: var(--primary)
+    color: var(--white)
+
+    @include media(768)
+      align-items: center
+      flex-direction: column
+      gap: 18px
+      text-align: center
+
+    h2
+      margin: 0 0 8px
+      color: var(--white)
+      font-size: 30px
+
+      @include media(1024)
+        font-size: 27px
+
+      @include media(768)
+        font-size: 24px
+
+      @include media(540)
+        font-size: 21px
+
+      line-height: 1.2
+
+    p
+      max-width: 460px
+
+      @include media(768)
+        max-width: 100%
+
+      margin: 0
+      color: rgba(255, 255, 255, 0.88)
+      font-size: 15px
+
+      @include media(768)
+        font-size: 14px
+
+      @include media(540)
+        font-size: 13px
+
+    .btn
+      flex-shrink: 0
+
+      @include media(540)
+        width: 100%
+        justify-content: center
+
+  .stat-grid
+    display: grid
+    grid-template-columns: repeat(4, minmax(0, 1fr))
+
+    @include media(1280)
+      grid-template-columns: repeat(2, minmax(0, 1fr))
+
+    gap: 18px
+
+    @include media(1280)
+      gap: 16px
+
+    @include media(540)
+      gap: 12px
+
+    margin-bottom: 22px
+
+    @include media(540)
+      margin-bottom: 18px
+
+  .stat-card
+    display: flex
+    align-items: center
+    gap: 14px
+
+    @include media(540)
+      gap: 10px
+
+    min-width: 0
+    padding: 20px
+
+    @include media(1024)
+      padding: 18px
+
+    @include media(540)
+      padding: 14px
+
+    border: 1px solid var(--gray)
+    background: var(--bg)
+    transition: border-color 0.3s ease
+
+    @include media(768)
+      flex-direction: column
+      text-align: center
+
+    &:hover
+      border-color: var(--primary)
+
+    .stat-icon
+      display: grid
+      place-items: center
+      flex-shrink: 0
+      width: 46px
+      height: 46px
+
+      @include media(540)
+        width: 38px
+        height: 38px
+
+      border: 1px solid var(--gray)
+      border-radius: 50%
+      background: var(--white)
+      color: var(--primary)
+      font-size: 18px
+
+      @include media(540)
+        font-size: 15px
+
+    strong
+      display: block
+      color: var(--black)
+      font-size: 24px
+
+      @include media(768)
+        font-size: 22px
+
+      @include media(540)
+        font-size: 20px
+
+      font-weight: 600
+      line-height: 1.1
+
+    div > span
+      display: block
+      margin-top: 2px
+      color: var(--text)
+      font-size: 13px
+
+      @include media(768)
+        font-size: 12px
+
+      @include media(540)
+        font-size: 11px
+
+  .recent-list
+    display: grid
+    gap: 12px
+
+    @include media(540)
+      gap: 10px
+
+  .recent-item
+    display: grid
+    grid-template-columns: 56px minmax(0, 1fr) auto auto auto
+
+    @include media(1280)
+      grid-template-columns: 56px minmax(0, 1fr) auto auto
+
+    @include media(768)
+      grid-template-columns: 56px minmax(0, 1fr)
+
+    @include media(540)
+      grid-template-columns: 46px minmax(0, 1fr)
+
+    align-items: center
+    gap: 18px
+
+    @include media(1280)
+      gap: 14px
+
+    @include media(768)
+      gap: 8px 14px
+
+    @include media(540)
+      gap: 6px 12px
+
+    min-width: 0
+    padding: 14px 16px
+
+    @include media(540)
+      padding: 12px
+
+    border: 1px solid var(--gray)
+    transition: border-color 0.3s ease
+
+    @include media(1280)
+      .btn
+        display: none
+
+    @include media(768)
+      .amount,
+      .status
+        grid-column: 2
+        justify-self: start
+
+    &:hover
+      border-color: var(--primary)
+
+    .thumb
+      display: block
+      width: 56px
+
+      @include media(540)
+        width: 46px
+
+      aspect-ratio: 3 / 4
+      overflow: hidden
+      border: 1px solid var(--gray)
+      background: var(--bg)
+
+      @include media(768)
+        grid-row: span 3
+
+      img
+        display: block
+        width: 100%
+        height: 100%
+        object-fit: cover
+        object-position: top center
+
+    .info
+      min-width: 0
+
+      h4
+        margin: 0 0 4px
+        overflow: hidden
+        color: var(--black)
+        font-size: 14px
+
+        @include media(540)
+          font-size: 13px
+
+        font-weight: 500
+        text-overflow: ellipsis
+        white-space: nowrap
+
+      p
+        margin: 0
+        color: var(--text)
+        font-size: 12px
+
+        @include media(540)
+          font-size: 11px
+
+    .amount
+      color: var(--black)
+      font-size: 15px
+
+      @include media(768)
+        font-size: 14px
+
+      @include media(540)
+        font-size: 13px
+
+      font-weight: 600
+
+  .track-form
+    display: grid
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto
+
+    @include media(768)
+      grid-template-columns: minmax(0, 1fr)
+
+    align-items: end
+    gap: 30px
+
+    @include media(991)
+      gap: 20px
+
+    @include media(768)
+      gap: 24px
+
+    @include media(540)
+      gap: 22px
+
+    .btn
+      min-height: 46px
+
+      @include media(540)
+        min-height: 44px
+
+      white-space: nowrap
+      cursor: pointer
+
+      @include media(768)
+        width: 100%
+
+  .shipment
+    .ship-top
+      display: flex
+      align-items: center
+      justify-content: space-between
+      flex-wrap: wrap
+      gap: 14px
+
+      @include media(768)
+        flex-direction: column
+        justify-content: center
+        text-align: center
+
+      margin-bottom: 22px
+
+      @include media(540)
+        margin-bottom: 16px
+
+      h4
+        margin: 0 0 4px
+        color: var(--black)
+        font-size: 20px
+
+        @include media(768)
+          font-size: 18px
+
+        @include media(540)
+          font-size: 16px
+
+        font-weight: 600
+
+      p
+        margin: 0
+        color: var(--text)
+        font-size: 14px
+
+        @include media(768)
+          font-size: 13px
+
+        @include media(540)
+          font-size: 12px
+
+    .ship-meta
+      display: grid
+      grid-template-columns: repeat(4, minmax(0, 1fr))
+
+      @include media(991)
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+
+      @include media(540)
+        grid-template-columns: minmax(0, 1fr)
+
+      gap: 16px
+
+      @include media(1024)
+        gap: 14px
+
+      @include media(540)
+        gap: 12px
+
+      margin-bottom: 36px
+
+      @include media(768)
+        margin-bottom: 30px
+
+      @include media(540)
+        margin-bottom: 24px
+
+      padding: 18px 20px
+
+      @include media(1280)
+        padding: 16px
+
+      @include media(540)
+        padding: 14px
+
+      border: 1px solid var(--gray)
+      background: var(--bg)
+
+      @include media(768)
+        text-align: center
+
+      small
+        display: block
+        margin-bottom: 4px
+        color: var(--text)
+        font-size: 11px
+
+        @include media(540)
+          font-size: 10px
+
+        text-transform: uppercase
+        letter-spacing: 0.12em
+
+      strong
+        display: block
+        color: var(--black)
+        font-size: 14px
+
+        @include media(768)
+          font-size: 13px
+
+        @include media(540)
+          font-size: 12px
+
+        font-weight: 600
+
+    .ship-log
+      margin-top: 36px
+
+      @include media(540)
+        margin-top: 26px
+
+      padding-top: 6px
+      border-top: 1px solid var(--gray)
+
+  .track-steps
+    display: grid
+    grid-template-columns: repeat(6, minmax(0, 1fr))
+
+    @include media(1024)
+      grid-template-columns: minmax(0, 1fr)
+
+    margin: 0
+    padding: 0
+    list-style: none
+
+    li
+      position: relative
+      text-align: center
+
+      @include media(1024)
+        display: flex
+        align-items: center
+        gap: 16px
+        height: 64px
+        text-align: left
+
+      @include media(540)
+        gap: 12px
+        height: 58px
+
+      &::before
+        content: ""
+        position: absolute
+        top: 22px
+        left: -50%
+        width: 100%
+        height: 2px
+        background: var(--gray)
+
+        @include media(1024)
+          top: -50%
+          left: 22px
+          width: 2px
+          height: 100%
+
+        @include media(540)
+          left: 18px
+
+      &:first-child::before
+        display: none
+
+      .dot
+        position: relative
+        z-index: 1
+        display: grid
+        place-items: center
+        width: 46px
+        height: 46px
+
+        @include media(1280)
+          width: 42px
+          height: 42px
+
+        @include media(1024)
+          width: 46px
+          height: 46px
+
+        @include media(540)
+          width: 38px
+          height: 38px
+
+        margin: 0 auto 12px
+
+        @include media(1024)
+          margin: 0
+
+        border: 2px solid var(--gray)
+        border-radius: 50%
+        background: var(--white)
+        color: var(--text)
+        font-size: 16px
+
+        @include media(1280)
+          font-size: 15px
+
+        @include media(540)
+          font-size: 14px
+
+        transition: all 0.3s ease
+
+        @include media(1024)
+          flex-shrink: 0
+
+      h5
+        margin: 0 0 3px
+
+        @include media(1024)
+          margin: 0 0 2px
+
+        color: var(--black)
+        font-size: 12px
+
+        @include media(1280)
+          font-size: 11px
+
+        @include media(1024)
+          font-size: 12px
+
+        @include media(540)
+          font-size: 11px
+
+        font-weight: 600
+        text-transform: uppercase
+        letter-spacing: 0.08em
+
+      .time
+        display: block
+        color: var(--text)
+        font-size: 11px
+
+        @include media(540)
+          font-size: 10px
+
+      &.done
+        &::before
+          background: var(--primary)
+
+        .dot
+          border-color: var(--primary)
+          background: var(--primary)
+          color: var(--white)
+
+      &.current
+        &::before
+          background: var(--primary)
+
+        .dot
+          border-color: var(--primary)
+          color: var(--primary)
+          animation: dashPulse 1.8s infinite
+
+  .timeline
+    margin: 0
+    padding: 0
+    list-style: none
+
+    li
+      position: relative
+      padding: 0 0 22px 38px
+
+      @include media(540)
+        padding: 0 0 18px 30px
+
+      &::before
+        content: ""
+        position: absolute
+        top: 22px
+        bottom: 0
+        left: 9px
+        width: 2px
+        background: var(--gray)
+
+      &:last-child
+        padding-bottom: 0
+
+        &::before
+          display: none
+
+      .dot
+        position: absolute
+        top: 2px
+        left: 0
+        display: grid
+        place-items: center
+        width: 20px
+        height: 20px
+        border: 2px solid var(--gray)
+        border-radius: 50%
+        background: var(--white)
+        color: var(--white)
+        font-size: 10px
+
+      h5
+        margin: 0 0 2px
+        color: var(--black)
+        font-size: 13px
+
+        @include media(540)
+          font-size: 12px
+
+        font-weight: 600
+
+      p
+        margin: 0
+        color: var(--text)
+        font-size: 13px
+
+        @include media(540)
+          font-size: 12px
+
+        line-height: 1.5
+
+      .time
+        display: block
+        margin-top: 3px
+        color: var(--text)
+        font-size: 12px
+
+        @include media(540)
+          font-size: 11px
+
+        opacity: 0.85
+
+      &.done
+        &::before
+          background: var(--primary)
+
+        .dot
+          border-color: var(--primary)
+          background: var(--primary)
+
+      &.current
+        .dot
+          border-color: var(--primary)
+          animation: dashPulse 1.8s infinite
+
+      &.cancel
+        .dot
+          border-color: $danger
+          background: $danger
+
+  .orders-bar
+    margin-bottom: 22px
+
+    @include media(540)
+      margin-bottom: 18px
+
+    .form-group
+      max-width: 340px
+
+      @include media(768)
+        max-width: 100%
+
+  .order-card
+    min-width: 0
+    margin-bottom: 16px
+
+    @include media(540)
+      margin-bottom: 12px
+
+    overflow: hidden
+    border: 1px solid var(--gray)
+    background: var(--white)
+    transition: border-color 0.3s ease
+
+    &:hover,
+    &.open
+      border-color: var(--primary)
+
+    &.open
+      .order-toggle
+        background: var(--primary)
+        color: var(--white)
+
+        i
+          transform: rotate(180deg)
+
+    .order-head
+      display: grid
+      grid-template-columns: minmax(0, 1.4fr) auto auto 40px
+
+      @include media(540)
+        grid-template-columns: minmax(0, 1fr) 36px
+
+      align-items: center
+      gap: 24px
+
+      @include media(1280)
+        gap: 20px
+
+      @include media(991)
+        gap: 16px
+
+      @include media(768)
+        gap: 14px
+
+      @include media(540)
+        gap: 10px 12px
+
+      padding: 18px 20px
+
+      @include media(1280)
+        padding: 16px 18px
+
+      @include media(768)
+        padding: 16px
+
+      @include media(540)
+        padding: 14px
+
+      cursor: pointer
+
+      @include media(540)
+        .oh-id
+          grid-column: 1
+
+        .order-toggle
+          grid-column: 2
+          grid-row: 1
+
+        .oh-total,
+        .oh-status
+          grid-column: 1
+
+      .oh-id
+        min-width: 0
+
+        strong
+          display: block
+          margin-bottom: 3px
+          color: var(--black)
+          font-size: 15px
+
+          @include media(540)
+            font-size: 14px
+
+          font-weight: 600
+
+        span
+          color: var(--text)
+          font-size: 13px
+
+          @include media(540)
+            font-size: 11px
+
+      .oh-total
+        small
+          display: block
+          color: var(--text)
+          font-size: 11px
+
+          @include media(540)
+            font-size: 10px
+
+          text-transform: uppercase
+          letter-spacing: 0.12em
+
+        b
+          color: var(--black)
+          font-size: 16px
+
+          @include media(768)
+            font-size: 15px
+
+          @include media(540)
+            font-size: 14px
+
+          font-weight: 600
+
+    .order-toggle
+      display: grid
+      place-items: center
+      width: 40px
+      height: 40px
+
+      @include media(540)
+        width: 36px
+        height: 36px
+
+      padding: 0
+      border: 1px solid var(--gray)
+      border-radius: 50%
+      background: var(--white)
+      color: var(--black)
+      cursor: pointer
+      transition: all 0.3s ease
+
+      i
+        font-size: 12px
+        transition: transform 0.3s ease
+
+    .order-detail
+      display: none
+      padding: 0 20px 22px
+
+      @include media(1280)
+        padding: 0 18px 20px
+
+      @include media(540)
+        padding: 0 14px 16px
+
+      border-top: 1px solid var(--gray)
+
+  .od-title
+    margin: 22px 0 14px
+
+    @include media(540)
+      margin: 18px 0 10px
+
+    color: var(--text)
+    font-size: 11px
+
+    @include media(540)
+      font-size: 10px
+
+    font-weight: 600
+    text-transform: uppercase
+    letter-spacing: 0.16em
+
+    @include media(540)
+      letter-spacing: 0.12em
+
+  .od-grid
+    display: grid
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr)
+
+    @include media(768)
+      grid-template-columns: minmax(0, 1fr)
+
+    gap: 36px
+
+    @include media(1280)
+      gap: 28px
+
+    @include media(991)
+      gap: 22px
+
+    @include media(768)
+      gap: 8px
+
+  .od-items
+    display: grid
+    gap: 4px
+
+  .od-item
+    display: flex
+    align-items: center
+    gap: 14px
+
+    @include media(540)
+      gap: 10px
+
+    padding: 12px 0
+
+    @include media(540)
+      padding: 10px 0
+
+    border-bottom: 1px solid var(--gray)
+
+    .thumb
+      display: block
+      flex-shrink: 0
+      width: 56px
+
+      @include media(540)
+        width: 48px
+
+      aspect-ratio: 3 / 4
+      overflow: hidden
+      border: 1px solid var(--gray)
+      background: var(--bg)
+
+      img
+        display: block
+        width: 100%
+        height: 100%
+        object-fit: cover
+        object-position: top center
+
+    .od-name
+      flex: 1
+      min-width: 0
+
+      h4
+        margin: 0 0 4px
+        color: var(--black)
+        font-size: 14px
+
+        @include media(768)
+          font-size: 13px
+
+        @include media(540)
+          font-size: 12px
+
+        font-weight: 500
+
+      p
+        margin: 0
+        color: var(--text)
+        font-size: 12px
+
+        @include media(540)
+          font-size: 11px
+
+    strong
+      flex-shrink: 0
+      color: var(--black)
+      font-size: 14px
+
+      @include media(540)
+        font-size: 13px
+
+      font-weight: 600
+
+  .od-summary
+    padding: 16px 18px
+
+    @include media(540)
+      padding: 12px 14px
+
+    border: 1px solid var(--gray)
+    background: var(--bg)
+
+    p
+      display: flex
+      align-items: center
+      justify-content: space-between
+      gap: 16px
+
+      @include media(540)
+        gap: 10px
+
+      margin: 0 0 10px
+      color: var(--text)
+      font-size: 14px
+
+      @include media(768)
+        font-size: 13px
+
+      @include media(540)
+        font-size: 12px
+
+      &:last-child
+        margin-bottom: 0
+
+      .green
+        color: $success
+        font-weight: 600
+
+      &.total
+        margin-top: 12px
+        padding-top: 12px
+        border-top: 1px solid var(--gray)
+        color: var(--black)
+        font-size: 15px
+
+        @include media(768)
+          font-size: 14px
+
+        @include media(540)
+          font-size: 13px
+
+        font-weight: 600
+
+  .od-info
+    display: grid
+    grid-template-columns: repeat(3, minmax(0, 1fr))
+
+    @include media(991)
+      grid-template-columns: repeat(2, minmax(0, 1fr))
+
+    @include media(768)
+      grid-template-columns: minmax(0, 1fr)
+
+    gap: 16px
+
+    @include media(991)
+      gap: 12px
+
+    margin-top: 8px
+
+  .od-box
+    min-width: 0
+    padding: 4px 18px 18px
+
+    @include media(540)
+      padding: 2px 14px 14px
+
+    border: 1px solid var(--gray)
+    background: var(--bg)
+
+    p
+      margin: 0
+      color: var(--text)
+      font-size: 13px
+
+      @include media(540)
+        font-size: 12px
+
+      line-height: 1.7
+
+      b
+        color: var(--black)
+
+  .od-actions
+    display: flex
+    flex-wrap: wrap
+
+    @include media(768)
+      justify-content: center
+
+    gap: 10px
+
+    @include media(540)
+      gap: 8px
+
+    margin-top: 22px
+
+    @include media(540)
+      margin-top: 18px
+
+    padding-top: 20px
+
+    @include media(540)
+      padding-top: 16px
+
+    border-top: 1px solid var(--gray)
+
+    @include media(540)
+      .btn
+        flex: 1 1 100%
+        justify-content: center
+
+  .wish-grid
+    display: grid
+    grid-template-columns: repeat(3, minmax(0, 1fr))
+
+    @include media(540)
+      grid-template-columns: repeat(2, minmax(0, 1fr))
+
+    gap: 22px
+
+    @include media(1280)
+      gap: 18px
+
+    @include media(1024)
+      gap: 22px
+
+    @include media(768)
+      gap: 16px
+
+    @include media(540)
+      gap: 12px
+
+  .wish-card
+    position: relative
+    min-width: 0
+    overflow: hidden
+    border: 1px solid var(--gray)
+    background: var(--white)
+    transition: border-color 0.3s ease
+
+    &:hover
+      border-color: var(--primary)
+
+      .wish-image img
+        transform: scale(1.05)
+
+    .wish-remove
+      position: absolute
+      top: 12px
+
+      @include media(540)
+        top: 8px
+
+      right: 12px
+
+      @include media(540)
+        right: 8px
+
+      z-index: 2
+      display: grid
+      place-items: center
+      width: 34px
+
+      @include media(540)
+        width: 30px
+
+      height: 34px
+
+      @include media(540)
+        height: 30px
+
+      padding: 0
+      border: 0
+      border-radius: 50%
+      background: var(--white)
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14)
+      color: var(--black)
+      font-size: 13px
+
+      @include media(540)
+        font-size: 11px
+
+      cursor: pointer
+      transition: all 0.3s ease
+
+      &:hover
+        background: $danger
+        color: var(--white)
+
+    .wish-image
+      position: relative
+      display: block
+      aspect-ratio: 3 / 4
+      overflow: hidden
+      background: var(--bg)
+
+      img
+        display: block
+        width: 100%
+        height: 100%
+        object-fit: cover
+        object-position: top center
+        transition: transform 0.5s ease
+
+      .badge
+        position: absolute
+        top: 12px
+
+        @include media(540)
+          top: 8px
+
+        left: 12px
+
+        @include media(540)
+          left: 8px
+
+        padding: 4px 10px
+
+        @include media(540)
+          padding: 3px 8px
+
+        background: var(--primary)
+        color: var(--white)
+        font-size: 11px
+
+        @include media(540)
+          font-size: 10px
+
+        font-weight: 600
+        letter-spacing: 0.06em
+
+    .wish-info
+      padding: 16px
+
+   
+
+      @include media(540)
+        padding: 12px
+
+      .cat
+        display: block
+        color: var(--primary)
+        font-size: 11px
+
+        @include media(540)
+          font-size: 10px
+
+        font-weight: 600
+        text-transform: uppercase
+        letter-spacing: 0.14em
+
+        @include media(540)
+          letter-spacing: 0.08em
+
+      h4
+        display: -webkit-box
+        margin: 6px 0 10px
+        overflow: hidden
+        font-size: 14px
+
+        @include media(768)
+          font-size: 13px
+
+        @include media(540)
+          font-size: 12px
+
+        font-weight: 500
+        line-height: 1.4
+        -webkit-box-orient: vertical
+        -webkit-line-clamp: 2
+
+        a
+          color: var(--black)
+          transition: color 0.3s ease
+
+          &:hover
+            color: var(--primary)
+
+    .wish-price
+      display: flex
+      align-items: center
+      flex-wrap: wrap
+
+
+      gap: 4px 10px
+
+      @include media(540)
+        gap: 2px 8px
+
+      margin-bottom: 8px
+
+      strong
+        color: var(--black)
+        font-size: 17px
+
+        @include media(768)
+          font-size: 16px
+
+        @include media(540)
+          font-size: 14px
+
+        font-weight: 600
+
+      del
+        color: var(--text)
+        font-size: 12px
+
+        @include media(540)
+          font-size: 11px
+
+        opacity: 0.7
+
+      .save
+        color: $success
+        font-size: 12px
+
+        @include media(540)
+          font-size: 10px
+
+        font-weight: 600
+
+    .stock
+      display: inline-flex
+      align-items: center
+      gap: 6px
+      margin-bottom: 14px
+
+      @include media(540)
+        margin-bottom: 10px
+
+      color: $danger
+      font-size: 12px
+
+      @include media(540)
+        font-size: 10px
+
+      font-weight: 600
+
+      &.in
+        color: $success
+
+    .wish-cta
+      display: flex
+      flex-direction: column
+      gap: 8px
+
+      .btn
+        width: 100%
+        padding: 0 10px
+
+        @include media(540)
+          padding: 0 8px
+
+        white-space: nowrap
+
+        &:disabled
+          opacity: 0.5
+          cursor: not-allowed
+
+    &.out
+      .wish-image img
+        filter: grayscale(1)
+        opacity: 0.6
+
+  .edit-box
+    display: none
+
+  .edit-toggle
+    .t-close
+      display: none
+
+    &.is-open
+      .t-edit
+        display: none
+
+      .t-close
+        display: inline
+
+  .profile-head
+    display: flex
+    align-items: center
+
+    @include media(768)
+      justify-content: center
+      text-align: center
+
+    @include media(540)
+      flex-direction: column
+
+    gap: 20px
+
+    @include media(540)
+      gap: 12px
+
+    margin-bottom: 26px
+
+    @include media(540)
+      margin-bottom: 18px
+
+    h4
+      margin: 0 0 4px
+      color: var(--black)
+      font-size: 22px
+
+      @include media(768)
+        font-size: 20px
+
+      @include media(540)
+        font-size: 17px
+
+      font-weight: 600
+
+    p
+      margin: 0
+      color: var(--text)
+      font-size: 14px
+
+      @include media(768)
+        font-size: 13px
+
+      @include media(540)
+        font-size: 12px
+
+  .detail-list
+    display: grid
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+
+    @include media(768)
+      grid-template-columns: minmax(0, 1fr)
+
+    gap: 20px 30px
+
+    @include media(1024)
+      gap: 18px 24px
+
+    @include media(768)
+      gap: 16px
+
+    padding: 22px
+
+    @include media(768)
+      padding: 18px
+
+    @include media(540)
+      padding: 14px
+
+    border: 1px solid var(--gray)
+    background: var(--bg)
+
+    @include media(768)
+      text-align: center
+
+    small
+      display: block
+      margin-bottom: 4px
+      color: var(--text)
+      font-size: 11px
+
+      @include media(540)
+        font-size: 10px
+
+      text-transform: uppercase
+      letter-spacing: 0.12em
+
+    p
+      margin: 0
+      color: var(--black)
+      font-size: 15px
+
+      @include media(768)
+        font-size: 14px
+
+      @include media(540)
+        font-size: 13px
+
+      font-weight: 500
+
+  .avatar-upload
+    display: flex
+    align-items: center
+
+    @include media(768)
+      justify-content: center
+      text-align: center
+
+    @include media(540)
+      flex-direction: column
+
+    gap: 20px
+
+    @include media(540)
+      gap: 12px
+
+    margin-bottom: 30px
+
+    @include media(540)
+      margin-bottom: 22px
+
+    p
+      margin: 8px 0 0
+      color: var(--text)
+      font-size: 12px
+
+      @include media(540)
+        font-size: 11px
+
+  .form-grid
+    display: grid
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+
+    @include media(768)
+      grid-template-columns: minmax(0, 1fr)
+
+    gap: 30px
+
+    @include media(1280)
+      gap: 26px
+
+    @include media(768)
+      gap: 24px
+
+    @include media(540)
+      gap: 22px
+
+    .full
+      grid-column: 1 / -1
+
+  .form-actions
+    display: flex
+    flex-wrap: wrap
+
+    @include media(768)
+      justify-content: center
+
+    gap: 12px
+
+    @include media(540)
+      gap: 10px
+
+    margin-top: 32px
+
+    @include media(768)
+      margin-top: 28px
+
+    @include media(540)
+      margin-top: 24px
+
+    .btn
+      min-height: 46px
+
+      @include media(540)
+        min-height: 44px
+
+      padding: 0 26px
+
+      @include media(540)
+        padding: 0 16px
+
+      cursor: pointer
+
+      @include media(540)
+        flex: 1 1 100%
+        justify-content: center
+
+  .addr-list
+    display: grid
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+
+    @include media(768)
+      grid-template-columns: minmax(0, 1fr)
+
+    gap: 18px
+
+    @include media(1024)
+      gap: 16px
+
+    @include media(768)
+      gap: 14px
+
+  .addr-card
+    min-width: 0
+    padding: 20px
+
+    @include media(768)
+      padding: 18px
+
+    @include media(540)
+      padding: 16px
+
+    border: 1px solid var(--gray)
+    background: var(--bg)
+    transition: border-color 0.3s ease
+
+    @include media(768)
+      text-align: center
+
+    &:hover
+      border-color: var(--primary)
+
+    .addr-type
+      display: inline-block
+      padding: 3px 10px
+      border: 1px solid var(--gray)
+      background: var(--white)
+      color: var(--text)
+      font-size: 10px
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.14em
+
+      &.default
+        border-color: var(--primary)
+        background: var(--primary)
+        color: var(--white)
+
+    h5
+      margin: 14px 0 6px
+      color: var(--black)
+      font-size: 15px
+
+      @include media(540)
+        font-size: 14px
+
+      font-weight: 600
+
+    p
+      margin: 0
+      color: var(--text)
+      font-size: 13px
+
+      @include media(540)
+        font-size: 12px
+
+      line-height: 1.7
+
+    .addr-actions
+      display: flex
+
+      @include media(768)
+        justify-content: center
+
+      gap: 22px
+
+      @include media(540)
+        gap: 18px
+
+      margin-top: 14px
+
+      a
+        display: inline-flex
+        align-items: center
+        gap: 7px
+        padding-bottom: 3px
+        border-bottom: 1px solid var(--black)
+        color: var(--black)
+        font-size: 11px
+
+        @include media(540)
+          font-size: 10px
+
+        font-weight: 600
+        text-transform: uppercase
+        letter-spacing: 0.14em
+
+        @include media(540)
+          letter-spacing: 0.1em
+
+        cursor: pointer
+        transition: all 0.3s ease
+
+        i
+          font-size: 10px
+
+        &:hover
+          border-color: var(--primary)
+          color: var(--primary)
+
+        &.remove
+          border-color: $danger
+          color: $danger
+
+  .addr-form
+    display: none
+    margin-top: 26px
+
+    @include media(540)
+      margin-top: 20px
+
+    padding-top: 4px
+    border-top: 1px solid var(--gray)
+
+  .addr-extra
+    display: flex
+    align-items: center
+    flex-wrap: wrap
+
+    @include media(768)
+      justify-content: center
+
+    @include media(540)
+      flex-direction: column
+
+    gap: 16px 30px
+
+    @include media(540)
+      gap: 14px 18px
+
+    margin-top: 28px
+
+    @include media(540)
+      margin-top: 22px
+
+  .type-pills
+    display: flex
+    flex-wrap: wrap
+
+    @include media(768)
+      justify-content: center
+
+    gap: 10px
+
+    @include media(540)
+      gap: 8px
+
+    .pill
+      position: relative
+      cursor: pointer
+
+      input
+        position: absolute
+        width: 1px
+        height: 1px
+        opacity: 0
+        pointer-events: none
+
+      span
+        display: inline-block
+        padding: 11px 22px
+
+        @include media(768)
+          padding: 10px 18px
+
+        @include media(540)
+          padding: 9px 16px
+
+        border: 1px solid var(--gray)
+        background: var(--white)
+        color: var(--text)
+        font-size: 12px
+
+        @include media(540)
+          font-size: 11px
+
+        font-weight: 500
+        text-transform: uppercase
+        letter-spacing: 0.12em
+
+        @include media(540)
+          letter-spacing: 0.08em
+
+        transition: all 0.3s ease
+
+      &:hover span
+        border-color: var(--black)
+
+      input:checked + span
+        border-color: var(--primary)
+        background: var(--primary)
+        color: var(--white)
+
+      input:focus-visible + span
+        box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.12)
+
+  .check
+    display: inline-flex
+    align-items: center
+    gap: 10px
+    cursor: pointer
+
+    input
+      flex-shrink: 0
+      width: 17px
+      height: 17px
+      margin: 0
+      accent-color: var(--primary)
+      cursor: pointer
+
+    span
+      color: var(--black)
+      font-size: 13px
+
+      @include media(540)
+        font-size: 12px
+
+@keyframes dashTabFade
+  from
+    opacity: 0
+    transform: translateY(5px)
+
+  to
+    opacity: 1
+    transform: translateY(0)
+
+@keyframes dashPulse
+  0%
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.18)
+
+  70%
+    box-shadow: 0 0 0 9px rgba(0, 0, 0, 0)
+
+  100%
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0)
+
+@media (prefers-reduced-motion: reduce)
+  .dash-secA
+    .dot,
+    .tabs
+      animation: none !important
