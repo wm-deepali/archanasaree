@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->text('meta_description')->nullable();
 
             $table->boolean('status')->default(1);
+            $table->boolean('show_in_navbar')->default(0);
             $table->integer('sort_order')->default(0);
 
             $table->timestamps();

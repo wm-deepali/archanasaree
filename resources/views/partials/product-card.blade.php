@@ -5,7 +5,20 @@
         ? round((($product->mrp - $product->price) / $product->mrp) * 100) : 0;
     $badge = $product->collections->first()?->name;
     $url = route('products.show', ['slug' => $product->slug]);
+    $wished = in_array($product->id, \App\Models\Wishlist::currentProductIds());
 @endphp
+
+<style>
+    .act-btn.wish-btn.is-active {
+        color: #e11d48;
+    }
+
+    .act-btn.wish-btn.is-loading {
+        opacity: .6;
+        pointer-events: none;
+    }
+</style>
+
 <div class="prod_cart">
     <div class="prod-img">
         <a href="{{ $url }}" class="prod-link">
@@ -15,10 +28,12 @@
             <span class="prod-badge">{{ $badge }}</span>
         @endif
         <div class="prod-actions">
-            <button type="button" class="act-btn wish-btn" data-id="{{ $product->id }}" aria-label="Wishlist">
-                <i class="fa-regular fa-heart"></i>
+            <button type="button" class="act-btn wish-btn {{ $wished ? 'is-active' : '' }}" data-id="{{ $product->id }}"
+                aria-label="{{ $wished ? 'Remove from wishlist' : 'Add to wishlist' }}"
+                aria-pressed="{{ $wished ? 'true' : 'false' }}">
+                <i class="{{ $wished ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
             </button>
-            <button type="button" class="act-btn quick-btn" data-id="{{ $product->id }}" aria-label="Quick view">
+            <button type="button" class="act-btn quick-btn" data-id="{{ $product->id }}" aria-label="Quick view" data-model=".product-view-pop">
                 <i class="fa-regular fa-eye"></i>
             </button>
         </div>

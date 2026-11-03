@@ -54,7 +54,7 @@
             <li data-tab="4">
               <i class="fa-regular fa-heart" aria-hidden="true"></i>
               My Wishlist
-              <span class="count">3</span>
+              <span class="count">{{ $wishlist->count() }}</span>
             </li>
             <li data-tab="5">
               <i class="fa-regular fa-user" aria-hidden="true"></i>
@@ -599,117 +599,82 @@
 </div>
 
 
-            <!-- ========== TAB 4: WISHLIST ========== -->
-            <div class="tabs" data-tab="4">
-              <div class="dash-panel">
-                <div class="panel-head">
-                  <h3>
-                    <i class="fa-regular fa-heart" aria-hidden="true"></i>
-                    My Wishlist
-                    <span class="muted wish-count">(3 items)</span>
-                  </h3>
-                </div>
+        <!-- ========== TAB 4: WISHLIST ========== -->
+<div class="tabs" data-tab="4">
+  <div class="dash-panel">
+    <div class="panel-head">
+      <h3>
+        <i class="fa-regular fa-heart" aria-hidden="true"></i>
+        My Wishlist
+        <span class="muted wish-count">({{ $wishlist->count() }} {{ \Illuminate\Support\Str::plural('item', $wishlist->count()) }})</span>
+      </h3>
+    </div>
 
-                <div class="wish-grid">
-                  <article class="wish-card">
-                    <button type="button" class="wish-remove" aria-label="Remove from wishlist">
-                      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
-                    </button>
-                    <a href="product-detail.html" class="wish-image">
-                      <img src="assets/images/home/tab1.png" alt="Kanjivaram Pure Silk Saree" loading="lazy" />
-                      <span class="badge">-24%</span>
-                    </a>
-                    <div class="wish-info">
-                      <span class="cat">Silk Saree</span>
-                      <h4>
-                        <a href="product-detail.html">Kanjivaram Pure Silk Saree</a>
-                      </h4>
-                      <div class="wish-price">
-                        <strong>₹12,999</strong><del>₹16,999</del><span class="save">Save ₹4,000</span>
-                      </div>
-                      <span class="stock in"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>
-                        In Stock</span>
-                      <div class="wish-cta">
-                        <button type="button" class="btn btn-primary btn-sm" data-id="SKU-S1"
-                          data-name="Kanjivaram Pure Silk Saree" data-toast-title="Added to Bag"
-                          data-toast-text="Kanjivaram Pure Silk Saree has been added to your bag."
-                          data-toast-type="success">
-                          <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-                          Add to Bag
-                        </button>
-                        <a href="product-detail.html" class="btn btn-outline-primary btn-sm">View</a>
-                      </div>
-                    </div>
-                  </article>
+    <div class="wish-grid" @if($wishlist->isEmpty()) style="display:none" @endif>
+      @foreach($wishlist as $w)
+        @php
+          $p      = $w->product;
+          $unit   = (float) $p->price;
+          $mrp    = (float) ($p->mrp ?: $unit);
+          $off    = $mrp > $unit ? (int) round((($mrp - $unit) / $mrp) * 100) : 0;
+          $inStock = (int) $p->stock > 0;
+          $url    = route('products.show', $p->slug);
+        @endphp
 
-                  <article class="wish-card">
-                    <button type="button" class="wish-remove" aria-label="Remove from wishlist">
-                      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
-                    </button>
-                    <a href="product-detail.html" class="wish-image">
-                      <img src="assets/images/home/tab2.png" alt="Velvet Bridal Lehenga" loading="lazy" />
-                      <span class="badge">-15%</span>
-                    </a>
-                    <div class="wish-info">
-                      <span class="cat">Bridal Lehenga</span>
-                      <h4>
-                        <a href="product-detail.html">Velvet Bridal Lehenga</a>
-                      </h4>
-                      <div class="wish-price">
-                        <strong>₹38,999</strong><del>₹45,999</del><span class="save">Save ₹7,000</span>
-                      </div>
-                      <span class="stock in"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>
-                        In Stock</span>
-                      <div class="wish-cta">
-                        <button type="button" class="btn btn-primary btn-sm" data-id="SKU-L2"
-                          data-name="Velvet Bridal Lehenga" data-toast-title="Added to Bag"
-                          data-toast-text="Velvet Bridal Lehenga has been added to your bag." data-toast-type="success">
-                          <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-                          Add to Bag
-                        </button>
-                        <a href="product-detail.html" class="btn btn-outline-primary btn-sm">View</a>
-                      </div>
-                    </div>
-                  </article>
+        <article class="wish-card {{ $inStock ? '' : 'out' }}">
+          <button type="button" class="wish-remove" data-id="{{ $p->id }}" aria-label="Remove from wishlist">
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+          </button>
 
-                  <article class="wish-card out">
-                    <button type="button" class="wish-remove" aria-label="Remove from wishlist">
-                      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
-                    </button>
-                    <a href="product-detail.html" class="wish-image">
-                      <img src="assets/images/home/tab4.png" alt="Pastel Organza Lehenga" loading="lazy" />
-                    </a>
-                    <div class="wish-info">
-                      <span class="cat">Organza Lehenga</span>
-                      <h4>
-                        <a href="product-detail.html">Pastel Organza Lehenga</a>
-                      </h4>
-                      <div class="wish-price">
-                        <strong>₹21,299</strong><del>₹24,999</del><span class="save">Save ₹3,700</span>
-                      </div>
-                      <span class="stock"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
-                        Out of Stock</span>
-                      <div class="wish-cta">
-                        <button type="button" class="btn btn-primary btn-sm" disabled>
-                          <i class="fa-regular fa-bell" aria-hidden="true"></i>
-                          Notify Me
-                        </button>
-                        <a href="product-detail.html" class="btn btn-outline-primary btn-sm">View</a>
-                      </div>
-                    </div>
-                  </article>
-                </div>
+          <a href="{{ $url }}" class="wish-image">
+            <img src="{{ $p->display_image }}" alt="{{ $p->name }}" loading="lazy" />
+            @if($off > 0)<span class="badge">-{{ $off }}%</span>@endif
+          </a>
 
-                <!-- Empty state (JS se tab dikhta hai jab saare items remove ho jayein) -->
-                <div class="empty-state wish-empty">
-                  <i class="fa-regular fa-heart" aria-hidden="true"></i>
-                  <h4>Your wishlist is empty</h4>
-                  <p>Save sarees and lehengas you love and find them here.</p>
-                  <a href="category-listing.html" class="btn btn-primary">Explore Collection</a>
-                </div>
-              </div>
+          <div class="wish-info">
+            <span class="cat">{{ $p->subcategory->name ?? ($p->category->name ?? '') }}</span>
+            <h4><a href="{{ $url }}">{{ $p->name }}</a></h4>
+
+            <div class="wish-price">
+              <strong>₹{{ number_format($unit) }}</strong>
+              @if($off > 0)
+                <del>₹{{ number_format($mrp) }}</del>
+                <span class="save">Save ₹{{ number_format($mrp - $unit) }}</span>
+              @endif
             </div>
 
+            @if($inStock)
+              <span class="stock in"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> In Stock</span>
+            @else
+              <span class="stock"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Out of Stock</span>
+            @endif
+
+            <div class="wish-cta">
+              @if($inStock)
+                <a href="{{ $url }}" class="btn btn-primary btn-sm">
+                  <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i> Choose Options
+                </a>
+              @else
+                <button type="button" class="btn btn-primary btn-sm" disabled>
+                  <i class="fa-regular fa-bell" aria-hidden="true"></i> Notify Me
+                </button>
+              @endif
+              <a href="{{ $url }}" class="btn btn-outline-primary btn-sm">View</a>
+            </div>
+          </div>
+        </article>
+      @endforeach
+    </div>
+
+    <!-- Empty state (shown when the list is empty, or by JS after the last item is removed) -->
+    <div class="empty-state wish-empty" @if($wishlist->isEmpty()) style="display:block" @endif>
+      <i class="fa-regular fa-heart" aria-hidden="true"></i>
+      <h4>Your wishlist is empty</h4>
+      <p>Save sarees and lehengas you love and find them here.</p>
+      <a href="{{ url('/products') }}" class="btn btn-primary">Explore Collection</a>
+    </div>
+  </div>
+</div>
             <!-- ========== TAB 5: MY PROFILE ========== -->
 <div class="tabs" data-tab="5">
  @php
@@ -916,10 +881,12 @@
           </div>
 
           <!-- ===== Sign out ===== -->
-          <a href="javascript:void(0)" class="logout-btn">
-            <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
-            Sign Out
-          </a>
+         <form method="POST" action="{{ route('user.logout') }}">
+  @csrf
+  <button type="submit" class="logout-btn" style="width: 100%;">
+    <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i> Sign Out
+  </button>
+</form>
         </div>
       </div>
     </section>
@@ -1028,19 +995,39 @@
       });
 
       // ===== Wishlist: remove =====
-      $(".wish-remove").on("click", function () {
-        var $card = $(this).closest(".wish-card");
-        $card.fadeOut(250, function () {
-          $card.remove();
-          var n = $(".wish-grid .wish-card").length;
-          $(".wish-count").text("(" + n + " items)");
-          $nav.children('li[data-tab="4"]').find(".count").text(n);
-          if (!n) {
-            $(".wish-grid").hide();
-            $(".wish-empty").show();
-          }
-        });
+var WISH_REMOVE_URL = @json(route('account.wishlist.remove', ['id' => '__ID__'])),
+  WISH_CSRF = @json(csrf_token());
+
+$(document).on("click", ".wish-remove", function () {
+  var $btn = $(this),
+    $card = $btn.closest(".wish-card"),
+    fd = new FormData();
+
+  fd.append("_method", "DELETE");
+  $btn.prop("disabled", true);
+
+  fetch(WISH_REMOVE_URL.replace("__ID__", $btn.data("id")), {
+    method: "POST",
+    headers: { "X-Requested-With": "XMLHttpRequest", "Accept": "application/json", "X-CSRF-TOKEN": WISH_CSRF },
+    body: fd
+  })
+    .then(function (r) { return r.json(); })
+    .then(function (res) {
+      if (!res.success) { $btn.prop("disabled", false); return; }
+
+      $card.fadeOut(250, function () {
+        $card.remove();
+        var n = res.count;
+        $(".wish-count").text("(" + n + " " + (n === 1 ? "item" : "items") + ")");
+        $nav.children('li[data-tab="4"]').find(".count").text(n);
+        if (!n) {
+          $(".wish-grid").hide();
+          $(".wish-empty").show();
+        }
       });
+    })
+    .catch(function () { $btn.prop("disabled", false); });
+});
 
       // ===== Profile: view <-> edit =====
       $(".edit-toggle").on("click", function () {

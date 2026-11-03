@@ -19,6 +19,46 @@ class FrontController extends Controller
         return view('front-pages.home');
     }
 
+    public function searchSuggest(Request $request)
+    {
+        $q = trim((string) $request->query('q', ''));
+
+        if ($q !== '' && mb_strlen($q) < 2) {
+            return response()->json(['items' => [], 'query' => $q]);
+        }
+
+        $query = Product::visible()->forCard()->with(['images', 'category', 'subcategory']);
+
+        if ($q !== '') {
+            $like = '%' . addcslashes($q, '%_\\') . '%';
+
+            $query->where(function ($w) use ($like) {
+                $w->where('name', 'like', $like)
+                    ->orWhere('sku', 'like', $like)
+                    ->orWhereHas('category', fn($c) => $c->where('name', 'like', $like))
+                    ->orWhereHas('subcategory', fn($c) => $c->where('name', 'like', $like));
+            })->orderByRaw('name like ? desc', [addcslashes($q, '%_\\') . '%']);
+        } else {
+            $query->latest('id');
+        }
+
+        $items = $query->limit(6)->get()->map(function ($p) {
+            $img = $p->images->firstWhere('is_default', 1) ?? $p->images->first();
+
+            return [
+                'name' => $p->name,
+                'url' => route('products.show', ['slug' => $p->slug]),
+                'image' => $img
+                    ? asset('storage/' . ($img->thumb ?? $img->image))
+                    : asset('assets/images/home/tab1.png'),
+                'category' => $p->subcategory->name ?? $p->category->name ?? '',
+                'price' => '₹' . number_format($p->price),
+            ];
+        })->values();
+
+        return response()->json(['items' => $items, 'query' => $q]);
+    }
+
     public function categories()
     {
         $categories = Category::active()
@@ -48,7 +88,9 @@ class FrontController extends Controller
             ]);
         }
 
-        $products = $this->categoryProducts($request, $filters, $category, null);
+        $activeSub = is_string($request->sub) ? $subCategories->firstWhere('slug', $request->sub) : null;
+
+        $products = $this->categoryProducts($request, $filters, $category, $activeSub);
 
         $recentlyViewed = $this->recentlyViewed();
 
@@ -65,7 +107,7 @@ class FrontController extends Controller
         $sortOptions = Product::SORT_OPTIONS;
 
         return view('front-pages.category-detail', array_merge(
-            compact('category', 'subCategories', 'products', 'recentlyViewed', 'alsoLike', 'sortOptions', 'currentSort'),
+            compact('category', 'subCategories', 'products', 'recentlyViewed', 'alsoLike', 'sortOptions', 'currentSort', 'activeSub'),
             $filters->sidebar($request, [$category->id])
         ));
     }
@@ -90,6 +132,16 @@ class FrontController extends Controller
     {
         $query = Product::visible()->forCard();
         $filters->apply($query, $request);
+
+        if ($request->filled('q')) {
+            $like = '%' . addcslashes(trim($request->q), '%_\\') . '%';
+            $query->where(function ($w) use ($like) {
+                $w->where('name', 'like', $like)
+                    ->orWhere('sku', 'like', $like)
+                    ->orWhereHas('category', fn($c) => $c->where('name', 'like', $like))
+                    ->orWhereHas('subcategory', fn($c) => $c->where('name', 'like', $like));
+            });
+        }
 
         $products = $query->orderForListing($request->sort)->paginate(24)->withQueryString();
 
@@ -387,4 +439,37 @@ class FrontController extends Controller
             ->limit($limit)
             ->get();
     }
+
+    public function quickView($id)
+    {
+        $product = Product::with(['images', 'category', 'subcategory', 'collections'])
+            // ->active()   // <- use the SAME visibility scope your listing uses, so hidden/draft products can't be fetched by id
+            ->findOrFail($id);
+
+        $img = $product->images->firstWhere('is_default', 1) ?? $product->images->first();
+        $off = $product->mrp > $product->price
+            ? (int) round((($product->mrp - $product->price) / $product->mrp) * 100)
+            : 0;
+
+        return response()->json([
+            'id' => $product->id,
+            'name' => $product->name,
+            'url' => route('products.show', ['slug' => $product->slug]),
+            'category' => $product->subcategory->name ?? $product->category->name ?? '',
+            'badge' => $product->collections->first()?->name,
+            'rating' => $product->avg_rating ? round($product->avg_rating, 1) : null,
+            'image' => $img
+                ? asset('storage/' . ($img->image ?? $img->thumb))
+                : asset('assets/images/home/tab1.png'),
+            'price_fmt' => '₹' . number_format($product->price),
+            'mrp_fmt' => '₹' . number_format($product->mrp),
+            'off' => $off,
+            'description' => $product->short_description,
+            'in_stock' => (int) $product->stock > 0,
+            'stock' => (int) $product->stock,
+            'min_qty' => max(1, (int) $product->min_qty),
+            'wished' => in_array($product->id, \App\Models\Wishlist::currentProductIds()),
+        ]);
+    }
+
 }

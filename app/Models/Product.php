@@ -93,7 +93,7 @@ class Product extends Model
 
         return $image
             ? asset('storage/' . ($image->thumb ?? $image->image))
-            : null;
+            : asset('assets/images/home/tab1.png');
     }
 
     public function attributeValues()

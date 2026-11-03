@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\State;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use App\Models\InvoiceSetting;
 use Illuminate\Validation\Rule;
@@ -102,6 +103,13 @@ class UserDashboardController extends Controller
             ->orderByDesc('is_default')->latest()->get();
         $states = State::orderBy('name')->get();
 
+        // ── Wishlist tab ──────────────────────────────────────
+        $wishlist = Wishlist::with(['product.category', 'product.subcategory'])
+            ->where('customer_id', $customerId)
+            ->whereHas('product')          // skip products that were deleted
+            ->latest()
+            ->get();
+
         return view('front-pages.dashboard', compact(
             'customer',
             'stats',
@@ -111,7 +119,8 @@ class UserDashboardController extends Controller
             'trackOrder',
             'trackError',
             'addresses',
-            'states'
+            'states',
+            'wishlist'
         ));
     }
 
@@ -301,6 +310,20 @@ class UserDashboardController extends Controller
         Cart::where('customer_id', $customer->id)->first()?->recalculateTotals();
 
         return response()->json(['success' => true]);
+    }
+
+    public function removeWishlist($id)
+    {
+        $customerId = auth('customer')->id();
+
+        Wishlist::where('customer_id', $customerId)
+            ->where('product_id', $id)
+            ->delete();
+
+        return response()->json([
+            'success' => true,
+            'count' => Wishlist::where('customer_id', $customerId)->whereHas('product')->count(),
+        ]);
     }
 
 }

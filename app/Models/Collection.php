@@ -14,6 +14,11 @@ class Collection extends Model
         'code',
         'status',
         'sort_order',
+        'show_in_navbar'
+    ];
+
+    protected $casts = [
+        'show_in_navbar' => 'boolean',
     ];
 
     public function products()

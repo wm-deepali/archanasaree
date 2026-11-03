@@ -38,6 +38,7 @@ class CollectionController extends Controller
             'name' => 'required|max:255',
             'meta_title' => 'nullable|max:255',
             'meta_description' => 'nullable',
+             'show_in_navbar' => 'nullable|boolean',
         ]);
 
         Collection::create([
@@ -54,6 +55,7 @@ class CollectionController extends Controller
             'sort_order' => $request->sort_order ?? 0,
             'meta_title' => $request->meta_title,
             'meta_description' => $request->meta_description,
+            'show_in_navbar' => $request->boolean('show_in_navbar'),
         ]);
 
         return redirect()
@@ -80,6 +82,7 @@ class CollectionController extends Controller
             'name' => 'required|max:255',
             'meta_title' => 'nullable|max:255',
             'meta_description' => 'nullable',
+            'show_in_navbar' => 'nullable|boolean',
         ]);
 
         $collection = Collection::findOrFail($id);
@@ -99,6 +102,7 @@ class CollectionController extends Controller
             'sort_order' => $request->sort_order ?? 0,
             'meta_title' => $request->meta_title,
             'meta_description' => $request->meta_description,
+            'show_in_navbar' => $request->boolean('show_in_navbar'),
         ]);
 
         return redirect()

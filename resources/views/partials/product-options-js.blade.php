@@ -320,6 +320,61 @@
                 });
         }
 
+        // ── Wishlist (main button + cards in the related / recently viewed sliders) ──
+        var WISH_URL = @json(route('wishlist.toggle'));
+
+        function wishToast(text, ok) {
+            $('.wish-toast').remove();
+            $('<div class="wish-toast">').text(text).css({
+                position: 'fixed', left: '50%', bottom: 24, transform: 'translateX(-50%)',
+                background: ok ? '#222' : '#b22222', color: '#fff', padding: '10px 18px',
+                borderRadius: 6, zIndex: 99999, fontSize: 14
+            }).appendTo('body').delay(2500).fadeOut(300, function () { $(this).remove(); });
+        }
+
+        function wishFail(xhr) {
+            var m = 'Could not update your wishlist right now. Please try again.';
+            if (xhr.status === 419) m = 'Your session expired. Please refresh the page and try again.';
+            else if (xhr.status === 429) m = 'Too many attempts. Please try again in a minute.';
+            else if (xhr.responseJSON && xhr.responseJSON.message) m = xhr.responseJSON.message;
+            return m;
+        }
+
+        function wishPaint($el, on) {
+            $el.toggleClass('is-active', on).attr('aria-pressed', on ? 'true' : 'false');
+            $el.find('i').toggleClass('fa-solid', on).toggleClass('fa-regular', !on);
+
+            if ($el.hasClass('wish-link')) {
+                $el.find('span').text(on ? 'Wishlisted' : 'Add to Wishlist');
+            } else {
+                $el.attr('aria-label', on ? 'Remove from wishlist' : 'Add to wishlist');
+            }
+        }
+
+        $(document).on('click', '.wish-btn, .wish-link', function (e) {
+            e.preventDefault();
+            var $b = $(this), id = $b.data('id');
+            if ($b.hasClass('is-loading')) return;
+
+            $b.addClass('is-loading');
+
+            $.ajax({
+                url: WISH_URL, method: 'POST', dataType: 'json',
+                data: { _token: CSRF, product_id: id }
+            })
+                .done(function (r) {
+                    // same product can appear in several places (main button, sliders)
+                    $('.wish-btn[data-id="' + id + '"], .wish-link[data-id="' + id + '"]').each(function () {
+                        wishPaint($(this), r.added);
+                    });
+                    $('.wishlist-count, [data-wishlist-count]').text(r.count);   // header badge: adjust selector
+                    $(document).trigger('wishlist:changed', [r]);
+                    wishToast(r.message, true);
+                })
+                .fail(function (xhr) { wishToast(wishFail(xhr), false); })
+                .always(function () { $b.removeClass('is-loading'); });
+        });
+
         $(document).on('change', '.opt-group input[name^="attr["]', update);
         $(document).on('change', 'input[name="addons[]"]', paintPrice);
         $(document).on('change', '#customColour', function () {

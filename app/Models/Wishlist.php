@@ -81,4 +81,16 @@ class Wishlist extends Model
             ->where('product_id', $product->id)
             ->delete();
     }
+
+    public static function currentProductIds(): array
+    {
+        $req = request();
+
+        if (!$req->attributes->has('wishlist_ids')) {
+            $req->attributes->set('wishlist_ids', static::current()->pluck('product_id')->all());
+        }
+
+        return $req->attributes->get('wishlist_ids');
+    }
+
 }

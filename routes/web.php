@@ -67,6 +67,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\PincodeController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CustomerAuthController;
 use App\Http\Controllers\ProductReviewController;
@@ -80,6 +81,8 @@ Route::middleware('maintenance.mode')->group(function () {
         Route::get('/category/{slug}', 'categoryShow')->name('category.show');
         Route::get('/products', 'products')->name('products');
         Route::get('/product/{slug}', 'productShow')->name('products.show');
+        Route::get('/products/{id}/quick-view', 'quickView')->whereNumber('id')->middleware('throttle:60,1')->name('products.quick-view');
+        Route::get('/search/suggest', 'searchSuggest')->middleware('throttle:60,1')->name('search.suggest');
 
         Route::view('/about', 'front-pages.about')->name('about');
         Route::view('/blog-detail', 'front-pages.blog-detail')->name('blog.show');
@@ -108,6 +111,7 @@ Route::middleware('maintenance.mode')->group(function () {
     Route::post('/checkout/track-step', [CheckoutController::class, 'trackStep'])->middleware('throttle:30,1')->name('checkout.track-step');
     Route::get('/states/{state}/cities', [CheckoutController::class, 'cities'])->name('state.cities');
 
+    Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->middleware('throttle:60,1')->name('wishlist.toggle');
 
     // customer login routes
     Route::get('/user/google', [CustomerAuthController::class, 'redirectToGoogle'])->name('user.google.login');
@@ -131,6 +135,7 @@ Route::middleware('maintenance.mode')->group(function () {
         Route::post('/profile/address', [UserDashboardController::class, 'storeAddress'])->name('account.address.store');
         Route::put('/profile/address/{address}', [UserDashboardController::class, 'updateAddress'])->name('account.address.update');
         Route::delete('/profile/address/{address}', [UserDashboardController::class, 'deleteAddress'])->name('account.address.delete');
+        Route::delete('/wishlist/{id}', [UserDashboardController::class, 'removeWishlist'])->name('account.wishlist.remove');
         Route::post('/user/logout', [CustomerAuthController::class, 'logout'])->name('user.logout');
     });
 

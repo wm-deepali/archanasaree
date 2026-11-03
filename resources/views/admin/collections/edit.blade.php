@@ -520,6 +520,17 @@
                             <div class="section-card-body" style="padding:16px 20px">
                                 <div class="toggle-row">
                                     <div>
+                                        <div class="toggle-label">Show in Main Navbar</div>
+                                        <div class="toggle-sub">Display this collection in the site menu</div>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="hidden" name="show_in_navbar" value="0">
+                                        <input type="checkbox" name="show_in_navbar" value="1" {{ old('show_in_navbar', $collection->show_in_navbar) ? 'checked' : '' }}>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="toggle-row">
+                                    <div>
                                         <div class="toggle-label">Status</div>
                                         <div class="toggle-sub">Visibility on storefront</div>
                                     </div>

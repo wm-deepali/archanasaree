@@ -2,6 +2,29 @@
 @php
   $authCustomer = auth('customer')->user();
   $dashUrl = Route::has('user.dashboard.index') ? route('user.dashboard.index') : null;
+  $wishCount = count(\App\Models\Wishlist::currentProductIds());
+
+  $siteName = $general->site_name ?: config('app.name');
+  $tagline = $general->tagline;
+  $headerLogo = $general->header_logo ? asset('storage/' . $general->header_logo) : null;
+  $footerLogo = $general->footer_logo ? asset('storage/' . $general->footer_logo) : $headerLogo;
+
+  // WhatsApp: sirf digits, 10 digit ho to 91 laga do
+  $waDigits = preg_replace('/\D/', '', (string) $general->whatsapp);
+  if (strlen($waDigits) === 10) {
+    $waDigits = '91' . $waDigits;
+  }
+
+  // Sirf wahi social links jinki value bhari hai
+  $socials = collect([
+    ['label' => 'Facebook', 'icon' => 'fa-brands fa-facebook-f', 'url' => $general->facebook],
+    ['label' => 'Instagram', 'icon' => 'fa-brands fa-instagram', 'url' => $general->instagram],
+    ['label' => 'Twitter', 'icon' => 'fa-brands fa-x-twitter', 'url' => $general->twitter],
+    ['label' => 'LinkedIn', 'icon' => 'fa-brands fa-linkedin-in', 'url' => $general->linkedin],
+    ['label' => 'Pinterest', 'icon' => 'fa-brands fa-pinterest-p', 'url' => $general->pinterest],
+    ['label' => 'YouTube', 'icon' => 'fa-brands fa-youtube', 'url' => $general->youtube],
+    ['label' => 'WhatsApp', 'icon' => 'fa-brands fa-whatsapp', 'url' => $waDigits ? 'https://wa.me/' . $waDigits : null],
+  ])->filter(fn($s) => filled($s['url']))->values();
 @endphp
 <html lang="en">
 
@@ -50,9 +73,9 @@
     <div class="top_header">
       <div class="container-fluid">
         <div class="announcement-bar">
-          <p class="ann-left">
-            Premium Sarees · Designer Lehengas · Bridal Wear
-          </p>
+          @if ($tagline)
+            <p class="ann-left">{{ $tagline }}</p>
+          @endif
 
           <div class="swiper announcement-swiper ann-center">
             <div class="swiper-wrapper">
@@ -80,27 +103,16 @@
           </div>
 
           <!-- ===== NEW: Social media icons (ann-right ki jagah) ===== -->
-          <ul class="ann-social">
-            <li>
-              <a href="javascript:void(0)" aria-label="Facebook" title="Facebook"><i
-                  class="fa-brands fa-facebook-f"></i></a>
-            </li>
-            <li>
-              <a href="javascript:void(0)" aria-label="Instagram" title="Instagram"><i
-                  class="fa-brands fa-instagram"></i></a>
-            </li>
-            <li>
-              <a href="javascript:void(0)" aria-label="Pinterest" title="Pinterest"><i
-                  class="fa-brands fa-pinterest-p"></i></a>
-            </li>
-            <li>
-              <a href="javascript:void(0)" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
-            </li>
-            <li>
-              <a href="javascript:void(0)" aria-label="WhatsApp" title="WhatsApp"><i
-                  class="fa-brands fa-whatsapp"></i></a>
-            </li>
-          </ul>
+          @if ($socials->isNotEmpty())
+            <ul class="ann-social">
+              @foreach ($socials as $s)
+                <li>
+                  <a href="{{ $s['url'] }}" target="_blank" rel="noopener" aria-label="{{ $s['label'] }}"
+                    title="{{ $s['label'] }}"><i class="{{ $s['icon'] }}"></i></a>
+                </li>
+              @endforeach
+            </ul>
+          @endif
           <!-- ===== /Social media icons ===== -->
         </div>
       </div>
@@ -116,8 +128,11 @@
             </svg>
           </button>
           <a href="{{ route('home') }}" class="logo">
-            <img src="{{ asset('assets/images/logo.png')}}" alt="Archana Saree Emporium"
-              title="Archana Saree Emporium" />
+            @if ($headerLogo)
+              <img src="{{ $headerLogo }}" alt="{{ $siteName }}" title="{{ $siteName }}" />
+            @else
+              <span>{{ $siteName }}</span>
+            @endif
           </a>
         </div>
 
@@ -125,267 +140,146 @@
           <ul class="menu-list">
             <li class="active"><a href="{{ route('home') }}">Home</a></li>
 
-            <li class="hasMega">
-              <a href="category-listing.html">
-                Saree
-                <svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
-                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
-              </a>
-              <div class="mega-menu">
-                <div class="mega-inner">
-                  <div class="mega-links">
-                    <h4><a href="category-listing.html">Shop Sarees</a></h4>
-                    <ul>
-                      <li><a href="product-listing.html">Bridal Saree</a></li>
-                      <li><a href="product-listing.html">Party Wears</a></li>
-                      <li>
-                        <a href="product-listing.html">Cocktail Saree</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">Banarsi Saree</a>
-                      </li>
-                      <li><a href="product-listing.html">Net Sarees</a></li>
-                    </ul>
-                  </div>
-                  <a href="category-listing.html" class="mega-feature">
-                    <img src="{{ asset('assets/images/home/cat1.png')}}" alt="The Saree Edit" loading="lazy" />
-                    <span class="feature-text">
-                      <span class="feature-label">The Saree Edit</span>
-                      <span class="feature-desc">Timeless drapes for every celebration.</span>
-                      <span class="feature-link">
-                        Explore Sarees
-                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
-                          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M3 12h18M15 6l6 6-6 6" />
-                        </svg>
-                      </span>
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </li>
+            @foreach ($navCategories as $navCat)
+              @php
+                $navUrl = route('category.show', $navCat->slug);
+                $navSubs = $navCat->children;
+              @endphp
 
-            <li class="hasMega">
-              <a href="category-listing.html">
-                Lehenga
-                <svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
-                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
-              </a>
-              <div class="mega-menu">
-                <div class="mega-inner">
-                  <div class="mega-links">
-                    <h4><a href="product-listing.html">Shop Lehengas</a></h4>
-                    <ul>
-                      <li>
-                        <a href="product-listing.html">Designer Lehengas</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">Bridal Lehengas</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">Party Wear Lehengas</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">Wedding Guest Lehengas</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">Sangeet &amp; Mehendi</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">Embroidered Lehengas</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">Velvet Lehengas</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">Organza Lehengas</a>
-                      </li>
-                    </ul>
-                  </div>
-                  <a href="category-listing.html" class="mega-feature">
-                    <img src="{{ asset('assets/images/home/cat2.png')}}" alt="The Lehenga Edit" loading="lazy" />
-                    <span class="feature-text">
-                      <span class="feature-label">The Lehenga Edit</span>
-                      <span class="feature-desc">Statement silhouettes for every celebration.</span>
-                      <span class="feature-link">
-                        Explore Lehengas
-                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
-                          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M3 12h18M15 6l6 6-6 6" />
-                        </svg>
-                      </span>
-                    </span>
+              @if ($navSubs->isEmpty())
+                <li><a href="{{ $navUrl }}">{{ $navCat->name }}</a></li>
+              @else
+                <li class="hasMega">
+                  <a href="{{ $navUrl }}">
+                    {{ $navCat->name }}
+                    <svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
                   </a>
-                </div>
-              </div>
-            </li>
+                  <div class="mega-menu">
+                    <div class="mega-inner">
+                      <div class="mega-links">
+                        <h4><a href="{{ $navUrl }}">Shop {{ $navCat->name }}</a></h4>
+                        <ul>
+                          @foreach ($navSubs as $navSub)
+                            <li>
+                              <a href="{{ route('category.show', ['slug' => $navCat->slug, 'sub' => $navSub->slug]) }}">
+                                {{ $navSub->name }}
+                              </a>
+                            </li>
+                          @endforeach
+                        </ul>
+                      </div>
 
-            <li class="hasMega">
-              <a href="category-listing.html">
-                Bridal Wear
-                <svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
-                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
-              </a>
-              <div class="mega-menu">
-                <div class="mega-inner">
-                  <div class="mega-links">
-                    <h4>
-                      <a href="product-listing.html">Shop Bridal Wear</a>
-                    </h4>
-                    <ul>
-                      <li>
-                        <a href="product-listing.html">Bridal Lehengas</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">Bridal Sarees</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">Reception Wear</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">Engagement Wear</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">Haldi &amp; Mehendi</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">Sangeet Outfits</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">Bridal Dupattas</a>
-                      </li>
-                      <li>
-                        <a href="javascript:void(0)">Heirloom Collection</a>
-                      </li>
-                    </ul>
+                      @if ($navCat->image)
+                        <a href="{{ $navUrl }}" class="mega-feature">
+                          <img src="{{ asset('storage/' . $navCat->image) }}" alt="{{ $navCat->name }}" loading="lazy" />
+                          <span class="feature-text">
+                            <span class="feature-label">{{ $navCat->name }}</span>
+                            @if ($navCat->sub_title)
+                              <span class="feature-desc">{{ $navCat->sub_title }}</span>
+                            @endif
+                            <span class="feature-link">
+                              Explore {{ $navCat->name }}
+                              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 12h18M15 6l6 6-6 6" />
+                              </svg>
+                            </span>
+                          </span>
+                        </a>
+                      @endif
+                    </div>
                   </div>
-                  <a href="category-listing.html" class="mega-feature">
-                    <img src="{{ asset('assets/images/home/cat3.png')}}" alt="The Bridal Edit" loading="lazy" />
-                    <span class="feature-text">
-                      <span class="feature-label">The Bridal Edit</span>
-                      <span class="feature-desc">Heirloom pieces for your most special day.</span>
-                      <span class="feature-link">
-                        Explore Bridal Wear
-                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
-                          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M3 12h18M15 6l6 6-6 6" />
-                        </svg>
-                      </span>
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </li>
+                </li>
+              @endif
+            @endforeach
 
             <!-- ===== Shop by Collection (Mega Menu, no image) ===== -->
-            <li class="hasMega">
-              <a href="category-listing.html">
-                Shop by Collection
-                <svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
-                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
-              </a>
-              <div class="mega-menu mega-collection">
-                <div class="mega-collection-inner">
-                  <div class="mega-col">
-                    <h4>Shop by Fabrics</h4>
-                    <ul>
-                      <li><a href="product-listing.html">Mul Chanderi</a></li>
-                      <li>
-                        <a href="product-listing.html">Viscose Georgette</a>
-                      </li>
-                      <li><a href="product-listing.html">Cotton</a></li>
-                      <li><a href="product-listing.html">Pure Organza</a></li>
-                      <li><a href="product-listing.html">Linen</a></li>
-                      <li><a href="product-listing.html">Kota</a></li>
-                      <li>
-                        <a href="product-listing.html">Pure Georgette</a>
-                      </li>
-                      <li><a href="product-listing.html">Silk</a></li>
-                      <li><a href="product-listing.html">Tissue</a></li>
-                      <li><a href="product-listing.html">Chanderi</a></li>
-                    </ul>
-                  </div>
+            @if ($navAttributes->isNotEmpty() || $navCollections->isNotEmpty() || $navOccasions->isNotEmpty() || count($navPriceRanges))
+              <li class="hasMega">
+                <a href="{{ route('products') }}">
+                  Shop by Collection
+                  <svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </a>
+                <div class="mega-menu mega-collection">
+                  <div class="mega-collection-inner">
 
-                  <div class="mega-col">
-                    <h4>Shop by Color</h4>
-                    <ul>
-                      <li><a href="product-listing.html">Red</a></li>
-                      <li><a href="product-listing.html">Blue</a></li>
-                      <li><a href="product-listing.html">Green</a></li>
-                      <li><a href="product-listing.html">Yellow</a></li>
-                      <li><a href="product-listing.html">Black</a></li>
-                      <li><a href="product-listing.html">White</a></li>
-                      <li><a href="product-listing.html">Pink</a></li>
-                      <li><a href="product-listing.html">Brown</a></li>
-                      <li><a href="product-listing.html">Orange</a></li>
-                      <li><a href="product-listing.html">Purple</a></li>
-                    </ul>
-                  </div>
+                    {{-- Attributes (Fabric, Color...) : show_in_navbar --}}
+                    @foreach ($navAttributes as $navAttr)
+                      <div class="mega-col">
+                        <h4>Shop by {{ $navAttr->name }}</h4>
+                        <ul>
+                          @foreach ($navAttr->values->take(10) as $navVal)
+                            <li>
+                              <a href="{{ route('products', ['attr' => [$navAttr->slug => [$navVal->slug]]]) }}">
+                                {{ $navVal->value }}
+                              </a>
+                            </li>
+                          @endforeach
+                        </ul>
+                      </div>
+                    @endforeach
 
-                  <div class="mega-col">
-                    <h4>Shop by Collections</h4>
-                    <ul>
-                      <li><a href="product-listing.html">New Arrival</a></li>
-                      <li><a href="product-listing.html">Best Sellers</a></li>
-                      <li><a href="product-listing.html">Premium Wear</a></li>
-                      <li>
-                        <a href="product-listing.html">Exclusive Collection</a>
-                      </li>
-                      <li><a href="product-listing.html">Festive Sale</a></li>
-                    </ul>
-                  </div>
+                    {{-- Collections --}}
+                    @if ($navCollections->isNotEmpty())
+                      <div class="mega-col">
+                        <h4>Shop by Collections</h4>
+                        <ul>
+                          @foreach ($navCollections->take(10) as $navCol)
+                            <li>
+                              <a href="{{ route('products', ['collection' => [$navCol->slug]]) }}">{{ $navCol->name }}</a>
+                            </li>
+                          @endforeach
+                        </ul>
+                      </div>
+                    @endif
 
-                  <div class="mega-col">
-                    <h4>Price Range</h4>
-                    <ul>
-                      <li><a href="product-listing.html">Under ₹2,999</a></li>
-                      <li>
-                        <a href="product-listing.html">₹3,000 - ₹5,999</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">₹6,000 - ₹9,999</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">₹10,000 - ₹14,999</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">₹15,000 and Above</a>
-                      </li>
-                    </ul>
-                  </div>
+                    {{-- Price Range --}}
+                    @if (count($navPriceRanges))
+                      <div class="mega-col">
+                        <h4>Price Range</h4>
+                        <ul>
+                          @foreach ($navPriceRanges as $range)
+                                            <li>
+                                              <a href="{{ route('products', array_filter([
+                              'price_min' => $range['min'],
+                              'price_max' => $range['max'],
+                            ])) }}">{{ $range['label'] }}</a>
+                                            </li>
+                          @endforeach
+                        </ul>
+                      </div>
+                    @endif
 
-                  <div class="mega-col">
-                    <h4>Shop by Occasions</h4>
-                    <ul>
-                      <li>
-                        <a href="product-listing.html">Elegant Ethnic Wear</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">Office/Everyday Wear</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">Indo-Western Collection</a>
-                      </li>
-                      <li>
-                        <a href="product-listing.html">Festive/Occasion Wear</a>
-                      </li>
-                    </ul>
+                    {{-- Occasions --}}
+                    @if ($navOccasions->isNotEmpty())
+                      <div class="mega-col">
+                        <h4>Shop by Occasions</h4>
+                        <ul>
+                          @foreach ($navOccasions->take(10) as $navOcc)
+                            <li>
+                              <a href="{{ route('products', ['occasion' => [$navOcc->slug]]) }}">{{ $navOcc->title }}</a>
+                            </li>
+                          @endforeach
+                        </ul>
+                      </div>
+                    @endif
+
                   </div>
                 </div>
-              </div>
-            </li>
-            <!-- ===== /Shop by Collection ===== -->
-
-            <li><a href="category-listing.html">New Arrivals</a></li>
-            <li><a href="category-listing.html">Offers</a></li>
+              </li>
+            @endif
+            {{-- Collections marked show_in_navbar (New Arrivals, Offers...) --}}
+            @foreach ($navBarCollections as $navBarCol)
+              <li>
+                <a href="{{ route('products', ['collection' => [$navBarCol->slug]]) }}">{{ $navBarCol->name }}</a>
+              </li>
+            @endforeach
           </ul>
         </div>
 
@@ -399,77 +293,17 @@
               </svg>
             </button>
             <div class="formField">
-              <input type="text" class="searchInput" placeholder="Search sarees, lehengas, bridal wear..."
-                autocomplete="off" />
+              <input type="text" class="searchInput"
+                placeholder="Search {{ $navCategories->pluck('name')->map(fn($n) => strtolower($n))->implode(', ') ?: 'products' }}..."
+                autocomplete="off" data-url="{{ route('search.suggest') }}" data-all="{{ route('products') }}" />
 
               <div class="search-results">
                 <p class="res-title">Suggestions</p>
-                <ul class="res-list">
-                  <li data-name="kanjivaram pure silk saree silk">
-                    <a href="product-detail.html">
-                      <img src="{{ asset('assets/images/home/tab1.png')}}" alt="Kanjivaram Pure Silk Saree" />
-                      <span class="res-text">
-                        <b>Kanjivaram Pure Silk Saree</b>
-                        <small>Silk Saree</small>
-                      </span>
-                      <span class="res-price">₹12,999</span>
-                    </a>
-                  </li>
-                  <li data-name="banarasi zari woven silk saree banarsi">
-                    <a href="product-detail.html">
-                      <img src="{{ asset('assets/images/home/tab2.png')}}" alt="Banarasi Zari Woven Silk Saree" />
-                      <span class="res-text">
-                        <b>Banarasi Zari Woven Silk Saree</b>
-                        <small>Banarasi Saree</small>
-                      </span>
-                      <span class="res-price">₹8,499</span>
-                    </a>
-                  </li>
-                  <li data-name="organza floral embroidered saree">
-                    <a href="product-detail.html">
-                      <img src="{{ asset('assets/images/home/tab3.png')}}" alt="Organza Floral Embroidered Saree" />
-                      <span class="res-text">
-                        <b>Organza Floral Embroidered Saree</b>
-                        <small>Organza Saree</small>
-                      </span>
-                      <span class="res-price">₹6,799</span>
-                    </a>
-                  </li>
-                  <li data-name="velvet bridal lehenga">
-                    <a href="product-detail.html">
-                      <img src="{{ asset('assets/images/home/tab2.png')}}" alt="Velvet Bridal Lehenga" />
-                      <span class="res-text">
-                        <b>Velvet Bridal Lehenga</b>
-                        <small>Bridal Lehenga</small>
-                      </span>
-                      <span class="res-price">₹38,999</span>
-                    </a>
-                  </li>
-                  <li data-name="sequined reception lehenga party">
-                    <a href="product-detail.html">
-                      <img src="{{ asset('assets/images/home/tab3.png')}}" alt="Sequined Reception Lehenga" />
-                      <span class="res-text">
-                        <b>Sequined Reception Lehenga</b>
-                        <small>Party Lehenga</small>
-                      </span>
-                      <span class="res-price">₹18,499</span>
-                    </a>
-                  </li>
-                  <li data-name="pastel organza lehenga">
-                    <a href="product-detail.html">
-                      <img src="{{ asset('assets/images/home/tab4.png')}}" alt="Pastel Organza Lehenga" />
-                      <span class="res-text">
-                        <b>Pastel Organza Lehenga</b>
-                        <small>Organza Lehenga</small>
-                      </span>
-                      <span class="res-price">₹21,299</span>
-                    </a>
-                  </li>
-                </ul>
-                <p class="res-empty">
+                <ul class="res-list"></ul>
+                <p class="res-empty" style="display:none">
                   No products found. Try a different keyword.
                 </p>
-                <a href="product-listing.html" class="res-all">
+                <a href="{{ route('products') }}" class="res-all">
                   View all results
                   <i class="fa-solid fa-arrow-right-long"></i>
                 </a>
@@ -498,14 +332,10 @@
 
                 <ul class="acc-list">
                   @if ($dashUrl)
-                    <li><a href="{{ $dashUrl }}"><i class="fa-solid fa-truck-fast"></i> Track Order</a></li>
-                    <li><a href="{{ $dashUrl }}"><i class="fa-solid fa-box-open"></i> My Orders</a></li>
-                  @endif
-                  @if (Route::has('wishlist'))
-                    <li><a href="{{ route('wishlist') }}"><i class="fa-regular fa-heart"></i> My Wishlist</a></li>
-                  @endif
-                  @if ($dashUrl)
-                    <li><a href="{{ $dashUrl }}"><i class="fa-regular fa-user"></i> My Profile</a></li>
+                    <li><a href="{{ $dashUrl }}#tab-2"><i class="fa-solid fa-truck-fast"></i> Track Order</a></li>
+                    <li><a href="{{ $dashUrl }}#tab-3"><i class="fa-solid fa-box-open"></i> My Orders</a></li>
+                    <li><a href="{{ $dashUrl }}#tab-4"><i class="fa-regular fa-heart"></i> My Wishlist</a></li>
+                    <li><a href="{{ $dashUrl }}#tab-5"><i class="fa-regular fa-user"></i> My Profile</a></li>
                   @endif
                   <li class="acc-out">
                     <a href="javascript:void(0)" onclick="document.getElementById('customerLogoutForm').submit()">
@@ -527,13 +357,23 @@
               </button>
             @endif
           </div>
-          <button data-model=".login-pop" class="action-link" aria-label="Wishlist">
-            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 20.5s-8-4.9-8-11A4.6 4.6 0 0112 6.8a4.6 4.6 0 018 2.7c0 6.1-8 11-8 11z" />
-            </svg>
-            <span class="count">0</span>
-          </button>
+          @if ($authCustomer && $dashUrl)
+            <a href="{{ $dashUrl }}#tab-4" class="action-link" aria-label="Wishlist">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20.5s-8-4.9-8-11A4.6 4.6 0 0112 6.8a4.6 4.6 0 018 2.7c0 6.1-8 11-8 11z" />
+              </svg>
+              <span class="count wishlist-count">{{ $wishCount }}</span>
+            </a>
+          @else
+            <button type="button" data-model=".login-pop" class="action-link" aria-label="Wishlist">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20.5s-8-4.9-8-11A4.6 4.6 0 0112 6.8a4.6 4.6 0 018 2.7c0 6.1-8 11-8 11z" />
+              </svg>
+              <span class="count wishlist-count">{{ $wishCount }}</span>
+            </button>
+          @endif
 
           <button data-model=".cart-pop" class="action-link" aria-label="Bag">
             <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5"
@@ -588,66 +428,78 @@
       <div class="footer-middle">
         <div class="container">
           <div class="colA">
-            <a href="{{ route('home') }}" class="logo"><img src="{{ asset('assets/images/logo.png')}}"
-                alt="Archana Saree Emporium" /></a>
-            <span class="brand-tag">Premium Sarees · Designer Lehengas · Bridal Wear</span>
-            <p class="brand-desc">
-              Timeless Indian elegance, thoughtfully curated for every
-              celebration.
-            </p>
-            <ul class="social">
-              <li>
-                <a href="#" target="_blank" rel="noopener" aria-label="Instagram"><i
-                    class="fa-brands fa-instagram"></i></a>
-              </li>
-              <li>
-                <a href="#" target="_blank" rel="noopener" aria-label="Facebook"><i
-                    class="fa-brands fa-facebook-f"></i></a>
-              </li>
-              <li>
-                <a href="#" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
-              </li>
-              <li>
-                <a href="#" target="_blank" rel="noopener" aria-label="WhatsApp"><i
-                    class="fa-brands fa-whatsapp"></i></a>
-              </li>
-            </ul>
+            <a href="{{ route('home') }}" class="logo">
+              @if ($footerLogo)
+                <img src="{{ $footerLogo }}" alt="{{ $siteName }}" />
+              @else
+                <span>{{ $siteName }}</span>
+              @endif
+            </a>
+            @if ($tagline)
+              <span class="brand-tag">{{ $tagline }}</span>
+            @endif
+            @if ($general->footer_description)
+              <p class="brand-desc">{{ $general->footer_description }}</p>
+            @endif
+            @if ($socials->isNotEmpty())
+              <ul class="social">
+                @foreach ($socials as $s)
+                  <li>
+                    <a href="{{ $s['url'] }}" target="_blank" rel="noopener" aria-label="{{ $s['label'] }}"><i
+                        class="{{ $s['icon'] }}"></i></a>
+                  </li>
+                @endforeach
+              </ul>
+            @endif
           </div>
 
           <div class="colB">
             <h5>Shop</h5>
             <ul>
-              <li><a href="category-listing.html">Sarees</a></li>
-              <li><a href="category-listing.html">Lehengas</a></li>
-              <li><a href="category-listing.html">Bridal Wear</a></li>
-              <li><a href="category-listing.html">New Arrivals</a></li>
-              <li><a href="product-listing.html">Bestsellers</a></li>
-              <li><a href="category-listing.html">Collections</a></li>
-              <li><a href="category-listing.html">Offers</a></li>
+              {{-- Categories (show_in_navbar) --}}
+              @foreach ($navCategories as $navCat)
+                <li><a href="{{ route('category.show', $navCat->slug) }}">{{ $navCat->name }}</a></li>
+              @endforeach
+
+              {{-- Collections (show_in_navbar): New Arrivals, Bestsellers, Offers... --}}
+              @foreach ($navBarCollections as $navBarCol)
+                <li>
+                  <a href="{{ route('products', ['collection' => [$navBarCol->slug]]) }}">{{ $navBarCol->name }}</a>
+                </li>
+              @endforeach
+
+              {{-- Sab products --}}
+              <li><a href="{{ route('products') }}">All Products</a></li>
             </ul>
           </div>
 
           <div class="colC">
             <h5>Customer Care</h5>
             <ul>
-              <li><a href="contact.html">Contact Us</a></li>
-              <li><a href="javascript:void(0)">My Account</a></li>
-              <li><a href="javascript:void(0)">My Orders</a></li>
-              <li><a href="javascript:void(0)">Wishlist</a></li>
+              <li><a href="{{ route('contact') }}">Contact Us</a></li>
+              @if ($authCustomer && $dashUrl)
+                <li><a href="{{ $dashUrl }}#tab-1">My Account</a></li>
+                <li><a href="{{ $dashUrl }}#tab-3">My Orders</a></li>
+                <li><a href="{{ $dashUrl }}#tab-4">Wishlist</a></li>
+              @else
+                <li><a href="javascript:void(0)" data-model=".login-pop">My Account</a></li>
+                <li><a href="javascript:void(0)" data-model=".login-pop">My Orders</a></li>
+                <li><a href="javascript:void(0)" data-model=".login-pop">Wishlist</a></li>
+              @endif
               <li><a href="shipping-policy.html">Shipping Information</a></li>
               <li>
                 <a href="returns-exchange.html">Returns &amp; Exchange</a>
               </li>
-              <li><a href="faqs.html">FAQs</a></li>
+              <li><a href="{{ route('faqs') }}">FAQs</a></li>
             </ul>
           </div>
 
           <div class="colD">
             <h5>Information</h5>
             <ul>
-              <li><a href="about.html">About Us</a></li>
-              <li><a href="blogs.html">Blogs</a></li>
-              <li><a href="privacy-policy.html">Privacy Policy</a></li>
+              <li><a href="{{ route('about') }}">About Us</a></li>
+              <li><a href="{{ route('blogs') }}">Blogs</a></li>
+              <li><a href="#privacy-policy.html">Privacy Policy</a></li>
               <li>
                 <a href="terms-conditions.html">Terms &amp; Conditions</a>
               </li>
@@ -662,18 +514,19 @@
             <h5>Contact</h5>
             <h6 class="help-title">Need Help? We're Here for You.</h6>
             <p class="desc">
-              Get in touch with our team for assistance with products, orders
-              and more.
+              Get in touch with our team for assistance with products, orders and more.
             </p>
-            <a href="contact.html" class="btn btn-white">Contact Us <i class="fa-solid fa-arrow-right-long"></i></a>
+            <a href="{{ route('contact') }}" class="btn btn-white">Contact Us <i
+                class="fa-solid fa-arrow-right-long"></i></a>
           </div>
+
         </div>
       </div>
 
       <div class="footer-bottom">
         <div class="container">
           <p class="copyright">
-            &copy; 2026 Archana Saree Emporium. All Rights Reserved.
+            {{ $general->footer_copyright ?: '© ' . date('Y') . ' ' . $siteName . '. All Rights Reserved.' }}
           </p>
           <ul class="legal">
             <li><a href="privacy-policy.html">Privacy Policy</a></li>
@@ -698,8 +551,14 @@
       <button type="button" class="float-link" data-model=".ham-pop" aria-label="Menu">
         <i class="fa-solid fa-bars"></i><span>Menu</span>
       </button>
-      <a href="wishlist.html" class="float-link"><i class="fa-regular fa-heart"></i><span>Wishlist</span><b
-          class="f-count">0</b></a>
+      @if ($authCustomer && $dashUrl)
+        <a href="{{ $dashUrl }}#tab-4" class="float-link"><i class="fa-regular fa-heart"></i><span>Wishlist</span><b
+            class="f-count wishlist-count">{{ $wishCount }}</b></a>
+      @else
+        <button type="button" class="float-link" data-model=".login-pop" aria-label="Wishlist"><i
+            class="fa-regular fa-heart"></i><span>Wishlist</span><b
+            class="f-count wishlist-count">{{ $wishCount }}</b></button>
+      @endif
       <a href="{{ route('cart') }}" class="float-link"><i class="fa-solid fa-bag-shopping"></i><span>Bag</span><b
           class="f-count cart-count">{{ $cartCount }}</b></a>
       @if ($authCustomer)
@@ -734,8 +593,10 @@
     </button>
 
     <div class="model-body">
-      <a href="javascript:void(0);" class="pop-logo" aria-label="Archana Saree Emporium Home">
-        <img src="{{ asset('assets/images/logo.png')}}" alt="" />
+      <a href="{{ route('home') }}" class="pop-logo" aria-label="{{ $siteName }} Home">
+        @if ($headerLogo)
+          <img src="{{ $headerLogo }}" alt="{{ $siteName }}" />
+        @endif
       </a>
 
       <div class="pop-title">
@@ -862,6 +723,63 @@
     </div>
   </div>
 
+  <div class="model product-view-pop">
+    <div class="model-body">
+      <button class="close close-btn" type="button" aria-label="Close quick view">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+
+      <div class="pvp-grid">
+        <div class="pvp-visual">
+          <img id="pvpImg" src="{{ asset('assets/images/home/tab1.png') }}" alt="" />
+          <span class="pvp-badge" id="pvpBadge" style="display:none"></span>
+        </div>
+
+        <div class="pvp-content">
+          <div class="pvp-meta">
+            <span class="pvp-cat" id="pvpCat"></span>
+            <span class="pvp-rate" id="pvpRate" style="display:none"><i class="fa-solid fa-star"></i> <b></b></span>
+          </div>
+
+          <h4 class="pvp-title"><a href="javascript:void(0)" id="pvpTitleLink"></a></h4>
+
+          <div class="pvp-price">
+            <span class="price-now" id="pvpNow"></span>
+            <del class="price-old" id="pvpOld" style="display:none"></del>
+            <span class="price-off" id="pvpOff" style="display:none"></span>
+          </div>
+
+          <p class="pvp-desc" id="pvpDesc" style="display:none"></p>
+          <p class="pvp-stock" id="pvpStock"></p>
+
+          <div class="pvp-actions">
+            <div class="pvp-qty qty">
+              <button type="button" class="pvp-minus" aria-label="Decrease quantity">
+                <i class="fa-solid fa-minus"></i>
+              </button>
+              <input type="text" class="pvp-qty-input" id="pvpQty" value="1" readonly aria-label="Quantity" />
+              <button type="button" class="pvp-plus" aria-label="Increase quantity">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+
+            <button type="button" class="btn btn-outline-primary pvp-cart" id="pvpAdd">Add to Cart</button>
+          </div>
+
+          <p class="pvp-msg" id="pvpMsg" style="display:none"></p>
+
+          <button type="button" class="wish-link pvp-wish" id="pvpWish" data-id="" aria-pressed="false">
+            <i class="fa-regular fa-heart"></i> <span>Add to Wishlist</span>
+          </button>
+
+          <a href="javascript:void(0)" class="btn btn-primary pvp-buy" id="pvpView">
+            View Full Details <i class="fa-solid fa-arrow-right-long"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ================= jQuery ================= -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
@@ -915,6 +833,79 @@
     document.addEventListener("click", (e) => {
       if (!sb.contains(e.target)) sb.classList.remove("open");
     });
+  </script>
+
+  <script>
+    (function () {
+      var input = document.querySelector('.searchInput');
+      if (!input) return;
+
+      var box = input.closest('.formField'),
+        list = box.querySelector('.res-list'),
+        title = box.querySelector('.res-title'),
+        empty = box.querySelector('.res-empty'),
+        all = box.querySelector('.res-all'),
+        url = input.dataset.url,
+        allUrl = input.dataset.all,
+        timer = null, ctrl = null, lastQ = null;
+
+      function esc(s) {
+        var d = document.createElement('div');
+        d.textContent = s == null ? '' : s;
+        return d.innerHTML;
+      }
+
+      function render(d) {
+        var q = d.query || '';
+        title.textContent = q ? 'Results' : 'Suggestions';
+        all.href = q ? allUrl + '?q=' + encodeURIComponent(q) : allUrl;
+
+        // data-name = typed query, taaki purana main.js filter (agar hai) in items ko hide na kare
+        list.innerHTML = d.items.map(function (p) {
+          return '<li data-name="' + esc(q.toLowerCase()) + '"><a href="' + esc(p.url) + '">' +
+            '<img src="' + esc(p.image) + '" alt="' + esc(p.name) + '" />' +
+            '<span class="res-text"><b>' + esc(p.name) + '</b>' +
+            (p.category ? '<small>' + esc(p.category) + '</small>' : '') + '</span>' +
+            '<span class="res-price">' + esc(p.price) + '</span></a></li>';
+        }).join('');
+
+        var none = d.items.length === 0;
+        list.style.display = none ? 'none' : '';
+        empty.style.display = none && q ? 'block' : 'none';
+        title.style.display = none ? 'none' : '';
+      }
+
+      function fetchResults() {
+        var q = input.value.trim();
+        if (q === lastQ) return;
+        lastQ = q;
+
+        if (ctrl) ctrl.abort();
+        ctrl = new AbortController();
+
+        fetch(url + '?q=' + encodeURIComponent(q), {
+          headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
+          signal: ctrl.signal
+        })
+          .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+          .then(render)
+          .catch(function (e) { if (e.name !== 'AbortError') console.error('Search failed:', e); });
+      }
+
+      input.addEventListener('input', function () {
+        clearTimeout(timer);
+        timer = setTimeout(fetchResults, 250);
+      });
+
+      input.addEventListener('focus', fetchResults);
+
+      // Enter: poore results page par
+      input.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter') return;
+        var q = input.value.trim();
+        if (q) window.location.href = allUrl + '?q=' + encodeURIComponent(q);
+      });
+    })();
   </script>
 
   <script>
@@ -1046,6 +1037,131 @@
       });
     </script>
   @endif
+
+  <script>
+    $(function () {
+      var QV_URL = @json(route('products.quick-view', ['id' => '__ID__'])),
+        QV_CART_URL = @json(route('cart.add')),
+        QV_CSRF = @json(csrf_token()),
+        $pop = $('.product-view-pop'),
+        cur = null, req = null, busy = false;
+
+      function msg(text) {
+        $('#pvpMsg').text(text).show();
+      }
+
+      function failMessage(xhr, fallback) {
+        var m = fallback;
+        if (xhr.status === 419) m = 'Your session expired. Please refresh the page and try again.';
+        else if (xhr.status === 429) m = 'Too many attempts. Please try again in a minute.';
+        else if (xhr.responseJSON) {
+          m = xhr.responseJSON.message || m;
+          if (xhr.responseJSON.errors) m = Object.values(xhr.responseJSON.errors)[0][0];
+        }
+        return m;
+      }
+
+      function paintWish(on) {
+        $('#pvpWish').toggleClass('is-active', on).attr('aria-pressed', on ? 'true' : 'false')
+          .find('i').toggleClass('fa-solid', on).toggleClass('fa-regular', !on).end()
+          .find('span').text(on ? 'Wishlisted' : 'Add to Wishlist');
+      }
+
+      function fill(p) {
+        cur = p;
+
+        $('#pvpImg').attr({ src: p.image, alt: p.name });
+        $('#pvpBadge').text(p.badge || '').toggle(!!p.badge);
+        $('#pvpCat').text(p.category);
+        $('#pvpRate').toggle(!!p.rating).find('b').text(p.rating);
+        $('#pvpTitleLink').text(p.name).attr('href', p.url);
+
+        $('#pvpNow').text(p.price_fmt);
+        $('#pvpOld').text(p.mrp_fmt).toggle(p.off > 0);
+        $('#pvpOff').text(p.off + '% OFF').toggle(p.off > 0);
+
+        $('#pvpDesc').text(p.description || '').toggle(!!p.description);
+        $('#pvpStock').text(p.in_stock ? 'In Stock' : 'Out of Stock').toggleClass('is-out', !p.in_stock);
+
+        $('#pvpQty').val(p.min_qty);
+        $('#pvpAdd').toggleClass('disabled', !p.in_stock).attr('aria-disabled', !p.in_stock);
+        $('#pvpView').attr('href', p.url);
+
+        // set the attribute AND jQuery's cache: the shared wishlist handler reads .data('id')
+        $('#pvpWish').attr('data-id', p.id).data('id', p.id);
+        paintWish(p.wished);
+
+        $('#pvpMsg').hide();
+        $pop.removeClass('is-loading');
+      }
+
+      // ── open: fetch the product the card points at ──
+      $(document).on('click', '.quick-btn', function () {
+        var id = $(this).data('id');
+        if (req) req.abort();
+
+        cur = null;
+        $('#pvpMsg').hide();
+        $pop.addClass('is-loading');
+        $('#pvpAdd').addClass('disabled');
+
+        req = $.getJSON(QV_URL.replace('__ID__', id))
+          .done(fill)
+          .fail(function (xhr, status) {
+            if (status === 'abort') return;
+            $pop.removeClass('is-loading');
+            msg(failMessage(xhr, 'Could not load this product. Please try again.'));
+          });
+      });
+
+      // ── quantity ──
+      $(document).on('click', '.pvp-plus, .pvp-minus', function () {
+        if (!cur) return;
+        var v = parseInt($('#pvpQty').val(), 10) || cur.min_qty;
+
+        if ($(this).hasClass('pvp-plus')) {
+          if (cur.stock && v + 1 > cur.stock) return msg('Only ' + cur.stock + ' units available.');
+          v++;
+        } else {
+          v = Math.max(cur.min_qty, v - 1);
+        }
+        $('#pvpMsg').hide();
+        $('#pvpQty').val(v);
+      });
+
+      // ── add to cart ──
+      $(document).on('click', '#pvpAdd', function () {
+        var $b = $(this);
+        if (!cur || busy || $b.hasClass('disabled')) return;
+
+        busy = true;
+        var label = $b.html();
+        $b.addClass('is-loading').text('Adding...');
+        $('#pvpMsg').hide();
+
+        $.ajax({
+          url: QV_CART_URL, method: 'POST', dataType: 'json',
+          data: { _token: QV_CSRF, product_id: cur.id, quantity: parseInt($('#pvpQty').val(), 10) || cur.min_qty }
+        }).done(function (r) {
+          if (r.mini_cart_html) $('#miniCart').html(r.mini_cart_html);
+          if (r.cart_count !== undefined) $('.cart-count').text(r.cart_count);
+          $(document).trigger('cart:added', [r]);
+
+          // close quick view, then open the mini cart
+          $pop.find('.close').first().trigger('click');
+          setTimeout(function () {
+            $('.action-link[data-model=".cart-pop"]').first().trigger('click');
+          }, 350);
+        }).fail(function (xhr) {
+          // e.g. the server asks for options: the "View Full Details" link is right below
+          msg(failMessage(xhr, 'Could not add to bag right now. Please try again.'));
+        }).always(function () {
+          busy = false;
+          $b.removeClass('is-loading').html(label);
+        });
+      });
+    });
+  </script>
 
   @include('partials.card-cart-js')
   @stack('scripts')

@@ -203,6 +203,9 @@ header
         padding: 0
         color: var(--black)
         transition: all 0.3s ease
+        // @include media(991)
+        //   display: flex
+
 
         svg
           display: block
@@ -826,6 +829,11 @@ header
               list-style: none
               max-height: 260px
               overflow-y: auto
+              scrollbar-width: none 
+              -ms-overflow-style: none 
+
+              &::-webkit-scrollbar
+                display: none 
 
               @include media(540)
                 max-height: 230px
@@ -1157,19 +1165,7 @@ header
   &.is-open
     transform: translateX(0%)
 
-  @include media(768)
-    top: auto
-    left: 0
-    right: 0
-    bottom: 0
-    height: auto
-    max-width: 100%
-    max-height: 85vh
-    border-radius: 20px 20px 0 0
-    transform: translateY(100%)
 
-    &.is-open
-      transform: translateY(0%)
 
   .f-groups
     flex: 1
@@ -1228,19 +1224,13 @@ header
       justify-content: center
 
 .sort-pop.model
-  top: auto
-  left: 0
   right: 0
-  bottom: 0
-  height: auto
-  max-width: 100%
-  max-height: 85vh
-  border-radius: 20px 20px 0 0
-  transform: translateY(100%)
+  max-width: 400px
+  transform: translateX(100%)
   transition: 0.5s ease
 
   &.is-open
-    transform: translateY(0%)
+    transform: translateX(0%)
 
   .sort-list
     margin: 0
@@ -1536,22 +1526,7 @@ header
   &.is-open
     transform: translateX(0%)
 
-  @include media(768)
-    top: auto
-    left: 0
-    right: 0
-    bottom: 0
-    height: auto
-    max-width: 100%
-    max-height: 85vh
-    border-radius: 20px 20px 0 0
-    transform: translateY(100%)
-
-    &.is-open
-      transform: translateY(0%)
-
-    .model-body
-      max-height: 85vh
+ 
 
   .size-table-wrap
     overflow-x: auto
@@ -2159,7 +2134,7 @@ $danger: #c62828
 
   @include media(540)
     .cp-head
-      padding: 72px 20px 16px
+      padding: 42px 20px 16px
 
       h3
         font-size: 22px
@@ -2185,3 +2160,1646 @@ $danger: #c62828
   100%
     opacity: 1
     transform: translateY(0)
+
+
+.toaster
+  position: fixed
+  top: 24px
+  left: 50%
+  z-index: 9999999999
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 12px
+  width: calc(100% - 32px)
+  max-width: 400px
+  transform: translateX(-50%)
+  pointer-events: none
+
+  @include media(1024)
+    top: 20px
+
+  @include media(768)
+    top: 16px
+    max-width: 380px
+
+  @include media(540)
+    top: 12px
+    gap: 10px
+    width: calc(100% - 24px)
+
+  .toast
+    position: relative
+    display: flex
+    align-items: center
+    gap: 14px
+    width: 100%
+    padding: 16px 16px 18px 18px
+    overflow: hidden
+    border: 1px solid var(--gray)
+    border-radius: 0
+    background: var(--white)
+    box-shadow: rgba(60, 30, 45, 0.16) 0 12px 36px
+    color: var(--black)
+    opacity: 0
+    transform: translateY(-20px)
+    transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)
+    pointer-events: auto
+
+    @include media(768)
+      gap: 12px
+      padding: 14px 14px 16px 16px
+
+    @include media(540)
+      gap: 10px
+      padding: 12px 12px 14px 14px
+
+    // top accent line (checkout price-box jaisa)
+    &::before
+      content: ""
+      position: absolute
+      top: -1px
+      left: 18px
+      width: 56px
+      height: 2px
+      background: var(--toast-color, var(--primary))
+
+      @include media(540)
+        left: 14px
+        width: 44px
+
+    // progress bar
+    &::after
+      content: ""
+      position: absolute
+      right: 0
+      bottom: 0
+      left: 0
+      height: 2px
+      background: var(--toast-color, var(--primary))
+      transform: scaleX(1)
+      transform-origin: left
+
+    &.is-show
+      opacity: 1
+      transform: translateY(0)
+
+      &::after
+        animation: toastBar var(--toast-time, 3s) linear forwards
+
+    .toast-icon
+      position: relative
+      display: grid
+      place-items: center
+      flex-shrink: 0
+      width: 42px
+      height: 42px
+      border: 1px solid var(--gray)
+      border-radius: 50%
+      background: var(--bg)
+      color: var(--toast-color, var(--primary))
+      font-size: 16px
+
+      @include media(768)
+        width: 38px
+        height: 38px
+        font-size: 15px
+
+      @include media(540)
+        width: 34px
+        height: 34px
+        font-size: 13px
+
+      &::before
+        content: ""
+        position: absolute
+        top: -4px
+        right: -4px
+        bottom: -4px
+        left: -4px
+        border: 1px solid var(--toast-color, var(--primary))
+        border-radius: 50%
+        opacity: 0
+
+        @include media(540)
+          top: -3px
+          right: -3px
+          bottom: -3px
+          left: -3px
+
+    &.is-show .toast-icon::before
+      animation: toastRing 0.9s ease-out 0.15s 1
+
+    .toast-body
+      flex: 1
+      min-width: 0
+
+    .toast-title
+      display: block
+      margin: 0
+      color: var(--black)
+      font-size: 12px
+      font-weight: 600
+      line-height: 1.4
+      text-transform: uppercase
+      letter-spacing: 0.16em
+
+      @include media(768)
+        letter-spacing: 0.14em
+
+      @include media(540)
+        font-size: 11px
+        letter-spacing: 0.1em
+
+    .toast-text
+      display: block
+      margin: 4px 0 0
+      color: var(--text)
+      font-size: 13px
+      font-weight: 400
+      line-height: 1.5
+      word-break: break-word
+
+      @include media(768)
+        font-size: 12px
+
+      @include media(540)
+        font-size: 11px
+
+    .toast-close
+      display: grid
+      place-items: center
+      flex-shrink: 0
+      width: 28px
+      height: 28px
+      padding: 0
+      border: 1px solid var(--gray)
+      border-radius: 50%
+      background: var(--white)
+      color: var(--text)
+      font-size: 11px
+      cursor: pointer
+      transition: all 0.3s ease
+
+      @include media(540)
+        width: 24px
+        height: 24px
+        font-size: 10px
+
+      &:hover,
+      &:focus-visible
+        border-color: var(--primary)
+        background: var(--primary)
+        color: var(--white)
+
+@keyframes toastBar
+  from
+    transform: scaleX(1)
+
+  to
+    transform: scaleX(0)
+
+@keyframes toastRing
+  0%
+    opacity: 0.7
+    transform: scale(0.85)
+
+  100%
+    opacity: 0
+    transform: scale(1.35)
+
+@media (prefers-reduced-motion: reduce)
+  .toaster
+    .toast,
+    .toast::after,
+    .toast .toast-icon::before
+      animation: none !important
+      transition: none !important
+.ham-pop
+  position: fixed
+  top: 0
+  left: 0
+  width: 100%
+  max-width: 500px
+  height: 100vh
+  height: 100dvh
+  transform: translateX(-100%)
+  transition: transform 0.5s ease
+  z-index: 999999
+  overflow: hidden
+  background-color: var(--white)
+  border-right: 1px solid var(--gray)
+
+  &::after
+    content: ""
+    position: absolute
+    right: 0
+    bottom: 0
+    z-index: 0
+    width: 340px
+    height: 340px
+    background-image: url(../../images/logo-bg.svg)
+    background-repeat: no-repeat
+    background-position: 100% 100%
+    background-size: contain
+    opacity: 0.04
+    pointer-events: none
+
+    @include media(540)
+      width: 220px
+      height: 220px
+
+  &.is-open
+    transform: translateX(0%)
+    box-shadow: 30px 0 80px -40px rgba(0, 0, 0, 0.3)
+
+  .ham-body
+    position: relative
+    z-index: 1
+    display: flex
+    flex-direction: column
+    width: 100%
+    height: 100%
+    padding: 0
+    overflow: hidden
+
+  // ---------- top bar ----------
+  .ham-top
+    position: relative
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 16px
+    flex: 0 0 80px
+    padding: 0 40px
+    border-bottom: 1px solid var(--gray)
+
+    @include media(540)
+      flex-basis: 70px
+      padding: 0 20px
+
+  // ---------- logo (default state) ----------
+  .ham-logo
+    display: flex
+    align-items: center
+    height: 100%
+    opacity: 1
+    visibility: visible
+    transform: translateX(0)
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease
+
+    img
+      display: block
+      width: auto
+      height: 85%
+      max-width: 200px
+      object-fit: contain
+      object-position: left center
+      mix-blend-mode: multiply
+
+      @include media(540)
+        height: 46px
+        max-width: 160px
+
+  // ---------- back (sits on the logo's place) ----------
+  .ham-back
+    position: absolute
+    top: 50%
+    left: 40px
+    display: inline-flex
+    align-items: center
+    gap: 8px
+    min-height: 0
+    margin: 0
+    padding: 8px 16px 8px 10px
+    border: 1px solid var(--gray)
+    border-radius: 50px
+    background: transparent
+    box-shadow: none
+    color: var(--black)
+    font-family: $Poppins
+    font-size: 12px
+    font-weight: 600
+    line-height: 1.2
+    text-transform: uppercase
+    letter-spacing: 0.1em
+    cursor: pointer
+    opacity: 0
+    visibility: hidden
+    transform: translate(-10px, -50%)
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease, background 0.3s ease, color 0.3s ease, border-color 0.3s ease
+
+    @include media(540)
+      left: 20px
+
+    span
+      font-family: $Poppins
+      font-size: 12px
+      font-weight: 600
+      line-height: 1.2
+      color: inherit
+
+    i
+      flex: 0 0 auto
+      display: block
+      font-size: 13px
+      line-height: 1
+      color: inherit
+
+    &.is-visible
+      opacity: 1
+      visibility: visible
+      transform: translate(0, -50%)
+
+      // back aaye to logo hide
+      + .ham-logo
+        opacity: 0
+        visibility: hidden
+        transform: translateX(10px)
+        pointer-events: none
+
+    &:hover
+      background: var(--primary)
+      border-color: var(--primary)
+      color: var(--white)
+
+  .close
+    position: relative
+    top: auto
+    right: auto
+    display: flex
+    align-items: center
+    justify-content: center
+    flex: 0 0 40px
+    width: 40px
+    height: 40px
+    margin: 0 0 0 auto
+    padding: 0
+    border: 1px solid var(--gray)
+    border-radius: 50%
+    background: var(--white)
+    color: var(--black)
+    cursor: pointer
+    transition: border-color 0.3s ease, background 0.3s ease, color 0.3s ease
+
+    i
+      display: block
+      font-size: 16px
+      line-height: 1
+      color: inherit
+
+    &:hover
+      background: var(--primary)
+      border-color: var(--primary)
+      color: var(--white)
+
+  // ---------- views ----------
+  .ham-views
+    position: relative
+    flex: 1
+    min-height: 0
+    overflow: hidden
+
+  .ham-view
+    position: absolute
+    inset: 0
+    padding: 14px 40px 30px
+    overflow-x: hidden
+    overflow-y: auto
+    opacity: 0
+    visibility: hidden
+    transform: translateX(100%)
+    transition: transform 0.45s ease, opacity 0.35s ease, visibility 0s linear 0.45s
+    @include scrollbar(4px, rgba(0, 0, 0, 0.05), var(--primary), 4px)
+
+    @include media(540)
+      padding: 10px 20px 24px
+
+    &.is-active
+      opacity: 1
+      visibility: visible
+      transform: translateX(0)
+      transition: transform 0.45s ease, opacity 0.35s ease, visibility 0s
+
+      .ham-list
+        > li
+          animation: hamFadeIn 0.5s ease both
+
+          @for $i from 1 through 12
+            &:nth-child(#{$i})
+              animation-delay: 0.05s * $i
+
+    &.is-behind
+      opacity: 0
+      transform: translateX(-30%)
+
+  // ---------- heading ----------
+  .ham-head
+    position: relative
+    margin: 0 0 10px
+    padding-bottom: 22px
+    border-bottom: 1px solid var(--gray)
+
+    &::after
+      content: ""
+      position: absolute
+      left: 0
+      bottom: -1px
+      width: 56px
+      height: 2px
+      background: var(--primary)
+
+    @include media(540)
+      padding-bottom: 18px
+
+  .ham-title
+    margin: 0
+    padding: 0
+    font-family: $Kugile
+    font-size: 24px
+    font-weight: 600
+    line-height: 1.1
+    letter-spacing: 0.02em
+    text-transform: uppercase
+    color: var(--black)
+
+    @include media(540)
+      font-size: 30px
+
+    @include media(420)
+      font-size: 26px
+
+  .ham-sub
+    margin: 10px 0 0
+    font-family: $Poppins
+    font-size: 13px
+    line-height: 1.6
+    color: rgba(0, 0, 0, 0.55)
+
+  // ---------- lists ----------
+  .ham-list
+    margin: 0
+    padding: 0
+    list-style: none
+
+    > li
+      margin: 0
+      padding: 0
+      border-bottom: 1px solid var(--gray)
+
+      > a,
+      > .ham-link
+        display: flex
+        align-items: center
+        justify-content: space-between
+        gap: 16px
+        width: 100%
+        min-height: 0
+        margin: 0
+        padding: 8px 0
+        border: 0
+        border-radius: 0
+        background: transparent
+        box-shadow: none
+        text-align: left
+        cursor: pointer
+        font-family: $Poppins
+        font-size: 16px
+        font-weight: 500
+        line-height: 1.2
+        letter-spacing: 0.06em
+        text-transform: uppercase
+        color: var(--black)
+        transition: color 0.3s ease, padding-left 0.3s ease
+
+        &:hover
+          color: var(--primary)
+          padding-left: 10px
+
+          .ham-arrow
+            background: var(--primary)
+            border-color: var(--primary)
+            color: var(--white)
+
+      &.active > a
+        color: var(--primary)
+
+  .ham-link-text
+    display: block
+    min-width: 0
+    font-family: $Poppins
+    font-size: inherit
+    font-weight: 500
+    line-height: 1.2
+    letter-spacing: inherit
+    text-transform: uppercase
+    color: inherit
+    border-radius: 18px
+
+    small
+      display: block
+      margin-top: 5px
+      font-family: $Poppins
+      font-size: 12px
+      font-weight: 500
+      line-height: 1.4
+      letter-spacing: 0
+      text-transform: none
+      color: rgba(0, 0, 0, 0.5)
+
+  .ham-arrow
+    display: flex
+    align-items: center
+    justify-content: center
+    flex: 0 0 32px
+    width: 32px
+    height: 32px
+    border: 1px solid var(--gray)
+    border-radius: 50%
+    color: var(--black)
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease
+
+    i
+      display: block
+      font-size: 13px
+      line-height: 1
+      color: inherit
+
+  // ---------- sub lists ----------
+  .ham-list--sub
+    > li
+      > a
+        position: relative
+        padding: 12px 0
+        font-family: $Poppins
+        font-size: 14px
+        font-weight: 400
+        letter-spacing: 0.02em
+        text-transform: none
+
+        &::after
+          content: ""
+          flex: 0 0 14px
+          width: 14px
+          height: 14px
+          background: currentColor
+          opacity: 0
+          transform: translateX(-8px)
+          transition: all 0.3s ease
+          -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5l7 7-7 7'/%3E%3C/svg%3E") center / contain no-repeat
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5l7 7-7 7'/%3E%3C/svg%3E") center / contain no-repeat
+
+        &:hover
+          &::after
+            opacity: 1
+            transform: translateX(0)
+
+      // last link = "Explore All"
+      &:last-child > a
+        color: var(--primary)
+        font-size: 12px
+        font-weight: 600
+        letter-spacing: 0.14em
+        text-transform: uppercase
+
+  // ---------- bottom ----------
+  .ham-bottom
+    display: flex
+    flex-direction: column
+    gap: 18px
+    flex: 0 0 auto
+    padding: 20px 40px 28px
+    border-top: 1px solid var(--gray)
+    background: var(--white)
+
+    @include media(540)
+      padding: 18px 20px 22px
+
+    .btn
+      display: flex
+      align-items: center
+      justify-content: center
+      gap: 10px
+      width: 100%
+      margin: 0
+
+  .ham-social
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: 14px
+
+    a
+      display: inline-flex
+      align-items: center
+      justify-content: center
+      width: 40px
+      height: 40px
+      border: 1px solid var(--gray)
+      border-radius: 50%
+      color: var(--black)
+      font-size: 15px
+      line-height: 1
+      transition: all 0.3s ease
+
+      i
+        display: block
+        line-height: 1
+
+      &:hover
+        background: var(--primary)
+        border-color: var(--primary)
+        color: var(--white)
+        transform: translateY(-2px)
+
+@keyframes hamFadeIn
+  from
+    opacity: 0
+    transform: translateY(16px)
+  to
+    opacity: 1
+    transform: translateY(0)
+.offer-pop.model
+  position: fixed
+  top: 50%
+  left: 50%
+  right: auto
+  bottom: auto
+  width: calc(100% - 30px)
+  max-width: 920px
+  height: auto
+  max-height: 90vh
+  max-height: 90dvh
+  background: var(--white)
+  border-radius: 10px
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22)
+  opacity: 0
+  visibility: hidden
+  pointer-events: none
+  transform: translate(-50%, -46%)
+  transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s ease
+
+  @include media(540)
+    width: calc(100% - 20px)
+    max-height: 94vh
+    max-height: 94dvh
+
+  &.is-open
+    opacity: 1
+    visibility: visible
+    pointer-events: auto
+    transform: translate(-50%, -50%)
+
+  .close
+    position: absolute
+    top: 10px
+    right: 10px
+    z-index: 5
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 40px
+    height: 40px
+    padding: 0
+    border: 1px solid var(--gray)
+    border-radius: 50%
+    background: var(--white)
+    color: var(--black)
+    box-shadow: rgba(0, 0, 0, 0.15) 0 6px 18px
+    cursor: pointer
+    transition: all 0.3s ease
+
+    @include media(540)
+      top: 8px
+      right: 8px
+      width: 32px
+      height: 32px
+
+    i
+      display: block
+      font-size: 15px
+      line-height: 1
+      color: inherit
+
+      @include media(540)
+        font-size: 13px
+
+    &:hover
+      background: var(--primary)
+      border-color: var(--primary)
+      color: var(--white)
+
+  .model-body
+    position: relative
+    max-height: 90vh
+    max-height: 90dvh
+    overflow-y: auto
+    overflow-x: hidden
+    border-radius: 10px
+    @include scrollbar(3px, #f2f2f2, #c9c9c9, 8px)
+
+    @include media(540)
+      max-height: 94vh
+      max-height: 94dvh
+
+  .op-grid
+    display: grid
+    grid-template-columns: 1fr 1.1fr
+    min-height: 520px
+
+    @include media(1024)
+      min-height: 480px
+
+    @include media(768)
+      grid-template-columns: 1fr
+      min-height: 0
+
+  // ---------- image side ----------
+  .op-visual
+    position: relative
+    overflow: hidden
+    background: var(--dark-gray)
+
+    @include media(768)
+      height: 150px
+
+    @include media(540)
+      height: 120px
+
+    img
+      position: absolute
+      inset: 0
+      width: 100%
+      height: 100%
+      object-fit: cover
+      object-position: top center
+      display: block
+
+    &::after
+      content: ""
+      position: absolute
+      inset: 14px
+      z-index: 1
+      border: 1px solid rgba(255, 255, 255, 0.55)
+      pointer-events: none
+
+      @include media(768)
+        inset: 10px
+
+      @include media(540)
+        inset: 8px
+
+    .op-badge
+      position: absolute
+      left: 0
+      bottom: 34px
+      z-index: 2
+      display: flex
+      flex-direction: column
+      gap: 6px
+      padding: 12px 22px 12px 20px
+      background: var(--primary)
+      color: var(--white)
+      font-size: 10px
+      font-weight: 500
+      line-height: 1
+      text-transform: uppercase
+      letter-spacing: 0.16em
+
+      @include media(768)
+        bottom: 18px
+        gap: 4px
+        padding: 9px 16px 9px 14px
+
+      @include media(540)
+        bottom: 14px
+        gap: 3px
+        padding: 7px 12px 7px 12px
+        font-size: 8px
+        letter-spacing: 0.12em
+
+      b
+        display: block
+        color: var(--white)
+        font-size: 24px
+        font-weight: 600
+        line-height: 1
+        letter-spacing: 0
+
+        @include media(768)
+          font-size: 20px
+
+        @include media(540)
+          font-size: 16px
+
+  // ---------- content side ----------
+  .op-content
+    display: flex
+    flex-direction: column
+    justify-content: center
+    min-width: 0
+    padding: 44px 40px
+
+    @include media(1024)
+      padding: 34px 28px
+
+    @include media(768)
+      padding: 20px 22px 18px
+
+    @include media(540)
+      padding: 14px 16px 14px
+
+  .op-eyebrow
+    display: block
+    margin-bottom: 12px
+    color: var(--primary)
+    font-family: $Poppins
+    font-size: 12px
+    font-weight: 600
+    text-transform: uppercase
+    letter-spacing: 0.25em
+
+    @include media(768)
+      margin-bottom: 8px
+
+    @include media(540)
+      margin-bottom: 4px
+      font-size: 10px
+      letter-spacing: 0.18em
+
+  .op-title
+    margin: 0 0 10px
+    color: var(--black)
+    font-family: $Kugile
+    font-size: 30px
+    line-height: 1.2
+
+    @include media(1024)
+      font-size: 27px
+
+    @include media(768)
+      margin-bottom: 6px
+      font-size: 24px
+
+    @include media(540)
+      margin-bottom: 4px
+      font-size: 20px
+
+  .op-desc
+    margin: 0 0 20px
+    font-size: 14px
+    line-height: 1.7
+
+    @include media(768)
+      display: -webkit-box
+      overflow: hidden
+      margin-bottom: 12px
+      font-size: 13px
+      line-height: 1.55
+      -webkit-line-clamp: 2
+      -webkit-box-orient: vertical
+
+    @include media(540)
+      margin-bottom: 10px
+      font-size: 12px
+
+  .op-price
+    display: flex
+    align-items: baseline
+    flex-wrap: wrap
+    gap: 6px 12px
+    margin-bottom: 22px
+    padding-bottom: 20px
+    border-bottom: 1px solid var(--gray)
+
+    @include media(768)
+      margin-bottom: 12px
+      padding-bottom: 12px
+
+    @include media(540)
+      gap: 4px 8px
+      margin-bottom: 10px
+      padding-bottom: 10px
+
+    .op-save
+      color: var(--black)
+      font-family: $Poppins
+      font-size: 26px
+      font-weight: 600
+      line-height: 1.1
+
+      @include media(768)
+        font-size: 22px
+
+      @include media(540)
+        font-size: 18px
+
+    .op-min
+      color: var(--text)
+      font-size: 13px
+
+      @include media(540)
+        font-size: 12px
+
+  // ---------- coupon ----------
+  .op-coupon
+    margin-bottom: 20px
+
+    @include media(768)
+      margin-bottom: 12px
+
+    @include media(540)
+      margin-bottom: 10px
+
+    .op-label
+      display: block
+      margin-bottom: 10px
+      color: var(--black)
+      font-family: $Poppins
+      font-size: 12px
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.16em
+
+      @include media(540)
+        display: none
+
+    .op-code-box
+      display: flex
+      align-items: center
+      justify-content: space-between
+      gap: 14px
+      padding: 10px 10px 10px 18px
+      border: 1px dashed var(--primary)
+      background: var(--bg)
+
+      @include media(768)
+        padding: 8px 8px 8px 14px
+
+      @include media(540)
+        gap: 10px
+        padding: 6px 6px 6px 12px
+
+    .op-code
+      min-width: 0
+      color: var(--primary)
+      font-family: $Poppins
+      font-size: 18px
+      font-weight: 600
+      letter-spacing: 0.14em
+      text-transform: uppercase
+
+      @include media(768)
+        font-size: 16px
+
+      @include media(540)
+        font-size: 14px
+        letter-spacing: 0.1em
+
+    .op-copy
+      flex: 0 0 auto
+      padding: 10px 16px
+      border: 1px solid var(--primary)
+      background: transparent
+      color: var(--primary)
+      font-family: $Poppins
+      font-size: 11px
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.12em
+      cursor: pointer
+      transition: all 0.3s ease
+
+      @include media(768)
+        padding: 8px 14px
+
+      @include media(540)
+        padding: 7px 10px
+        font-size: 10px
+        letter-spacing: 0.08em
+
+      span
+        color: inherit
+
+      &:hover,
+      &.copied
+        background: var(--primary)
+        color: var(--white)
+
+  // ---------- points ----------
+  .op-points
+    display: grid
+    gap: 8px
+    margin: 0 0 24px
+    padding: 0
+    list-style: none
+
+    @include media(768)
+      display: flex
+      flex-wrap: wrap
+      gap: 6px 14px
+      margin-bottom: 14px
+
+    @include media(540)
+      gap: 4px 10px
+      margin-bottom: 12px
+
+    li
+      display: flex
+      align-items: center
+      gap: 10px
+      color: var(--black)
+      font-size: 13px
+      line-height: 1.4
+
+      @include media(768)
+        gap: 6px
+        font-size: 12px
+
+      @include media(540)
+        gap: 5px
+        font-size: 11px
+
+      i
+        flex: 0 0 18px
+        display: flex
+        align-items: center
+        justify-content: center
+        width: 18px
+        height: 18px
+        border-radius: 50%
+        background: var(--primary)
+        color: var(--white)
+        font-size: 9px
+
+        @include media(540)
+          flex-basis: 14px
+          width: 14px
+          height: 14px
+          font-size: 7px
+
+  // ---------- buttons ----------
+  .op-btns
+    display: grid
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+    gap: 12px
+
+    @include media(540)
+      gap: 8px
+
+    .btn
+      display: flex
+      align-items: center
+      justify-content: center
+      gap: 8px
+      width: 100%
+      margin: 0
+
+      @include media(540)
+        gap: 5px
+        min-height: 0
+        padding: 11px 8px
+        font-size: 11px
+        letter-spacing: 0.06em
+
+      i
+        transition: transform 0.3s ease
+
+        @include media(540)
+          font-size: 10px
+
+      &:hover i
+        transform: translateX(5px)
+
+  .op-note
+    margin: 14px 0 0
+    font-size: 11px
+    text-align: center
+    opacity: 0.65
+
+    @include media(768)
+      margin-top: 10px
+
+    @include media(540)
+      margin-top: 8px
+      font-size: 10px
+
+.video-pop.model
+    left: 0
+    right: 0
+    bottom: -100%
+    background: #0000007a
+    z-index: 90
+    max-width: 100%
+    transform: translateY(100%)
+    transition: .5s ease
+
+    &.is-open
+        transform: translateY(0%)
+        bottom: 0
+
+    .close-video
+        position: absolute
+        bottom: calc(100% + 20px)
+        top: auto
+        right: -40px
+        height: 50px
+        width: 50px
+        border-radius: 50%
+        background: var(--primary)
+        display: flex
+        align-items: center
+        justify-content: center
+        transition: .5s ease
+
+        @include media(675)
+            right: 0
+
+        &:hover
+            background: var(--primary)
+
+        svg
+            height: 35%
+            width: 35%
+
+        path
+            stroke-width: 2
+            stroke: $white
+
+    .model-body
+        position: absolute
+        top: 50%
+        left: 50%
+        translate: -50% -50%
+        width: 100%
+        max-width: 50%
+
+        @include media(675)
+            max-width: 95%
+
+        iframe
+            width: 100%
+            aspect-ratio: 1.9
+            border: 2px solid $white
+            background: $white
+
+
+.product-view-pop.model
+  position: fixed
+  top: 50%
+  left: 50%
+  right: auto
+  bottom: auto
+  width: calc(100% - 30px)
+  max-width: 880px
+  height: auto
+  max-height: 90vh
+  max-height: 90dvh
+  background: var(--white)
+  border-radius: 10px
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22)
+  opacity: 0
+  visibility: hidden
+  pointer-events: none
+  transform: translate(-50%, -46%)
+  transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s ease
+
+  @include media(540)
+    width: calc(100% - 20px)
+    max-height: 94vh
+    max-height: 94dvh
+
+  &.is-open
+    opacity: 1
+    visibility: visible
+    pointer-events: auto
+    transform: translate(-50%, -50%)
+
+  // ---------- close ----------
+  .close
+    position: absolute
+    top: 10px
+    right: 10px
+    z-index: 5
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 40px
+    height: 40px
+    padding: 0
+    border: 1px solid var(--gray)
+    border-radius: 50%
+    background: var(--white)
+    color: var(--black)
+    box-shadow: rgba(0, 0, 0, 0.15) 0 6px 18px
+    cursor: pointer
+    transition: all 0.3s ease
+
+    @include media(540)
+      top: 8px
+      right: 8px
+      width: 32px
+      height: 32px
+
+    i
+      display: block
+      font-size: 15px
+      line-height: 1
+      color: inherit
+
+      @include media(540)
+        font-size: 13px
+
+    &:hover
+      background: var(--primary)
+      border-color: var(--primary)
+      color: var(--white)
+
+  .model-body
+    position: relative
+    max-height: 90vh
+    max-height: 90dvh
+    overflow-y: auto
+    overflow-x: hidden
+    border-radius: 10px
+    @include scrollbar(3px, #f2f2f2, #c9c9c9, 8px)
+
+    @include media(540)
+      max-height: 94vh
+      max-height: 94dvh
+
+  .pvp-grid
+    display: grid
+    grid-template-columns: 1fr 1.1fr
+    min-height: 500px
+
+    @include media(1024)
+      min-height: 460px
+
+    @include media(768)
+      grid-template-columns: 1fr
+      min-height: 0
+
+  // ---------- image side ----------
+  .pvp-visual
+    position: relative
+    overflow: hidden
+    background: var(--dark-gray)
+
+    @include media(768)
+      height: 200px
+
+    @include media(540)
+      height: 170px
+
+    img
+      position: absolute
+      inset: 0
+      width: 100%
+      height: 100%
+      object-fit: cover
+      object-position: top center
+      display: block
+
+    &::after
+      content: ""
+      position: absolute
+      inset: 14px
+      z-index: 1
+      border: 1px solid rgba(255, 255, 255, 0.55)
+      pointer-events: none
+
+      @include media(540)
+        inset: 8px
+
+    .pvp-badge
+      position: absolute
+      left: 0
+      bottom: 30px
+      z-index: 2
+      padding: 10px 18px 10px 16px
+      background: var(--primary)
+      color: var(--white)
+      font-family: $Poppins
+      font-size: 10px
+      font-weight: 500
+      line-height: 1
+      text-transform: uppercase
+      letter-spacing: 0.16em
+
+      @include media(768)
+        bottom: 18px
+
+      @include media(540)
+        bottom: 14px
+        padding: 7px 12px
+        font-size: 9px
+        letter-spacing: 0.12em
+
+  // ---------- content side ----------
+  .pvp-content
+    display: flex
+    flex-direction: column
+    justify-content: center
+    min-width: 0
+    padding: 44px 40px
+
+    @include media(1024)
+      padding: 34px 28px
+
+    @include media(768)
+      padding: 20px 22px 20px
+
+    @include media(540)
+      padding: 14px 16px 16px
+
+  .pvp-meta
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 12px
+    margin-bottom: 10px
+    padding-right: 46px
+
+    @include media(768)
+      margin-bottom: 6px
+
+    @include media(540)
+      padding-right: 0
+      margin-bottom: 4px
+
+    .pvp-cat
+      color: var(--primary)
+      font-family: $Poppins
+      font-size: 11px
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.2em
+
+      @include media(540)
+        font-size: 10px
+        letter-spacing: 0.14em
+
+    .pvp-rate
+      display: inline-flex
+      align-items: center
+      gap: 5px
+      color: var(--black)
+      font-size: 13px
+      font-weight: 500
+
+      @include media(540)
+        font-size: 12px
+
+      i
+        color: var(--primary)
+        font-size: 12px
+
+  .pvp-title
+    margin: 0 0 12px
+    color: var(--black)
+    font-family: $Kugile
+    font-size: 28px
+    line-height: 1.2
+
+    @include media(1024)
+      font-size: 25px
+
+    @include media(768)
+      margin-bottom: 8px
+      font-size: 22px
+
+    @include media(540)
+      margin-bottom: 6px
+      font-size: 19px
+
+  .pvp-price
+    display: flex
+    align-items: baseline
+    flex-wrap: wrap
+    gap: 6px 12px
+    margin-bottom: 16px
+
+    @include media(768)
+      margin-bottom: 10px
+
+    @include media(540)
+      gap: 4px 8px
+      margin-bottom: 8px
+
+    .price-now
+      color: var(--black)
+      font-family: $Poppins
+      font-size: 26px
+      font-weight: 600
+      line-height: 1.1
+
+      @include media(768)
+        font-size: 22px
+
+      @include media(540)
+        font-size: 19px
+
+    .price-old
+      color: var(--text)
+      font-size: 15px
+      opacity: 0.7
+
+      @include media(540)
+        font-size: 13px
+
+    .price-off
+      color: var(--secondary)
+      font-size: 12px
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.1em
+
+      @include media(540)
+        font-size: 11px
+
+  .pvp-desc
+    margin: 0 0 20px
+    padding-bottom: 20px
+    border-bottom: 1px solid var(--gray)
+    font-size: 14px
+    line-height: 1.7
+
+    @include media(768)
+      display: -webkit-box
+      overflow: hidden
+      margin-bottom: 12px
+      padding-bottom: 12px
+      font-size: 13px
+      line-height: 1.55
+      -webkit-line-clamp: 2
+      -webkit-box-orient: vertical
+
+    @include media(540)
+      margin-bottom: 10px
+      padding-bottom: 10px
+      font-size: 12px
+
+  // ---------- size ----------
+  .pvp-size
+    margin-bottom: 22px
+
+    @include media(768)
+      margin-bottom: 14px
+
+    @include media(540)
+      display: flex
+      align-items: center
+      gap: 12px
+      margin-bottom: 12px
+
+    .pvp-label
+      display: block
+      margin-bottom: 10px
+      color: var(--black)
+      font-family: $Poppins
+      font-size: 12px
+      font-weight: 600
+      text-transform: uppercase
+      letter-spacing: 0.16em
+
+      @include media(540)
+        margin: 0
+        font-size: 11px
+        letter-spacing: 0.12em
+
+    .pvp-size-list
+      display: flex
+      flex-wrap: wrap
+      gap: 10px
+
+      @include media(540)
+        gap: 8px
+
+      input
+        position: absolute
+        width: 0
+        height: 0
+        opacity: 0
+
+        &:focus-visible + label
+          outline: 2px solid var(--secondary)
+          outline-offset: 2px
+
+        &:checked + label
+          background: var(--black)
+          border-color: var(--black)
+          color: var(--white)
+
+      label
+        display: flex
+        align-items: center
+        justify-content: center
+        min-width: 46px
+        height: 42px
+        margin: 0
+        padding: 0 12px
+        border: 1px solid var(--gray)
+        background: var(--white)
+        color: var(--black)
+        font-family: $Poppins
+        font-size: 13px
+        font-weight: 500
+        cursor: pointer
+        transition: all 0.3s ease
+
+        @include media(540)
+          min-width: 38px
+          height: 34px
+          padding: 0 8px
+          font-size: 12px
+
+        &:hover
+          border-color: var(--primary)
+          color: var(--primary)
+
+      input:checked + label:hover
+        color: var(--white)
+
+  // ---------- qty + add to cart ----------
+  .pvp-actions
+    display: grid
+    grid-template-columns: auto minmax(0, 1fr)
+    gap: 12px
+    margin-bottom: 12px
+
+    @include media(540)
+      gap: 8px
+      margin-bottom: 8px
+
+  .pvp-qty
+    display: inline-flex
+    align-items: center
+    border: 1px solid var(--black)
+    background: var(--white)
+
+    button
+      display: grid
+      place-items: center
+      width: 40px
+      height: 100%
+      min-height: 46px
+      padding: 0
+      border: 0
+      background: transparent
+      color: var(--black)
+      font-size: 11px
+      cursor: pointer
+      transition: all 0.3s ease
+
+      @include media(540)
+        width: 32px
+        min-height: 40px
+        font-size: 10px
+
+      &:hover,
+      &:focus-visible
+        background: var(--black)
+        color: var(--white)
+
+    input
+      width: 44px
+      height: 100%
+      padding: 0
+      border: 0
+      outline: 0
+      background: transparent
+      color: var(--black)
+      font-family: $Poppins
+      font-size: 14px
+      font-weight: 500
+      text-align: center
+
+      @include media(540)
+        width: 34px
+        font-size: 13px
+
+  .pvp-cart,
+  .pvp-buy
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: 8px
+    width: 100%
+    margin: 0
+
+    @include media(540)
+      min-height: 0
+      padding: 11px 10px
+      font-size: 12px
+      letter-spacing: 0.06em
+
+  .pvp-buy
+    i
+      transition: transform 0.3s ease
+
+      @include media(540)
+        font-size: 11px
+
+    &:hover i
+      transform: translateX(5px)

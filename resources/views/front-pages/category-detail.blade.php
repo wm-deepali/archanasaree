@@ -6,39 +6,54 @@
 
 @section('content')
 
+  @php
+    $activeSub = $activeSub ?? null;
+    $catImage = $category->image ? asset('storage/' . $category->image) : null;
+  @endphp
+
   <main>
 
     <section class="product-banner">
       <div class="banner-img">
-        <img src="{{ asset('assets/images/home/banner2.png')}}" alt="Sarees" />
+        <img src="{{ $catImage ?? asset('assets/images/home/banner2.png') }}" alt="{{ $category->name }}" />
       </div>
       <div class="container">
         @include('partials.breadcrumb', [
-          'crumbs' => [
+          'crumbs' => array_values(array_filter([
             ['label' => 'Home', 'url' => route('home')],
             ['label' => 'Categories', 'url' => route('categories')],
-            ['label' => $category->name],
-          ]
+            $activeSub
+              ? ['label' => $category->name, 'url' => route('category.show', $category->slug)]
+              : ['label' => $category->name],
+            $activeSub ? ['label' => $activeSub->name] : null,
+          ]))
         ])
         <div class="banner-content">
-          <span class="eyebrow">Sarees</span>
-          <h1>Draped in Timeless Elegance</h1>
-          <p class="banner-desc">
-            Discover beautifully crafted sarees selected for celebrations,
-            weddings and every occasion worth remembering.
-          </p>
-          <a href="javascript:void()" class="btn btn-primary">Shop Sarees</a>
+          <span class="eyebrow">{{ $activeSub->name ?? $category->name }}</span>
+          <h1>{{ $category->sub_title ?: $category->name }}</h1>
+          @if ($category->meta_description)
+            <p class="banner-desc">{{ $category->meta_description }}</p>
+          @endif
+          <a href="#catProducts" class="btn btn-primary">Shop {{ $category->name }}</a>
         </div>
       </div>
     </section>
 
-    <section class="product-secB">
+    <section class="product-secB" id="catProducts">
       <div class="container">
-        @php $tabs = collect([null])->merge($subCategories); @endphp
+        @php
+          $tabs = collect([null])->merge($subCategories);
+          $activeIndex = $activeSub
+            ? $tabs->search(fn($t) => $t && $t->id === $activeSub->id)
+            : 0;
+          if ($activeIndex === false) {
+            $activeIndex = 0;
+          }
+        @endphp
 
         <ul class="tab-nav">
           @foreach ($tabs as $i => $tab)
-            <li data-tab="{{ $i + 1 }}" class="{{ $i === 0 ? 'active' : '' }}">
+            <li data-tab="{{ $i + 1 }}" class="{{ $i === $activeIndex ? 'active' : '' }}">
               {{ $tab ? $tab->name : 'All ' . $category->name }}
             </li>
           @endforeach
@@ -46,15 +61,17 @@
 
         <div class="tab-nav-content">
           @foreach ($tabs as $i => $tab)
-            <div class="tabs {{ $i === 0 ? 'active' : '' }}" data-tab="{{ $i + 1 }}" data-sub="{{ $tab->slug ?? '' }}" @if ($i === 0) data-loaded="1" @endif>
+            @php $isActive = $i === $activeIndex; @endphp
+            <div class="tabs {{ $isActive ? 'active' : '' }}" data-tab="{{ $i + 1 }}" data-sub="{{ $tab->slug ?? '' }}"
+              @if ($isActive) data-loaded="1" @endif>
 
               <div class="prod-head">
                 <h3>The {{ $category->name }} Collection</h3>
-                <span class="prod-styles">{{ $i === 0 ? $products->total() . ' styles' : '' }}</span>
+                <span class="prod-styles">{{ $isActive ? $products->total() . ' styles' : '' }}</span>
               </div>
 
               <div class="prod-toolbar">
-                <p class="prod-count"><b>{{ $i === 0 ? $products->total() : '' }}</b> {{ $category->name }}</p>
+                <p class="prod-count"><b>{{ $isActive ? $products->total() : '' }}</b> {{ $category->name }}</p>
                 <div class="prod-tools">
                   <button type="button" class="tool-btn filter-btn" data-model=".filter-pop">
                     <i class="fa-solid fa-sliders"></i> Filter
@@ -77,18 +94,18 @@
               </div>
 
               <div class="prod-grid">
-                @if ($i === 0)
+                @if ($isActive)
                   @include('partials.product-cards', ['products' => $products])
                 @endif
               </div>
 
-              <div class="load-more" @if ($i !== 0 || !$products->hasMorePages()) style="display:none" @endif>
+              <div class="load-more" @if (!$isActive || !$products->hasMorePages()) style="display:none" @endif>
                 <button type="button" class="btn btn-outline-primary"
-                  data-next="{{ $i === 0 && $products->hasMorePages() ? 2 : '' }}">
+                  data-next="{{ $isActive && $products->hasMorePages() ? 2 : '' }}">
                   Load More {{ $category->name }}
                 </button>
-                <p>Showing {{ $i === 0 ? ($products->lastItem() ?? 0) : 0 }} of {{ $i === 0 ? $products->total() : 0 }}
-                  styles</p>
+                <p>Showing {{ $isActive ? ($products->lastItem() ?? 0) : 0 }} of
+                  {{ $isActive ? $products->total() : 0 }} styles</p>
               </div>
             </div>
           @endforeach
@@ -96,32 +113,28 @@
       </div>
     </section>
 
-    <section class="product-secC">
-      <div class="container">
-        <div class="art-grid">
-          <div class="art-visual">
-            <div class="art-photo">
-              <img src="{{ asset('assets/images/home/banner5.jpg')}}" alt="The Art of the Saree" loading="lazy" />
+    @if ($category->meta_description)
+      <section class="product-secC">
+        <div class="container">
+          <div class="art-grid">
+            <div class="art-visual">
+              <div class="art-photo">
+                <img src="{{ $catImage ?? asset('assets/images/home/banner5.jpg') }}"
+                  alt="The Art of {{ $category->name }}" loading="lazy" />
+              </div>
             </div>
-          </div>
-          <div class="art-content">
-            <div class="heading">
-              <h3>The Art of the Saree</h3>
+            <div class="art-content">
+              <div class="heading">
+                <h3>The Art of {{ $category->name }}</h3>
+              </div>
+              <p>{{ $category->meta_description }}</p>
+              <a href="#catProducts" class="btn btn-primary">Explore the Collection
+                <i class="fa-solid fa-arrow-right-long"></i></a>
             </div>
-            <p>
-              A saree is more than a silhouette. It is craftsmanship, colour,
-              tradition and a story carried from one celebration to another.
-            </p>
-            <p>
-              Explore timeless Indian drapes thoughtfully selected for modern
-              wardrobes and unforgettable occasions.
-            </p>
-            <a href="javascript:void()" class="btn btn-primary">Explore the Collection
-              <i class="fa-solid fa-arrow-right-long"></i></a>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    @endif
 
     @if ($recentlyViewed->count())
       <section class="product-secD">

@@ -4,6 +4,17 @@
     <link rel="stylesheet" href="{{ asset('assets/sass/detail/detail.css') }}" />
 @endpush
 
+<style>
+    .wish-link.is-active {
+        color: #e11d48;
+    }
+
+    .wish-link.is-loading {
+        opacity: .6;
+        pointer-events: none;
+    }
+</style>
+
 @section('content')
 
     @php
@@ -215,8 +226,11 @@
                                             <i class="fa-solid fa-plus"></i>
                                         </button>
                                     </div>
-                                    <button type="button" class="wish-link">
-                                        <i class="fa-regular fa-heart"></i> Add to Wishlist
+                                    @php $wished = in_array($product->id, \App\Models\Wishlist::currentProductIds()); @endphp
+                                    <button type="button" class="wish-link {{ $wished ? 'is-active' : '' }}"
+                                        data-id="{{ $product->id }}" aria-pressed="{{ $wished ? 'true' : 'false' }}">
+                                        <i class="{{ $wished ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
+                                        <span>{{ $wished ? 'Wishlisted' : 'Add to Wishlist' }}</span>
                                     </button>
                                 </div>
                                 <div class="act-btns">
