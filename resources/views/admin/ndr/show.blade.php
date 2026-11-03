@@ -380,6 +380,13 @@
                         </button>
                     @endif
 
+                    @if($ndr->refundTransaction && $ndr->refundTransaction->status === 'completed')
+                        <a href="{{ route('admin.credit-notes.show', $ndr->refundTransaction) }}" target="_blank"
+                            class="btn-red-dash">
+                            <i class="fa fa-file-pdf-o"></i> Credit Note
+                        </a>
+                    @endif
+
                     <a href="{{ route('admin.ndr.index') }}" class="btn-secondary-dash"><i class="fa fa-arrow-left"></i>
                         Back</a>
                 </div>
@@ -458,7 +465,7 @@
                                 <div>
                                     <div class="tl-label">
                                         @if($ndr->status === 'delivered') Delivered
-                                        @elseif($ndr->status === 'rto') Returned to Origin — stock credited back
+                                        @elseif($ndr->status === 'rto') Returned to Origin — stock credited back{{ $ndr->refundTransaction ? ' & refund recorded' : '' }}
                                         @elseif($ndr->status === 'cancelled') Order Cancelled
                                         @endif
                                     </div>
@@ -469,6 +476,47 @@
                     </ul>
                 </div>
             </div>
+
+            @if($ndr->refundTransaction && $ndr->refundTransaction->status === 'completed')
+                @php $cnRefund = $ndr->refundTransaction; @endphp
+                <div class="detail-grid">
+                    <div class="dcard" style="grid-column:1/-1">
+                        <h3>Credit Note</h3>
+                        <div class="drow">
+                            <span class="dlabel">Credit Note No.</span>
+                            <span class="dval" style="font-family:monospace;font-weight:700;color:var(--red)">
+                                CN-{{ str_pad($cnRefund->id, 4, '0', STR_PAD_LEFT) }}
+                            </span>
+                        </div>
+                        <div class="drow">
+                            <span class="dlabel">Type</span>
+                            <span class="dval">{{ $ndr->status === 'rto' ? 'RTO' : 'Cancelled (Failed Delivery)' }}</span>
+                        </div>
+                        <div class="drow">
+                            <span class="dlabel">Refund Amount</span>
+                            <span class="dval">₹{{ number_format($cnRefund->amount, 2) }}</span>
+                        </div>
+                        <div class="drow">
+                            <span class="dlabel">Refund UTR</span>
+                            <span class="dval" style="font-family:monospace">{{ $cnRefund->utr_id }}</span>
+                        </div>
+                        <div class="drow">
+                            <span class="dlabel">Issued On</span>
+                            <span class="dval">{{ $cnRefund->created_at->format('d M Y, h:i A') }}</span>
+                        </div>
+                        <div class="drow">
+                            <span class="dlabel">PDF</span>
+                            <span class="dval" style="display:flex;gap:8px">
+                                <a href="{{ route('admin.credit-notes.show', $cnRefund) }}" target="_blank"
+                                    class="btn-secondary-dash" style="padding:5px 12px"><i class="fa fa-eye"></i> View</a>
+                                <a href="{{ route('admin.credit-notes.download', $cnRefund) }}" class="btn-secondary-dash"
+                                    style="padding:5px 12px"><i class="fa fa-file-pdf-o"></i> Download</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
         </div>
     </div>
 
@@ -579,6 +627,13 @@
                                                 onchange="ndrToggleRefundMethod('rto', 'upi')">
                                             UPI
                                         </label>
+                                        <label id="rto-tab-payment_gateway" class="refund-tab"
+                                            style="flex:1;border:1px solid #e3e5e8;border-radius:8px;padding:10px 12px;text-align:center;cursor:pointer;font-size:13px;font-weight:500;color:#202223;background:#fff">
+                                            <input type="radio" name="refund_method" value="payment_gateway"
+                                                style="display:none"
+                                                onchange="ndrToggleRefundMethod('rto', 'payment_gateway')">
+                                            Refund via Payment Gateway
+                                        </label>
                                     </div>
                                 </div>
 
@@ -618,6 +673,15 @@
                                     <input type="text" name="upi_id" class="mf-input" placeholder="name@upi">
                                 </div>
 
+                                {{-- Payment Gateway note --}}
+                                <div id="rto-method-payment_gateway" style="display:none;margin-bottom:14px">
+                                    <div
+                                        style="background:#fff5cc;border:1px solid #f0d060;border-radius:8px;padding:10px 12px;font-size:12.5px;color:#916a00">
+                                        <i class="fa fa-circle-info"></i> Refund payment gateway dashboard se manually
+                                        process karein, phir neeche gateway ka refund reference ID daalein.
+                                    </div>
+                                </div>
+
                                 <div style="margin-bottom:14px">
                                     <label class="mf-label">Reference / UTR ID <span style="color:#b22222">*</span></label>
                                     <input type="text" name="utr_id" required class="mf-input"
@@ -643,7 +707,6 @@
         </div>
     </div>
 
-    {{-- ===== Cancel Modal ===== --}}
     {{-- ===== Cancel Modal ===== --}}
     <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered {{ $ndr->order->payment_status === 'paid' ? 'modal-lg' : '' }}"
@@ -693,6 +756,13 @@
                                                 onchange="ndrToggleRefundMethod('cancel', 'upi')">
                                             UPI
                                         </label>
+                                        <label id="cancel-tab-payment_gateway" class="refund-tab"
+                                            style="flex:1;border:1px solid #e3e5e8;border-radius:8px;padding:10px 12px;text-align:center;cursor:pointer;font-size:13px;font-weight:500;color:#202223;background:#fff">
+                                            <input type="radio" name="refund_method" value="payment_gateway"
+                                                style="display:none"
+                                                onchange="ndrToggleRefundMethod('cancel', 'payment_gateway')">
+                                            Refund via Payment Gateway
+                                        </label>
                                     </div>
                                 </div>
 
@@ -730,6 +800,14 @@
                                     <input type="text" name="upi_id" class="mf-input" placeholder="name@upi">
                                 </div>
 
+                                <div id="cancel-method-payment_gateway" style="display:none;margin-bottom:14px">
+                                    <div
+                                        style="background:#fff5cc;border:1px solid #f0d060;border-radius:8px;padding:10px 12px;font-size:12.5px;color:#916a00">
+                                        <i class="fa fa-circle-info"></i> Refund payment gateway dashboard se manually
+                                        process karein, phir neeche gateway ka refund reference ID daalein.
+                                    </div>
+                                </div>
+
                                 <div style="margin-bottom:14px">
                                     <label class="mf-label">Reference / UTR ID <span style="color:#b22222">*</span></label>
                                     <input type="text" name="utr_id" required class="mf-input"
@@ -759,23 +837,25 @@
 @include('admin.footer')
 
 <script>
-function ndrToggleRefundMethod(context, selected) {
-    ['neft_rtgs_imps', 'upi'].forEach(function (m) {
-        var panel = document.getElementById(context + '-method-' + m);
-        if (panel) panel.style.display = (m === selected) ? 'block' : 'none';
+    var NDR_REFUND_METHODS = ['neft_rtgs_imps', 'upi', 'payment_gateway'];
 
-        var tab = document.getElementById(context + '-tab-' + m);
-        if (!tab) return;
+    function ndrToggleRefundMethod(context, selected) {
+        NDR_REFUND_METHODS.forEach(function (m) {
+            var panel = document.getElementById(context + '-method-' + m);
+            if (panel) panel.style.display = (m === selected) ? 'block' : 'none';
 
-        if (m === selected) {
-            tab.style.borderColor = '#303d89';
-            tab.style.color = '#303d89';
-            tab.style.background = '#f0f1fc';
-        } else {
-            tab.style.borderColor = '#e3e5e8';
-            tab.style.color = '#202223';
-            tab.style.background = '#fff';
-        }
-    });
-}
+            var tab = document.getElementById(context + '-tab-' + m);
+            if (!tab) return;
+
+            if (m === selected) {
+                tab.style.borderColor = '#303d89';
+                tab.style.color = '#303d89';
+                tab.style.background = '#f0f1fc';
+            } else {
+                tab.style.borderColor = '#e3e5e8';
+                tab.style.color = '#202223';
+                tab.style.background = '#fff';
+            }
+        });
+    }
 </script>

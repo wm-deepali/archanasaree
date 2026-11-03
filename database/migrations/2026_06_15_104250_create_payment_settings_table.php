@@ -4,27 +4,29 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-      Schema::create('payment_settings', function (Blueprint $table) {
+        Schema::create('payment_settings', function (Blueprint $table) {
 
-    $table->id();
+            $table->id();
 
-    $table->boolean('live_mode')->default(false);
+            $table->boolean('live_mode')->default(false);
 
-    $table->string('test_key_id')->nullable();
-    $table->text('test_key_secret')->nullable();
+            $table->string('test_key_id')->nullable();
+            $table->text('test_key_secret')->nullable();
 
-    $table->string('live_key_id')->nullable();
-    $table->text('live_key_secret')->nullable();
+            $table->string('live_key_id')->nullable();
+            $table->text('live_key_secret')->nullable();
 
-    $table->timestamps();
-});
+            $table->string('test_webhook_secret')->nullable();
+            $table->string('live_webhook_secret')->nullable();
+
+            $table->timestamps();
+        });
     }
 
     /**

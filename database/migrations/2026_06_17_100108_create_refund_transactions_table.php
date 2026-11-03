@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
 
             $table->enum('status', ['completed', 'failed'])->default('completed');
-            $table->enum('refund_method', ['neft_rtgs_imps', 'upi']);
+            $table->enum('refund_method', ['neft_rtgs_imps', 'upi', 'payment_gateway']);
             $table->string('upi_id')->nullable();
             $table->string('bank_name')->nullable();
             $table->string('account_name')->nullable();

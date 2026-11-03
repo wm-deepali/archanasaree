@@ -27,9 +27,8 @@ use App\Http\Controllers\Admin\{
     HomeHeroBannerController,
     HomeHeroSlideController,
     HomePageController,
-    HomeSliderController,
-    HomeTextSliderController,
-    HomeWhyController,
+    HomeContentController,
+    HomeSectionController,
     LogoutController,
     OrderController,
     OtherEnquiryController,
@@ -58,8 +57,10 @@ use App\Http\Controllers\Admin\{
     SystemLogController,
     RedirectController,
     NdrController,
-    NdrReportController
-
+    NdrReportController,
+    CancelledInvoiceController,
+    CancelledRefundController,
+    CreditNoteController
 };
 
 use Illuminate\Support\Facades\Route;
@@ -72,6 +73,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CustomerAuthController;
 use App\Http\Controllers\ProductReviewController;
 use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\RazorpayWebhookController;
 
 Route::middleware('maintenance.mode')->group(function () {
 
@@ -141,8 +143,7 @@ Route::middleware('maintenance.mode')->group(function () {
 
 });
 
-
-
+Route::post('/razorpay/webhook', [RazorpayWebhookController::class, 'handle'])->name('razorpay.webhook');
 
 // Admin Routes list
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -341,6 +342,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
         Route::get('orders/{order}/invoice', [OrderController::class, 'invoice'])->name('orders.invoice');
         Route::get('orders/{order}/invoice/download', [OrderController::class, 'invoiceDownload'])->name('orders.invoice.download');
+        Route::post('orders/{order}/generate-invoice', [OrderController::class, 'generateInvoice'])->name('orders.generate-invoice');
+        Route::post('orders/{order}/update-payment', [OrderController::class, 'updatePayment'])->name('orders.update-payment');
+
+        // Credit Notes (keyed by completed RefundTransaction id)
+        Route::get('credit-notes/{refund}', [CreditNoteController::class, 'show'])->name('credit-notes.show');
+        Route::get('credit-notes/{refund}/download', [CreditNoteController::class, 'download'])->name('credit-notes.download');
 
         // Payments routes
         Route::get('payments', [PaymentController::class, 'index'])->name('payments.index');
@@ -371,6 +378,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('stored-carts/{cart}', [StoredCartController::class, 'show'])->whereNumber('cart')->name('stored-carts.show');
 
         Route::resource('return-reasons', ReturnReasonController::class)->names('return-reasons');
+
+        Route::get('cancelled-refunds', [CancelledRefundController::class, 'index'])->name('cancelled-refunds.index');
+        Route::post('cancelled-refunds/{order}/refund', [CancelledRefundController::class, 'refund'])->name('cancelled-refunds.refund');
+
+        Route::get('cancelled-invoices', [CancelledInvoiceController::class, 'index'])->name('cancelled-invoices.index');
 
         Route::get('order-returns', [OrderReturnController::class, 'index'])->name('order-returns.index');
         Route::get('order-returns/export', [OrderReturnController::class, 'export'])->name('order-returns.export');

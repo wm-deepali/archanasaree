@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\RefundTransaction;
+use App\Services\CreditNoteService;
+use App\Http\Controllers\Controller;
 
 
 class TaxReportController extends Controller
@@ -66,12 +67,7 @@ class TaxReportController extends Controller
         // original order date — a credit note belongs to the GST period it
         // was issued in, per Section 34 CGST Act, regardless of when the
         // original invoice was raised.
-        $creditNoteBaseQuery = RefundTransaction::with([
-            'ndr.order.items.product',
-            'orderReturn.order',
-            'orderReturn.orderItem.product',
-            'orderReturn.orderItem.addons',
-        ])
+        $creditNoteBaseQuery = RefundTransaction::with($this->creditNoteRelations())
             ->where('status', 'completed')
             ->whereBetween('created_at', [$from->startOfDay(), $to->endOfDay()]);
 
@@ -112,64 +108,14 @@ class TaxReportController extends Controller
         ]);
     }
 
-    /**
-     * Builds a single Credit Note row from a completed RefundTransaction.
-     *
-     * - NDR-originated (ndr_id set): full order was cancelled/RTO'd — the
-     *   ENTIRE order's tax is reversed. Product column lists every item.
-     * - OrderReturn-originated (order_return_id set): only ONE item was
-     *   returned — only that item's proportional share of the order's tax
-     *   is reversed, using (item base value / order subtotal) as the ratio.
-     *
-     * ASSUMPTION: OrderItem has `price` and `quantity` columns, and
-     * `addons()` sums via a `price` column — matches what
-     * OrderReturnController / order-returns views already assume. Adjust
-     * $itemBase below if your actual column names differ.
-     */
+    private function creditNoteRelations(): array
+    {
+        return CreditNoteService::relations();
+    }
+
     private function buildCreditNoteRow(RefundTransaction $refund): array
     {
-        if ($refund->ndr_id) {
-            $order = $refund->ndr->order;
-            $productNames = $order->items->pluck('product.name')->filter()->implode(', ') ?: '—';
-
-            $taxable = (float) $order->subtotal;
-            $cgst = (float) $order->cgst_amount;
-            $sgst = (float) $order->sgst_amount;
-            $igst = (float) $order->igst_amount;
-            $tax = (float) $order->tax_amount;
-            $reason = $refund->ndr->status === 'rto' ? 'RTO' : 'Cancelled (Failed Delivery)';
-        } else {
-            $orderReturn = $refund->orderReturn;
-            $order = $orderReturn->order;
-            $item = $orderReturn->orderItem;
-
-            $itemBase = ((float) $item->price * $item->quantity) + (float) $item->addons->sum('price');
-            $proportion = $order->subtotal > 0 ? $itemBase / (float) $order->subtotal : 0;
-
-            $productNames = $item->product->name ?? '—';
-            $taxable = $itemBase;
-            $tax = (float) $order->tax_amount * $proportion;
-            $cgst = (float) $order->cgst_amount * $proportion;
-            $sgst = (float) $order->sgst_amount * $proportion;
-            $igst = (float) $order->igst_amount * $proportion;
-            $reason = 'Returned';
-        }
-
-        return [
-            'credit_note_no' => 'CN-' . str_pad($refund->id, 4, '0', STR_PAD_LEFT),
-            'order_number' => $order->order_number,
-            'order_id' => $order->id,
-            'product' => $productNames,
-            'reason' => $reason,
-            'refund_date' => $refund->created_at,
-            'taxable' => $taxable,
-            'cgst' => $cgst,
-            'sgst' => $sgst,
-            'igst' => $igst,
-            'tax' => $tax,
-            'refund_amount' => (float) $refund->amount,
-            'utr_id' => $refund->utr_id,
-        ];
+        return app(CreditNoteService::class)->build($refund);
     }
 
     public function exportCsv(Request $request)
@@ -221,12 +167,7 @@ class TaxReportController extends Controller
     {
         [$from, $to] = $this->resolveDateRange($request);
 
-        $refunds = RefundTransaction::with([
-            'ndr.order.items.product',
-            'orderReturn.order',
-            'orderReturn.orderItem.product',
-            'orderReturn.orderItem.addons',
-        ])
+        $refunds = RefundTransaction::with($this->creditNoteRelations())
             ->where('status', 'completed')
             ->whereBetween('created_at', [$from->startOfDay(), $to->endOfDay()])
             ->orderByDesc('created_at')
@@ -269,8 +210,14 @@ class TaxReportController extends Controller
 
     private function filteredQuery(Request $request, Carbon $from, Carbon $to)
     {
-        $query = Order::whereBetween('created_at', [$from->startOfDay(), $to->endOfDay()])
-            ->where('payment_status', 'paid');
+        $query = Order::whereBetween('created_at', [$from->startOfDay(), $to->endOfDay()]);
+
+        if ($request->filled('payment_status')) {
+            $query->where('payment_status', strtolower($request->payment_status));
+        } else {
+            // Refunded orders were invoiced and taxed originally; the credit note reverses them in the refund period
+            $query->whereIn('payment_status', ['paid', 'refunded']);
+        }
 
         if ($request->filled('gst_slab')) {
             // Slab isn't a stored column, so filter in PHP after fetch if you need exact slab filtering.
@@ -279,10 +226,6 @@ class TaxReportController extends Controller
 
         if ($request->filled('tax_type')) {
             $query->where('gst_type', $request->tax_type === 'igst' ? 'inter' : 'intra');
-        }
-
-        if ($request->filled('payment_status')) {
-            $query->where('payment_status', strtolower($request->payment_status));
         }
 
         if ($request->filled('search')) {

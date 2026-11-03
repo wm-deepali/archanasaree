@@ -81,6 +81,8 @@ return new class extends Migration {
                 'refunded'
             ])->default('pending');
 
+            $table->timestamp('paid_at')->nullable();
+
             $table->string('transaction_id')->nullable();
 
             $table->string('razorpay_order_id')->nullable();
