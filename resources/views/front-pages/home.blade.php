@@ -3,832 +3,193 @@
 @section('content')
 
   <main>
-    <section class="home-banner">
-      <div class="swiper singleSlider">
-        <div class="swiper-wrapper">
-          <div class="swiper-slide">
-            <div class="slide-img">
-              <img src="assets/images/home/banner1.png" alt="Bridal wear editorial" />
-            </div>
-            <div class="container">
-              <div class="slide-content">
-                <span class="hero-eyebrow">The Archana Edit</span>
-                <h1 class="hero-title">
-                  Dress the Moment.<br />Remember the Look.
-                </h1>
-                <p class="hero-desc">
-                  Discover premium sarees, statement lehengas and exquisite
-                  bridal wear, thoughtfully curated for weddings, festivities
-                  and every occasion worth dressing up for.
-                </p>
-                <div class="hero-btns">
-                  <a href="javascript:void()" class="btn btn-primary">Shop the Collection</a>
-                  <a href="javascript:void()" class="btn btn-outline-primary">Explore Bridal Wear
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
-                      stroke-linejoin="round">
-                      <path d="M3 12h18M15 6l6 6-6 6" />
-                    </svg></a>
+
+    @if ($heroSlides->isNotEmpty())
+      <section class="home-banner">
+        <div class="swiper singleSlider">
+          <div class="swiper-wrapper">
+            @foreach ($heroSlides as $slide)
+              <div class="swiper-slide {{ $slide->theme === 'white' ? 'theme-white' : '' }}">
+                <div class="slide-img">
+                  <img src="{{ $slide->image_url }}" alt="{{ strip_tags($slide->title ?: config('app.name')) }}" @if (!$loop->first) loading="lazy" @endif />
                 </div>
-                <p class="hero-note">Sarees · Lehengas · Bridal Wear</p>
+
+                @if ($slide->eyebrow || $slide->title || $slide->description || $slide->primary_btn_text || $slide->secondary_btn_text || $slide->note)
+                  <div class="container">
+                    <div class="slide-content">
+                      @if (filled($slide->eyebrow))
+                        <span class="hero-eyebrow">{{ $slide->eyebrow }}</span>
+                      @endif
+
+                      @if (filled($slide->title))
+                        @if ($loop->first)
+                          <h1 class="hero-title">{!! nl2br(e($slide->title)) !!}</h1>
+                        @else
+                          <h2 class="hero-title">{!! nl2br(e($slide->title)) !!}</h2>
+                        @endif
+                      @endif
+
+                      @if (filled($slide->description))
+                        <p class="hero-desc">{{ $slide->description }}</p>
+                      @endif
+
+                      @if (filled($slide->primary_btn_text) || filled($slide->secondary_btn_text))
+                        <div class="hero-btns">
+                          @if (filled($slide->primary_btn_text) && filled($slide->primary_btn_link))
+                            <a href="{{ $slide->primary_btn_link }}" class="btn btn-primary">{{ $slide->primary_btn_text }}</a>
+                          @endif
+
+                          @if (filled($slide->secondary_btn_text) && filled($slide->secondary_btn_link))
+                            <a href="{{ $slide->secondary_btn_link }}"
+                              class="btn btn-outline-primary">{{ $slide->secondary_btn_text }}
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M3 12h18M15 6l6 6-6 6" />
+                              </svg></a>
+                          @endif
+                        </div>
+                      @endif
+
+                      @if (filled($slide->note))
+                        <p class="hero-note">{{ $slide->note }}</p>
+                      @endif
+                    </div>
+                  </div>
+                @endif
               </div>
-            </div>
+            @endforeach
           </div>
-          <div class="swiper-slide theme-white">
-            <div class="slide-img">
-              <img src="assets/images/home/banner2.png" alt="Lehenga editorial" />
+
+          @if ($heroSlides->count() > 1)
+            <div class="swiper-pagination"></div>
+          @endif
+        </div>
+      </section>
+    @endif
+
+    @if ($homeCategories->isNotEmpty())
+      <section class="home-secA">
+        <div class="container">
+          <div class="sec-head">
+            <span class="eyebrow">Explore Our Collections</span>
+            <div class="heading">
+              <h3>Find Your Signature Look</h3>
             </div>
-            <div class="container">
-              <div class="slide-content">
-                <span class="hero-eyebrow">The Lehenga Edit</span>
-                <h1 class="hero-title">
-                  Statement Silhouettes.<br />Made to Be Remembered.
-                </h1>
-                <p class="hero-desc">
-                  Designer lehengas with fine embroidery and rich fabrics, for
-                  sangeet nights, receptions and every celebration in between.
-                </p>
-                <div class="hero-btns">
-                  <a href="javascript:void()" class="btn btn-primary">Shop Lehengas</a>
-                  <a href="javascript:void()" class="btn btn-outline-primary">Explore Bridal Wear
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
-                      stroke-linejoin="round">
-                      <path d="M3 12h18M15 6l6 6-6 6" />
-                    </svg></a>
-                </div>
-                <p class="hero-note">Sarees · Lehengas · Bridal Wear</p>
+            <p>Discover something made for every celebration.</p>
+          </div>
+
+          <div class="swiper-wrap">
+            <div class="swiper fourSlider">
+              <div class="swiper-wrapper">
+                @foreach ($homeCategories as $category)
+                  <div class="swiper-slide">
+                    <a href="{{ route('category.show', $category->slug) }}" class="cat-card">
+                      <div class="cat-img">
+                        @if ($category->image)
+                          <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" loading="lazy" />
+                        @else
+                          <img src="{{ asset('assets/images/home/cat1.png') }}" alt="{{ $category->name }}" loading="lazy" />
+                        @endif
+                      </div>
+                      <div class="cat-info">
+                        <h4>{{ $category->name }}</h4>
+                        @if (filled($category->sub_title))
+                          <p>{{ \Illuminate\Support\Str::limit(strip_tags($category->sub_title), 80) }}</p>
+                        @endif
+                        <span class="cat-link">Shop {{ $category->name }}
+                          <i class="fa-solid fa-arrow-right-long"></i></span>
+                      </div>
+                    </a>
+                  </div>
+                @endforeach
               </div>
+            </div>
+
+            <div class="swiper-group">
+              <button type="button" class="btn-prev" aria-label="Previous slide">
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+              <button type="button" class="btn-next" aria-label="Next slide">
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
             </div>
           </div>
         </div>
-        <div class="swiper-pagination"></div>
-      </div>
-    </section>
+      </section>
+    @endif
 
-    <section class="home-secA">
-      <div class="container">
-        <div class="sec-head">
-          <span class="eyebrow">Explore Our Collections</span>
-          <div class="heading">
-            <h3>Find Your Signature Look</h3>
+    @if ($lovedAll->isNotEmpty())
+      <section class="home-secB">
+        <div class="container">
+          <div class="sec-head">
+            <span class="eyebrow">Most Loved</span>
+            <div class="heading">
+              <h3>What Everyone's Loving</h3>
+            </div>
+            <p>Discover the styles our customers are choosing.</p>
           </div>
-          <p>
-            From graceful sarees to statement lehengas and unforgettable
-            bridal ensembles, discover something made for every celebration.
-          </p>
-        </div>
-        <div class="swiper-wrap">
-          <div class="swiper fourSlider">
-            <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <a href="{{ route('categories') }}" class="cat-card">
-                  <div class="cat-img">
-                    <img src="assets/images/home/cat1.png" alt="Premium Sarees" loading="lazy" />
+
+          <ul class="tab-nav">
+            <li data-tab="1" class="active">All</li>
+            @foreach ($lovedTabs as $i => $tab)
+              <li data-tab="{{ $i + 2 }}">{{ $tab['category']->name }}</li>
+            @endforeach
+          </ul>
+
+          <div class="tab-nav-content">
+
+            {{-- TAB 1: ALL --}}
+            <div class="tabs active" data-tab="1">
+              <div class="swiper-wrap">
+                <div class="swiper fourSlider">
+                  <div class="swiper-wrapper">
+                    @foreach ($lovedAll as $product)
+                      <div class="swiper-slide">
+                        @include('partials.product-card', ['product' => $product])
+                      </div>
+                    @endforeach
                   </div>
-                  <div class="cat-info">
-                    <h4>Premium Sarees</h4>
-                    <p>Timeless drapes, beautiful craftsmanship.</p>
-                    <span class="cat-link">Shop Sarees <i class="fa-solid fa-arrow-right-long"></i></span>
-                  </div>
-                </a>
-              </div>
-              <div class="swiper-slide">
-                <a href="{{ route('categories') }}" class="cat-card">
-                  <div class="cat-img">
-                    <img src="assets/images/home/cat2.png" alt="Designer Lehengas" loading="lazy" />
-                  </div>
-                  <div class="cat-info">
-                    <h4>Designer Lehengas</h4>
-                    <p>Statement silhouettes for every grand occasion.</p>
-                    <span class="cat-link">Shop Lehengas
-                      <i class="fa-solid fa-arrow-right-long"></i></span>
-                  </div>
-                </a>
-              </div>
-              <div class="swiper-slide">
-                <a href="{{ route('categories') }}" class="cat-card">
-                  <div class="cat-img">
-                    <img src="assets/images/home/cat3.png" alt="Suits" loading="lazy" />
-                  </div>
-                  <div class="cat-info">
-                    <h4>Suits</h4>
-                    <p>
-                      Graceful suits for everyday elegance and festive
-                      moments.
-                    </p>
-                    <span class="cat-link">Shop Suits <i class="fa-solid fa-arrow-right-long"></i></span>
-                  </div>
-                </a>
-              </div>
-              <div class="swiper-slide">
-                <a href="{{ route('categories') }}" class="cat-card">
-                  <div class="cat-img">
-                    <img src="assets/images/home/cat4.png" alt="Bridal Wear" loading="lazy" />
-                  </div>
-                  <div class="cat-info">
-                    <h4>Bridal Wear</h4>
-                    <p>
-                      Extraordinary pieces for your most memorable moments.
-                    </p>
-                    <span class="cat-link">Explore Bridal
-                      <i class="fa-solid fa-arrow-right-long"></i></span>
-                  </div>
-                </a>
+                </div>
+                <div class="swiper-group">
+                  <button type="button" class="btn-prev" aria-label="Previous slide">
+                    <i class="fa-solid fa-arrow-right"></i>
+                  </button>
+                  <button type="button" class="btn-next" aria-label="Next slide">
+                    <i class="fa-solid fa-arrow-right"></i>
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="swiper-group">
-            <button type="button" class="btn-prev" aria-label="Previous slide">
-              <i class="fa-solid fa-arrow-right"></i>
-            </button>
-            <button type="button" class="btn-next" aria-label="Next slide">
-              <i class="fa-solid fa-arrow-right"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <section class="home-secB">
-      <div class="container">
-        <div class="sec-head">
-          <span class="eyebrow">Most Loved</span>
-          <div class="heading">
-            <h3>What Everyone's Loving</h3>
-          </div>
-          <p>
-            Discover the styles our customers are choosing for celebrations,
-            festivities and unforgettable occasions.
-          </p>
-        </div>
-        <ul class="tab-nav">
-          <li data-tab="1" class="active">All</li>
-          <li data-tab="2">Sarees</li>
-          <li data-tab="3">Lehengas</li>
-          <li data-tab="4">Bridal Wear</li>
-        </ul>
-        <div class="tab-nav-content">
-          <!-- TAB 1: ALL -->
-          <div class="tabs active" data-tab="1">
-            <div class="swiper-wrap">
-              <div class="swiper fourSlider">
-                <div class="swiper-wrapper">
-                  <div class="swiper-slide">
-                    <div class="prod_cart">
-                      <div class="prod-img">
-                        <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab1.png"
-                            alt="Zari Woven Banarasi Silk Saree" loading="lazy" /></a>
-                        <span class="prod-badge">Bestseller</span>
-                        <div class="prod-actions">
-                          <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                            <i class="fa-regular fa-heart"></i>
-                          </button>
-                          <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                            <i class="fa-regular fa-eye"></i>
-                          </button>
+            {{-- CATEGORY TABS --}}
+            @foreach ($lovedTabs as $i => $tab)
+              <div class="tabs" data-tab="{{ $i + 2 }}">
+                <div class="swiper-wrap">
+                  <div class="swiper fourSlider">
+                    <div class="swiper-wrapper">
+                      @foreach ($tab['products'] as $product)
+                        <div class="swiper-slide">
+                          @include('partials.product-card', ['product' => $product])
                         </div>
-                      </div>
-                      <div class="prod-info">
-                        <div class="prod-meta">
-                          <span class="prod-cat">Banarasi Saree</span>
-                          <span class="prod-rate"><i class="fa-solid fa-star"></i> 4.8</span>
-                        </div>
-                        <h5 class="prod-name">
-                          <a href="product-detail.html">Zari Woven Banarasi Silk Saree</a>
-                        </h5>
-                        <div class="prod-price">
-                          <span class="price-now">₹8,499</span><del class="price-old">₹11,999</del><span
-                            class="price-off">29% OFF</span>
-                        </div>
-                        <div class="prod-btns">
-                          <button data-model=".cart-pop" type="button" class="btn btn-outline-primary prod-cta">
-                            Add to Cart
-                          </button>
-                          <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                        </div>
-                      </div>
+                      @endforeach
                     </div>
                   </div>
-
-                  <div class="swiper-slide">
-                    <div class="prod_cart">
-                      <div class="prod-img">
-                        <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab2.png"
-                            alt="Organza Embroidered Party Saree" loading="lazy" /></a>
-                        <span class="prod-badge">Bestseller</span>
-                        <div class="prod-actions">
-                          <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                            <i class="fa-regular fa-heart"></i>
-                          </button>
-                          <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                            <i class="fa-regular fa-eye"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="prod-info">
-                        <div class="prod-meta">
-                          <span class="prod-cat">Organza Saree</span>
-                          <span class="prod-rate"><i class="fa-solid fa-star"></i> 4.7</span>
-                        </div>
-                        <h5 class="prod-name">
-                          <a href="product-detail.html">Organza Embroidered Party Saree</a>
-                        </h5>
-                        <div class="prod-price">
-                          <span class="price-now">₹6,299</span><del class="price-old">₹8,999</del><span
-                            class="price-off">30% OFF</span>
-                        </div>
-                        <div class="prod-btns">
-                          <button data-model=".cart-pop" type="button" class="btn btn-outline-primary prod-cta">
-                            Add to Cart
-                          </button>
-                          <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="prod_cart">
-                      <div class="prod-img">
-                        <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab3.png"
-                            alt="Kanjivaram Pure Silk Saree" loading="lazy" /></a>
-                        <span class="prod-badge">Bestseller</span>
-                        <div class="prod-actions">
-                          <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                            <i class="fa-regular fa-heart"></i>
-                          </button>
-                          <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                            <i class="fa-regular fa-eye"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="prod-info">
-                        <div class="prod-meta">
-                          <span class="prod-cat">Silk Saree</span>
-                          <span class="prod-rate"><i class="fa-solid fa-star"></i> 4.9</span>
-                        </div>
-                        <h5 class="prod-name">
-                          <a href="product-detail.html">Kanjivaram Pure Silk Saree</a>
-                        </h5>
-                        <div class="prod-price">
-                          <span class="price-now">₹12,999</span><del class="price-old">₹17,499</del><span
-                            class="price-off">26% OFF</span>
-                        </div>
-                        <div class="prod-btns">
-                          <button data-model=".cart-pop" type="button" class="btn btn-outline-primary prod-cta">
-                            Add to Cart
-                          </button>
-                          <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="prod_cart">
-                      <div class="prod-img">
-                        <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab4.png"
-                            alt="Embroidered Designer Lehenga Set" loading="lazy" /></a>
-                        <span class="prod-badge">Bestseller</span>
-                        <div class="prod-actions">
-                          <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                            <i class="fa-regular fa-heart"></i>
-                          </button>
-                          <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                            <i class="fa-regular fa-eye"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="prod-info">
-                        <div class="prod-meta">
-                          <span class="prod-cat">Designer Lehenga</span>
-                          <span class="prod-rate"><i class="fa-solid fa-star"></i> 4.8</span>
-                        </div>
-                        <h5 class="prod-name">
-                          <a href="product-detail.html">Embroidered Designer Lehenga Set</a>
-                        </h5>
-                        <div class="prod-price">
-                          <span class="price-now">₹18,999</span><del class="price-old">₹26,999</del><span
-                            class="price-off">30% OFF</span>
-                        </div>
-                        <div class="prod-btns">
-                          <button data-model=".cart-pop" type="button" class="btn btn-outline-primary prod-cta">
-                            Add to Cart
-                          </button>
-                          <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="prod_cart">
-                      <div class="prod-img">
-                        <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab1.png"
-                            alt="Velvet Sequin Sangeet Lehenga" loading="lazy" /></a>
-                        <span class="prod-badge">Bestseller</span>
-                        <div class="prod-actions">
-                          <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                            <i class="fa-regular fa-heart"></i>
-                          </button>
-                          <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                            <i class="fa-regular fa-eye"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="prod-info">
-                        <div class="prod-meta">
-                          <span class="prod-cat">Party Wear Lehenga</span>
-                          <span class="prod-rate"><i class="fa-solid fa-star"></i> 4.6</span>
-                        </div>
-                        <h5 class="prod-name">
-                          <a href="product-detail.html">Velvet Sequin Sangeet Lehenga</a>
-                        </h5>
-                        <div class="prod-price">
-                          <span class="price-now">₹14,499</span><del class="price-old">₹19,999</del><span
-                            class="price-off">28% OFF</span>
-                        </div>
-                        <div class="prod-btns">
-                          <button data-model=".cart-pop" type="button" class="btn btn-outline-primary prod-cta">
-                            Add to Cart
-                          </button>
-                          <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="prod_cart">
-                      <div class="prod-img">
-                        <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab2.png"
-                            alt="Organza Floral Lehenga Set" loading="lazy" /></a>
-                        <span class="prod-badge">Bestseller</span>
-                        <div class="prod-actions">
-                          <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                            <i class="fa-regular fa-heart"></i>
-                          </button>
-                          <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                            <i class="fa-regular fa-eye"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="prod-info">
-                        <div class="prod-meta">
-                          <span class="prod-cat">Organza Lehenga</span>
-                          <span class="prod-rate"><i class="fa-solid fa-star"></i> 4.7</span>
-                        </div>
-                        <h5 class="prod-name">
-                          <a href="product-detail.html">Organza Floral Lehenga Set</a>
-                        </h5>
-                        <div class="prod-price">
-                          <span class="price-now">₹16,799</span><del class="price-old">₹22,999</del><span
-                            class="price-off">27% OFF</span>
-                        </div>
-                        <div class="prod-btns">
-                          <button data-model=".cart-pop" type="button" class="btn btn-outline-primary prod-cta">
-                            Add to Cart
-                          </button>
-                          <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="prod_cart">
-                      <div class="prod-img">
-                        <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab3.png"
-                            alt="Heavy Zardozi Bridal Lehenga" loading="lazy" /></a>
-                        <span class="prod-badge">Bestseller</span>
-                        <div class="prod-actions">
-                          <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                            <i class="fa-regular fa-heart"></i>
-                          </button>
-                          <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                            <i class="fa-regular fa-eye"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="prod-info">
-                        <div class="prod-meta">
-                          <span class="prod-cat">Bridal Lehenga</span>
-                          <span class="prod-rate"><i class="fa-solid fa-star"></i> 4.9</span>
-                        </div>
-                        <h5 class="prod-name">
-                          <a href="product-detail.html">Heavy Zardozi Bridal Lehenga</a>
-                        </h5>
-                        <div class="prod-price">
-                          <span class="price-now">₹42,999</span><del class="price-old">₹59,999</del><span
-                            class="price-off">28% OFF</span>
-                        </div>
-                        <div class="prod-btns">
-                          <button data-model=".cart-pop" type="button" class="btn btn-outline-primary prod-cta">
-                            Add to Cart
-                          </button>
-                          <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="prod_cart">
-                      <div class="prod-img">
-                        <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab4.png"
-                            alt="Red Bridal Silk Saree" loading="lazy" /></a>
-                        <span class="prod-badge">Bestseller</span>
-                        <div class="prod-actions">
-                          <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                            <i class="fa-regular fa-heart"></i>
-                          </button>
-                          <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                            <i class="fa-regular fa-eye"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="prod-info">
-                        <div class="prod-meta">
-                          <span class="prod-cat">Bridal Saree</span>
-                          <span class="prod-rate"><i class="fa-solid fa-star"></i> 4.8</span>
-                        </div>
-                        <h5 class="prod-name">
-                          <a href="product-detail.html">Red Bridal Silk Saree</a>
-                        </h5>
-                        <div class="prod-price">
-                          <span class="price-now">₹24,999</span><del class="price-old">₹34,999</del><span
-                            class="price-off">29% OFF</span>
-                        </div>
-                        <div class="prod-btns">
-                          <button data-model=".cart-pop" type="button" class="btn btn-outline-primary prod-cta">
-                            Add to Cart
-                          </button>
-                          <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                        </div>
-                      </div>
-                    </div>
+                  <div class="swiper-group">
+                    <button type="button" class="btn-prev" aria-label="Previous slide">
+                      <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                    <button type="button" class="btn-next" aria-label="Next slide">
+                      <i class="fa-solid fa-arrow-right"></i>
+                    </button>
                   </div>
                 </div>
               </div>
-              <div class="swiper-group">
-                <button type="button" class="btn-prev" aria-label="Previous slide">
-                  <i class="fa-solid fa-arrow-right"></i>
-                </button>
-                <button type="button" class="btn-next" aria-label="Next slide">
-                  <i class="fa-solid fa-arrow-right"></i>
-                </button>
-              </div>
-            </div>
-          </div>
+            @endforeach
 
-          <!-- TAB 2: SAREES -->
-          <div class="tabs" data-tab="2">
-            <div class="swiper-wrap">
-              <div class="swiper fourSlider">
-                <div class="swiper-wrapper">
-                  <div class="swiper-slide">
-                    <div class="prod_cart">
-                      <div class="prod-img">
-                        <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab1.png"
-                            alt="Zari Woven Banarasi Silk Saree" loading="lazy" /></a>
-                        <span class="prod-badge">Bestseller</span>
-                        <div class="prod-actions">
-                          <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                            <i class="fa-regular fa-heart"></i>
-                          </button>
-                          <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                            <i class="fa-regular fa-eye"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="prod-info">
-                        <div class="prod-meta">
-                          <span class="prod-cat">Banarasi Saree</span>
-                          <span class="prod-rate"><i class="fa-solid fa-star"></i> 4.8</span>
-                        </div>
-                        <h5 class="prod-name">
-                          <a href="product-detail.html">Zari Woven Banarasi Silk Saree</a>
-                        </h5>
-                        <div class="prod-price">
-                          <span class="price-now">₹8,499</span><del class="price-old">₹11,999</del><span
-                            class="price-off">29% OFF</span>
-                        </div>
-                        <div class="prod-btns">
-                          <button data-model=".cart-pop" type="button" class="btn btn-outline-primary prod-cta">
-                            Add to Cart
-                          </button>
-                          <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="prod_cart">
-                      <div class="prod-img">
-                        <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab2.png"
-                            alt="Organza Embroidered Party Saree" loading="lazy" /></a>
-                        <span class="prod-badge">Bestseller</span>
-                        <div class="prod-actions">
-                          <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                            <i class="fa-regular fa-heart"></i>
-                          </button>
-                          <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                            <i class="fa-regular fa-eye"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="prod-info">
-                        <div class="prod-meta">
-                          <span class="prod-cat">Organza Saree</span>
-                          <span class="prod-rate"><i class="fa-solid fa-star"></i> 4.7</span>
-                        </div>
-                        <h5 class="prod-name">
-                          <a href="product-detail.html">Organza Embroidered Party Saree</a>
-                        </h5>
-                        <div class="prod-price">
-                          <span class="price-now">₹6,299</span><del class="price-old">₹8,999</del><span
-                            class="price-off">30% OFF</span>
-                        </div>
-                        <div class="prod-btns">
-                          <button data-model=".cart-pop" type="button" class="btn btn-outline-primary prod-cta">
-                            Add to Cart
-                          </button>
-                          <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="prod_cart">
-                      <div class="prod-img">
-                        <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab3.png"
-                            alt="Kanjivaram Pure Silk Saree" loading="lazy" /></a>
-                        <span class="prod-badge">Bestseller</span>
-                        <div class="prod-actions">
-                          <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                            <i class="fa-regular fa-heart"></i>
-                          </button>
-                          <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                            <i class="fa-regular fa-eye"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="prod-info">
-                        <div class="prod-meta">
-                          <span class="prod-cat">Silk Saree</span>
-                          <span class="prod-rate"><i class="fa-solid fa-star"></i> 4.9</span>
-                        </div>
-                        <h5 class="prod-name">
-                          <a href="product-detail.html">Kanjivaram Pure Silk Saree</a>
-                        </h5>
-                        <div class="prod-price">
-                          <span class="price-now">₹12,999</span><del class="price-old">₹17,499</del><span
-                            class="price-off">26% OFF</span>
-                        </div>
-                        <div class="prod-btns">
-                          <button data-model=".cart-pop" type="button" class="btn btn-outline-primary prod-cta">
-                            Add to Cart
-                          </button>
-                          <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="swiper-group">
-                <button type="button" class="btn-prev" aria-label="Previous slide">
-                  <i class="fa-solid fa-arrow-right"></i>
-                </button>
-                <button type="button" class="btn-next" aria-label="Next slide">
-                  <i class="fa-solid fa-arrow-right"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- TAB 3: LEHENGAS -->
-          <div class="tabs" data-tab="3">
-            <div class="swiper-wrap">
-              <div class="swiper fourSlider">
-                <div class="swiper-wrapper">
-                  <div class="swiper-slide">
-                    <div class="prod_cart">
-                      <div class="prod-img">
-                        <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab1.png"
-                            alt="Embroidered Designer Lehenga Set" loading="lazy" /></a>
-                        <span class="prod-badge">Bestseller</span>
-                        <div class="prod-actions">
-                          <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                            <i class="fa-regular fa-heart"></i>
-                          </button>
-                          <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                            <i class="fa-regular fa-eye"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="prod-info">
-                        <div class="prod-meta">
-                          <span class="prod-cat">Designer Lehenga</span>
-                          <span class="prod-rate"><i class="fa-solid fa-star"></i> 4.8</span>
-                        </div>
-                        <h5 class="prod-name">
-                          <a href="product-detail.html">Embroidered Designer Lehenga Set</a>
-                        </h5>
-                        <div class="prod-price">
-                          <span class="price-now">₹18,999</span><del class="price-old">₹26,999</del><span
-                            class="price-off">30% OFF</span>
-                        </div>
-                        <div class="prod-btns">
-                          <button data-model=".cart-pop" type="button" class="btn btn-outline-primary prod-cta">
-                            Add to Cart
-                          </button>
-                          <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="prod_cart">
-                      <div class="prod-img">
-                        <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab2.png"
-                            alt="Velvet Sequin Sangeet Lehenga" loading="lazy" /></a>
-                        <span class="prod-badge">Bestseller</span>
-                        <div class="prod-actions">
-                          <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                            <i class="fa-regular fa-heart"></i>
-                          </button>
-                          <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                            <i class="fa-regular fa-eye"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="prod-info">
-                        <div class="prod-meta">
-                          <span class="prod-cat">Party Wear Lehenga</span>
-                          <span class="prod-rate"><i class="fa-solid fa-star"></i> 4.6</span>
-                        </div>
-                        <h5 class="prod-name">
-                          <a href="product-detail.html">Velvet Sequin Sangeet Lehenga</a>
-                        </h5>
-                        <div class="prod-price">
-                          <span class="price-now">₹14,499</span><del class="price-old">₹19,999</del><span
-                            class="price-off">28% OFF</span>
-                        </div>
-                        <div class="prod-btns">
-                          <button data-model=".cart-pop" type="button" class="btn btn-outline-primary prod-cta">
-                            Add to Cart
-                          </button>
-                          <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="prod_cart">
-                      <div class="prod-img">
-                        <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab3.png"
-                            alt="Organza Floral Lehenga Set" loading="lazy" /></a>
-                        <span class="prod-badge">Bestseller</span>
-                        <div class="prod-actions">
-                          <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                            <i class="fa-regular fa-heart"></i>
-                          </button>
-                          <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                            <i class="fa-regular fa-eye"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="prod-info">
-                        <div class="prod-meta">
-                          <span class="prod-cat">Organza Lehenga</span>
-                          <span class="prod-rate"><i class="fa-solid fa-star"></i> 4.7</span>
-                        </div>
-                        <h5 class="prod-name">
-                          <a href="product-detail.html">Organza Floral Lehenga Set</a>
-                        </h5>
-                        <div class="prod-price">
-                          <span class="price-now">₹16,799</span><del class="price-old">₹22,999</del><span
-                            class="price-off">27% OFF</span>
-                        </div>
-                        <div class="prod-btns">
-                          <button data-model=".cart-pop" type="button" class="btn btn-outline-primary prod-cta">
-                            Add to Cart
-                          </button>
-                          <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="swiper-group">
-                <button type="button" class="btn-prev" aria-label="Previous slide">
-                  <i class="fa-solid fa-arrow-right"></i>
-                </button>
-                <button type="button" class="btn-next" aria-label="Next slide">
-                  <i class="fa-solid fa-arrow-right"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- TAB 4: BRIDAL WEAR -->
-          <div class="tabs" data-tab="4">
-            <div class="swiper-wrap">
-              <div class="swiper fourSlider">
-                <div class="swiper-wrapper">
-                  <div class="swiper-slide">
-                    <div class="prod_cart">
-                      <div class="prod-img">
-                        <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab1.png"
-                            alt="Heavy Zardozi Bridal Lehenga" loading="lazy" /></a>
-                        <span class="prod-badge">Bestseller</span>
-                        <div class="prod-actions">
-                          <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                            <i class="fa-regular fa-heart"></i>
-                          </button>
-                          <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                            <i class="fa-regular fa-eye"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="prod-info">
-                        <div class="prod-meta">
-                          <span class="prod-cat">Bridal Lehenga</span>
-                          <span class="prod-rate"><i class="fa-solid fa-star"></i> 4.9</span>
-                        </div>
-                        <h5 class="prod-name">
-                          <a href="product-detail.html">Heavy Zardozi Bridal Lehenga</a>
-                        </h5>
-                        <div class="prod-price">
-                          <span class="price-now">₹42,999</span><del class="price-old">₹59,999</del><span
-                            class="price-off">28% OFF</span>
-                        </div>
-                        <div class="prod-btns">
-                          <button data-model=".cart-pop" type="button" class="btn btn-outline-primary prod-cta">
-                            Add to Cart
-                          </button>
-                          <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="prod_cart">
-                      <div class="prod-img">
-                        <a href="product-detail.html" class="prod-link"><img src="assets/images/home/tab2.png"
-                            alt="Red Bridal Silk Saree" loading="lazy" /></a>
-                        <span class="prod-badge">Bestseller</span>
-                        <div class="prod-actions">
-                          <button type="button" class="act-btn wish-btn" aria-label="Wishlist">
-                            <i class="fa-regular fa-heart"></i>
-                          </button>
-                          <button type="button" class="act-btn quick-btn" aria-label="Quick view">
-                            <i class="fa-regular fa-eye"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="prod-info">
-                        <div class="prod-meta">
-                          <span class="prod-cat">Bridal Saree</span>
-                          <span class="prod-rate"><i class="fa-solid fa-star"></i> 4.8</span>
-                        </div>
-                        <h5 class="prod-name">
-                          <a href="product-detail.html">Red Bridal Silk Saree</a>
-                        </h5>
-                        <div class="prod-price">
-                          <span class="price-now">₹24,999</span><del class="price-old">₹34,999</del><span
-                            class="price-off">29% OFF</span>
-                        </div>
-                        <div class="prod-btns">
-                          <button data-model=".cart-pop" type="button" class="btn btn-outline-primary prod-cta">
-                            Add to Cart
-                          </button>
-                          <a href="product-detail.html" class="btn btn-primary prod-cta">Buy Now</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="swiper-group">
-                <button type="button" class="btn-prev" aria-label="Previous slide">
-                  <i class="fa-solid fa-arrow-right"></i>
-                </button>
-                <button type="button" class="btn-next" aria-label="Next slide">
-                  <i class="fa-solid fa-arrow-right"></i>
-                </button>
-              </div>
-            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    @endif
 
     <section class="home-secC">
       <div class="container">

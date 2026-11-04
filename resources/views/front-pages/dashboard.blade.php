@@ -6,11 +6,15 @@
 
 @section('content')
 
+ @php
+    $returnPage = \App\Models\DynamicPage::active()->where('slug', 'returns-exchange')->first();
+  @endphp
+
   <main>
     <section class="dash-secA">
       <div class="container">
         <nav class="breadcrumb" aria-label="Breadcrumb">
-          <a href="index.html">Home</a>
+          <a href="{{ route('home') }}">Home</a>
           <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
           <span class="current">My Account</span>
         </nav>
@@ -75,7 +79,7 @@
         details up to date.
       </p>
     </div>
-    <a href="{{ url('/products') }}" class="btn btn-white">
+    <a href="{{ route('products') }}" class="btn btn-white">
       Continue Shopping
       <i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i>
     </a>
@@ -152,7 +156,7 @@
         <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
         <h4>No orders yet</h4>
         <p>When you place an order it will show up here.</p>
-        <a href="{{ url('/all-products') }}" class="btn btn-primary">Start Shopping</a>
+        <a href="{{ route('products') }}" class="btn btn-primary">Start Shopping</a>
       </div>
     @endif
   </div>
@@ -321,7 +325,7 @@
                     <i class="fa-solid fa-truck-fast" aria-hidden="true"></i>
                     <h4>No orders to track</h4>
                     <p>Once you place an order you can follow it here.</p>
-                    <a href="{{ url('/categories') }}" class="btn btn-primary">Start Shopping</a>
+                    <a href="{{ route('products') }}" class="btn btn-primary">Start Shopping</a>
                   </div>
                 </div>
               @endif
@@ -568,8 +572,8 @@
     <i class="fa-solid fa-truck-fast" aria-hidden="true"></i> Track Order</a>
 @endif
 
-            @if($order->status === 'delivered')
-              <a href="returns-exchange.html" class="btn btn-outline-primary btn-sm">
+             @if($order->status === 'delivered' && $returnPage)
+              <a href="{{ $returnPage->url }}" class="btn btn-outline-primary btn-sm">
                 <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Return / Exchange</a>
             @endif
 
@@ -578,7 +582,7 @@
                 <i class="fa-solid fa-file-invoice" aria-hidden="true"></i> Download Invoice</a>
             @endif
 
-            <a href="contact.html" class="btn btn-outline-primary btn-sm">
+            <a href="{{ route('contact') }}" class="btn btn-outline-primary btn-sm">
               <i class="fa-solid fa-headset" aria-hidden="true"></i> Need Help?</a>
           </div>
         </div>
@@ -588,7 +592,7 @@
         <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
         <h4>No orders yet</h4>
         <p>When you place an order it will show up here.</p>
-        <a href="{{ url('/categories') }}" class="btn btn-primary">Start Shopping</a>
+        <a href="{{ route('products') }}" class="btn btn-primary">Start Shopping</a>
       </div>
     @endforelse
 
@@ -671,7 +675,7 @@
       <i class="fa-regular fa-heart" aria-hidden="true"></i>
       <h4>Your wishlist is empty</h4>
       <p>Save sarees and lehengas you love and find them here.</p>
-      <a href="{{ url('/products') }}" class="btn btn-primary">Explore Collection</a>
+      <a href="{{ route('products') }}" class="btn btn-primary">Explore Collection</a>
     </div>
   </div>
 </div>
@@ -946,13 +950,16 @@
       });
 
       // same hash par dobara click karne par bhi kaam kare
-      $(document).on("click", 'a[href*="dashboard.html#tab-"]', function () {
-        var m = this.getAttribute("href").match(/#tab-(\d+)$/);
-        var onDash = /dashboard\.html$/.test(
-          window.location.pathname.split("/").pop(),
-        );
-        if (m && onDash) {
-          activateTab(m[1]);
+      $(document).on("click", 'a[href*="#tab-"]', function () {
+        var m = this.getAttribute("href").match(/^(.*?)#tab-(\d+)$/);
+        if (!m) return;
+
+        var path = m[1]
+          ? new URL(m[1], window.location.href).pathname
+          : window.location.pathname;
+
+        if (path === window.location.pathname) {
+          activateTab(m[2]);
           scrollToDash();
         }
       });

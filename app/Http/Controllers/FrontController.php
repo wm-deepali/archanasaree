@@ -8,6 +8,7 @@ use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\Setting;
 use App\Models\Category;
+use App\Models\HomeSlider;
 use App\Models\FaqCategory;
 use App\Models\DynamicPage;
 use Illuminate\Http\Request;
@@ -23,9 +24,37 @@ class FrontController extends Controller
 {
     use LogsApiCalls;
 
-    public function home(Request $request)
+    public function home()
     {
-        return view('front-pages.home');
+        $heroSlides = HomeSlider::active()->ordered()->get();
+
+        $homeCategories = Category::active()
+            ->parents()
+            ->orderBy('sort_order')
+            ->take(12)
+            ->get();
+
+        // Most Loved: "All" tab + one tab per category (only those that have products)
+        $lovedAll = Product::visible()->forCard()
+            ->latest('id')          // swap for your bestseller / featured / most-viewed ordering if you have one
+            ->limit(8)
+            ->get();
+
+        $lovedTabs = $homeCategories->take(6)
+            ->map(function ($cat) {
+                return [
+                    'category' => $cat,
+                    'products' => Product::visible()->forCard()
+                        ->where('category_id', $cat->id)
+                        ->latest('id')
+                        ->limit(8)
+                        ->get(),
+                ];
+            })
+            ->filter(fn($t) => $t['products']->isNotEmpty())
+            ->values();
+
+        return view('front-pages.home', compact('heroSlides', 'homeCategories', 'lovedAll', 'lovedTabs'));
     }
 
     public function searchSuggest(Request $request)

@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\{
     HomeHeroBannerController,
     HomeHeroSlideController,
     HomePageController,
+    HomeSliderController,
     LogoutController,
     OrderController,
     PaymentController,
@@ -222,20 +223,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/delete/{id}', [HomeSliderController::class, 'destroy'])->name('destroy');
         });
 
-        Route::prefix('home/text-sliders')->name('home.text-sliders.')->group(function () {
-
-            Route::get('/', [HomeTextSliderController::class, 'index'])->name('index');
-
-            Route::get('/create', [HomeTextSliderController::class, 'create'])->name('create');
-
-            Route::post('/store', [HomeTextSliderController::class, 'store'])->name('store');
-
-            Route::get('/edit/{id}', [HomeTextSliderController::class, 'edit'])->name('edit');
-
-            Route::put('/update/{id}', [HomeTextSliderController::class, 'update'])->name('update');
-
-            Route::delete('/delete/{id}', [HomeTextSliderController::class, 'destroy'])->name('destroy');
-        });
 
         Route::resource('gallery-images', GalleryImageController::class)->names('gallery-images');
 

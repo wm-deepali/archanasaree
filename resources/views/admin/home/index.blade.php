@@ -193,26 +193,7 @@
                     </div>
                 </div>
 
-                <!-- 2. Text Slider Section -->
-                <div class="widget-card">
-                    <div class="widget-head">
-                        <div class="widget-icon wi-amber"><i class="fa fa-align-center"></i></div>
-                        <div>
-                            <div style="display:flex;align-items:center;gap:8px">
-                                <span class="widget-num">2</span>
-                                <span class="widget-title">Text Slider Section</span>
-                            </div>
-                            <span class="type-badge tb-multiple"><i class="fa fa-th-large"></i> Multiple</span>
-                        </div>
-                    </div>
-                    <div style="font-size:12px;color:var(--text-hint)">Scrolling announcement or promo text strip below the header.</div>
-                    <div class="widget-actions">
-                        <a href="{{ route('admin.home.text-sliders.index') }}" class="btn-manage">
-                            <i class="fa fa-pencil"></i> Manage
-                        </a>
-                    </div>
-                </div>
-
+            
                 <!-- 3. Feature Cards -->
                 <div class="widget-card">
                     <div class="widget-head">

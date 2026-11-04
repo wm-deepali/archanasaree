@@ -25,6 +25,13 @@
     ['label' => 'YouTube', 'icon' => 'fa-brands fa-youtube', 'url' => $general->youtube],
     ['label' => 'WhatsApp', 'icon' => 'fa-brands fa-whatsapp', 'url' => $waDigits ? 'https://wa.me/' . $waDigits : null],
   ])->filter(fn($s) => filled($s['url']))->values();
+
+  // Policy / info pages from Manage Dynamic Pages (only active ones)
+  $policyPages = \App\Models\DynamicPage::active()->get()->keyBy('slug');
+  $pageLinks = fn(array $slugs) => collect($slugs)
+    ->map(fn($s) => $policyPages->get($s))
+    ->filter();
+
 @endphp
 <html lang="en">
 
@@ -481,10 +488,9 @@
                 <li><a href="javascript:void(0)" data-model=".login-pop">My Orders</a></li>
                 <li><a href="javascript:void(0)" data-model=".login-pop">Wishlist</a></li>
               @endif
-              <li><a href="shipping-policy.html">Shipping Information</a></li>
-              <li>
-                <a href="returns-exchange.html">Returns &amp; Exchange</a>
-              </li>
+              @foreach ($pageLinks(['shipping-policy', 'returns-exchange']) as $pg)
+                <li><a href="{{ $pg->url }}">{{ $pg->heading }}</a></li>
+              @endforeach
               <li><a href="{{ route('faqs') }}">FAQs</a></li>
             </ul>
           </div>
@@ -494,14 +500,9 @@
             <ul>
               <li><a href="{{ route('about') }}">About Us</a></li>
               <li><a href="{{ route('blogs') }}">Blogs</a></li>
-              <li><a href="#privacy-policy.html">Privacy Policy</a></li>
-              <li>
-                <a href="terms-conditions.html">Terms &amp; Conditions</a>
-              </li>
-              <li><a href="shipping-policy.html">Shipping Policy</a></li>
-              <li>
-                <a href="refund-cancellation-policy.html">Refund &amp; Cancellation Policy</a>
-              </li>
+              @foreach ($pageLinks(['privacy-policy', 'terms-conditions', 'refund-cancellation-policy']) as $pg)
+                <li><a href="{{ $pg->url }}">{{ $pg->heading }}</a></li>
+              @endforeach
             </ul>
           </div>
 
@@ -524,14 +525,9 @@
             {{ $general->footer_copyright ?: '© ' . date('Y') . ' ' . $siteName . '. All Rights Reserved.' }}
           </p>
           <ul class="legal">
-            <li><a href="privacy-policy.html">Privacy Policy</a></li>
-            <li>
-              <a href="terms-conditions.html">Terms &amp; Conditions</a>
-            </li>
-            <li><a href="shipping-policy.html">Shipping Policy</a></li>
-            <li>
-              <a href="returns-exchange.html">Returns &amp; Exchange</a>
-            </li>
+            @foreach ($pageLinks(['privacy-policy', 'terms-conditions', 'shipping-policy', 'returns-exchange']) as $pg)
+              <li><a href="{{ $pg->url }}">{{ $pg->heading }}</a></li>
+            @endforeach
           </ul>
           <p class="credit">
             Design &amp; Developed by
@@ -690,12 +686,17 @@
             <button type="submit" class="btn btn-primary pop-submit">
               Register Account
             </button>
-
-            <p class="pop-note">
-              By continuing, you agree to our
-              <a href="javascript:void(0);">Terms &amp; Conditions</a> and
-              <a href="javascript:void(0);">Privacy Policy</a>.
-            </p>
+            
+            @php $tc = $policyPages->get('terms-conditions');
+            $pp = $policyPages->get('privacy-policy'); @endphp
+            @if ($tc || $pp)
+              <p class="pop-note">
+                By continuing, you agree to our
+                @if ($tc)<a href="{{ $tc->url }}" target="_blank">Terms &amp; Conditions</a>@endif
+                @if ($tc && $pp) and @endif
+                @if ($pp)<a href="{{ $pp->url }}" target="_blank">Privacy Policy</a>@endif.
+              </p>
+            @endif
           </form>
 
           <div class="pop-divider"><span>or</span></div>
