@@ -5,8 +5,32 @@
 @endpush
 
 @section('content')
+@php
+    $siteName = $general->site_name ?: config('app.name');
+
+    // phone for tel: links (digits and +)
+    $telNum = preg_replace('/[^\d+]/', '', (string) $general->phone);
+
+    // WhatsApp: digits only, add 91 to a 10 digit number
+    $waNum = preg_replace('/\D/', '', (string) $general->whatsapp);
+    if (strlen($waNum) === 10) {
+        $waNum = '91' . $waNum;
+    }
+
+    $email   = $general->support_email ?: $general->admin_email;
+    $address = $general->business_address;
+    $hours   = $general->business_hours;
+
+    // google_map_url must be the embed src; if empty, build one from the address
+    $mapSrc = $general->google_map_url
+        ?: ($address ? 'https://www.google.com/maps?q=' . urlencode($address) . '&output=embed' : null);
+    $dirUrl = $address
+        ? 'https://www.google.com/maps/dir/?api=1&destination=' . urlencode($address)
+        : null;
+@endphp
 
     <main>
+      {{-- ================= Hero ================= --}}
       <section class="contact-secA">
         <div class="container">
           <ul class="crumb">
@@ -25,25 +49,25 @@
                 or bridal wear for your special day, our team is here to help
                 you choose the right piece.
               </p>
-              <div class="ban-btns">
-                <a href="tel:+91XXXXXXXXXX" class="btn btn-primary"
-                  ><i class="fa-solid fa-phone"></i> Call Now</a
-                >
-                <a
-                  href="https://wa.me/91XXXXXXXXXX"
-                  class="btn btn-outline-primary"
-                  target="_blank"
-                  rel="noopener"
-                  ><i class="fa-brands fa-whatsapp"></i> WhatsApp Us</a
-                >
-              </div>
+              @if ($telNum || $waNum)
+                <div class="ban-btns">
+                  @if ($telNum)
+                    <a href="tel:{{ $telNum }}" class="btn btn-primary">
+                      <i class="fa-solid fa-phone"></i> Call Now
+                    </a>
+                  @endif
+                  @if ($waNum)
+                    <a href="https://wa.me/{{ $waNum }}" class="btn btn-outline-primary" target="_blank"
+                      rel="noopener">
+                      <i class="fa-brands fa-whatsapp"></i> WhatsApp Us
+                    </a>
+                  @endif
+                </div>
+              @endif
             </div>
             <div class="ban-visual">
               <div class="ban-photo">
-                <img
-                  src="assets/images/home/banner5.jpg"
-                  alt="Archana Saree Emporium saree collection"
-                />
+                <img src="{{ asset('assets/images/home/banner5.jpg') }}" alt="{{ $siteName }} saree collection" />
               </div>
               <span class="ban-tag">Personal Assistance</span>
             </div>
@@ -51,66 +75,76 @@
         </div>
       </section>
 
+      {{-- ================= Contact option cards ================= --}}
       <section class="contact-secB">
         <div class="container">
           <div class="opt-grid">
-            <div class="opt-card">
-              <span class="opt-ico"><i class="fa-solid fa-phone"></i></span>
-              <span class="opt-label">Call Us</span>
-              <h4>Speak With Our Team</h4>
-              <p>
-                Have a question about a product, order or availability? Give us
-                a call.
-              </p>
-              <a href="tel:+91XXXXXXXXXX" class="opt-link"
-                >Call Now <i class="fa-solid fa-arrow-right-long"></i
-              ></a>
-            </div>
-            <div class="opt-card">
-              <span class="opt-ico"><i class="fa-brands fa-whatsapp"></i></span>
-              <span class="opt-label">WhatsApp</span>
-              <h4>Chat With Us</h4>
-              <p>
-                Get quick assistance with product details, availability and
-                shopping enquiries.
-              </p>
-              <a
-                href="https://wa.me/91XXXXXXXXXX"
-                class="opt-link"
-                target="_blank"
-                rel="noopener"
-                >Chat on WhatsApp <i class="fa-solid fa-arrow-right-long"></i
-              ></a>
-            </div>
-            <div class="opt-card">
-              <span class="opt-ico"
-                ><i class="fa-solid fa-location-dot"></i
-              ></span>
-              <span class="opt-label">Visit Our Store</span>
-              <h4>Visit Archana Saree Emporium</h4>
-              <p>
-                Explore our collections in person and let our team help you find
-                your perfect look.
-              </p>
-              <a href="#storeLocation" class="opt-link"
-                >Get Directions <i class="fa-solid fa-arrow-right-long"></i
-              ></a>
-            </div>
-            <div class="opt-card">
-              <span class="opt-ico"><i class="fa-solid fa-envelope"></i></span>
-              <span class="opt-label">Email Us</span>
-              <h4>Send an Email</h4>
-              <p>
-                For detailed enquiries, collaborations or general assistance,
-                send us a message.
-              </p>
-              <a href="mailto:[EMAIL ADDRESS]" class="opt-link"
-                >Email Us <i class="fa-solid fa-arrow-right-long"></i
-              ></a>
-            </div>
+
+            @if ($telNum)
+              <div class="opt-card">
+                <span class="opt-ico"><i class="fa-solid fa-phone"></i></span>
+                <span class="opt-label">Call Us</span>
+                <h4>Speak With Our Team</h4>
+                <p>
+                  Have a question about a product, order or availability? Give us
+                  a call.
+                </p>
+                <a href="tel:{{ $telNum }}" class="opt-link">
+                  Call Now <i class="fa-solid fa-arrow-right-long"></i>
+                </a>
+              </div>
+            @endif
+
+            @if ($waNum)
+              <div class="opt-card">
+                <span class="opt-ico"><i class="fa-brands fa-whatsapp"></i></span>
+                <span class="opt-label">WhatsApp</span>
+                <h4>Chat With Us</h4>
+                <p>
+                  Get quick assistance with product details, availability and
+                  shopping enquiries.
+                </p>
+                <a href="https://wa.me/{{ $waNum }}" class="opt-link" target="_blank" rel="noopener">
+                  Chat on WhatsApp <i class="fa-solid fa-arrow-right-long"></i>
+                </a>
+              </div>
+            @endif
+
+            @if ($address)
+              <div class="opt-card">
+                <span class="opt-ico"><i class="fa-solid fa-location-dot"></i></span>
+                <span class="opt-label">Visit Our Store</span>
+                <h4>Visit {{ $siteName }}</h4>
+                <p>
+                  Explore our collections in person and let our team help you find
+                  your perfect look.
+                </p>
+                <a href="#storeLocation" class="opt-link">
+                  Get Directions <i class="fa-solid fa-arrow-right-long"></i>
+                </a>
+              </div>
+            @endif
+
+            @if ($email)
+              <div class="opt-card">
+                <span class="opt-ico"><i class="fa-solid fa-envelope"></i></span>
+                <span class="opt-label">Email Us</span>
+                <h4>Send an Email</h4>
+                <p>
+                  For detailed enquiries, collaborations or general assistance,
+                  send us a message.
+                </p>
+                <a href="mailto:{{ $email }}" class="opt-link">
+                  Email Us <i class="fa-solid fa-arrow-right-long"></i>
+                </a>
+              </div>
+            @endif
+
           </div>
         </div>
       </section>
+
+      {{-- ================= Details + enquiry form ================= --}}
       <section class="contact-secC">
         <div class="container">
           <div class="ct-layout">
@@ -128,58 +162,57 @@
               </p>
 
               <ul class="ct-list">
-                <li>
-                  <i class="fa-solid fa-phone" aria-hidden="true"></i>
-                  <div>
-                    <b>Phone</b>
-                    <a href="tel:+911145671890">+91 11 4567 1890</a>
-                  </div>
-                </li>
+                @if ($general->phone)
+                  <li>
+                    <i class="fa-solid fa-phone" aria-hidden="true"></i>
+                    <div>
+                      <b>Phone</b>
+                      <a href="tel:{{ $telNum }}">{{ $general->phone }}</a>
+                    </div>
+                  </li>
+                @endif
 
-                <li>
-                  <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
-                  <div>
-                    <b>WhatsApp</b>
-                    <a
-                      href="https://wa.me/919810456789"
-                      target="_blank"
-                      rel="noopener"
-                    >
-                      +91 98104 56789
-                    </a>
-                  </div>
-                </li>
+                @if ($waNum)
+                  <li>
+                    <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                    <div>
+                      <b>WhatsApp</b>
+                      <a href="https://wa.me/{{ $waNum }}" target="_blank" rel="noopener">
+                        {{ $general->whatsapp }}
+                      </a>
+                    </div>
+                  </li>
+                @endif
 
-                <li>
-                  <i class="fa-solid fa-envelope" aria-hidden="true"></i>
-                  <div>
-                    <b>Email</b>
-                    <a href="mailto:hello@archanasareeemporium.com">
-                      hello@archanasareeemporium.com
-                    </a>
-                  </div>
-                </li>
+                @if ($email)
+                  <li>
+                    <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+                    <div>
+                      <b>Email</b>
+                      <a href="mailto:{{ $email }}">{{ $email }}</a>
+                    </div>
+                  </li>
+                @endif
 
-                <li>
-                  <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
-                  <div>
-                    <b>Store Address</b>
-                    <span>
-                      1842, Kucha Natwa, Chandni Chowk, Delhi – 110006
-                    </span>
-                  </div>
-                </li>
+                @if ($address)
+                  <li>
+                    <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                    <div>
+                      <b>Store Address</b>
+                      <span>{!! nl2br(e($address)) !!}</span>
+                    </div>
+                  </li>
+                @endif
 
-                <li>
-                  <i class="fa-regular fa-clock" aria-hidden="true"></i>
-                  <div>
-                    <b>Business Hours</b>
-                    <span>
-                      Monday – Saturday: 10:30 AM – 8:30 PM<br />
-                      Sunday: 11:00 AM – 7:00 PM
-                    </span>
-                  </div>
-                </li>
+                @if ($hours)
+                  <li>
+                    <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                    <div>
+                      <b>Business Hours</b>
+                      <span>{!! nl2br(e($hours)) !!}</span>
+                    </div>
+                  </li>
+                @endif
               </ul>
             </div>
 
@@ -192,52 +225,32 @@
                 </p>
               </div>
 
-              <form
-                id="contactForm"
-                class="form ct-form"
-                action=""
-                method="post"
-                novalidate
-              >
+              <form id="contactForm" class="form ct-form" action="{{ route('contact.submit') }}" method="post"
+                novalidate>
+                @csrf
+
+                {{-- honeypot: hidden from real users, bots fill it --}}
+                <input type="text" name="website" tabindex="-1" autocomplete="off"
+                  style="position:absolute;left:-9999px;opacity:0" aria-hidden="true" />
+
                 <div class="ct-fields">
                   <div class="form-group">
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="cName"
-                      name="name"
-                      placeholder=" "
-                      autocomplete="name"
-                      required
-                    />
+                    <input type="text" class="form-control" id="cName" name="name" placeholder=" "
+                      autocomplete="name" required />
                     <label for="cName">Full Name *</label>
                     <span class="error" hidden></span>
                   </div>
 
                   <div class="form-group">
-                    <input
-                      type="tel"
-                      class="form-control"
-                      id="cPhone"
-                      name="phone"
-                      placeholder=" "
-                      autocomplete="tel"
-                      required
-                    />
+                    <input type="tel" class="form-control" id="cPhone" name="phone" placeholder=" "
+                      autocomplete="tel" required />
                     <label for="cPhone">Phone Number *</label>
                     <span class="error" hidden></span>
                   </div>
 
                   <div class="form-group">
-                    <input
-                      type="email"
-                      class="form-control"
-                      id="cEmail"
-                      name="email"
-                      placeholder=" "
-                      autocomplete="email"
-                      required
-                    />
+                    <input type="email" class="form-control" id="cEmail" name="email" placeholder=" "
+                      autocomplete="email" required />
                     <label for="cEmail">Email Address *</label>
                     <span class="error" hidden></span>
                   </div>
@@ -245,29 +258,16 @@
                   <div class="form-group">
                     <select class="form-control" id="cType" name="type">
                       <option value="">Enquiry Type</option>
-                      <option value="Saree Enquiry">Saree Enquiry</option>
-                      <option value="Lehenga Enquiry">Lehenga Enquiry</option>
-                      <option value="Bridal Wear">Bridal Wear</option>
-                      <option value="Product Availability">
-                        Product Availability
-                      </option>
-                      <option value="Order Assistance">Order Assistance</option>
-                      <option value="Store Visit">Store Visit</option>
-                      <option value="General Enquiry">General Enquiry</option>
+                      @foreach ($enquiryTypes as $t)
+                        <option value="{{ $t }}">{{ $t }}</option>
+                      @endforeach
                     </select>
+                    <span class="error" hidden></span>
                   </div>
 
                   <div class="form-group ct-full">
-                    <textarea
-                      class="form-control"
-                      id="cMessage"
-                      name="message"
-                      placeholder=" "
-                      required
-                    ></textarea>
-                    <label for="cMessage">
-                      Tell us what you're looking for... *
-                    </label>
+                    <textarea class="form-control" id="cMessage" name="message" placeholder=" " required></textarea>
+                    <label for="cMessage">Tell us what you're looking for... *</label>
                     <span class="error" hidden></span>
                   </div>
                 </div>
@@ -277,10 +277,7 @@
                 <div class="ct-actions">
                   <button type="submit" class="btn btn-primary">
                     Send Enquiry
-                    <i
-                      class="fa-solid fa-arrow-right-long"
-                      aria-hidden="true"
-                    ></i>
+                    <i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i>
                   </button>
                 </div>
               </form>
@@ -289,77 +286,76 @@
         </div>
       </section>
 
-      <section class="contact-secD" id="storeLocation">
-        <div class="container">
-          <div class="loc-grid">
-            <div class="loc-info">
-              <span class="eyebrow">Visit Us</span>
+      {{-- ================= Store location ================= --}}
+      @if ($address || $mapSrc)
+        <section class="contact-secD" id="storeLocation">
+          <div class="container">
+            <div class="loc-grid">
+              <div class="loc-info">
+                <span class="eyebrow">Visit Us</span>
 
-              <div class="heading">
-                <h3>Come Visit Archana Saree Emporium</h3>
+                <div class="heading">
+                  <h3>Come Visit {{ $siteName }}</h3>
+                </div>
+
+                <p class="loc-desc">
+                  Prefer to see the collection in person? Visit our store and
+                  explore our sarees, lehengas and bridal collections with our
+                  team.
+                </p>
+
+                <ul class="loc-meta">
+                  @if ($address)
+                    <li>
+                      <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                      <div>
+                        <b>Store Address</b>
+                        <span>{!! nl2br(e($address)) !!}</span>
+                      </div>
+                    </li>
+                  @endif
+
+                  @if ($general->phone)
+                    <li>
+                      <i class="fa-solid fa-phone" aria-hidden="true"></i>
+                      <div>
+                        <b>Phone</b>
+                        <span>{{ $general->phone }}</span>
+                      </div>
+                    </li>
+                  @endif
+
+                  @if ($hours)
+                    <li>
+                      <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                      <div>
+                        <b>Opening Hours</b>
+                        <span>{!! nl2br(e($hours)) !!}</span>
+                      </div>
+                    </li>
+                  @endif
+                </ul>
+
+                @if ($dirUrl)
+                  <a href="{{ $dirUrl }}" class="btn btn-primary" target="_blank" rel="noopener">
+                    Get Directions
+                    <i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i>
+                  </a>
+                @endif
               </div>
 
-              <p class="loc-desc">
-                Prefer to see the collection in person? Visit our store and
-                explore our sarees, lehengas and bridal collections with our
-                team.
-              </p>
-
-              <ul class="loc-meta">
-                <li>
-                  <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
-                  <div>
-                    <b>Store Address</b>
-                    <span>
-                      1842, Kucha Natwa, Chandni Chowk, Delhi – 110006
-                    </span>
-                  </div>
-                </li>
-
-                <li>
-                  <i class="fa-solid fa-phone" aria-hidden="true"></i>
-                  <div>
-                    <b>Phone</b>
-                    <span>+91 11 4567 1890</span>
-                  </div>
-                </li>
-
-                <li>
-                  <i class="fa-regular fa-clock" aria-hidden="true"></i>
-                  <div>
-                    <b>Opening Hours</b>
-                    <span>
-                      Monday – Saturday: 10:30 AM – 8:30 PM<br />
-                      Sunday: 11:00 AM – 7:00 PM
-                    </span>
-                  </div>
-                </li>
-              </ul>
-
-              <a
-                href="https://www.google.com/maps/dir/?api=1&destination=Kucha+Natwa,+Chandni+Chowk,+Delhi+110006"
-                class="btn btn-primary"
-                target="_blank"
-                rel="noopener"
-              >
-                Get Directions
-                <i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i>
-              </a>
-            </div>
-
-            <div class="loc-map">
-              <iframe
-                title="Archana Saree Emporium location"
-                src="https://www.google.com/maps?q=Kucha+Natwa,+Chandni+Chowk,+Delhi+110006&output=embed"
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-                allowfullscreen
-              ></iframe>
+              @if ($mapSrc)
+                <div class="loc-map">
+                  <iframe title="{{ $siteName }} location" src="{{ $mapSrc }}" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+                </div>
+              @endif
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      @endif
 
+      {{-- ================= Need help ================= --}}
       <section class="contact-secE">
         <div class="container">
           <div class="help-box">
@@ -375,20 +371,87 @@
               </p>
             </div>
             <div class="help-btns">
-              <a
-                href="https://wa.me/91XXXXXXXXXX"
-                class="btn btn-primary"
-                target="_blank"
-                rel="noopener"
-                ><i class="fa-brands fa-whatsapp"></i> WhatsApp Us</a
-              >
-              <a href="tel:+91XXXXXXXXXX" class="btn btn-outline-primary"
-                ><i class="fa-solid fa-phone"></i> Call Us</a
-              >
+              @if ($waNum)
+                <a href="https://wa.me/{{ $waNum }}" class="btn btn-primary" target="_blank" rel="noopener">
+                  <i class="fa-brands fa-whatsapp"></i> WhatsApp Us
+                </a>
+              @endif
+              @if ($telNum)
+                <a href="tel:{{ $telNum }}" class="btn btn-outline-primary">
+                  <i class="fa-solid fa-phone"></i> Call Us
+                </a>
+              @endif
             </div>
           </div>
         </div>
       </section>
     </main>
 
-@endsection   
+@endsection
+
+@push('scripts')
+  <script>
+    (function () {
+      var f = document.getElementById('contactForm'),
+        st = document.getElementById('ctStatus');
+      if (!f) return;
+      var btn = f.querySelector('button[type=submit]');
+
+      function showStatus(msg, ok) {
+        st.textContent = msg;
+        st.hidden = false;
+        st.style.color = ok ? '#1b7a4b' : '#b22222';
+      }
+
+      f.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        f.querySelectorAll('.error').forEach(function (s) {
+          s.hidden = true;
+          s.textContent = '';
+        });
+        st.hidden = true;
+        btn.disabled = true;
+
+        fetch(f.action, {
+          method: 'POST',
+          headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
+          body: new FormData(f)
+        })
+          .then(function (r) {
+            return r.json().then(function (j) { return { status: r.status, body: j }; });
+          })
+          .then(function (res) {
+            if (res.status === 422) {
+              Object.keys(res.body.errors || {}).forEach(function (k) {
+                var field = f.querySelector('[name="' + k + '"]');
+                var group = field && field.closest('.form-group');
+                var span = group && group.querySelector('.error');
+                if (span) {
+                  span.textContent = res.body.errors[k][0];
+                  span.hidden = false;
+                }
+              });
+              showStatus('Please correct the highlighted fields.', false);
+            } else if (res.status >= 200 && res.status < 300) {
+              f.reset();
+              showStatus(res.body.message, true);
+            } else {
+              showStatus(
+                res.status === 429
+                  ? 'Too many attempts. Please try again in a minute.'
+                  : 'Something went wrong. Please try again.',
+                false
+              );
+            }
+          })
+          .catch(function () {
+            showStatus('Network error. Please try again.', false);
+          })
+          .finally(function () {
+            btn.disabled = false;
+          });
+      });
+    })();
+  </script>
+@endpush

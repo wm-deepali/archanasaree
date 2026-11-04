@@ -3,13 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Faq;
+use App\Models\Blog;
 use App\Models\Coupon;
 use App\Models\Product;
+use App\Models\Setting;
 use App\Models\Category;
 use App\Models\FaqCategory;
+use App\Models\DynamicPage;
 use Illuminate\Http\Request;
 use App\Traits\LogsApiCalls;
+use App\Models\ContactEnquiry;
+use Illuminate\Validation\Rule;
 use App\Models\CategoryAttribute;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use App\Services\ProductFilterService;
 
 class FrontController extends Controller
@@ -499,6 +506,84 @@ class FrontController extends Controller
         }
 
         return view('front-pages.faqs', compact('categories'));
+    }
+
+    public function blogs()
+    {
+        $featured = Blog::published()->where('is_featured', 1)->latest('published_at')->latest('id')->first()
+            ?? Blog::published()->latest('published_at')->latest('id')->first();
+
+        $blogs = Blog::published()
+            ->when($featured, fn($q) => $q->where('id', '!=', $featured->id))
+            ->orderByDesc('published_at')->orderByDesc('id')
+            ->paginate(9)
+            ->withQueryString();
+
+        return view('front-pages.blogs', compact('featured', 'blogs'));
+    }
+
+    public function blogDetail($slug)
+    {
+        $blog = Blog::published()->where('slug', $slug)->firstOrFail();
+
+        $related = Blog::published()
+            ->where('id', '!=', $blog->id)
+            ->orderByRaw('(category = ?) desc', [$blog->category])
+            ->orderByDesc('published_at')
+            ->limit(6)
+            ->get();
+
+        return view('front-pages.blog-detail', compact('blog', 'related'));
+    }
+
+    public function contact()
+    {
+        return view('front-pages.contact', ['enquiryTypes' => ContactEnquiry::TYPES]);
+    }
+
+    public function contactSubmit(Request $request)
+    {
+        // honeypot: bots fill this hidden field, so pretend success and save nothing
+        if ($request->filled('website')) {
+            return response()->json(['message' => 'Thank you! We will get back to you soon.']);
+        }
+
+        $data = $request->validate([
+            'name' => 'required|string|max:100',
+            'phone' => ['required', 'string', 'max:20', 'regex:/^[0-9+\-\s()]{7,20}$/'],
+            'email' => 'required|email|max:150',
+            'type' => ['nullable', Rule::in(ContactEnquiry::TYPES)],
+            'message' => 'required|string|max:2000',
+        ], [
+            'phone.regex' => 'Please enter a valid phone number.',
+        ]);
+
+        $enquiry = ContactEnquiry::create($data + ['ip_address' => $request->ip()]);
+
+        // email the store; a mail failure must not lose the enquiry
+        $to = view()->shared('general')->support_email ?? null;
+        if ($to) {
+            try {
+                Mail::raw(
+                    "New enquiry #{$enquiry->id}\n\nName: {$enquiry->name}\nPhone: {$enquiry->phone}\n"
+                    . "Email: {$enquiry->email}\nType: " . ($enquiry->type ?: '-') . "\n\n{$enquiry->message}",
+                    fn($m) => $m->to($to)->replyTo($enquiry->email)->subject('New website enquiry: ' . $enquiry->name)
+                );
+            } catch (\Throwable $e) {
+                Log::warning('Contact mail failed: ' . $e->getMessage());
+            }
+        }
+
+        return response()->json(['message' => 'Thank you! Your enquiry has been sent. Our team will contact you soon.']);
+    }
+
+    public function pageDetail(string $slug)
+    {
+        $page = DynamicPage::active()->where('slug', $slug)->firstOrFail();
+
+        $content = $page->renderedContent(Setting::first());
+
+        return view('front-pages.page', compact('page', 'content'));
     }
 
 }

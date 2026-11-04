@@ -20,199 +20,203 @@
         <!-- Content -->
         <div class="settings-content">
 
-          <!-- Site Identity -->
-<div class="settings-section" id="gs-site">
-    <div class="settings-section-title"><i class="fa-solid fa-globe"></i> Site Identity</div>
-    <p class="settings-section-desc">Basic information about your store shown to customers and used across
-        the
-        admin panel.</p>
+            <!-- Site Identity -->
+            <div class="settings-section" id="gs-site">
+                <div class="settings-section-title"><i class="fa-solid fa-globe"></i> Site Identity</div>
+                <p class="settings-section-desc">Basic information about your store shown to customers and used across
+                    the
+                    admin panel.</p>
 
-    <style>
-        .logo-preview-box {
-            width: 100%;
-            max-width: 220px;
-            height: 70px;
-            margin: 10px auto 0;
-            border: 1px solid #e3e5e8;
-            border-radius: 8px;
-            background: #fafafa;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            padding: 6px;
-        }
-        .logo-preview-box img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        .logo-preview-remove {
-            display: block;
-            text-align: center;
-            margin-top: 6px;
-            font-size: 11.5px;
-            color: #b22222;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-        }
-    </style>
+                <style>
+                    .logo-preview-box {
+                        width: 100%;
+                        max-width: 220px;
+                        height: 70px;
+                        margin: 10px auto 0;
+                        border: 1px solid #e3e5e8;
+                        border-radius: 8px;
+                        background: #fafafa;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        overflow: hidden;
+                        padding: 6px;
+                    }
 
-    <div class="form-grid">
-        <div class="field-group col-full">
-            <label class="field-label">Site / Store Name <span class="req">*</span></label>
-            <input type="text" name="site_name" class="field-input"
-                value="{{ old('site_name', $general?->site_name) }}" placeholder="Your store name">
-        </div>
+                    .logo-preview-box img {
+                        max-width: 100%;
+                        max-height: 100%;
+                        object-fit: contain;
+                    }
 
-        <div class="field-group col-full">
-            <label class="field-label">Tagline</label>
-            <input type="text" name="tagline" class="field-input"
-                value="{{ old('tagline', $general?->tagline) }}"
-                placeholder="e.g. Authentic Lucknowi Chikankari">
-            <span class="field-hint">Used alongside the website header logo.</span>
-        </div>
+                    .logo-preview-remove {
+                        display: block;
+                        text-align: center;
+                        margin-top: 6px;
+                        font-size: 11.5px;
+                        color: #b22222;
+                        background: none;
+                        border: none;
+                        cursor: pointer;
+                        padding: 0;
+                    }
+                </style>
 
-        <!-- Website Header Logo -->
-        <div class="field-group">
-            <label class="field-label">Website Header Logo</label>
-            <div class="upload-area">
-                <input type="file" id="header_logo" name="header_logo" accept="image/*">
-                <div class="upload-icon"><i class="fa fa-cloud-upload"></i></div>
-                <div class="upload-label">Upload Header Logo</div>
-                <div class="upload-sub">PNG, SVG · recommended 200×60px</div>
-            </div>
+                <div class="form-grid">
+                    <div class="field-group col-full">
+                        <label class="field-label">Site / Store Name <span class="req">*</span></label>
+                        <input type="text" name="site_name" class="field-input"
+                            value="{{ old('site_name', $general?->site_name) }}" placeholder="Your store name">
+                    </div>
 
-            @if(!empty($general->header_logo))
-                <div class="logo-preview-box">
-                    <img src="{{ asset('storage/' . $general->header_logo) }}" alt="Header Logo">
+                    <div class="field-group col-full">
+                        <label class="field-label">Tagline</label>
+                        <input type="text" name="tagline" class="field-input"
+                            value="{{ old('tagline', $general?->tagline) }}"
+                            placeholder="e.g. Authentic Lucknowi Chikankari">
+                        <span class="field-hint">Used alongside the website header logo.</span>
+                    </div>
+
+                    <!-- Website Header Logo -->
+                    <div class="field-group">
+                        <label class="field-label">Website Header Logo</label>
+                        <div class="upload-area">
+                            <input type="file" id="header_logo" name="header_logo" accept="image/*">
+                            <div class="upload-icon"><i class="fa fa-cloud-upload"></i></div>
+                            <div class="upload-label">Upload Header Logo</div>
+                            <div class="upload-sub">PNG, SVG · recommended 200×60px</div>
+                        </div>
+
+                        @if(!empty($general->header_logo))
+                            <div class="logo-preview-box">
+                                <img src="{{ asset('storage/' . $general->header_logo) }}" alt="Header Logo">
+                            </div>
+                        @endif
+
+                        <div id="header_logoPreview" style="display:none">
+                            <div class="logo-preview-box">
+                                <img id="preview_header_logo" src="" alt="Preview">
+                            </div>
+                            <button type="button" class="logo-preview-remove" onclick="clearImage('header_logo')">
+                                <i class="fa fa-times"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Website Footer Logo -->
+                    <div class="field-group">
+                        <label class="field-label">Website Footer Logo</label>
+                        <div class="upload-area">
+                            <input type="file" id="footer_logo" name="footer_logo" accept="image/*">
+                            <div class="upload-icon"><i class="fa fa-cloud-upload"></i></div>
+                            <div class="upload-label">Upload Footer Logo</div>
+                            <div class="upload-sub">PNG, SVG · recommended 200×60px</div>
+                        </div>
+
+                        @if(!empty($general->footer_logo))
+                            <div class="logo-preview-box">
+                                <img src="{{ asset('storage/' . $general->footer_logo) }}" alt="Footer Logo">
+                            </div>
+                        @endif
+
+                        <div id="footer_logoPreview" style="display:none">
+                            <div class="logo-preview-box">
+                                <img id="preview_footer_logo" src="" alt="Preview">
+                            </div>
+                            <button type="button" class="logo-preview-remove" onclick="clearImage('footer_logo')">
+                                <i class="fa fa-times"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Favicon -->
+                    <div class="field-group">
+                        <label class="field-label">Favicon</label>
+                        <div class="upload-area">
+                            <input type="file" id="favicon" name="favicon" accept="image/*">
+                            <div class="upload-icon"><i class="fa fa-image"></i></div>
+                            <div class="upload-label">Upload Favicon</div>
+                            <div class="upload-sub">ICO, PNG · 32×32px</div>
+                        </div>
+
+                        @if(!empty($general->favicon))
+                            <div class="logo-preview-box" style="height:50px;max-width:60px">
+                                <img src="{{ asset('storage/' . $general->favicon) }}" alt="Favicon">
+                            </div>
+                        @endif
+
+                        <div id="faviconPreview" style="display:none">
+                            <div class="logo-preview-box" style="height:50px;max-width:60px">
+                                <img id="preview_favicon" src="" alt="Preview">
+                            </div>
+                            <button type="button" class="logo-preview-remove" onclick="clearImage('favicon')">
+                                <i class="fa fa-times"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Admin Login Page Logo -->
+                    <div class="field-group">
+                        <label class="field-label">Admin Login Page Logo</label>
+                        <div class="upload-area">
+                            <input type="file" id="admin_login_logo" name="admin_login_logo" accept="image/*">
+                            <div class="upload-icon"><i class="fa fa-cloud-upload"></i></div>
+                            <div class="upload-label">Upload Login Logo</div>
+                            <div class="upload-sub">PNG, SVG · recommended 200×60px</div>
+                        </div>
+
+                        @if(!empty($general->admin_login_logo))
+                            <div class="logo-preview-box">
+                                <img src="{{ asset('storage/' . $general->admin_login_logo) }}" alt="Admin Login Logo">
+                            </div>
+                        @endif
+
+                        <div id="admin_login_logoPreview" style="display:none">
+                            <div class="logo-preview-box">
+                                <img id="preview_admin_login_logo" src="" alt="Preview">
+                            </div>
+                            <button type="button" class="logo-preview-remove" onclick="clearImage('admin_login_logo')">
+                                <i class="fa fa-times"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Admin Dashboard Logo -->
+                    <div class="field-group">
+                        <label class="field-label">Admin Dashboard Logo</label>
+                        <div class="upload-area">
+                            <input type="file" id="admin_dashboard_logo" name="admin_dashboard_logo" accept="image/*">
+                            <div class="upload-icon"><i class="fa fa-cloud-upload"></i></div>
+                            <div class="upload-label">Upload Dashboard Logo</div>
+                            <div class="upload-sub">PNG, SVG · recommended 200×60px</div>
+                        </div>
+
+                        @if(!empty($general->admin_dashboard_logo))
+                            <div class="logo-preview-box">
+                                <img src="{{ asset('storage/' . $general->admin_dashboard_logo) }}"
+                                    alt="Admin Dashboard Logo">
+                            </div>
+                        @endif
+
+                        <div id="admin_dashboard_logoPreview" style="display:none">
+                            <div class="logo-preview-box">
+                                <img id="preview_admin_dashboard_logo" src="" alt="Preview">
+                            </div>
+                            <button type="button" class="logo-preview-remove"
+                                onclick="clearImage('admin_dashboard_logo')">
+                                <i class="fa fa-times"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="field-group col-full">
+                        <label class="field-label">Admin Email</label>
+                        <input type="email" name="admin_email" class="field-input"
+                            value="{{ old('admin_email', $general?->admin_email) }}">
+                        <span class="field-hint">Used for system notifications and order alerts.</span>
+                    </div>
                 </div>
-            @endif
-
-            <div id="header_logoPreview" style="display:none">
-                <div class="logo-preview-box">
-                    <img id="preview_header_logo" src="" alt="Preview">
-                </div>
-                <button type="button" class="logo-preview-remove" onclick="clearImage('header_logo')">
-                    <i class="fa fa-times"></i> Remove
-                </button>
             </div>
-        </div>
-
-        <!-- Website Footer Logo -->
-        <div class="field-group">
-            <label class="field-label">Website Footer Logo</label>
-            <div class="upload-area">
-                <input type="file" id="footer_logo" name="footer_logo" accept="image/*">
-                <div class="upload-icon"><i class="fa fa-cloud-upload"></i></div>
-                <div class="upload-label">Upload Footer Logo</div>
-                <div class="upload-sub">PNG, SVG · recommended 200×60px</div>
-            </div>
-
-            @if(!empty($general->footer_logo))
-                <div class="logo-preview-box">
-                    <img src="{{ asset('storage/' . $general->footer_logo) }}" alt="Footer Logo">
-                </div>
-            @endif
-
-            <div id="footer_logoPreview" style="display:none">
-                <div class="logo-preview-box">
-                    <img id="preview_footer_logo" src="" alt="Preview">
-                </div>
-                <button type="button" class="logo-preview-remove" onclick="clearImage('footer_logo')">
-                    <i class="fa fa-times"></i> Remove
-                </button>
-            </div>
-        </div>
-
-        <!-- Favicon -->
-        <div class="field-group">
-            <label class="field-label">Favicon</label>
-            <div class="upload-area">
-                <input type="file" id="favicon" name="favicon" accept="image/*">
-                <div class="upload-icon"><i class="fa fa-image"></i></div>
-                <div class="upload-label">Upload Favicon</div>
-                <div class="upload-sub">ICO, PNG · 32×32px</div>
-            </div>
-
-            @if(!empty($general->favicon))
-                <div class="logo-preview-box" style="height:50px;max-width:60px">
-                    <img src="{{ asset('storage/' . $general->favicon) }}" alt="Favicon">
-                </div>
-            @endif
-
-            <div id="faviconPreview" style="display:none">
-                <div class="logo-preview-box" style="height:50px;max-width:60px">
-                    <img id="preview_favicon" src="" alt="Preview">
-                </div>
-                <button type="button" class="logo-preview-remove" onclick="clearImage('favicon')">
-                    <i class="fa fa-times"></i> Remove
-                </button>
-            </div>
-        </div>
-
-        <!-- Admin Login Page Logo -->
-        <div class="field-group">
-            <label class="field-label">Admin Login Page Logo</label>
-            <div class="upload-area">
-                <input type="file" id="admin_login_logo" name="admin_login_logo" accept="image/*">
-                <div class="upload-icon"><i class="fa fa-cloud-upload"></i></div>
-                <div class="upload-label">Upload Login Logo</div>
-                <div class="upload-sub">PNG, SVG · recommended 200×60px</div>
-            </div>
-
-            @if(!empty($general->admin_login_logo))
-                <div class="logo-preview-box">
-                    <img src="{{ asset('storage/' . $general->admin_login_logo) }}" alt="Admin Login Logo">
-                </div>
-            @endif
-
-            <div id="admin_login_logoPreview" style="display:none">
-                <div class="logo-preview-box">
-                    <img id="preview_admin_login_logo" src="" alt="Preview">
-                </div>
-                <button type="button" class="logo-preview-remove" onclick="clearImage('admin_login_logo')">
-                    <i class="fa fa-times"></i> Remove
-                </button>
-            </div>
-        </div>
-
-        <!-- Admin Dashboard Logo -->
-        <div class="field-group">
-            <label class="field-label">Admin Dashboard Logo</label>
-            <div class="upload-area">
-                <input type="file" id="admin_dashboard_logo" name="admin_dashboard_logo" accept="image/*">
-                <div class="upload-icon"><i class="fa fa-cloud-upload"></i></div>
-                <div class="upload-label">Upload Dashboard Logo</div>
-                <div class="upload-sub">PNG, SVG · recommended 200×60px</div>
-            </div>
-
-            @if(!empty($general->admin_dashboard_logo))
-                <div class="logo-preview-box">
-                    <img src="{{ asset('storage/' . $general->admin_dashboard_logo) }}" alt="Admin Dashboard Logo">
-                </div>
-            @endif
-
-            <div id="admin_dashboard_logoPreview" style="display:none">
-                <div class="logo-preview-box">
-                    <img id="preview_admin_dashboard_logo" src="" alt="Preview">
-                </div>
-                <button type="button" class="logo-preview-remove" onclick="clearImage('admin_dashboard_logo')">
-                    <i class="fa fa-times"></i> Remove
-                </button>
-            </div>
-        </div>
-
-        <div class="field-group col-full">
-            <label class="field-label">Admin Email</label>
-            <input type="email" name="admin_email" class="field-input"
-                value="{{ old('admin_email', $general?->admin_email) }}">
-            <span class="field-hint">Used for system notifications and order alerts.</span>
-        </div>
-    </div>
-</div>
 
             <hr class="section-divider">
 
@@ -243,6 +247,22 @@
                         <textarea name="business_address" class="field-textarea"
                             rows="3">{{ old('business_address', $general?->business_address) }}</textarea>
                     </div>
+
+                    <div class="field-group col-full">
+                        <label class="field-label">Business Hours</label>
+                        <textarea name="business_hours" class="field-textarea" rows="3"
+                            placeholder="Monday – Saturday: 10:30 AM – 8:30 PM&#10;Sunday: 11:00 AM – 7:00 PM">{{ old('business_hours', $general?->business_hours) }}</textarea>
+                        <span class="field-hint">One line per row. Shown on the Contact page.</span>
+                    </div>
+
+                    <div class="field-group col-full">
+                        <label class="field-label">Google Map Embed</label>
+                        <input type="text" name="google_map_url" class="field-input"
+                            value="{{ old('google_map_url', $general?->google_map_url) }}"
+                            placeholder="Paste the embed code or URL from Google Maps → Share → Embed a map">
+                        <span class="field-hint">Leave empty to build the map from the business address.</span>
+                    </div>
+
                 </div>
             </div>
 
@@ -410,12 +430,12 @@
                     <label class="toggle-switch"><input type="checkbox" name="stock_alerts" {{ old('stock_alerts', $general?->stock_alerts) ? 'checked' : '' }}><span class="toggle-track"></span></label>
                 </div>
                 <div class="toggle-row">
-    <div>
-        <div class="toggle-info-label">Cash on Delivery (COD)</div>
-        <div class="toggle-info-sub">Allow customers to pay cash on delivery at checkout.</div>
-    </div>
-    <label class="toggle-switch"><input type="checkbox" name="cod_enabled" {{ old('cod_enabled', $general?->cod_enabled) ? 'checked' : '' }}><span class="toggle-track"></span></label>
-</div>
+                    <div>
+                        <div class="toggle-info-label">Cash on Delivery (COD)</div>
+                        <div class="toggle-info-sub">Allow customers to pay cash on delivery at checkout.</div>
+                    </div>
+                    <label class="toggle-switch"><input type="checkbox" name="cod_enabled" {{ old('cod_enabled', $general?->cod_enabled) ? 'checked' : '' }}><span class="toggle-track"></span></label>
+                </div>
             </div>
 
         </div><!-- /settings-content -->

@@ -19,6 +19,7 @@ class Setting extends Model
         'phone',
         'whatsapp',
         'business_address',
+        'business_hours',
         'footer_description',
         'footer_copyright',
         'google_map_url',

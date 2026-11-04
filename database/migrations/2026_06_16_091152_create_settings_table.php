@@ -26,6 +26,7 @@ return new class extends Migration {
             $table->string('phone')->nullable();
             $table->string('whatsapp')->nullable();
             $table->text('business_address')->nullable();
+            $table->text('business_hours')->nullable();
 
             // Footer
             $table->text('footer_description')->nullable();

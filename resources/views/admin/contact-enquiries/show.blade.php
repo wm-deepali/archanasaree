@@ -35,73 +35,70 @@
                     <div class="p-4">
 
                         <div class="row mb-4">
-                            <div class="col-md-3">
-                                <strong>Name</strong>
-                            </div>
-                            <div class="col-md-9">
-                                {{ $enquiry->name }}
+                            <div class="col-md-3"><strong>Name</strong></div>
+                            <div class="col-md-9">{{ $enquiry->name }}</div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-3"><strong>Email</strong></div>
+                            <div class="col-md-9"><a href="mailto:{{ $enquiry->email }}">{{ $enquiry->email }}</a></div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-3"><strong>Phone</strong></div>
+                            <div class="col-md-9"><a
+                                    href="tel:{{ preg_replace('/[^\d+]/', '', $enquiry->phone) }}">{{ $enquiry->phone }}</a>
                             </div>
                         </div>
 
                         <div class="row mb-4">
-                            <div class="col-md-3">
-                                <strong>Email</strong>
-                            </div>
+                            <div class="col-md-3"><strong>Enquiry Type</strong></div>
                             <div class="col-md-9">
-                                {{ $enquiry->email }}
+                                <span class="inq-tag">{{ $enquiry->type ?: 'General' }}</span>
                             </div>
                         </div>
 
                         <div class="row mb-4">
-                            <div class="col-md-3">
-                                <strong>Mobile</strong>
-                            </div>
-                            <div class="col-md-9">
-                                {{ $enquiry->mobile }}
-                            </div>
-                        </div>
-
-                        <div class="row mb-4">
-                            <div class="col-md-3">
-                                <strong>Company</strong>
-                            </div>
-                            <div class="col-md-9">
-                                {{ $enquiry->company ?: '—' }}
-                            </div>
-                        </div>
-
-                        <div class="row mb-4">
-                            <div class="col-md-3">
-                                <strong>Inquiry Type</strong>
-                            </div>
-                            <div class="col-md-9">
-                                <span class="inq-tag">
-                                    {{ $enquiry->inquiry_type ?: 'General' }}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="row mb-4">
-                            <div class="col-md-3">
-                                <strong>Submitted On</strong>
-                            </div>
+                            <div class="col-md-3"><strong>Submitted On</strong></div>
                             <div class="col-md-9">
                                 {{ $enquiry->created_at->format('d M Y') }}
-                                <div class="text-muted small">
-                                    {{ $enquiry->created_at->format('h:i A') }}
-                                </div>
+                                <div class="text-muted small">{{ $enquiry->created_at->format('h:i A') }}</div>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-3">
-                                <strong>Message</strong>
+                        @if($enquiry->ip_address)
+                            <div class="row mb-4">
+                                <div class="col-md-3"><strong>IP Address</strong></div>
+                                <div class="col-md-9 text-muted">{{ $enquiry->ip_address }}</div>
                             </div>
+                        @endif
 
+                        <div class="row mb-4">
+                            <div class="col-md-3"><strong>Message</strong></div>
                             <div class="col-md-9">
-                                <div class="border rounded p-3 bg-light">
-                                    {!! nl2br(e($enquiry->message)) !!}
-                                </div>
+                                <div class="border rounded p-3 bg-light">{!! nl2br(e($enquiry->message)) !!}</div>
+                            </div>
+                        </div>
+
+                        @php
+                            $wa = preg_replace('/\D/', '', $enquiry->phone);
+                            if (strlen($wa) === 10) {
+                                $wa = '91' . $wa;
+                            }
+                        @endphp
+                        <div class="row">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-9" style="display:flex;gap:8px;flex-wrap:wrap">
+                                <a href="mailto:{{ $enquiry->email }}?subject={{ rawurlencode('Re: your enquiry') }}"
+                                    class="btn-secondary-dash">
+                                    <i class="fa fa-envelope"></i> Reply by Email
+                                </a>
+                                @if(strlen($wa) >= 10)
+                                    <a href="https://wa.me/{{ $wa }}" target="_blank" rel="noopener"
+                                        class="btn-secondary-dash">
+                                        <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                                    </a>
+                                @endif
                             </div>
                         </div>
 

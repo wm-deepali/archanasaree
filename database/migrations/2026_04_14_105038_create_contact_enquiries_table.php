@@ -5,20 +5,18 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
+
     public function up(): void
     {
         Schema::create('contact_enquiries', function (Blueprint $table) {
             $table->id();
-
             $table->string('name');
+            $table->string('phone', 20);
             $table->string('email');
-            $table->string('mobile');
-
-            $table->string('company')->nullable();
-            $table->string('inquiry_type')->nullable();
-
+            $table->string('type')->nullable();
             $table->text('message');
-
+            $table->string('ip_address', 45)->nullable();
+            $table->boolean('is_read')->default(false);
             $table->timestamps();
         });
     }
@@ -27,4 +25,5 @@ return new class extends Migration {
     {
         Schema::dropIfExists('contact_enquiries');
     }
+    
 };

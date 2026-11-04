@@ -17,8 +17,6 @@
         --green-bg:      #e3f1ec;
         --red:           #b22222;
         --red-bg:        #fce8e8;
-        --amber:         #916a00;
-        --amber-bg:      #fff5cc;
         --radius-sm:     8px;
         --radius-md:     12px;
         --shadow-card:   0 1px 3px rgba(0,0,0,.08), 0 0 0 1px var(--border);
@@ -34,6 +32,9 @@
     .crumb a { color: var(--accent); text-decoration: none; }
     .crumb a:hover { text-decoration: underline; }
     .crumb span { margin: 0 5px; }
+
+    .alert-box { border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px; margin-bottom: 16px; }
+    .alert-success { background: var(--green-bg); color: var(--green); border: 1px solid #bfe0d3; }
 
     .btn-primary-dash {
         display: inline-flex; align-items: center; gap: 6px;
@@ -56,18 +57,16 @@
     .pages-table tbody td { padding: 13px 16px; vertical-align: middle; color: var(--text-primary); }
 
     .id-chip { display: inline-block; background: var(--bg); color: var(--text-secondary); font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 6px; font-family: 'SF Mono','Fira Code',monospace; }
-
     .slug-code { display: inline-flex; align-items: center; gap: 4px; background: var(--bg); color: var(--accent); font-size: 12px; padding: 3px 8px; border-radius: 6px; font-family: 'SF Mono','Fira Code',monospace; }
-
-    .page-name-cell { font-weight: 600; font-size: 13px; color: var(--text-primary); }
-    .page-heading-cell { font-size: 13px; color: var(--text-secondary); }
+    .page-heading-cell { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+    .page-short-cell { font-size: 12px; color: var(--text-hint); margin-top: 2px; max-width: 360px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
     .pill { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 600; padding: 3px 9px; border-radius: 20px; }
     .pill::before { content: ''; width: 5px; height: 5px; border-radius: 50%; display: inline-block; }
-    .pill-active   { background: var(--green-bg); color: var(--green); }
-    .pill-active::before   { background: var(--green); }
-    .pill-block    { background: var(--red-bg);   color: var(--red); }
-    .pill-block::before    { background: var(--red); }
+    .pill-active { background: var(--green-bg); color: var(--green); }
+    .pill-active::before { background: var(--green); }
+    .pill-block { background: var(--red-bg); color: var(--red); }
+    .pill-block::before { background: var(--red); }
 
     .action-btn { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); font-size: 12px; cursor: pointer; transition: all .12s; text-decoration: none; }
     .action-btn:hover { background: var(--bg); color: var(--text-primary); }
@@ -97,6 +96,10 @@
                 </a>
             </div>
 
+            @if(session('success'))
+                <div class="alert-box alert-success">{{ session('success') }}</div>
+            @endif
+
             <div class="pages-card">
                 <div class="pages-table-wrap">
                     <table class="pages-table">
@@ -106,7 +109,7 @@
                                 <th>Page Slug</th>
                                 <th>Heading</th>
                                 <th style="width:110px">Status</th>
-                                <th style="width:90px">Actions</th>
+                                <th style="width:130px">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -118,16 +121,19 @@
                                     <td>
                                         <span class="slug-code">
                                             <i class="fa fa-link" style="font-size:10px"></i>
-                                            {{ $page->page_name }}
+                                            {{ $page->slug }}
                                         </span>
                                     </td>
 
                                     <td>
-                                        <span class="page-heading-cell">{{ $page->heading }}</span>
+                                        <div class="page-heading-cell">{{ $page->heading }}</div>
+                                        @if($page->short_description)
+                                            <div class="page-short-cell">{{ $page->short_description }}</div>
+                                        @endif
                                     </td>
 
                                     <td>
-                                        @if($page->status === 'active')
+                                        @if($page->status)
                                             <span class="pill pill-active">Active</span>
                                         @else
                                             <span class="pill pill-block">Blocked</span>
@@ -136,11 +142,16 @@
 
                                     <td>
                                         <div style="display:flex;gap:6px">
+                                            @if($page->status && Route::has('page.show'))
+                                                <a href="{{ $page->url }}" target="_blank" class="action-btn" title="View">
+                                                    <i class="fa fa-external-link"></i>
+                                                </a>
+                                            @endif
                                             <a href="{{ route('admin.pages.edit', $page->id) }}"
                                                 class="action-btn" title="Edit">
                                                 <i class="fa fa-pencil"></i>
                                             </a>
-                                            <button class="action-btn action-btn-danger"
+                                            <button type="button" class="action-btn action-btn-danger"
                                                 onclick="deletePage({{ $page->id }})" title="Delete">
                                                 <i class="fa fa-trash"></i>
                                             </button>

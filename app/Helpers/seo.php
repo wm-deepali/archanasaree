@@ -62,7 +62,7 @@ function getSeo()
             $slug = request()->route('slug');
             return DynamicPage::get()
             ->first(function ($p) use ($slug) {
-                return Str::slug($p->page_name) === $slug;
+                return Str::slug($p->slug) === $slug;
             });
 
 

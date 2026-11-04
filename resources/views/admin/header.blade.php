@@ -97,7 +97,6 @@
             <a href="#"><i class="fa-solid fa-cart-shopping"></i> Customer & Orders</a>
             <ul>
                 <li><a href="{{ route('admin.orders.index') }}">Manage Orders</a></li>
-                <li><a href="{{ route('admin.orders.print-labels') }}">Print Label</a></li>
                 <li><a href="{{ route('admin.payments.index') }}">Payments & Transactions</a></li>
                 <li><a href="{{ route('admin.order-returns.index') }}">Manage Returns</a></li>
                 <li><a href="{{ route('admin.return-reasons.index') }}">Return Reasons</a></li>
@@ -118,39 +117,34 @@
 
         {{-- CONTENT MANAGEMENT --}}
         <li class="{{ request()->routeIs(
+    'admin.announcements.*',
     'admin.home-page.*',
-    'admin.banners.*',
     'admin.faqs.*',
     'admin.blogs.*',
     'admin.pages.*',
-    'admin.announcements.*',
     'admin.testimonials.*',
     'admin.teams.*'
 ) ? 'active' : '' }}">
             <a href="#"><i class="fa-solid fa-file-lines"></i> Content Management</a>
             <ul>
+                <li><a href="{{ route('admin.announcements.index') }}">Announcement Bar</a></li>
                 <li><a href="{{ route('admin.home-page.index') }}">Home Page Widgets</a></li>
-                <li><a href="#">Banners & Sliders</a></li>
                 <li><a href="{{ route('admin.faqs.index') }}">FAQ</a></li>
                 <li><a href="{{ route('admin.blogs.index') }}">Blog Management</a></li>
                 <li><a href="{{ route('admin.pages.index') }}">Dynamic Pages</a></li>
-                <li><a href="{{ route('admin.announcements.index') }}">Announcement Bar</a></li>
                 <li><a href="{{ route('admin.teams.index') }}">Manage Teams</a></li>
                 <li><a href="{{ route('admin.testimonials.index') }}">Testimonial & Feedback</a></li>
-                <li><a href="{{ route('admin.contact-branches.index') }}">Manage Office Branches</a></li>
             </ul>
         </li>
 
         {{-- ENQUIRIES --}}
         <li class="{{ request()->routeIs(
     'admin.contact-enquiries.*',
-    'admin.other-enquiries.*',
     'admin.coupon-enquiries.*'
 ) ? 'active' : '' }}">
             <a href="#"><i class="fa-solid fa-envelope"></i> Enquiries</a>
             <ul>
                 <li><a href="{{ route('admin.contact-enquiries.index') }}">Contact Us Enquiries</a></li>
-                <li><a href="{{ route('admin.other-enquiries.index') }}">Other Enquiries</a></li>
                 <li><a href="{{ route('admin.coupon-enquiries.index') }}">Coupon Enquiries</a></li>
             </ul>
         </li>
@@ -200,24 +194,6 @@
                 <li><a href="{{ route('admin.redirect-settings.index') }}">Re-Direction Setting</a></li>
             </ul>
         </li>
-
-        {{-- ROLES & PERMISSION --}}
-        <li class="{{ request()->routeIs(
-    'admin.roles-category.*',
-    'admin.permission-settings.*',
-    'admin.team.*'
-) ? 'active' : '' }}">
-            <a href="#"><i class="fa-solid fa-user-shield"></i> Roles & Permission</a>
-            <ul>
-                <li><a href="{{ route('admin.roles-category.index') }}">Role Category</a></li>
-                <li><a href="{{ route('admin.permission-settings.index') }}">Roles Permission</a></li>
-                <li><a href="{{ route('admin.team.index') }}">Team Setup</a></li>
-                <li><a href="{{ route('admin.team.activity-logs') }}">Activity Logs</a></li>
-                <li><a href="{{ route('admin.team.login-summary') }}">Login Summary</a></li>
-            </ul>
-        </li>
-
-
 
         {{-- REPORTS --}}
         <li class="{{ request()->routeIs(

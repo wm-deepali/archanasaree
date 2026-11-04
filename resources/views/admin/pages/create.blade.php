@@ -6,9 +6,7 @@
     <style>
         .cke_notifications_area,
         .cke_notification,
-        .cke_notification_warning {
-            display: none !important;
-        }
+        .cke_notification_warning { display: none !important; }
 
         :root {
             --bg: #f1f2f4;
@@ -20,309 +18,82 @@
             --accent: #303d89;
             --accent-light: #f0f1fc;
             --red: #b22222;
+            --red-bg: #fce8e8;
             --radius-sm: 8px;
             --radius-md: 12px;
             --shadow-card: 0 1px 3px rgba(0, 0, 0, .08), 0 0 0 1px var(--border);
             --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
-        .page-create {
-            background: var(--bg);
-            padding: 24px 28px;
-            min-height: 100vh;
-            font-family: var(--font);
-            color: var(--text-primary);
-        }
+        .page-create { background: var(--bg); padding: 24px 28px; min-height: 100vh; font-family: var(--font); color: var(--text-primary); }
+        .page-create * { box-sizing: border-box; }
 
-        .page-create * {
-            box-sizing: border-box;
-        }
+        .page-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+        .page-header h1 { font-size: 20px; font-weight: 650; color: var(--text-primary); margin: 0; }
+        .crumb { font-size: 12.5px; color: var(--text-hint); margin-top: 3px; }
+        .crumb a { color: var(--accent); text-decoration: none; }
+        .crumb a:hover { text-decoration: underline; }
+        .crumb span { margin: 0 5px; }
 
-        .page-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
+        .alert-error { background: var(--red-bg); color: var(--red); border: 1px solid #f5c6c6; border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px; margin-bottom: 16px; }
+        .alert-error ul { margin: 0; padding-left: 18px; }
 
-        .page-header h1 {
-            font-size: 20px;
-            font-weight: 650;
-            color: var(--text-primary);
-            margin: 0;
-        }
+        .create-layout { display: grid; grid-template-columns: 1fr 280px; gap: 20px; align-items: start; }
+        @media(max-width:960px) { .create-layout { grid-template-columns: 1fr; } }
 
-        .crumb {
-            font-size: 12.5px;
-            color: var(--text-hint);
-            margin-top: 3px;
-        }
+        .section-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-card); overflow: hidden; margin-bottom: 16px; }
+        .section-card:last-child { margin-bottom: 0; }
+        .section-card-header { padding: 14px 20px; border-bottom: 1px solid var(--border); background: #fafafa; }
+        .section-card-header h5 { font-size: 13px; font-weight: 650; color: var(--text-primary); margin: 0; }
+        .section-card-body { padding: 20px; }
 
-        .crumb a {
-            color: var(--accent);
-            text-decoration: none;
-        }
+        .field-group { margin-bottom: 16px; }
+        .field-group:last-child { margin-bottom: 0; }
+        .field-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); letter-spacing: .03em; text-transform: uppercase; margin-bottom: 6px; }
+        .field-label .req { color: var(--red); margin-left: 2px; }
+        .field-hint { font-size: 11.5px; color: var(--text-hint); margin-top: 4px; }
 
-        .crumb a:hover {
-            text-decoration: underline;
+        .field-input, .field-select, .field-textarea {
+            width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm);
+            padding: 0 12px; font-size: 13.5px; color: var(--text-primary); background: var(--surface);
+            outline: none; transition: border-color .15s, box-shadow .15s; font-family: var(--font);
         }
+        .field-input, .field-select { height: 38px; }
+        .field-textarea { padding: 10px 12px; resize: vertical; min-height: 90px; }
+        .field-input:focus, .field-select:focus, .field-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(48, 61, 137, .12); }
 
-        .crumb span {
-            margin: 0 5px;
-        }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        @media(max-width:600px) { .two-col { grid-template-columns: 1fr; } }
 
-        /* Two-column layout */
-        .create-layout {
-            display: grid;
-            grid-template-columns: 1fr 280px;
-            gap: 20px;
-            align-items: start;
-        }
-
-        @media(max-width:960px) {
-            .create-layout {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Section card */
-        .section-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-card);
-            overflow: hidden;
-            margin-bottom: 16px;
-        }
-
-        .section-card:last-child {
-            margin-bottom: 0;
-        }
-
-        .section-card-header {
-            padding: 14px 20px;
-            border-bottom: 1px solid var(--border);
-            background: #fafafa;
-        }
-
-        .section-card-header h5 {
-            font-size: 13px;
-            font-weight: 650;
-            color: var(--text-primary);
-            margin: 0;
-        }
-
-        .section-card-body {
-            padding: 20px;
-        }
-
-        /* Fields */
-        .field-group {
-            margin-bottom: 16px;
-        }
-
-        .field-group:last-child {
-            margin-bottom: 0;
-        }
-
-        .field-label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            letter-spacing: .03em;
-            text-transform: uppercase;
-            margin-bottom: 6px;
-        }
-
-        .field-label .req {
-            color: var(--red);
-            margin-left: 2px;
-        }
-
-        .field-hint {
-            font-size: 11.5px;
-            color: var(--text-hint);
-            margin-top: 4px;
-        }
-
-        .field-input,
-        .field-select,
-        .field-textarea {
-            width: 100%;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 0 12px;
-            font-size: 13.5px;
-            color: var(--text-primary);
-            background: var(--surface);
-            outline: none;
-            transition: border-color .15s, box-shadow .15s;
-            font-family: var(--font);
-        }
-
-        .field-input,
-        .field-select {
-            height: 38px;
-        }
-
-        .field-textarea {
-            padding: 10px 12px;
-            resize: vertical;
-            min-height: 90px;
-        }
-
-        .field-input:focus,
-        .field-select:focus,
-        .field-textarea:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(48, 61, 137, .12);
-        }
-
-        /* Two column grid inside card */
-        .two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
-
-        @media(max-width:600px) {
-            .two-col {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Status select small */
         .field-select-sm {
-            height: 32px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 0 28px 0 10px;
-            font-size: 12.5px;
-            color: var(--text-primary);
-            background: var(--surface);
-            outline: none;
-            font-family: var(--font);
-            min-width: 110px;
-            appearance: none;
+            height: 32px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+            padding: 0 28px 0 10px; font-size: 12.5px; color: var(--text-primary); background: var(--surface);
+            outline: none; font-family: var(--font); min-width: 110px; appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238c9196'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 9px center;
-            transition: border-color .15s;
+            background-repeat: no-repeat; background-position: right 9px center; transition: border-color .15s;
         }
+        .field-select-sm:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(48, 61, 137, .12); }
 
-        .field-select-sm:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(48, 61, 137, .12);
-        }
+        .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--bg); }
+        .toggle-label { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+        .toggle-sub { font-size: 11.5px; color: var(--text-hint); margin-top: 1px; }
 
-        /* Toggle row */
-        .toggle-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--bg);
-        }
+        .ph-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--bg); font-size: 12.5px; }
+        .ph-row:last-child { border-bottom: none; }
+        .ph-row .k { color: var(--text-hint); }
+        .ph-row .v { font-family: monospace; color: var(--accent); font-size: 12px; }
 
-        .toggle-row:first-child {
-            padding-top: 0;
-        }
+        .cke { border-radius: var(--radius-sm) !important; border: 1px solid var(--border) !important; overflow: hidden; }
+        .cke_top { background: #fafafa !important; border-bottom: 1px solid var(--border) !important; }
 
-        .toggle-row:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
+        .btn-primary-dash { display: inline-flex; align-items: center; gap: 6px; background: var(--accent); color: #fff !important; border: none; border-radius: var(--radius-sm); padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none !important; font-family: var(--font); transition: background .15s; box-shadow: 0 1px 3px rgba(48, 61, 137, .25); }
+        .btn-primary-dash:hover { background: #252f70; }
+        .btn-secondary-dash { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); color: var(--text-primary) !important; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 18px; font-size: 13px; font-weight: 500; cursor: pointer; text-decoration: none !important; font-family: var(--font); transition: background .15s; }
+        .btn-secondary-dash:hover { background: var(--bg); }
 
-        .toggle-label {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
+        .action-bar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-card); padding: 14px 20px; display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-top: 20px; }
 
-        .toggle-sub {
-            font-size: 11.5px;
-            color: var(--text-hint);
-            margin-top: 1px;
-        }
-
-        /* CKEditor override */
-        .cke {
-            border-radius: var(--radius-sm) !important;
-            border: 1px solid var(--border) !important;
-            overflow: hidden;
-        }
-
-        .cke_top {
-            background: #fafafa !important;
-            border-bottom: 1px solid var(--border) !important;
-        }
-
-        /* Buttons */
-        .btn-primary-dash {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--accent);
-            color: #fff !important;
-            border: none;
-            border-radius: var(--radius-sm);
-            padding: 8px 18px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none !important;
-            font-family: var(--font);
-            transition: background .15s;
-            box-shadow: 0 1px 3px rgba(48, 61, 137, .25);
-        }
-
-        .btn-primary-dash:hover {
-            background: #252f70;
-        }
-
-        .btn-secondary-dash {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--surface);
-            color: var(--text-primary) !important;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 8px 18px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            text-decoration: none !important;
-            font-family: var(--font);
-            transition: background .15s;
-        }
-
-        .btn-secondary-dash:hover {
-            background: var(--bg);
-        }
-
-        /* Action bar */
-        .action-bar {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-card);
-            padding: 14px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        @media(max-width:768px) {
-            .page-create {
-                padding: 16px;
-            }
-        }
+        @media(max-width:768px) { .page-create { padding: 16px; } }
     </style>
 
     <div class="app-content content container-fluid">
@@ -341,6 +112,16 @@
                 </div>
             </div>
 
+            @if($errors->any())
+                <div class="alert-error">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form method="POST" action="{{ route('admin.pages.store') }}">
                 @csrf
 
@@ -349,51 +130,52 @@
                     <!-- LEFT -->
                     <div>
 
-                        <!-- Basic Info -->
                         <div class="section-card">
-                            <div class="section-card-header">
-                                <h5>Page Details</h5>
-                            </div>
+                            <div class="section-card-header"><h5>Page Details</h5></div>
                             <div class="section-card-body">
 
                                 <div class="two-col" style="margin-bottom:16px">
                                     <div class="field-group" style="margin:0">
-                                        <label class="field-label">Page Name (Slug)</label>
-                                        <input type="text" name="page_name" class="field-input"
-                                            placeholder="e.g. about-us">
-                                        <div class="field-hint">Used in the URL: /page/<strong>slug</strong></div>
+                                        <label class="field-label">Heading <span class="req">*</span></label>
+                                        <input type="text" name="heading" class="field-input"
+                                            value="{{ old('heading') }}" placeholder="e.g. About Us">
                                     </div>
                                     <div class="field-group" style="margin:0">
-                                        <label class="field-label">Heading</label>
-                                        <input type="text" name="heading" class="field-input"
-                                            placeholder="e.g. About Us">
+                                        <label class="field-label">Slug</label>
+                                        <input type="text" name="slug" class="field-input"
+                                            value="{{ old('slug') }}" placeholder="Auto-generated from heading if empty">
+                                        <div class="field-hint">Used in the URL: /page/<strong>slug</strong></div>
                                     </div>
                                 </div>
 
                                 <div class="field-group">
-                                    <label class="field-label">Page Content</label>
+                                    <label class="field-label">Short Description</label>
+                                    <textarea name="short_description" class="field-textarea"
+                                        style="min-height:70px"
+                                        placeholder="One or two lines shown in listings / page intro">{{ old('short_description') }}</textarea>
+                                </div>
+
+                                <div class="field-group">
+                                    <label class="field-label">Page Content <span class="req">*</span></label>
                                     <textarea name="content" id="content" class="field-textarea editor"
-                                        style="min-height:200px"></textarea>
+                                        style="min-height:200px">{{ old('content') }}</textarea>
                                 </div>
 
                             </div>
                         </div>
 
-                        <!-- SEO -->
                         <div class="section-card">
-                            <div class="section-card-header">
-                                <h5>SEO</h5>
-                            </div>
+                            <div class="section-card-header"><h5>SEO</h5></div>
                             <div class="section-card-body">
                                 <div class="field-group">
                                     <label class="field-label">Meta Title</label>
                                     <input type="text" name="meta_title" class="field-input"
-                                        placeholder="Page title for search engines">
+                                        value="{{ old('meta_title') }}" placeholder="Page title for search engines">
                                 </div>
                                 <div class="field-group">
                                     <label class="field-label">Meta Description</label>
                                     <textarea name="meta_description" class="field-textarea"
-                                        placeholder="Brief description shown in search results (150–160 chars)"></textarea>
+                                        placeholder="Brief description shown in search results (150–160 chars)">{{ old('meta_description') }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -403,9 +185,7 @@
                     <!-- RIGHT -->
                     <div>
                         <div class="section-card">
-                            <div class="section-card-header">
-                                <h5>Settings</h5>
-                            </div>
+                            <div class="section-card-header"><h5>Settings</h5></div>
                             <div class="section-card-body" style="padding:14px 20px">
                                 <div class="toggle-row" style="padding:0;border:none">
                                     <div>
@@ -413,38 +193,32 @@
                                         <div class="toggle-sub">Visible to visitors</div>
                                     </div>
                                     <select name="status" class="field-select-sm">
-                                        <option value="active">Active</option>
-                                        <option value="block">Block</option>
+                                        <option value="1" {{ old('status', '1') == '1' ? 'selected' : '' }}>Active</option>
+                                        <option value="0" {{ old('status', '1') == '0' ? 'selected' : '' }}>Blocked</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Help card -->
                         <div class="section-card">
-                            <div class="section-card-header">
-                                <h5>Examples</h5>
-                            </div>
+                            <div class="section-card-header"><h5>Content Placeholders</h5></div>
                             <div class="section-card-body" style="padding:14px 20px">
-                                <div style="font-size:12.5px;color:var(--text-secondary);line-height:1.9">
-                                    <div
-                                        style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--bg)">
-                                        <span style="color:var(--text-hint)">Slug</span>
-                                        <span
-                                            style="font-family:monospace;color:var(--accent);font-size:12px">about-us</span>
-                                    </div>
-                                    <div
-                                        style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--bg)">
-                                        <span style="color:var(--text-hint)">Slug</span>
-                                        <span
-                                            style="font-family:monospace;color:var(--accent);font-size:12px">privacy-policy</span>
-                                    </div>
-                                    <div style="display:flex;justify-content:space-between;padding:5px 0">
-                                        <span style="color:var(--text-hint)">Slug</span>
-                                        <span
-                                            style="font-family:monospace;color:var(--accent);font-size:12px">terms-conditions</span>
-                                    </div>
+                                <div class="field-hint" style="margin:0 0 8px">
+                                    Use these in the content. They are replaced with values from Settings.
                                 </div>
+                                <div class="ph-row"><span class="k">Site name</span><span class="v">[[site_name]]</span></div>
+                                <div class="ph-row"><span class="k">Email</span><span class="v">[[email]]</span></div>
+                                <div class="ph-row"><span class="k">Phone</span><span class="v">[[phone]]</span></div>
+                                <div class="ph-row"><span class="k">Address</span><span class="v">[[address]]</span></div>
+                            </div>
+                        </div>
+
+                        <div class="section-card">
+                            <div class="section-card-header"><h5>Slug Examples</h5></div>
+                            <div class="section-card-body" style="padding:14px 20px">
+                                <div class="ph-row"><span class="k">Slug</span><span class="v">about-us</span></div>
+                                <div class="ph-row"><span class="k">Slug</span><span class="v">privacy-policy</span></div>
+                                <div class="ph-row"><span class="k">Slug</span><span class="v">terms-conditions</span></div>
                             </div>
                         </div>
                     </div>

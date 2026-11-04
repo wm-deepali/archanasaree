@@ -4,14 +4,16 @@ namespace App\Exports;
 
 use App\Models\ContactEnquiry;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class ContactEnquiriesExport implements FromCollection, WithHeadings, WithMapping, WithStyles, ShouldAutoSize
 {
+    private int $index = 0;
+
     public function collection()
     {
         return ContactEnquiry::orderBy('created_at', 'desc')->get();
@@ -19,21 +21,19 @@ class ContactEnquiriesExport implements FromCollection, WithHeadings, WithMappin
 
     public function headings(): array
     {
-        return ['#', 'Name', 'Email', 'Mobile', 'Inquiry Type', 'Message', 'Date'];
+        return ['#', 'Name', 'Email', 'Phone', 'Enquiry Type', 'Message', 'Status', 'Date'];
     }
 
     public function map($item): array
     {
-        static $index = 0;
-        $index++;
-
         return [
-            $index,
+            ++$this->index,
             $item->name,
             $item->email,
-            $item->mobile ?? '—',
-            $item->inquiry_type ?? '—',
-            $item->message ?? '—',
+            $item->phone,
+            $item->type ?: '—',
+            $item->message,
+            $item->is_read ? 'Read' : 'New',
             $item->created_at->format('d M Y h:i A'),
         ];
     }

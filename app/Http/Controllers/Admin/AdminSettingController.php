@@ -247,6 +247,8 @@ class AdminSettingController extends Controller
             'phone' => 'nullable|string|max:20',
             'whatsapp' => 'nullable|string|max:20',
             'business_address' => 'nullable|string',
+            'business_hours' => 'nullable|string|max:500',
+            'google_map_url' => 'nullable|string|max:2000',
             'footer_description' => 'nullable|string',
             'facebook' => 'nullable|url|max:255',
             'instagram' => 'nullable|url|max:255',
@@ -264,16 +266,18 @@ class AdminSettingController extends Controller
             'admin_dashboard_logo' => 'nullable|image|mimes:jpg,jpeg,png,svg,webp|max:2048',
         ]);
 
-        $validated['maintenance_mode']
-            = $request->has('maintenance_mode');
-        $validated['product_reviews']
-            = $request->has('product_reviews');
-        $validated['wishlist']
-            = $request->has('wishlist');
-        $validated['stock_alerts']
-            = $request->has('stock_alerts');
-        $validated['cod_enabled']
-            = $request->has('cod_enabled');
+        if (
+            !empty($validated['google_map_url'])
+            && preg_match('/src=["\']([^"\']+)["\']/', $validated['google_map_url'], $m)
+        ) {
+            $validated['google_map_url'] = html_entity_decode($m[1]);
+        }
+
+        $validated['maintenance_mode'] = $request->has('maintenance_mode');
+        $validated['product_reviews'] = $request->has('product_reviews');
+        $validated['wishlist'] = $request->has('wishlist');
+        $validated['stock_alerts'] = $request->has('stock_alerts');
+        $validated['cod_enabled'] = $request->has('cod_enabled');
 
         // Header Logo
         if ($request->hasFile('header_logo')) {

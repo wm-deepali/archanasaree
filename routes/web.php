@@ -9,7 +9,6 @@ use App\Http\Controllers\Admin\{
     CategoryAttributeController,
     CategoryController,
     CollectionController,
-    ContactBranchController,
     ContactEnquiryController,
     CouponController,
     CustomerAddressController,
@@ -30,7 +29,6 @@ use App\Http\Controllers\Admin\{
     HomePageController,
     LogoutController,
     OrderController,
-    OtherEnquiryController,
     PaymentController,
     ProductController,
     ProfileSettingController,
@@ -85,12 +83,13 @@ Route::middleware('maintenance.mode')->group(function () {
         Route::get('/products/{id}/quick-view', 'quickView')->whereNumber('id')->middleware('throttle:60,1')->name('products.quick-view');
         Route::get('/search/suggest', 'searchSuggest')->middleware('throttle:60,1')->name('search.suggest');
         Route::get('/faqs', 'faqs')->name('faqs');
+        Route::get('/blog', 'blogs')->name('blogs');
+        Route::get('/blog/{slug}', 'blogDetail')->name('blog.show');
+        Route::get('/contact', 'contact')->name('contact');
+        Route::post('/contact', 'contactSubmit')->middleware('throttle:5,1')->name('contact.submit');
+        Route::get('/page/{slug}', 'pageDetail')->where('slug', '[a-z0-9\-]+')->name('page.show');
 
         Route::view('/about', 'front-pages.about')->name('about');
-        Route::view('/blog-detail', 'front-pages.blog-detail')->name('blog.show');
-        Route::view('/blogs', 'front-pages.blogs')->name('blogs');
-        Route::view('/contact', 'front-pages.contact')->name('contact');
-        Route::view('/privacy-policy', 'front-pages.privacy-policy')->name('blog.show');
 
     });
 
@@ -172,7 +171,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('gifting-occasions', GiftingOccasionController::class);
 
         // product routes
-        Route::view('/products/media-library', 'admin.products.media-library')->name('products.media-library');
         Route::get('products/subcategories/{category}', [ProductController::class, 'subcategories'])->name('products.subcategories');
         Route::get('products/category-attributes/{category}', [ProductController::class, 'categoryAttributes'])->name('products.category-attributes');
         Route::post('/products/upload-images-zip', [ProductController::class, 'uploadImagesZip'])->name('products.images.upload');
@@ -190,15 +188,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::resource('testimonials', TestimonialController::class)->names('testimonials');
 
-        Route::resource('contact-branches', ContactBranchController::class);
-
+        Route::get('contact-enquiries', [ContactEnquiryController::class, 'index'])->name('contact-enquiries.index');
         Route::get('contact-enquiries/export', [ContactEnquiryController::class, 'export'])->name('contact-enquiries.export');
         Route::delete('contact-enquiries/bulk-delete', [ContactEnquiryController::class, 'bulkDelete'])->name('contact-enquiries.bulk-delete');
-        Route::resource('contact-enquiries', ContactEnquiryController::class);
-
-        Route::get('other-enquiries/export', [OtherEnquiryController::class, 'export'])->name('other-enquiries.export');
-        Route::delete('other-enquiries/bulk-delete', [OtherEnquiryController::class, 'bulkDelete'])->name('other-enquiries.bulk-delete');
-        Route::resource('other-enquiries', OtherEnquiryController::class);
+        Route::get('contact-enquiries/{contact_enquiry}', [ContactEnquiryController::class, 'show'])->name('contact-enquiries.show');
+        Route::delete('contact-enquiries/{contact_enquiry}', [ContactEnquiryController::class, 'destroy'])->name('contact-enquiries.destroy');
 
         Route::resource('coupon-enquiries', CouponEnquiryController::class);
         Route::delete('coupon-enquiries/bulk-delete', [CouponEnquiryController::class, 'bulkDelete'])->name('coupon-enquiries.bulk-delete');
@@ -295,14 +289,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('coupons/{coupon}/share', [CouponController::class, 'share'])->name('coupons.share');
         Route::resource('coupons', CouponController::class);
 
-        // Admin Settings routes
-        Route::view('/admin-setting/whatsapp', 'admin.admin-settings.whatsapp')->name('admin-setting.whatsapp');
-        Route::view('/admin-setting/sms-api', 'admin.admin-settings.sms-api')->name('admin-setting.sms-api');
-        Route::view('/admin-setting/delivery-setting', 'admin.admin-settings.delivery-setting')->name('admin-setting.delivery-setting');
-        Route::view('/security/security-settings', 'admin.security.security-settings')->name('security.security-settings');
-
-
-
         Route::prefix('redirect-settings')->name('redirect-settings.')->group(function () {
             Route::get('/', [RedirectController::class, 'index'])->name('index');
             Route::post('/', [RedirectController::class, 'store'])->name('store');
@@ -334,9 +320,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Orders routes
         Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
-        Route::get('orders/print-labels', [OrderController::class, 'printLabels'])->name('orders.print-labels');
-        Route::post('orders/print-labels/preview', [OrderController::class, 'previewLabels'])->name('orders.preview-labels');
-        Route::post('orders/print-labels/generate', [OrderController::class, 'generateLabels'])->name('orders.generate-labels');
         Route::get('orders/export', [OrderController::class, 'export'])->name('orders.export');
         Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
         Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
@@ -476,32 +459,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{notification}', [NotificationController::class, 'destroy'])->name('destroy');
         });
 
-        Route::view('/templates-setting', 'admin.admin-settings.template-setting')->name('templates.template-setting');
-
-        Route::prefix('roles-and-permission')->group(function () {
-
-            // Roles Category
-            Route::view('/roles-category', 'admin.roles-and-permission.roles-category.index')->name('roles-category.index');
-            Route::view('/roles-category/create', 'admin.roles-and-permission.roles-category.create')->name('roles-category.create');
-            Route::view('/roles-category/edit', 'admin.roles-and-permission.roles-category.edit')->name('roles-category.edit');
-
-            // Permission and Settings
-            Route::view('/permission-and-settings', 'admin.roles-and-permission.permission-and-settings.index')->name('permission-settings.index');
-            Route::view('/permission-and-settings/create', 'admin.roles-and-permission.permission-and-settings.create')->name('permission-settings.create');
-            Route::view('/permission-and-settings/edit', 'admin.roles-and-permission.permission-and-settings.edit')->name('permission-settings.edit');
-
-            // Team
-            Route::view('/team', 'admin.roles-and-permission.team.index')->name('team.index');
-            Route::view('/team/create', 'admin.roles-and-permission.team.create')->name('team.create');
-            Route::view('/team/edit', 'admin.roles-and-permission.team.edit')->name('team.edit');
-            Route::view('/team/customise-permission', 'admin.roles-and-permission.team.customise-permission')->name('team.customise-permission');
-            Route::view('/team/activity-logs', 'admin.roles-and-permission.team.activity-logs')->name('team.activity-logs');
-            Route::view('/team/login', 'admin.roles-and-permission.team.login')->name('team.login');
-            Route::view('/team/login-summary', 'admin.roles-and-permission.team.login-summary')->name('team.login-summary');
-            Route::view('/team/login-history', 'admin.roles-and-permission.team.login-history')->name('team.login-history');
-
-
-        });
 
     });
 });
