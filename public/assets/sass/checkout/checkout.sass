@@ -8,9 +8,17 @@ $danger: #c62828
   margin-top: calc(var(--headerheight) + 50px)
   padding-bottom: 70px
 
+  @include media(1280)
+    margin-top: calc(var(--headerheight) + 46px)
+    padding-bottom: 66px
+
   @include media(1024)
     margin-top: calc(var(--headerheight) + 40px)
     padding-bottom: 60px
+
+  @include media(991)
+    margin-top: calc(var(--headerheight) + 36px)
+    padding-bottom: 56px
 
   @include media(768)
     margin-top: calc(var(--headerheight) + 30px)
@@ -20,7 +28,6 @@ $danger: #c62828
     margin-top: calc(var(--headerheight) + 24px)
     padding-bottom: 40px
 
-  // ---------- Steps ----------
   .co-top
     position: relative
     display: flex
@@ -30,9 +37,17 @@ $danger: #c62828
     padding-bottom: 26px
     border-bottom: 1px solid var(--gray)
 
+    @include media(1280)
+      margin-bottom: 38px
+      padding-bottom: 24px
+
     @include media(1024)
       margin-bottom: 34px
       padding-bottom: 22px
+
+    @include media(991)
+      margin-bottom: 30px
+      padding-bottom: 20px
 
     @include media(768)
       flex-direction: column
@@ -41,7 +56,9 @@ $danger: #c62828
       padding-bottom: 18px
 
     @include media(540)
+      gap: 10px
       margin-bottom: 24px
+      padding-bottom: 16px
 
   .co-steps
     display: flex
@@ -50,6 +67,9 @@ $danger: #c62828
     margin: 0
     padding: 0
     list-style: none
+
+    @include media(1024)
+      gap: 12px
 
     @include media(768)
       gap: 10px
@@ -67,6 +87,12 @@ $danger: #c62828
       text-transform: uppercase
       letter-spacing: 0.18em
 
+      span
+        font-size: inherit
+
+      @include media(1024)
+        letter-spacing: 0.15em
+
       @include media(768)
         font-size: 11px
         letter-spacing: 0.12em
@@ -83,8 +109,14 @@ $danger: #c62828
         height: 1px
         background: var(--gray)
 
+        @include media(1280)
+          width: 48px
+
         @include media(1024)
           width: 40px
+
+        @include media(991)
+          width: 34px
 
         @include media(768)
           width: 28px
@@ -115,6 +147,11 @@ $danger: #c62828
         background: var(--white)
         color: var(--text)
         font-size: 13px
+
+        @include media(768)
+          width: 34px
+          height: 34px
+          font-size: 12px
 
         @include media(540)
           width: 30px
@@ -155,17 +192,26 @@ $danger: #c62828
       height: auto
 
     @include media(540)
+      gap: 6px
       font-size: 11px
 
     i
       color: $success
       font-size: 16px
 
-  // ---------- Head ----------
+      @include media(768)
+        font-size: 15px
+
+      @include media(540)
+        font-size: 14px
+
   .co-head
     position: relative
     margin-bottom: 34px
     text-align: center
+
+    @include media(1024)
+      margin-bottom: 32px
 
     @include media(768)
       margin-bottom: 28px
@@ -182,7 +228,12 @@ $danger: #c62828
       text-transform: uppercase
       letter-spacing: 0.25em
 
+      @include media(768)
+        margin-bottom: 10px
+        letter-spacing: 0.22em
+
       @include media(540)
+        margin-bottom: 8px
         font-size: 11px
         letter-spacing: 0.2em
 
@@ -190,8 +241,14 @@ $danger: #c62828
       margin: 0
       font-size: 40px
 
+      @include media(1280)
+        font-size: 38px
+
       @include media(1024)
         font-size: 36px
+
+      @include media(991)
+        font-size: 34px
 
       @include media(768)
         font-size: 32px
@@ -222,12 +279,16 @@ $danger: #c62828
         transform: none
 
       @include media(540)
+        gap: 8px
         font-size: 10px
         letter-spacing: 0.1em
 
       i
         font-size: 12px
         transition: transform 0.3s ease
+
+        @include media(540)
+          font-size: 11px
 
       &:hover
         border-color: var(--primary)
@@ -236,7 +297,6 @@ $danger: #c62828
         i
           transform: translateX(-5px)
 
-  // ---------- Layout ----------
   .co-layout
     display: grid
     grid-template-columns: minmax(0, 1fr) 420px
@@ -244,6 +304,7 @@ $danger: #c62828
     align-items: start
 
     @include media(1280)
+      grid-template-columns: minmax(0, 1fr) 390px
       gap: 40px
 
     @include media(1024)
@@ -253,6 +314,9 @@ $danger: #c62828
     @include media(991)
       grid-template-columns: minmax(0, 1fr)
       gap: 34px
+
+    @include media(768)
+      gap: 30px
 
     @include media(540)
       gap: 28px
@@ -264,6 +328,9 @@ $danger: #c62828
     min-width: 0
     border: 1px solid var(--border)
 
+    @include media(1024)
+      gap: 20px
+
     @include media(540)
       gap: 18px
 
@@ -272,8 +339,14 @@ $danger: #c62828
     border: 1px solid var(--gray)
     background: var(--white)
 
+    @include media(1280)
+      padding: 24px 24px 28px
+
     @include media(1024)
       padding: 22px 20px 26px
+
+    @include media(768)
+      padding: 22px 20px 24px
 
     @include media(540)
       padding: 20px 16px 22px
@@ -286,11 +359,11 @@ $danger: #c62828
     gap: 8px 16px
     margin-bottom: 20px
 
-    .co-title
-      margin: 0
-
     @include media(540)
       margin-bottom: 16px
+
+    .co-title
+      margin: 0
 
   .co-title
     display: flex
@@ -302,6 +375,9 @@ $danger: #c62828
     font-weight: 600
     text-transform: uppercase
     letter-spacing: 0.16em
+
+    @include media(1024)
+      letter-spacing: 0.14em
 
     @include media(540)
       gap: 10px
@@ -332,6 +408,9 @@ $danger: #c62828
     color: var(--text)
     font-size: 14px
 
+    @include media(768)
+      font-size: 13px
+
     @include media(540)
       font-size: 12px
 
@@ -342,12 +421,14 @@ $danger: #c62828
       text-decoration: underline
       text-underline-offset: 3px
 
-  // ---------- Form fields (common .form handles inputs) ----------
   .fields
     display: grid
     grid-template-columns: repeat(12, minmax(0, 1fr))
     gap: 28px 18px
     padding-top: 12px
+
+    @include media(1024)
+      gap: 26px 16px
 
     @include media(540)
       gap: 26px 14px
@@ -432,7 +513,6 @@ $danger: #c62828
       @include media(540)
         font-size: 12px
 
-  // ---------- Address cards ----------
   .addr-list
     display: flex
     flex-direction: column
@@ -470,6 +550,9 @@ $danger: #c62828
       gap: 14px
       padding: 18px 96px 18px 18px
       cursor: pointer
+
+      @include media(1024)
+        padding: 16px 92px 16px 16px
 
       @include media(768)
         padding: 16px 92px 16px 16px
@@ -543,14 +626,14 @@ $danger: #c62828
       text-transform: uppercase
       letter-spacing: 0.14em
 
+      @include media(540)
+        padding: 3px 8px
+        letter-spacing: 0.1em
+
       &.tag-default
         background: var(--primary)
         border-color: var(--primary)
         color: var(--white)
-
-      @include media(540)
-        padding: 3px 8px
-        font-size: 9px
 
     .addr-line
       color: var(--text)
@@ -593,13 +676,6 @@ $danger: #c62828
       cursor: pointer
       transition: all 0.3s ease
 
-      i
-        font-size: 10px
-
-      &:hover
-        border-color: var(--primary)
-        color: var(--primary)
-
       @include media(768)
         top: 12px
         right: 12px
@@ -610,6 +686,14 @@ $danger: #c62828
         bottom: 18px
         left: 50px
         font-size: 10px
+        letter-spacing: 0.1em
+
+      i
+        font-size: 10px
+
+      &:hover
+        border-color: var(--primary)
+        color: var(--primary)
 
     .edit-toggle:focus-visible + .addr-edit
       color: var(--primary)
@@ -628,6 +712,10 @@ $danger: #c62828
       @include media(768)
         margin: 0 16px 18px
         padding-top: 20px
+
+      @include media(540)
+        margin: 0 14px 16px
+        padding-top: 18px
 
       h3
         margin: 0 0 6px
@@ -663,11 +751,13 @@ $danger: #c62828
     .addr-radio:checked ~ .addr-form
       display: block
 
-  // ---------- Address type chips ----------
   .type-group
     margin: 24px 0 0
     padding: 0
     border: 0
+
+    @include media(540)
+      margin-top: 22px
 
     legend
       margin: 0 0 10px
@@ -680,6 +770,7 @@ $danger: #c62828
 
       @include media(540)
         font-size: 10px
+        letter-spacing: 0.12em
 
     .type-options
       display: grid
@@ -715,6 +806,9 @@ $danger: #c62828
         cursor: pointer
         transition: all 0.3s ease
 
+        @include media(1024)
+          letter-spacing: 0.08em
+
         @include media(540)
           gap: 6px
           height: 42px
@@ -723,6 +817,9 @@ $danger: #c62828
 
         i
           font-size: 12px
+
+          @include media(540)
+            font-size: 11px
 
       &:hover span
         border-color: var(--black)
@@ -751,11 +848,13 @@ $danger: #c62828
       padding: 0 26px
       cursor: pointer
 
+      @include media(768)
+        padding: 0 22px
+
       @include media(540)
         flex: 1
         padding: 0 16px
 
-  // ---------- Delivery method ----------
   .method-list
     display: grid
     grid-template-columns: repeat(2, minmax(0, 1fr))
@@ -764,12 +863,14 @@ $danger: #c62828
     @include media(1024)
       grid-template-columns: 1fr
 
-    @include media(768)
+    @include media(991)
       grid-template-columns: repeat(2, minmax(0, 1fr))
+
+    @include media(768)
+      gap: 12px
 
     @include media(540)
       grid-template-columns: 1fr
-      gap: 12px
 
   .method
     position: relative
@@ -795,6 +896,10 @@ $danger: #c62828
       @include media(768)
         gap: 12px
         padding: 14px 16px
+
+      @include media(540)
+        gap: 12px
+        padding: 14px
 
     &:hover .method-body
       border-color: var(--black)
@@ -867,30 +972,50 @@ $danger: #c62828
       &.is-free
         color: $success
 
-  // ---------- Summary ----------
   .co-summary
     position: sticky
     top: calc(var(--headerheight) + 20px)
     display: flex
     flex-direction: column
     gap: 16px
-    background: var(--bg)
     min-width: 0
     padding: 20px
+    background: var(--bg)
 
+    @include media(1280)
+      gap: 14px
+      padding: 18px
+
+    @include media(1024)
+      padding: 16px
 
     @include media(991)
       position: static
+      gap: 16px
+      padding: 18px
+
+    @include media(768)
+      padding: 16px
 
     @include media(540)
       gap: 14px
+      padding: 14px
 
   .box
     padding: 24px
     border: 1px solid var(--gray)
 
+    @include media(1280)
+      padding: 22px
+
     @include media(1024)
       padding: 22px 20px
+
+    @include media(991)
+      padding: 22px
+
+    @include media(768)
+      padding: 20px 18px
 
     @include media(540)
       padding: 20px 16px
@@ -906,7 +1031,11 @@ $danger: #c62828
       text-transform: uppercase
       letter-spacing: 0.16em
 
+      @include media(1024)
+        letter-spacing: 0.14em
+
       @include media(540)
+        gap: 8px
         font-size: 12px
         letter-spacing: 0.12em
 
@@ -916,6 +1045,9 @@ $danger: #c62828
         font-weight: 400
         text-transform: none
         letter-spacing: 0
+
+        @include media(540)
+          font-size: 11px
 
   .box-head
     display: flex
@@ -949,6 +1081,18 @@ $danger: #c62828
       height: 2px
       background: var(--primary)
 
+      @include media(1280)
+        left: 22px
+
+      @include media(1024)
+        left: 20px
+
+      @include media(991)
+        left: 22px
+
+      @include media(768)
+        left: 18px
+
       @include media(540)
         left: 16px
 
@@ -961,10 +1105,17 @@ $danger: #c62828
     list-style: none
     border-bottom: 1px solid var(--gray)
 
+    @include media(540)
+      gap: 12px
+      padding-bottom: 16px
+
     li
       display: flex
       align-items: center
       gap: 14px
+
+      @include media(1024)
+        gap: 12px
 
       @include media(540)
         gap: 12px
@@ -973,6 +1124,9 @@ $danger: #c62828
       position: relative
       flex-shrink: 0
       width: 56px
+
+      @include media(540)
+        width: 50px
 
       img
         display: block
@@ -1002,9 +1156,6 @@ $danger: #c62828
           min-width: 18px
           height: 18px
           font-size: 10px
-
-      @include media(540)
-        width: 50px
 
     .mini-text
       display: flex
@@ -1053,6 +1204,9 @@ $danger: #c62828
       color: var(--text)
       font-size: 14px
 
+      @include media(1024)
+        gap: 12px
+
       @include media(540)
         gap: 12px
         font-size: 13px
@@ -1071,6 +1225,9 @@ $danger: #c62828
           font-size: 12px
           opacity: 0.7
 
+          @include media(540)
+            font-size: 11px
+
         &.is-green
           color: $success
           font-weight: 500
@@ -1088,6 +1245,9 @@ $danger: #c62828
       text-transform: uppercase
       letter-spacing: 0.12em
 
+      @include media(1024)
+        letter-spacing: 0.1em
+
       @include media(540)
         padding-top: 14px
         font-size: 13px
@@ -1096,6 +1256,9 @@ $danger: #c62828
         font-size: 22px
         font-weight: 600
         letter-spacing: 0
+
+        @include media(768)
+          font-size: 21px
 
         @include media(540)
           font-size: 20px
@@ -1107,6 +1270,7 @@ $danger: #c62828
     text-align: right
 
     @include media(540)
+      margin-bottom: 14px
       font-size: 11px
 
   .save-chip
@@ -1120,8 +1284,12 @@ $danger: #c62828
     font-size: 13px
     font-weight: 600
 
+    @include media(1024)
+      padding: 11px 12px
+
     @include media(540)
       gap: 8px
+      margin-bottom: 16px
       padding: 10px 12px
       font-size: 12px
 
@@ -1174,6 +1342,12 @@ $danger: #c62828
     border-top: 1px solid var(--gray)
     border-bottom: 1px solid var(--gray)
 
+    @include media(1024)
+      gap: 12px 12px
+
+    @include media(991)
+      gap: 14px 16px
+
     @include media(540)
       gap: 12px 10px
       padding: 16px 0
@@ -1211,6 +1385,10 @@ $danger: #c62828
     line-height: 1.5
     transition: border-color 0.3s ease
 
+    @include media(1024)
+      gap: 12px
+      padding: 14px
+
     @include media(540)
       gap: 12px
       padding: 12px 14px
@@ -1221,11 +1399,14 @@ $danger: #c62828
       color: $success
       font-size: 26px
 
-      @include media(540)
+      @include media(1024)
         font-size: 24px
 
+      @include media(540)
+        font-size: 22px
+
     span
-        font-size: inherit
+      font-size: inherit
 
     b
       display: block
@@ -1236,7 +1417,6 @@ $danger: #c62828
     &:hover
       border-color: var(--primary)
 
-  // ---------- Mobile sticky bar ----------
   .co-bar
     display: none
 
@@ -1252,6 +1432,14 @@ $danger: #c62828
       background: var(--white)
       border: 1px solid var(--gray)
       box-shadow: rgba(60, 30, 45, 0.16) 0 12px 36px
+      transition: bottom 0.3s ease
+
+      &.is-lifted
+        bottom: calc(75px + env(safe-area-inset-bottom, 0px))
+
+    @include media(768)
+      gap: 14px
+      padding: 10px 10px 10px 16px
 
     @include media(540)
       gap: 12px
@@ -1272,11 +1460,17 @@ $danger: #c62828
         text-transform: uppercase
         letter-spacing: 0.16em
 
+        @include media(540)
+          letter-spacing: 0.12em
+
       strong
         color: var(--black)
         font-size: 20px
         font-weight: 600
         line-height: 1.1
+
+        @include media(768)
+          font-size: 19px
 
         @include media(540)
           font-size: 18px

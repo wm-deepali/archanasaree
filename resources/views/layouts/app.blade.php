@@ -79,29 +79,24 @@
 
           <div class="swiper announcement-swiper ann-center">
             <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <p>Celebrate Every Occasion in Timeless Elegance</p>
-              </div>
-              <div class="swiper-slide">
-                <p>
-                  Free Express Delivery Across India on Orders Above ₹4,999
-                  <a href="javascript:void(0)">Shop Now</a>
-                </p>
-              </div>
-              <div class="swiper-slide">
-                <p>
-                  Wedding Season Edit — Bridal Lehengas &amp; Banarasi Sarees
-                  <a href="javascript:void(0)">Explore</a>
-                </p>
-              </div>
-              <div class="swiper-slide">
-                <p>
-                  Visit Our Chandni Chowk Store — Trusted Since Generations
-                </p>
-              </div>
+              @forelse ($announcements as $ann)
+                <div class="swiper-slide">
+                  <p>
+                    @if (filled($ann->link))
+                      <a href="{{ $ann->link }}">{{ $ann->title }}</a>
+                    @else
+                      {{ $ann->title }}
+                    @endif
+                  </p>
+                </div>
+              @empty
+                {{-- Optional fallback so the bar is never empty --}}
+                <div class="swiper-slide">
+                  <p>{{ $tagline ?: $siteName }}</p>
+                </div>
+              @endforelse
             </div>
           </div>
-
           <!-- ===== NEW: Social media icons (ann-right ki jagah) ===== -->
           @if ($socials->isNotEmpty())
             <ul class="ann-social">
@@ -803,19 +798,28 @@
   <script type="text/javascript" src="{{ asset('assets/js/main.js')}}"></script>
 
   <script>
-    new Swiper(".announce-swiper", {
-      direction: "vertical",
-      slidesPerView: 1,
-      loop: true,
-      speed: 700,
-      allowTouchMove: false,
-      autoplay: {
-        delay: 3500,
-        disableOnInteraction: false,
-        pauseOnMouseEnter: true,
-      },
-    });
+    (function () {
+      var el = document.querySelector(".announcement-swiper");
+      if (!el) return;
 
+      var slides = el.querySelectorAll(".swiper-slide").length;
+
+      new Swiper(el, {
+        direction: "vertical",
+        slidesPerView: 1,
+        loop: slides > 1,
+        speed: 700,
+        allowTouchMove: false,
+        autoplay: slides > 1 ? {
+          delay: 3500,
+          disableOnInteraction: false,
+          pauseOnMouseEnter: true,
+        } : false,
+      });
+    })();
+  </script>
+
+  <script>
     const header = document.querySelector("header");
     const onScroll = () =>
       header.classList.toggle("header-fixed", window.scrollY > 40);

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
+use App\Models\Faq;
 use App\Models\Coupon;
 use App\Models\Product;
+use App\Models\Category;
+use App\Models\FaqCategory;
 use Illuminate\Http\Request;
 use App\Traits\LogsApiCalls;
 use App\Models\CategoryAttribute;
@@ -470,6 +472,33 @@ class FrontController extends Controller
             'min_qty' => max(1, (int) $product->min_qty),
             'wished' => in_array($product->id, \App\Models\Wishlist::currentProductIds()),
         ]);
+    }
+
+
+    public function faqs()
+    {
+        $categories = FaqCategory::where('status', 1)
+            ->orderBy('sort_order')
+            ->with(['faqs' => fn($q) => $q->where('status', 1)->orderBy('sort_order')->orderBy('id')])
+            ->get()
+            ->filter(fn($c) => $c->faqs->isNotEmpty())
+            ->values();
+
+        // FAQs without a category go into a "General" tab at the end
+        $general = Faq::whereNull('faq_category_id')
+            ->where('status', 1)
+            ->orderBy('sort_order')->orderBy('id')
+            ->get();
+
+        if ($general->isNotEmpty()) {
+            $categories->push((object) [
+                'name' => 'General',
+                'icon' => 'fa-solid fa-circle-question',
+                'faqs' => $general,
+            ]);
+        }
+
+        return view('front-pages.faqs', compact('categories'));
     }
 
 }

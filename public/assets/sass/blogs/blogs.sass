@@ -21,15 +21,29 @@
   .eyebrow
     display: block
     margin-bottom: 14px
+
+    @include media(768)
+      margin-bottom: 12px
+
+    @include media(540)
+      margin-bottom: 10px
     color: var(--primary)
     font-family: $Poppins
     font-size: 12px
+
+    @include media(768)
+      font-size: 11px
     font-weight: 600
     text-transform: uppercase
     letter-spacing: 0.25em
 
+    @include media(1024)
+      letter-spacing: 0.24em
+
+    @include media(768)
+      letter-spacing: 0.22em
+
     @include media(540)
-      font-size: 11px
       letter-spacing: 0.2em
 
 .blog-secB,
@@ -37,8 +51,14 @@
 .blog-secD
   padding: 70px 0
 
+  @include media(1280)
+    padding: 66px 0
+
   @include media(1024)
     padding: 60px 0
+
+  @include media(991)
+    padding: 58px 0
 
   @include media(768)
     padding: 55px 0
@@ -50,8 +70,14 @@
   padding: 60px 0 20px
   background: var(--bg)
 
+  @include media(1280)
+    padding: 58px 0 20px
+
   @include media(1024)
     padding: 54px 0 20px
+
+  @include media(991)
+    padding: 52px 0 18px
 
   @include media(768)
     padding: 50px 0 16px
@@ -59,51 +85,15 @@
   @include media(540)
     padding: 44px 0 10px
 
-  .crumb
-    display: flex
-    align-items: center
-    flex-wrap: wrap
-    gap: 10px
-    margin: 0 0 34px
-    padding: 0
-    list-style: none
-
-    @include media(768)
-      justify-content: center
-      margin-bottom: 28px
-
-    li
-      color: var(--black)
-      font-family: $Poppins
-      font-size: 12px
-      text-transform: uppercase
-      letter-spacing: 0.12em
-      opacity: 0.8
-
-      @include media(540)
-        font-size: 11px
-
-      a
-        color: var(--black)
-        transition: color 0.3s ease
-
-        &:hover
-          color: var(--primary)
-
-      &.current
-        color: var(--primary)
-        font-weight: 600
-        opacity: 1
-
-      i
-        font-size: 9px
-        opacity: 0.5
+ 
 
   .ban-grid
     display: grid
     grid-template-columns: 7fr 4fr
+
+    @include media(991)
+      grid-template-columns: 1fr
     gap: 70px
-    align-items: center
 
     @include media(1280)
       gap: 50px
@@ -112,8 +102,14 @@
       gap: 36px
 
     @include media(991)
-      grid-template-columns: 1fr
       gap: 40px
+
+    @include media(768)
+      gap: 36px
+
+    @include media(540)
+      gap: 30px
+    align-items: center
 
   .ban-content
     min-width: 0
@@ -124,25 +120,14 @@
     .heading
       margin-bottom: 20px
 
+      @include media(768)
+        margin-bottom: 18px
+
+      @include media(540)
+        margin-bottom: 16px
+
       h1
         margin: 0
-        font-size: 56px
-        line-height: 1.12
-
-        @include media(1280)
-          font-size: 48px
-
-        @include media(1024)
-          font-size: 42px
-
-        @include media(991)
-          font-size: 38px
-
-        @include media(768)
-          font-size: 34px
-
-        @include media(540)
-          font-size: 28px
 
     .ban-desc
       max-width: 560px
@@ -155,27 +140,41 @@
     position: relative
     padding: 0 18px 18px 0
 
+    @include media(768)
+      padding: 0 14px 14px 0
+
+    @include media(540)
+      padding: 0 12px 12px 0
+
     @include media(991)
       width: 100%
       max-width: 360px
       margin: 0 auto
 
     @include media(540)
-      padding: 0 12px 12px 0
+      max-width: 300px
 
     &::before
       content: ""
       position: absolute
       top: 18px
+
+      @include media(768)
+        top: 14px
+
+      @include media(540)
+        top: 12px
       left: 18px
+
+      @include media(768)
+        left: 14px
+
+      @include media(540)
+        left: 12px
       right: 0
       bottom: 0
       border: 1px solid var(--primary)
       border-radius: 999px 999px 0 0
-
-      @include media(540)
-        top: 12px
-        left: 12px
 
     .ban-photo
       position: relative
@@ -206,20 +205,35 @@
       position: absolute
       left: 0
       bottom: 40px
+
+      @include media(768)
+        bottom: 34px
+
+      @include media(540)
+        bottom: 28px
       z-index: 2
       padding: 11px 18px
+
+      @include media(768)
+        padding: 10px 16px
+
+      @include media(540)
+        padding: 9px 14px
       background: var(--primary)
       color: var(--white)
       font-size: 11px
+
+      @include media(540)
+        font-size: 10px
       font-weight: 500
       line-height: 1
       text-transform: uppercase
       letter-spacing: 0.2em
 
+      @include media(768)
+        letter-spacing: 0.16em
+
       @include media(540)
-        bottom: 28px
-        padding: 9px 14px
-        font-size: 10px
         letter-spacing: 0.14em
 
 .blog-secB
@@ -228,13 +242,16 @@
   .feat-card
     display: grid
     grid-template-columns: 6fr 5fr
+
+    @include media(1024)
+      grid-template-columns: 1fr 1fr
+
+    @include media(991)
+      grid-template-columns: 1fr
     overflow: hidden
     border: 1px solid var(--gray)
     background: var(--white)
     transition: all 0.4s ease
-
-    @include media(991)
-      grid-template-columns: 1fr
 
     &:hover
       border-color: var(--primary)
@@ -255,7 +272,6 @@
     display: block
     overflow: hidden
     min-height: 440px
-    background: var(--dark-gray)
 
     @include media(1280)
       min-height: 400px
@@ -267,8 +283,12 @@
       min-height: 0
       aspect-ratio: 16 / 10
 
+    @include media(768)
+      aspect-ratio: 16 / 9.5
+
     @include media(540)
       aspect-ratio: 4 / 3.2
+    background: var(--dark-gray)
 
     img
       position: absolute
@@ -285,21 +305,36 @@
     .feat-tag
       position: absolute
       top: 24px
+
+      @include media(768)
+        top: 20px
+
+      @include media(540)
+        top: 16px
       left: 0
       z-index: 3
       padding: 10px 18px
+
+      @include media(768)
+        padding: 9px 16px
+
+      @include media(540)
+        padding: 8px 14px
       background: var(--primary)
       color: var(--white)
       font-size: 11px
+
+      @include media(540)
+        font-size: 10px
       font-weight: 500
       line-height: 1
       text-transform: uppercase
       letter-spacing: 0.2em
 
+      @include media(768)
+        letter-spacing: 0.16em
+
       @include media(540)
-        top: 16px
-        padding: 8px 14px
-        font-size: 10px
         letter-spacing: 0.14em
 
   .feat-content
@@ -307,6 +342,9 @@
     flex-direction: column
     justify-content: center
     align-items: flex-start
+
+    @include media(768)
+      align-items: center
     min-width: 0
     padding: 54px 56px
 
@@ -316,20 +354,30 @@
     @include media(1024)
       padding: 36px 30px
 
+    @include media(991)
+      padding: 38px 32px 40px
+
     @include media(768)
-      align-items: center
       padding: 32px 22px 36px
-      text-align: center
 
     @include media(540)
       padding: 28px 16px 32px
+
+    @include media(768)
+      text-align: center
 
     .post-meta
       display: flex
       align-items: center
       flex-wrap: wrap
       gap: 10px 20px
+
+      @include media(540)
+        gap: 8px 14px
       margin-bottom: 18px
+
+      @include media(540)
+        margin-bottom: 14px
 
       @include media(768)
         justify-content: center
@@ -340,32 +388,49 @@
       gap: 8px
       font-family: $Poppins
       font-size: 12px
+
+      @include media(768)
+        font-size: 11px
+
+      @include media(540)
+        font-size: 10px
       font-weight: 500
       text-transform: uppercase
       letter-spacing: 0.14em
 
       @include media(540)
-        font-size: 11px
+        letter-spacing: 0.1em
 
       i
         color: var(--primary)
 
     .post-cat
       padding-left: 20px
+
+      @include media(540)
+        padding-left: 14px
       border-left: 1px solid var(--gray)
       color: var(--primary)
       font-family: $Poppins
       font-size: 12px
+
+      @include media(768)
+        font-size: 11px
+
+      @include media(540)
+        font-size: 10px
       font-weight: 600
       text-transform: uppercase
       letter-spacing: 0.14em
 
       @include media(540)
-        padding-left: 14px
-        font-size: 11px
+        letter-spacing: 0.1em
 
     h3
       margin: 0 0 16px
+
+      @include media(540)
+        margin-bottom: 14px
 
       a
         color: inherit
@@ -376,7 +441,13 @@
 
     p
       max-width: 480px
+
+      @include media(768)
+        max-width: 100%
       margin: 0 0 30px
+
+      @include media(768)
+        margin-bottom: 26px
 
       @include media(540)
         margin-bottom: 24px
@@ -387,6 +458,7 @@
       gap: 10px
 
       @include media(540)
+        gap: 8px
         width: 100%
         justify-content: center
 
@@ -395,6 +467,9 @@
 
 .blog-secC
   padding-top: 50px
+
+  @include media(1024)
+    padding-top: 46px
 
   @include media(768)
     padding-top: 40px
@@ -406,13 +481,16 @@
     width: 100%
     max-width: 450px
     margin: 0 auto 44px
-    text-align: center
+
+    @include media(1024)
+      margin-bottom: 40px
 
     @include media(768)
       margin-bottom: 34px
 
     @include media(540)
       margin-bottom: 28px
+    text-align: center
 
     .heading
       margin: 0
@@ -420,6 +498,12 @@
   .blog-grid
     display: grid
     grid-template-columns: repeat(3, minmax(0, 1fr))
+
+    @include media(991)
+      grid-template-columns: repeat(2, minmax(0, 1fr))
+
+    @include media(540)
+      grid-template-columns: 1fr
     gap: 30px 26px
 
     @include media(1280)
@@ -429,11 +513,12 @@
       gap: 22px 16px
 
     @include media(991)
-      grid-template-columns: repeat(2, minmax(0, 1fr))
       gap: 22px 18px
 
+    @include media(768)
+      gap: 20px 16px
+
     @include media(540)
-      grid-template-columns: 1fr
       gap: 18px
 
   .blog-card
@@ -481,21 +566,36 @@
         position: absolute
         left: 0
         bottom: 18px
+
+        @include media(768)
+          bottom: 16px
+
+        @include media(540)
+          bottom: 14px
         z-index: 3
         padding: 9px 16px
+
+        @include media(768)
+          padding: 8px 14px
+
+        @include media(540)
+          padding: 8px 12px
         background: var(--white)
         color: var(--primary)
         font-family: $Poppins
         font-size: 11px
+
+        @include media(540)
+          font-size: 10px
         font-weight: 600
         line-height: 1
         text-transform: uppercase
         letter-spacing: 0.16em
 
+        @include media(768)
+          letter-spacing: 0.14em
+
         @include media(540)
-          bottom: 14px
-          padding: 8px 12px
-          font-size: 10px
           letter-spacing: 0.12em
 
     .blog-body
@@ -504,8 +604,16 @@
       flex: 1
       padding: 26px 24px 28px
 
+      @include media(1280)
+        padding: 24px 20px 26px
+
       @include media(1024)
         padding: 22px 18px 24px
+
+      @include media(768)
+        align-items: center
+        padding: 22px 16px 24px
+        text-align: center
 
       @include media(540)
         padding: 22px 18px 24px
@@ -514,23 +622,50 @@
       display: inline-flex
       align-items: center
       gap: 8px
+
+      @include media(768)
+        justify-content: center
       margin-bottom: 12px
+
+      @include media(540)
+        margin-bottom: 10px
       color: var(--text)
       font-family: $Poppins
       font-size: 12px
+
+      @include media(768)
+        font-size: 11px
+
+      @include media(540)
+        font-size: 10px
       font-weight: 500
       text-transform: uppercase
       letter-spacing: 0.14em
 
       @include media(540)
-        font-size: 11px
+        letter-spacing: 0.1em
 
       i
         color: var(--primary)
 
     h4
       margin: 0 0 12px
+
+      @include media(540)
+        margin-bottom: 10px
       font-size: 20px
+
+      @include media(1280)
+        font-size: 19px
+
+      @include media(1024)
+        font-size: 18px
+
+      @include media(768)
+        font-size: 17px
+
+      @include media(540)
+        font-size: 16px
 
       a
         color: inherit
@@ -544,36 +679,58 @@
       display: -webkit-box
       overflow: hidden
       margin: 0 0 22px
-      font-size: 14px
-      line-height: 1.7
-      -webkit-line-clamp: 3
-      -webkit-box-orient: vertical
 
       @include media(540)
         margin-bottom: 18px
+      font-size: 14px
+
+      @include media(540)
         font-size: 13px
+      line-height: 1.7
+
+      @include media(540)
+        line-height: 1.6
+      -webkit-line-clamp: 3
+      -webkit-box-orient: vertical
 
     .blog-link
       display: inline-flex
       align-items: center
       align-self: flex-start
+
+      @include media(768)
+        align-self: center
       gap: 8px
+
+      @include media(540)
+        gap: 6px
       margin-top: auto
       padding-bottom: 5px
+
+      @include media(540)
+        padding-bottom: 4px
       border-bottom: 1px solid var(--primary)
       color: var(--primary)
       font-family: $Poppins
       font-size: 11px
+
+      @include media(540)
+        font-size: 10px
       font-weight: 500
       text-transform: uppercase
       letter-spacing: 0.16em
 
+      @include media(768)
+        letter-spacing: 0.14em
+
       @include media(540)
-        font-size: 10px
         letter-spacing: 0.12em
 
       i
         font-size: 12px
+
+        @include media(540)
+          font-size: 11px
         transition: transform 0.3s ease
 
   .blog-pager
@@ -582,35 +739,53 @@
     justify-content: center
     flex-wrap: wrap
     gap: 10px
+
+    @include media(540)
+      gap: 8px
     margin: 54px 0 0
-    padding: 0
-    list-style: none
+
+    @include media(1024)
+      margin-top: 48px
 
     @include media(768)
       margin-top: 40px
 
     @include media(540)
-      gap: 8px
       margin-top: 32px
+    padding: 0
+    list-style: none
 
     li a
       display: flex
       align-items: center
       justify-content: center
       width: 46px
+
+      @include media(768)
+        width: 42px
+
+      @include media(540)
+        width: 38px
       height: 46px
+
+      @include media(768)
+        height: 42px
+
+      @include media(540)
+        height: 38px
       border: 1px solid var(--gray)
       border-radius: 50%
       color: var(--black)
       font-family: $Poppins
       font-size: 14px
-      font-weight: 500
-      transition: all 0.3s ease
+
+      @include media(768)
+        font-size: 13px
 
       @include media(540)
-        width: 40px
-        height: 40px
-        font-size: 13px
+        font-size: 12px
+      font-weight: 500
+      transition: all 0.3s ease
 
       &:hover
         border-color: var(--primary)
@@ -624,6 +799,12 @@
       &.pg-arrow
         font-size: 13px
 
+        @include media(768)
+          font-size: 12px
+
+        @include media(540)
+          font-size: 11px
+
 .blog-secD
   padding-top: 0
 
@@ -632,16 +813,15 @@
     align-items: center
     justify-content: space-between
     gap: 40px
-    padding: 50px 56px
-    background: var(--dark-gray)
-    border-left: 2px solid var(--primary)
-
-    @include media(1280)
-      padding: 44px 40px
 
     @include media(1024)
       gap: 30px
-      padding: 38px 30px
+
+    @include media(991)
+      gap: 26px
+
+    @include media(540)
+      gap: 22px
 
     @include media(991)
       flex-direction: column
@@ -649,20 +829,42 @@
 
     @include media(768)
       align-items: center
+    padding: 50px 56px
+
+    @include media(1280)
+      padding: 44px 40px
+
+    @include media(1024)
+      padding: 38px 30px
+
+    @include media(991)
+      padding: 36px 30px
+
+    @include media(768)
       padding: 34px 22px
-      border-left: 0
-      border-top: 2px solid var(--primary)
-      text-align: center
 
     @include media(540)
       padding: 28px 16px
+    background: var(--dark-gray)
+    border-left: 2px solid var(--primary)
+
+    @include media(768)
+      border-left: 0
+      border-top: 2px solid var(--primary)
+      text-align: center
 
   .help-content
     min-width: 0
     max-width: 620px
 
+    @include media(768)
+      max-width: 100%
+
     .heading
       margin-bottom: 12px
+
+      @include media(540)
+        margin-bottom: 10px
 
     p
       margin: 0
@@ -672,11 +874,13 @@
     align-items: center
     flex-wrap: wrap
     gap: 14px
+
+    @include media(1024)
+      gap: 12px
     flex-shrink: 0
 
     @include media(768)
       justify-content: center
-      gap: 12px
 
     @include media(540)
       flex-direction: column
@@ -690,6 +894,7 @@
       gap: 10px
 
       @include media(540)
+        gap: 8px
         width: 100%
 
       i
@@ -698,8 +903,10 @@
       &:hover i
         transform: translateX(5px)
 
-
 .blog-secA
   padding-top: 0
-  height: calc(  100vh - var(--headerheight) )
+  height: calc(100vh - var(--headerheight))
   margin: var(--headerheight) 0 0
+
+  @include media(991)
+    height: auto

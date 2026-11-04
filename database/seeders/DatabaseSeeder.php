@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             CatalogSeeder::class,
             ProductSeeder::class,
             SettingSeeder::class,
+            FaqCategorySeeder::class,
         ]);
 
 

@@ -229,25 +229,50 @@ $(function () {
     });
   });
 
-  $("[data-video]").on("click", function (e) {
-    e.preventDefault();
+$("[data-video]").on("click", function (e) {
+  e.preventDefault();
+  e.stopPropagation();
 
-    e.stopPropagation();
+  var src = $(this).attr("data-video");
 
-    $(".video-pop").addClass("is-open");
+  if (src.includes("youtube.com/embed/")) {
+    var videoId = src.split("embed/")[1].split("?")[0];
 
-    var src = $(this).attr("data-video");
+    src += (src.includes("?") ? "&" : "?") +
+      "autoplay=1&loop=1&playlist=" + videoId;
+  }
 
-    if (src.includes("youtube.com/embed/")) {
-      var videoId = src.split("embed/")[1].split("?")[0];
+  $("#iframe1").attr("src", src);
+  $(".video-pop").addClass("is-open");
+  $("body, html").addClass("overflow-hidden");
+});
 
-      src += "&autoplay=1&loop=1&playlist=" + videoId;
-    }
+// Close modal
+$(".video-pop .close, .video-pop .close-btn").on("click", function (e) {
+  e.preventDefault();
 
-    $("#iframe1").attr("src", src);
+  $(".video-pop").removeClass("is-open");
+  $("#iframe1").attr("src", "");
+  $("body, html").removeClass("overflow-hidden");
+});
 
-    $("body,html").addClass("overflow-hidden");
-  });
+// Close when clicking the overlay
+$(".video-pop").on("click", function (e) {
+  if ($(e.target).is(".video-pop")) {
+    $(this).removeClass("is-open");
+    $("#iframe1").attr("src", "");
+    $("body, html").removeClass("overflow-hidden");
+  }
+});
+
+// Stop video when pressing Escape
+$(document).on("keydown", function (e) {
+  if (e.key === "Escape" && $(".video-pop").hasClass("is-open")) {
+    $(".video-pop").removeClass("is-open");
+    $("#iframe1").attr("src", "");
+    $("body, html").removeClass("overflow-hidden");
+  }
+});
 
   // ============ HEADER ANNOUNCEMENT (vertical) ============
   // FIX: header HTML class now matches (.announcement-swiper)
@@ -331,26 +356,7 @@ $(function () {
     },
   });
 
-  // =====================================================
-  // COMMON SLIDER: .fourSlider
-  // Used in: categories, product tabs, saree subcategories,
-  //          lehenga occasions, bridal cards, reels, reviews.
-  //
-  // Cards per view (override with data attributes on .fourSlider):
-  //   phone (up to 540)  -> data-mob  (default 2)
-  //   541 - 991          -> data-sm   (default 2)
-  //   992 - 1199         -> data-lg   (default 3)
-  //   1200 and up        -> data-xl   (default 4)
-  //
-  // Markup rule (same everywhere):
-  //   .swiper-wrap
-  //     .swiper.fourSlider
-  //     .swiper-group > .btn-prev + .btn-next
-  //   (optional, sibling of .swiper-wrap)
-  //   .slider-foot > .sliderCurrent + .sliderProgress + .sliderTotal
-  // Every slider only looks inside its OWN .swiper-wrap, so
-  // sliders never pick up each other's arrows.
-  // =====================================================
+ 
   function padNum(n) {
     return n < 10 ? "0" + n : "" + n;
   }
@@ -476,11 +482,14 @@ $(function () {
 
 
 var $floatMenu = $(".float-menu");
+var $stickyBars = $(".cart-bar, .co-bar, .pay-bar");
 
 function toggleFloatMenu() {
   var scrolled = $(window).scrollTop() > 200;
   var popupOpen = $(".ham-pop").hasClass("is-open");
-  $floatMenu.toggleClass("show", scrolled && !popupOpen);
+  var showMenu = scrolled && !popupOpen;
+  $floatMenu.toggleClass("show", showMenu);
+  $stickyBars.toggleClass("is-lifted", showMenu);
 }
 
 $(window).on("scroll resize", toggleFloatMenu);
@@ -490,7 +499,6 @@ $(document).on("click", "[data-model], .overlay, .close", function () {
 });
 
 toggleFloatMenu();
-
 
 $(function () {
   new Swiper(".cartRelatedSlider", {
@@ -580,3 +588,198 @@ if ("IntersectionObserver" in window) {
   });
 }
 
+
+
+
+
+  $(function () {
+  var stack = ["main"];
+
+  function getPop() {
+    return $(".ham-pop");
+  }
+
+  function getView(id) {
+    return getPop().find('.ham-view[data-ham-view="' + id + '"]');
+  }
+
+  function renderHam() {
+    var $back = getPop().find("[data-ham-back]");
+    var current = stack[stack.length - 1];
+
+    getPop().find(".ham-view").each(function () {
+      var id = $(this).attr("data-ham-view");
+      $(this)
+        .toggleClass("is-active", id === current)
+        .toggleClass("is-behind", id !== current && stack.indexOf(id) > -1)
+        .attr("aria-hidden", String(id !== current));
+    });
+
+    $back.toggleClass("is-visible", stack.length > 1);
+    if (stack.length > 1) {
+      $back.find("span").text("Back to " + (getView(stack[stack.length - 2]).attr("data-ham-title") || "Menu"));
+    }
+  }
+
+  $(document).on("click", ".ham-pop [data-ham-open]", function (e) {
+    e.preventDefault();
+    var id = $(this).attr("data-ham-open");
+    if (!getView(id).length) return;
+    stack.push(id);
+    getView(id).scrollTop(0);
+    renderHam();
+  });
+
+  $(document).on("click", ".ham-pop [data-ham-back]", function (e) {
+    e.preventDefault();
+    if (stack.length > 1) {
+      stack.pop();
+      renderHam();
+    }
+  });
+});
+
+$(function () {
+  var $pop = $(".offer-pop");
+  var $overlay = $(".overlay");
+  var KEY = "archanaOfferClosed";
+
+  if (!$pop.length) return;
+
+  // sirf home page
+  var path = window.location.pathname.toLowerCase();
+  var last = path.split("/").pop();
+  var isHome = last === "" || last === "index.html" || last === "index";
+  if (!isHome) return;
+
+  // purani localStorage wali key hata do (ab sessionStorage use hota hai)
+  try {
+    localStorage.removeItem(KEY);
+  } catch (e) {}
+
+  // isi tab me pehle close ho chuka hai (refresh) to kholo hi mat
+  try {
+    if (sessionStorage.getItem(KEY)) return;
+  } catch (e) {}
+
+  function openPop() {
+    $pop.addClass("is-open");
+    $overlay.addClass("is-open");
+  }
+
+  function closePop() {
+    $pop.removeClass("is-open");
+    $overlay.removeClass("is-open");
+    try {
+      sessionStorage.setItem(KEY, "1");
+    } catch (e) {}
+  }
+
+  // open: page load hote hi
+  if (document.readyState === "complete") {
+    openPop();
+  } else {
+    $(window).on("load", openPop);
+  }
+
+  // close: button, pop ke andar ke links
+  $pop.on("click", ".close, .op-btns a", closePop);
+
+  // close: bahar click (overlay ya page pe kahin bhi)
+  $(document).on("mousedown", function (e) {
+    if (
+      $pop.hasClass("is-open") &&
+      !$(e.target).closest(".offer-pop .model-body").length
+    ) {
+      closePop();
+    }
+  });
+
+  // close: Esc
+  $(document).on("keydown", function (e) {
+    if (e.key === "Escape" && $pop.hasClass("is-open")) {
+      closePop();
+    }
+  });
+});
+
+
+/* =========================================================
+   2. TOAST  (showToast is global, call it anytime)
+   ========================================================= */
+(function () {
+  var duration = 3000;
+
+  var types = {
+    success: { color: "#218641", icon: "fa-circle-check" },
+    error: { color: "#d93025", icon: "fa-circle-xmark" },
+    warning: { color: "#b7791f", icon: "fa-triangle-exclamation" },
+    info: { color: "#2563eb", icon: "fa-circle-info" }
+  };
+
+  function removeToast($toast) {
+    $toast.removeClass("is-show");
+    setTimeout(function () {
+      $toast.remove();
+    }, 350);
+  }
+
+  function showToast(title, text, type, color) {
+    var preset = types[type] || types.info;
+    var $toast = $('<div class="toast" role="status"></div>');
+    var $body = $('<div class="toast-body"></div>');
+    var $toaster = $("#toaster");
+
+    // agar page pe #toaster div nahi hai to khud bana lo
+    if (!$toaster.length) {
+      $toaster = $('<div class="toaster" id="toaster"></div>').appendTo("body");
+    }
+
+    $toast[0].style.setProperty("--toast-color", color || preset.color);
+    $toast[0].style.setProperty("--toast-time", duration + "ms");
+
+    if (title) {
+      $body.append($('<strong class="toast-title"></strong>').text(title));
+    }
+    if (text) {
+      $body.append($('<span class="toast-text"></span>').text(text));
+    }
+
+    $toast.append(
+      $('<span class="toast-icon"></span>').append(
+        $('<i class="fa-solid" aria-hidden="true"></i>').addClass(preset.icon)
+      )
+    );
+    $toast.append($body);
+    $toast.append('<button type="button" class="toast-close" aria-label="Close"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>');
+
+    $toaster.append($toast);
+
+    setTimeout(function () {
+      $toast.addClass("is-show");
+    }, 10);
+
+    setTimeout(function () {
+      removeToast($toast);
+    }, duration);
+  }
+
+  // global: backend developer kahin se bhi call kar sakta hai
+  window.showToast = showToast;
+
+  // data attributes wale buttons / links
+  $(document).on("click", "[data-toast-title], [data-toast-text]", function () {
+    var $el = $(this);
+    showToast(
+      $el.attr("data-toast-title"),
+      $el.attr("data-toast-text") || $el.attr("data-name"),
+      $el.attr("data-toast-type"),
+      $el.attr("data-toast-color")
+    );
+  });
+
+  // toast close button
+  $(document).on("click", ".toast-close", function () {
+    removeToast($(this).closest(".toast"));
+  });
+})();

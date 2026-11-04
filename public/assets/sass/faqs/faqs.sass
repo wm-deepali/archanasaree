@@ -20,23 +20,48 @@
   .eyebrow
     display: block
     margin-bottom: 14px
+
+    @include media(768)
+      margin-bottom: 12px
+
+    @include media(540)
+      margin-bottom: 10px
+
     color: var(--primary)
     font-family: $Poppins
     font-size: 12px
+
+    @include media(768)
+      font-size: 11px
+
+    @include media(540)
+      font-size: 10px
+
     font-weight: 600
     text-transform: uppercase
     letter-spacing: 0.25em
 
+    @include media(1024)
+      letter-spacing: 0.24em
+
+    @include media(768)
+      letter-spacing: 0.22em
+
     @include media(540)
-      font-size: 11px
       letter-spacing: 0.2em
 
 .faq-secC,
 .faq-secD
   padding: 70px 0
 
+  @include media(1280)
+    padding: 66px 0
+
   @include media(1024)
     padding: 60px 0
+
+  @include media(991)
+    padding: 58px 0
 
   @include media(768)
     padding: 55px 0
@@ -46,10 +71,15 @@
 
 .faq-secA
   padding: 60px 0 20px
-  background: var(--bg)
+
+  @include media(1280)
+    padding: 58px 0 20px
 
   @include media(1024)
     padding: 54px 0 20px
+
+  @include media(991)
+    padding: 52px 0 18px
 
   @include media(768)
     padding: 50px 0 16px
@@ -57,51 +87,18 @@
   @include media(540)
     padding: 44px 0 10px
 
-  .crumb
-    display: flex
-    align-items: center
-    flex-wrap: wrap
-    gap: 10px
-    margin: 0 0 34px
-    padding: 0
-    list-style: none
+  background: var(--bg)
 
-    @include media(768)
-      justify-content: center
-      margin-bottom: 28px
 
-    li
-      color: var(--black)
-      font-family: $Poppins
-      font-size: 12px
-      text-transform: uppercase
-      letter-spacing: 0.12em
-      opacity: 0.8
-
-      @include media(540)
-        font-size: 11px
-
-      a
-        color: var(--black)
-        transition: color 0.3s ease
-
-        &:hover
-          color: var(--primary)
-
-      &.current
-        color: var(--primary)
-        font-weight: 600
-        opacity: 1
-
-      i
-        font-size: 9px
-        opacity: 0.5
 
   .ban-grid
     display: grid
     grid-template-columns: 7fr 4fr
+
+    @include media(991)
+      grid-template-columns: 1fr
+
     gap: 70px
-    align-items: center
 
     @include media(1280)
       gap: 50px
@@ -110,8 +107,15 @@
       gap: 36px
 
     @include media(991)
-      grid-template-columns: 1fr
       gap: 40px
+
+    @include media(768)
+      gap: 36px
+
+    @include media(540)
+      gap: 30px
+
+    align-items: center
 
   .ban-content
     min-width: 0
@@ -122,25 +126,14 @@
     .heading
       margin-bottom: 20px
 
+      @include media(768)
+        margin-bottom: 18px
+
+      @include media(540)
+        margin-bottom: 16px
+
       h1
         margin: 0
-        font-size: 56px
-        line-height: 1.12
-
-        @include media(1280)
-          font-size: 48px
-
-        @include media(1024)
-          font-size: 42px
-
-        @include media(991)
-          font-size: 38px
-
-        @include media(768)
-          font-size: 34px
-
-        @include media(540)
-          font-size: 28px
 
     .ban-desc
       max-width: 560px
@@ -153,27 +146,43 @@
     position: relative
     padding: 0 18px 18px 0
 
+    @include media(768)
+      padding: 0 14px 14px 0
+
+    @include media(540)
+      padding: 0 12px 12px 0
+
     @include media(991)
       width: 100%
       max-width: 360px
       margin: 0 auto
 
     @include media(540)
-      padding: 0 12px 12px 0
+      max-width: 300px
 
     &::before
       content: ""
       position: absolute
       top: 18px
+
+      @include media(768)
+        top: 14px
+
+      @include media(540)
+        top: 12px
+
       left: 18px
+
+      @include media(768)
+        left: 14px
+
+      @include media(540)
+        left: 12px
+
       right: 0
       bottom: 0
       border: 1px solid var(--primary)
       border-radius: 999px 999px 0 0
-
-      @include media(540)
-        top: 12px
-        left: 12px
 
     .ban-photo
       position: relative
@@ -204,24 +213,51 @@
       position: absolute
       left: 0
       bottom: 40px
+
+      @include media(768)
+        bottom: 34px
+
+      @include media(540)
+        bottom: 28px
+
       z-index: 2
       padding: 11px 18px
+
+      @include media(768)
+        padding: 10px 16px
+
+      @include media(540)
+        padding: 9px 14px
+
       background: var(--primary)
       color: var(--white)
       font-size: 11px
+
+      @include media(540)
+        font-size: 10px
+
       font-weight: 500
       line-height: 1
       text-transform: uppercase
       letter-spacing: 0.2em
 
+      @include media(768)
+        letter-spacing: 0.16em
+
       @include media(540)
-        bottom: 28px
-        padding: 9px 14px
-        font-size: 10px
         letter-spacing: 0.14em
 
 .faq-secB
   padding: 50px 0 10px
+
+  @include media(1280)
+    padding: 48px 0 10px
+
+  @include media(1024)
+    padding: 46px 0 8px
+
+  @include media(991)
+    padding: 44px 0 8px
 
   @include media(768)
     padding: 44px 0 6px
@@ -237,6 +273,9 @@
     .heading
       margin-bottom: 14px
 
+      @include media(540)
+        margin-bottom: 12px
+
     p
       margin: 0
 
@@ -244,8 +283,11 @@
   .faq-layout
     display: grid
     grid-template-columns: 3.4fr 8fr
+
+    @include media(991)
+      grid-template-columns: 1fr
+
     gap: 60px
-    align-items: start
 
     @include media(1280)
       gap: 40px
@@ -254,24 +296,37 @@
       gap: 30px
 
     @include media(991)
-      grid-template-columns: 1fr
       gap: 28px
+
+    @include media(768)
+      gap: 26px
+
+    @include media(540)
+      gap: 24px
+
+    align-items: start
 
   .tab-nav
     position: sticky
     top: 110px
-    margin: 0
-    padding: 0
-    list-style: none
 
     @include media(1024)
       top: 90px
 
     @include media(991)
       position: static
+
+    margin: 0
+    padding: 0
+    list-style: none
+
+    @include media(991)
       display: flex
       flex-wrap: wrap
       gap: 10px
+
+    @include media(540)
+      gap: 8px
 
     @include media(768)
       justify-content: center
@@ -279,28 +334,49 @@
     li
       display: flex
       align-items: center
+
+      @include media(768)
+        justify-content: center
+
       gap: 14px
-      margin-bottom: 12px
-      padding: 14px 18px
-      border: 1px solid var(--gray)
-      border-radius: 14px
-      background: var(--white)
-      cursor: pointer
-      transition: all 0.3s ease
 
       @include media(1280)
         gap: 12px
-        padding: 13px 14px
 
       @include media(991)
         gap: 10px
-        margin-bottom: 0
-        padding: 9px 16px 9px 10px
-        border-radius: 999px
 
       @include media(540)
         gap: 8px
+
+      margin-bottom: 12px
+
+      @include media(991)
+        margin-bottom: 0
+
+      padding: 14px 18px
+
+      @include media(1280)
+        padding: 13px 14px
+
+      @include media(991)
+        padding: 9px 16px 9px 10px
+
+      @include media(768)
+        padding: 8px 14px 8px 9px
+
+      @include media(540)
         padding: 7px 12px 7px 8px
+
+      border: 1px solid var(--gray)
+      border-radius: 14px
+
+      @include media(991)
+        border-radius: 999px
+
+      background: var(--white)
+      cursor: pointer
+      transition: all 0.3s ease
 
       .tab-no
         color: var(--primary)
@@ -320,36 +396,63 @@
         justify-content: center
         flex-shrink: 0
         width: 38px
+
+        @include media(1024)
+          width: 36px
+
+        @include media(991)
+          width: 32px
+
+        @include media(540)
+          width: 28px
+
         height: 38px
+
+        @include media(1024)
+          height: 36px
+
+        @include media(991)
+          height: 32px
+
+        @include media(540)
+          height: 28px
+
         border-radius: 50%
         background: var(--gray)
         color: var(--primary)
         font-size: 15px
-        transition: all 0.3s ease
+
+        @include media(1024)
+          font-size: 14px
 
         @include media(991)
-          width: 32px
-          height: 32px
           font-size: 13px
 
         @include media(540)
-          width: 28px
-          height: 28px
           font-size: 12px
+
+        transition: all 0.3s ease
 
       .tab-txt
         color: var(--black)
         font-family: $Poppins
         font-size: 14px
-        font-weight: 500
-        line-height: 1.4
-        transition: color 0.3s ease
 
         @include media(1280)
           font-size: 13px
 
-        @include media(540)
+        @include media(768)
           font-size: 12px
+
+        @include media(540)
+          font-size: 11px
+
+        font-weight: 500
+        line-height: 1.4
+        transition: color 0.3s ease
+
+        @include media(768)
+          text-align: center
 
       &:hover
         border-color: var(--primary)
@@ -380,19 +483,35 @@
 
   .accordion-item
     margin-bottom: 14px
-    padding: 0 30px
-    border: 1px solid var(--gray)
-    border-radius: 16px
-    background: var(--white)
-    transition: all 0.3s ease
-
-    @include media(768)
-      padding: 0 22px
-      border-radius: 14px
 
     @include media(540)
       margin-bottom: 10px
+
+    padding: 0 30px
+
+    @include media(1280)
+      padding: 0 26px
+
+    @include media(1024)
+      padding: 0 24px
+
+    @include media(768)
+      padding: 0 22px
+
+    @include media(540)
       padding: 0 16px
+
+    border: 1px solid var(--gray)
+    border-radius: 16px
+
+    @include media(768)
+      border-radius: 14px
+
+    @include media(540)
+      border-radius: 12px
+
+    background: var(--white)
+    transition: all 0.3s ease
 
     &:last-child
       margin-bottom: 0
@@ -416,31 +535,47 @@
       align-items: center
       justify-content: space-between
       gap: 24px
-      padding: 26px 0
-      cursor: pointer
+
+      @include media(1024)
+        gap: 20px
 
       @include media(768)
         gap: 16px
-        padding: 22px 0
 
       @include media(540)
         gap: 12px
+
+      padding: 26px 0
+
+      @include media(1280)
+        padding: 24px 0
+
+      @include media(768)
+        padding: 22px 0
+
+      @include media(540)
         padding: 18px 0
+
+      cursor: pointer
 
       h4
         flex: 1
         min-width: 0
         margin: 0
         font-size: 17px
+
+        @include media(1024)
+          font-size: 16px
+
+        @include media(768)
+          font-size: 15px
+
+        @include media(540)
+          font-size: 14px
+
         font-weight: 600
         line-height: 1.5
         transition: color 0.3s ease
-
-        @include media(768)
-          font-size: 16px
-
-        @include media(540)
-          font-size: 15px
 
     .accordion-icon
       display: flex
@@ -448,30 +583,59 @@
       justify-content: center
       flex-shrink: 0
       width: 36px
+
+      @include media(768)
+        width: 32px
+
+      @include media(540)
+        width: 30px
+
       height: 36px
+
+      @include media(768)
+        height: 32px
+
+      @include media(540)
+        height: 30px
+
       border-radius: 50%
       background: var(--gray)
       color: var(--black)
       font-size: 18px
-      line-height: 1
-      transition: all 0.3s ease
+
+      @include media(768)
+        font-size: 17px
 
       @include media(540)
-        width: 30px
-        height: 30px
         font-size: 16px
+
+      line-height: 1
+      transition: all 0.3s ease
 
     .accordion-content
       p
         max-width: 760px
         margin: 0
         padding: 0 0 26px
+
+        @include media(768)
+          padding-bottom: 22px
+
+        @include media(540)
+          padding-bottom: 20px
+
         font-size: 15px
+
+        @include media(768)
+          font-size: 14px
+
+        @include media(540)
+          font-size: 13px
+
         line-height: 1.8
 
         @include media(540)
-          padding-bottom: 22px
-          font-size: 14px
+          line-height: 1.7
 
         a
           color: var(--primary)
@@ -485,16 +649,15 @@
     align-items: center
     justify-content: space-between
     gap: 40px
-    padding: 50px 56px
-    background: var(--dark-gray)
-    border-left: 2px solid var(--primary)
-
-    @include media(1280)
-      padding: 44px 40px
 
     @include media(1024)
       gap: 30px
-      padding: 38px 30px
+
+    @include media(991)
+      gap: 26px
+
+    @include media(540)
+      gap: 22px
 
     @include media(991)
       flex-direction: column
@@ -502,20 +665,44 @@
 
     @include media(768)
       align-items: center
+
+    padding: 50px 56px
+
+    @include media(1280)
+      padding: 44px 40px
+
+    @include media(1024)
+      padding: 38px 30px
+
+    @include media(991)
+      padding: 36px 30px
+
+    @include media(768)
       padding: 34px 22px
-      border-left: 0
-      border-top: 2px solid var(--primary)
-      text-align: center
 
     @include media(540)
       padding: 28px 16px
+
+    background: var(--dark-gray)
+    border-left: 2px solid var(--primary)
+
+    @include media(768)
+      border-left: 0
+      border-top: 2px solid var(--primary)
+      text-align: center
 
   .help-content
     min-width: 0
     max-width: 620px
 
+    @include media(768)
+      max-width: 100%
+
     .heading
       margin-bottom: 12px
+
+      @include media(540)
+        margin-bottom: 10px
 
     p
       margin: 0
@@ -525,11 +712,14 @@
     align-items: center
     flex-wrap: wrap
     gap: 14px
+
+    @include media(1024)
+      gap: 12px
+
     flex-shrink: 0
 
     @include media(768)
       justify-content: center
-      gap: 12px
 
     @include media(540)
       flex-direction: column
@@ -543,6 +733,7 @@
       gap: 10px
 
       @include media(540)
+        gap: 8px
         width: 100%
 
 @keyframes faqFade
@@ -554,9 +745,10 @@
     opacity: 1
     transform: translateY(0)
 
-
-
 .faq-secA
   padding-top: 0
-  height: calc(  100vh - var(--headerheight) )
+  height: calc(100vh - var(--headerheight))
   margin: var(--headerheight) 0 0
+
+  @include media(991)
+    height: auto

@@ -13,31 +13,120 @@
 }
 .common-policies-secA {
   padding: 0 70px 0;
-  margin-top: calc(var(--headerheight) + 66px);
+  margin-top: calc(var(--headerheight) + 70px);
   background: var(--white);
+}
+@media only screen and (max-width: 1280px) {
+  .common-policies-secA {
+    padding: 45px 50px 0;
+  }
+}
+@media only screen and (max-width: 1024px) {
+  .common-policies-secA {
+    padding: 40px 30px 0;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .common-policies-secA {
+    padding: 36px 30px 0;
+    margin-top: calc(var(--headerheight) - 40px);
+  }
+}
+@media only screen and (max-width: 768px) {
+  .common-policies-secA {
+    padding: 30px 0 0;
+  }
+}
+@media only screen and (max-width: 540px) {
+  .common-policies-secA {
+    padding: 20px 0 0;
+  }
 }
 .common-policies-secA .banner {
   min-height: 180px;
+}
+@media only screen and (max-width: 768px) {
+  .common-policies-secA .banner {
+    min-height: 160px;
+  }
+}
+@media only screen and (max-width: 540px) {
+  .common-policies-secA .banner {
+    min-height: 140px;
+  }
+}
+.common-policies-secA .banner {
   padding: 28px 50px;
+}
+@media only screen and (max-width: 1280px) {
+  .common-policies-secA .banner {
+    padding: 28px 44px;
+  }
+}
+@media only screen and (max-width: 1024px) {
+  .common-policies-secA .banner {
+    padding: 26px 36px;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .common-policies-secA .banner {
+    padding: 26px 32px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .common-policies-secA .banner {
+    padding: 24px 28px;
+  }
+}
+@media only screen and (max-width: 540px) {
+  .common-policies-secA .banner {
+    padding: 20px;
+  }
+}
+.common-policies-secA .banner {
   border-radius: 24px;
+}
+@media only screen and (max-width: 768px) {
+  .common-policies-secA .banner {
+    border-radius: 18px;
+  }
+}
+@media only screen and (max-width: 540px) {
+  .common-policies-secA .banner {
+    border-radius: 14px;
+  }
+}
+.common-policies-secA .banner {
   background: var(--primary);
   color: var(--white);
 }
+@media only screen and (max-width: 768px) {
+  .common-policies-secA .banner {
+    text-align: center;
+  }
+}
 .common-policies-secA .banner .breadcrumb {
   margin-bottom: 14px;
+}
+@media only screen and (max-width: 540px) {
+  .common-policies-secA .banner .breadcrumb {
+    margin-bottom: 10px;
+  }
 }
 .common-policies-secA .banner .breadcrumb ol {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  margin: 0;
-  padding: 0;
-  list-style: none;
 }
 @media only screen and (max-width: 768px) {
   .common-policies-secA .banner .breadcrumb ol {
     justify-content: center;
   }
+}
+.common-policies-secA .banner .breadcrumb ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 .common-policies-secA .banner .breadcrumb li {
   display: inline-flex;
@@ -45,14 +134,26 @@
   color: rgba(255, 255, 255, 0.8);
   font-size: 13px;
 }
+@media only screen and (max-width: 768px) {
+  .common-policies-secA .banner .breadcrumb li {
+    font-size: 12px;
+  }
+}
+@media only screen and (max-width: 540px) {
+  .common-policies-secA .banner .breadcrumb li {
+    font-size: 11px;
+  }
+}
 .common-policies-secA .banner .breadcrumb li i {
   margin: 0 10px;
-  font-size: 9px;
 }
 @media only screen and (max-width: 540px) {
   .common-policies-secA .banner .breadcrumb li i {
     margin: 0 8px;
   }
+}
+.common-policies-secA .banner .breadcrumb li i {
+  font-size: 10px;
 }
 .common-policies-secA .banner .breadcrumb li a {
   color: var(--white);
@@ -62,27 +163,25 @@
 .common-policies-secA .banner .breadcrumb li a:hover, .common-policies-secA .banner .breadcrumb li a:focus-visible {
   opacity: 0.7;
 }
-@media only screen and (max-width: 540px) {
-  .common-policies-secA .banner .breadcrumb li {
-    font-size: 12px;
-  }
-}
-@media only screen and (max-width: 540px) {
-  .common-policies-secA .banner .breadcrumb {
-    margin-bottom: 10px;
-  }
-}
 .common-policies-secA .banner .heading {
   max-width: 640px;
 }
+@media only screen and (max-width: 768px) {
+  .common-policies-secA .banner .heading {
+    max-width: 100%;
+  }
+}
 .common-policies-secA .banner .heading h1 {
   margin: 0 0 6px;
+}
+@media only screen and (max-width: 540px) {
+  .common-policies-secA .banner .heading h1 {
+    margin-bottom: 4px;
+  }
+}
+.common-policies-secA .banner .heading h1 {
   color: var(--white);
   font-size: 36px;
-  font-weight: 700;
-  width: 100%;
-  max-width: 100%;
-  line-height: 1.15;
 }
 @media only screen and (max-width: 1280px) {
   .common-policies-secA .banner .heading h1 {
@@ -109,87 +208,86 @@
     font-size: 26px;
   }
 }
+.common-policies-secA .banner .heading h1 {
+  font-weight: 700;
+  width: 100%;
+  max-width: 100%;
+  line-height: 1.15;
+}
 .common-policies-secA .banner .heading p {
   margin: 0;
   color: var(--white);
   font-size: 15px;
-  line-height: 1.6;
-  opacity: 0.88;
 }
 @media only screen and (max-width: 540px) {
   .common-policies-secA .banner .heading p {
     font-size: 14px;
+  }
+}
+.common-policies-secA .banner .heading p {
+  line-height: 1.6;
+}
+@media only screen and (max-width: 540px) {
+  .common-policies-secA .banner .heading p {
     line-height: 1.55;
   }
 }
-@media only screen and (max-width: 1280px) {
-  .common-policies-secA .banner {
-    padding: 28px 44px;
-  }
-}
-@media only screen and (max-width: 1024px) {
-  .common-policies-secA .banner {
-    padding: 26px 36px;
-  }
-}
-@media only screen and (max-width: 991px) {
-  .common-policies-secA .banner {
-    padding: 26px 32px;
-  }
-}
-@media only screen and (max-width: 768px) {
-  .common-policies-secA .banner {
-    min-height: 160px;
-    padding: 24px 28px;
-    border-radius: 18px;
-  }
-}
-@media only screen and (max-width: 540px) {
-  .common-policies-secA .banner {
-    min-height: 140px;
-    padding: 20px;
-    border-radius: 14px;
-  }
-}
-@media only screen and (max-width: 1280px) {
-  .common-policies-secA {
-    padding: 45px 50px 0;
-  }
-}
-@media only screen and (max-width: 1024px) {
-  .common-policies-secA {
-    padding: 40px 30px 0;
-  }
-}
-@media only screen and (max-width: 991px) {
-  .common-policies-secA {
-    padding: 36px 30px 0;
-  }
-}
-@media only screen and (max-width: 768px) {
-  .common-policies-secA {
-    padding: 30px 0 0;
-  }
-}
-@media only screen and (max-width: 540px) {
-  .common-policies-secA {
-    padding: 20px 0 0;
-  }
+.common-policies-secA .banner .heading p {
+  opacity: 0.88;
 }
 
 .common-policies-secB {
   padding: 50px 70px 65px;
 }
+@media only screen and (max-width: 1280px) {
+  .common-policies-secB {
+    padding: 50px 50px 65px;
+  }
+}
+@media only screen and (max-width: 1024px) {
+  .common-policies-secB {
+    padding: 40px 30px 55px;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .common-policies-secB {
+    padding: 40px 30px 52px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .common-policies-secB {
+    padding: 35px 0 50px;
+  }
+}
+@media only screen and (max-width: 540px) {
+  .common-policies-secB {
+    padding: 30px 0 44px;
+  }
+}
 .common-policies-secB .website-content {
   max-width: 900px;
 }
+@media only screen and (max-width: 991px) {
+  .common-policies-secB .website-content {
+    max-width: 100%;
+  }
+}
 .common-policies-secB .website-content h2 {
   font-size: 28px;
-  font-weight: 500;
+}
+@media only screen and (max-width: 1280px) {
+  .common-policies-secB .website-content h2 {
+    font-size: 27px;
+  }
 }
 @media only screen and (max-width: 1024px) {
   .common-policies-secB .website-content h2 {
     font-size: 26px;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .common-policies-secB .website-content h2 {
+    font-size: 25px;
   }
 }
 @media only screen and (max-width: 768px) {
@@ -202,11 +300,13 @@
     font-size: 22px;
   }
 }
-.common-policies-secB .website-content h3 {
-  font-size: 24px;
+.common-policies-secB .website-content h2 {
   font-weight: 500;
 }
-@media only screen and (max-width: 1024px) {
+.common-policies-secB .website-content h3 {
+  font-size: 24px;
+}
+@media only screen and (max-width: 1280px) {
   .common-policies-secB .website-content h3 {
     font-size: 23px;
   }
@@ -221,38 +321,63 @@
     font-size: 21px;
   }
 }
-.common-policies-secB .website-content h4 {
-  font-size: 20px;
+.common-policies-secB .website-content h3 {
   font-weight: 500;
 }
-@media only screen and (max-width: 768px) {
+.common-policies-secB .website-content h4 {
+  font-size: 20px;
+}
+@media only screen and (max-width: 1024px) {
   .common-policies-secB .website-content h4 {
     font-size: 19px;
   }
 }
-@media only screen and (max-width: 540px) {
+@media only screen and (max-width: 768px) {
   .common-policies-secB .website-content h4 {
     font-size: 18px;
   }
 }
+@media only screen and (max-width: 540px) {
+  .common-policies-secB .website-content h4 {
+    font-size: 17px;
+  }
+}
+.common-policies-secB .website-content h4 {
+  font-weight: 500;
+}
 .common-policies-secB .website-content h5 {
   font-size: 17px;
 }
-@media only screen and (max-width: 540px) {
+@media only screen and (max-width: 768px) {
   .common-policies-secB .website-content h5 {
     font-size: 16px;
+  }
+}
+@media only screen and (max-width: 540px) {
+  .common-policies-secB .website-content h5 {
+    font-size: 15px;
   }
 }
 .common-policies-secB .website-content h6 {
   font-size: 15px;
 }
-@media only screen and (max-width: 540px) {
+@media only screen and (max-width: 768px) {
   .common-policies-secB .website-content h6 {
     font-size: 14px;
   }
 }
+@media only screen and (max-width: 540px) {
+  .common-policies-secB .website-content h6 {
+    font-size: 13px;
+  }
+}
 .common-policies-secB .website-content h2, .common-policies-secB .website-content h3, .common-policies-secB .website-content h4 {
   margin: 40px 0 15px;
+}
+@media only screen and (max-width: 1024px) {
+  .common-policies-secB .website-content h2, .common-policies-secB .website-content h3, .common-policies-secB .website-content h4 {
+    margin: 36px 0 14px;
+  }
 }
 @media only screen and (max-width: 768px) {
   .common-policies-secB .website-content h2, .common-policies-secB .website-content h3, .common-policies-secB .website-content h4 {
@@ -289,6 +414,7 @@
 }
 .common-policies-secB .website-content a {
   color: #000000;
+  word-break: break-word;
 }
 .common-policies-secB .website-content a:hover {
   text-decoration: underline;
@@ -303,29 +429,37 @@
 }
 .common-policies-secB .website-content ul {
   margin-bottom: 20px;
+}
+@media only screen and (max-width: 540px) {
+  .common-policies-secB .website-content ul {
+    margin-bottom: 16px;
+  }
+}
+.common-policies-secB .website-content ul {
   padding-left: 35px;
+}
+@media only screen and (max-width: 1024px) {
+  .common-policies-secB .website-content ul {
+    padding-left: 28px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .common-policies-secB .website-content ul {
+    padding-left: 20px;
+  }
+}
+@media only screen and (max-width: 540px) {
+  .common-policies-secB .website-content ul {
+    padding-left: 10px;
+  }
 }
 .common-policies-secB .website-content ul li {
   position: relative;
   padding-left: 35px;
-  font-family: "Poppins";
 }
-.common-policies-secB .website-content ul li:not(:last-child) {
-  margin-bottom: 6px;
-}
-.common-policies-secB .website-content ul li::before {
-  content: "";
-  position: absolute;
-  top: 8px;
-  left: 0;
-  width: 10px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: var(--primary);
-}
-@media only screen and (max-width: 540px) {
-  .common-policies-secB .website-content ul li::before {
-    width: 8px;
+@media only screen and (max-width: 1024px) {
+  .common-policies-secB .website-content ul li {
+    padding-left: 32px;
   }
 }
 @media only screen and (max-width: 768px) {
@@ -338,27 +472,49 @@
     padding-left: 25px;
   }
 }
-@media only screen and (max-width: 768px) {
-  .common-policies-secB .website-content ul {
-    padding-left: 20px;
-  }
+.common-policies-secB .website-content ul li {
+  font-family: "Poppins";
+}
+.common-policies-secB .website-content ul li:not(:last-child) {
+  margin-bottom: 6px;
 }
 @media only screen and (max-width: 540px) {
-  .common-policies-secB .website-content ul {
-    margin-bottom: 16px;
-    padding-left: 10px;
+  .common-policies-secB .website-content ul li:not(:last-child) {
+    margin-bottom: 5px;
   }
+}
+.common-policies-secB .website-content ul li::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 0;
+  width: 10px;
+}
+@media only screen and (max-width: 540px) {
+  .common-policies-secB .website-content ul li::before {
+    width: 8px;
+  }
+}
+.common-policies-secB .website-content ul li::before {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--primary);
 }
 .common-policies-secB .website-content ol {
   margin-bottom: 20px;
+}
+@media only screen and (max-width: 540px) {
+  .common-policies-secB .website-content ol {
+    margin-bottom: 16px;
+  }
+}
+.common-policies-secB .website-content ol {
   padding-left: 35px;
 }
-.common-policies-secB .website-content ol li {
-  font-family: "Poppins";
-  padding-left: 6px;
-}
-.common-policies-secB .website-content ol li:not(:last-child) {
-  margin-bottom: 6px;
+@media only screen and (max-width: 1024px) {
+  .common-policies-secB .website-content ol {
+    padding-left: 32px;
+  }
 }
 @media only screen and (max-width: 768px) {
   .common-policies-secB .website-content ol {
@@ -367,33 +523,19 @@
 }
 @media only screen and (max-width: 540px) {
   .common-policies-secB .website-content ol {
-    margin-bottom: 16px;
     padding-left: 22px;
   }
 }
-@media only screen and (max-width: 1280px) {
-  .common-policies-secB {
-    padding: 50px 50px 65px;
-  }
+.common-policies-secB .website-content ol li {
+  font-family: "Poppins";
+  padding-left: 6px;
 }
-@media only screen and (max-width: 1024px) {
-  .common-policies-secB {
-    padding: 40px 30px 55px;
-  }
-}
-@media only screen and (max-width: 991px) {
-  .common-policies-secB {
-    padding: 40px 30px 52px;
-  }
-}
-@media only screen and (max-width: 768px) {
-  .common-policies-secB {
-    padding: 35px 0 50px;
-  }
+.common-policies-secB .website-content ol li:not(:last-child) {
+  margin-bottom: 6px;
 }
 @media only screen and (max-width: 540px) {
-  .common-policies-secB {
-    padding: 30px 0 44px;
+  .common-policies-secB .website-content ol li:not(:last-child) {
+    margin-bottom: 5px;
   }
 }
 

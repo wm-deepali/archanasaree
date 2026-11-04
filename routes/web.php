@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\{
     CustomizationController,
     DashboardController,
     DynamicPageController,
+    FaqCategoryController,
     FaqController,
     GalleryImageController,
     GiftingOccasionController,
@@ -27,8 +28,6 @@ use App\Http\Controllers\Admin\{
     HomeHeroBannerController,
     HomeHeroSlideController,
     HomePageController,
-    HomeContentController,
-    HomeSectionController,
     LogoutController,
     OrderController,
     OtherEnquiryController,
@@ -85,12 +84,12 @@ Route::middleware('maintenance.mode')->group(function () {
         Route::get('/product/{slug}', 'productShow')->name('products.show');
         Route::get('/products/{id}/quick-view', 'quickView')->whereNumber('id')->middleware('throttle:60,1')->name('products.quick-view');
         Route::get('/search/suggest', 'searchSuggest')->middleware('throttle:60,1')->name('search.suggest');
+        Route::get('/faqs', 'faqs')->name('faqs');
 
         Route::view('/about', 'front-pages.about')->name('about');
         Route::view('/blog-detail', 'front-pages.blog-detail')->name('blog.show');
         Route::view('/blogs', 'front-pages.blogs')->name('blogs');
         Route::view('/contact', 'front-pages.contact')->name('contact');
-        Route::view('/faqs', 'front-pages.faqs')->name('faqs');
         Route::view('/privacy-policy', 'front-pages.privacy-policy')->name('blog.show');
 
     });
@@ -184,6 +183,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::resource('pages', DynamicPageController::class)->names('pages');
 
+        Route::resource('faq-categories', FaqCategoryController::class)->except(['show']);
         Route::resource('faqs', FaqController::class)->names('faqs');
 
         Route::resource('blogs', BlogController::class)->names('blogs');

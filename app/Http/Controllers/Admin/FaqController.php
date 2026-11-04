@@ -3,92 +3,70 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Faq;
+use App\Models\FaqCategory;
+use Illuminate\Http\Request;
 
 class FaqController extends Controller
 {
-
     public function index()
     {
-        $faqs = Faq::latest()->get();
+        $faqs = Faq::with('category')->latest()->get();
 
-        return view('admin.faqs.index',compact('faqs'));
+        return view('admin.faqs.index', compact('faqs'));
     }
-
 
     public function create()
     {
-        return view('admin.faqs.create');
-    }
+        $categories = FaqCategory::orderBy('sort_order')->get();
 
+        return view('admin.faqs.create', compact('categories'));
+    }
 
     public function store(Request $request)
     {
-
-        $request->validate([
-            'question'=>'required',
-            'answer'=>'required'
-        ]);
-
-        Faq::create([
-
-            'question'=>$request->question,
-
-            'answer'=>$request->answer,
-
-            'show_home'=>$request->show_home ? 1:0,
-
-            'status'=>$request->status ? 1:0
-
-        ]);
+        Faq::create($this->validated($request));
 
         return redirect()->route('admin.faqs.index')
-            ->with('success','FAQ Added Successfully');
-
+            ->with('success', 'FAQ Added Successfully');
     }
-
 
     public function edit($id)
     {
         $faq = Faq::findOrFail($id);
+        $categories = FaqCategory::orderBy('sort_order')->get();
 
-        return view('admin.faqs.edit',compact('faq'));
+        return view('admin.faqs.edit', compact('faq', 'categories'));
     }
 
-
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
-
-        $faq = Faq::findOrFail($id);
-
-        $faq->update([
-
-            'question'=>$request->question,
-
-            'answer'=>$request->answer,
-
-            'show_home'=>$request->show_home ? 1:0,
-
-            'status'=>$request->status ? 1:0
-
-        ]);
+        Faq::findOrFail($id)->update($this->validated($request));
 
         return redirect()->route('admin.faqs.index')
-            ->with('success','FAQ Updated Successfully');
-
+            ->with('success', 'FAQ Updated Successfully');
     }
-
 
     public function destroy($id)
     {
-
         Faq::findOrFail($id)->delete();
 
-        return response()->json([
-            'message'=>'FAQ Deleted Successfully'
-        ]);
-
+        return response()->json(['message' => 'FAQ Deleted Successfully']);
     }
 
+    private function validated(Request $request): array
+    {
+        $data = $request->validate([
+            'faq_category_id' => 'nullable|exists:faq_categories,id',
+            'question'        => 'required|string|max:500',
+            'answer'          => 'required|string',
+            'sort_order'      => 'nullable|integer|min:0',
+        ]);
+
+        $data['sort_order'] = $data['sort_order'] ?? 0;
+        $data['show_home']  = $request->boolean('show_home');
+        $data['status']     = $request->boolean('status');
+
+        return $data;
+    }
 }

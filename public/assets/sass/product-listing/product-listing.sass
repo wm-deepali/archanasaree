@@ -1,8 +1,5 @@
 @import '../_var'
 
-// ======================================================
-// scrollbar mixin (aapka style)
-// ======================================================
 @mixin filter-scroll
   &::-webkit-scrollbar
     width: 4px
@@ -17,7 +14,6 @@
   &::-webkit-scrollbar-thumb:hover
     background: var(--bgcolor) !important
 
-// shared eyebrow
 .listing-intro, .listing-journal, .listing-news
   .eyebrow
     display: block
@@ -28,13 +24,18 @@
     text-transform: uppercase
     letter-spacing: 0.25em
 
-    @include media(540)
+    @include media(1024)
+      margin-bottom: 12px
+
+    @include media(768)
       font-size: 11px
+      letter-spacing: 0.22em
+
+    @include media(540)
+      margin-bottom: 10px
+      font-size: 10px
       letter-spacing: 0.2em
 
-// ======================================================
-// 1. HERO
-// ======================================================
 .listing-banner
   position: relative
   display: flex
@@ -50,12 +51,17 @@
 
   @include media(1024)
     min-height: 420px
+    margin-bottom: 26px
 
   @include media(768)
     min-height: 500px
+    margin-bottom: 24px
+    margin-top: calc(var(--headerheight) + 1px)
 
   @include media(540)
     min-height: 480px
+    margin-bottom: 20px
+    margin-top: calc(var(--headerheight) + 1px)
 
   .banner-img
     position: absolute
@@ -103,9 +109,18 @@
     padding: 22px 0 0
     list-style: none
 
+    @include media(1024)
+      gap: 9px
+
+    @include media(768)
+      justify-content: center
+      padding-top: 18px
+
     @include media(540)
+      justify-content: flex-start
       flex-wrap: nowrap
       gap: 8px
+      padding-top: 14px
       overflow-x: auto
       white-space: nowrap
       scrollbar-width: none
@@ -121,8 +136,14 @@
       text-transform: uppercase
       letter-spacing: 0.14em
 
-      @include media(540)
+      @include media(1024)
+        letter-spacing: 0.12em
+
+      @include media(768)
         font-size: 11px
+
+      @include media(540)
+        font-size: 10px
         letter-spacing: 0.1em
 
       a
@@ -146,8 +167,15 @@
     margin: auto 0
     padding: 30px 0 56px
 
+    @include media(1280)
+      padding: 28px 0 50px
+
     @include media(1024)
       max-width: 500px
+      padding: 26px 0 44px
+
+    @include media(991)
+      max-width: 460px
 
     @include media(768)
       max-width: 560px
@@ -157,7 +185,7 @@
 
     @include media(540)
       max-width: 100%
-      padding-bottom: 38px
+      padding: 26px 0 34px
 
     .eyebrow
       display: block
@@ -168,15 +196,27 @@
       text-transform: uppercase
       letter-spacing: 0.25em
 
-      @include media(540)
+      @include media(1024)
+        margin-bottom: 14px
+
+      @include media(768)
+        margin-bottom: 12px
         font-size: 11px
+        letter-spacing: 0.22em
+
+      @include media(540)
+        margin-bottom: 10px
+        font-size: 10px
         letter-spacing: 0.2em
 
     h1
       margin: 0 0 18px
 
+      @include media(1024)
+        margin-bottom: 16px
+
       @include media(540)
-        margin-bottom: 14px
+        margin-bottom: 12px
 
     .banner-desc
       margin: 0 0 28px
@@ -185,47 +225,85 @@
       font-weight: 300
       line-height: 1.7
 
-      @include media(768)
+      @include media(1280)
+        margin-bottom: 26px
+
+      @include media(1024)
         font-size: 14px
         margin-bottom: 24px
 
+      @include media(768)
+        margin-bottom: 22px
+
+      @include media(540)
+        font-size: 13px
+        line-height: 1.65
+        margin-bottom: 20px
+
     .btn
+      @include media(768)
+        justify-content: center
+
       @include media(540)
         display: flex
         width: 100%
         justify-content: center
 
-// ======================================================
-// 2. INTRO
-// ======================================================
 .listing-intro
   padding: 40px 0 30px
 
+  @include media(1280)
+    padding: 36px 0 28px
+
+  @include media(1024)
+    padding: 34px 0 26px
+
   @include media(768)
     padding: 30px 0 20px
+
+  @include media(540)
+    padding: 26px 0 16px
 
   .intro-wrap
     max-width: 720px
     margin: 0 auto
     text-align: center
 
+    @include media(1024)
+      max-width: 640px
+
+    @include media(540)
+      max-width: 100%
+
     .heading
       margin-bottom: 16px
+
+      @include media(768)
+        margin-bottom: 14px
+
+      @include media(540)
+        margin-bottom: 12px
 
     p
       margin: 0 auto
 
-// ======================================================
-// 3. TOOLBAR + LAYOUT
-// ======================================================
 .listing-main
   padding: 30px 0 80px
+
+  @include media(1280)
+    padding-bottom: 74px
 
   @include media(1024)
     padding-bottom: 65px
 
+  @include media(991)
+    padding-bottom: 60px
+
   @include media(768)
     padding: 20px 0 55px
+
+  @include media(540)
+    padding: 16px 0 50px
 
   .listing-toolbar
     display: flex
@@ -237,6 +315,14 @@
     border-top: 1px solid var(--gray)
     border-bottom: 1px solid var(--gray)
 
+    @include media(1280)
+      margin-bottom: 30px
+
+    @include media(1024)
+      gap: 14px
+      margin-bottom: 28px
+      padding: 12px 0
+
     @include media(991)
       flex-direction: column
       align-items: stretch
@@ -245,16 +331,25 @@
       padding: 14px 0 0
       border-bottom: 0
 
+    @include media(768)
+      margin-bottom: 24px
+
+    @include media(540)
+      gap: 12px
+      margin-bottom: 20px
+      padding: 12px 0 0
+
   .listing-count
     margin: 0
     font-size: 14px
     letter-spacing: 0.04em
 
-    @include media(991)
+    @include media(768)
+      font-size: 13px
       text-align: center
 
     @include media(540)
-      font-size: 13px
+      font-size: 12px
 
     b
       color: var(--black)
@@ -265,10 +360,19 @@
     align-items: center
     gap: 18px
 
+    @include media(1280)
+      gap: 16px
+
+    @include media(1024)
+      gap: 14px
+
     @include media(991)
       display: grid
       grid-template-columns: repeat(2, minmax(0, 1fr))
       gap: 10px
+
+    @include media(540)
+      gap: 8px
 
   .tool-btn
     display: none
@@ -288,8 +392,15 @@
     @include media(991)
       display: inline-flex
 
-    @include media(540)
+    @include media(768)
+      padding: 11px 14px
       font-size: 11px
+
+    @include media(540)
+      width: 100%
+      gap: 6px
+      padding: 11px 10px
+      font-size: 10px
       letter-spacing: 0.1em
 
     &:hover
@@ -322,8 +433,13 @@
 
   .listing-sort
     display: flex
+    border: 1px solid var(--black)
+    padding: 7px 20px
     align-items: center
     gap: 12px
+
+    @include media(1024)
+      gap: 10px
 
     @include media(991)
       gap: 0
@@ -334,6 +450,10 @@
       text-transform: uppercase
       letter-spacing: 0.14em
       white-space: nowrap
+
+      @include media(1024)
+        font-size: 11px
+        letter-spacing: 0.12em
 
       @include media(991)
         position: absolute
@@ -361,10 +481,24 @@
         outline: none
         transition: border-color 0.3s ease
 
+        @include media(1280)
+          min-width: 190px
+
+        @include media(1024)
+          min-width: 170px
+          padding: 10px 36px 10px 14px
+
         @include media(991)
           width: 100%
           min-width: 0
           padding: 11px 36px 11px 14px
+
+        @include media(768)
+          font-size: 12px
+
+        @include media(540)
+          padding: 11px 32px 11px 12px
+          font-size: 11px
 
         &:focus
           border-color: var(--primary)
@@ -377,6 +511,12 @@
         transform: translateY(-50%)
         pointer-events: none
 
+        @include media(1024)
+          right: 12px
+
+        @include media(540)
+          right: 10px
+
   .listing-layout
     display: grid
     grid-template-columns: 280px minmax(0, 1fr)
@@ -386,6 +526,10 @@
     @include media(1280)
       grid-template-columns: 250px minmax(0, 1fr)
       gap: 30px
+
+    @include media(1024)
+      grid-template-columns: 230px minmax(0, 1fr)
+      gap: 26px
 
     @include media(991)
       grid-template-columns: minmax(0, 1fr)
@@ -402,6 +546,12 @@
     @include media(1280)
       grid-template-columns: repeat(3, minmax(0, 1fr))
       gap: 34px 20px
+
+    @include media(1024)
+      gap: 30px 18px
+
+    @include media(991)
+      gap: 28px 16px
 
     @include media(768)
       grid-template-columns: repeat(2, minmax(0, 1fr))
@@ -426,11 +576,26 @@
     padding-top: 26px
     border-top: 1px solid var(--gray)
 
+    @include media(1280)
+      margin-top: 54px
+
+    @include media(1024)
+      margin-top: 50px
+      padding-top: 24px
+
+    @include media(991)
+      gap: 14px
+
     @include media(768)
       margin-top: 44px
       flex-wrap: wrap
       justify-content: center
       gap: 18px
+
+    @include media(540)
+      margin-top: 38px
+      gap: 14px
+      padding-top: 20px
 
     ul
       display: flex
@@ -440,17 +605,32 @@
       padding: 0
       list-style: none
 
+      @include media(1024)
+        gap: 4px
+
       @include media(768)
         order: -1
         width: 100%
         justify-content: center
 
+      @include media(540)
+        gap: 2px
+
       li
         font-size: 13px
+
+        @include media(768)
+          font-size: 12px
+
+        @include media(540)
+          font-size: 11px
 
         &.dots
           padding: 0 6px
           opacity: 0.6
+
+          @include media(540)
+            padding: 0 4px
 
         a
           display: inline-flex
@@ -464,9 +644,18 @@
           border-bottom: 2px solid transparent
           transition: all 0.3s ease
 
-          @include media(540)
-            min-width: 38px
+          @include media(1024)
+            min-width: 40px
             height: 40px
+
+          @include media(768)
+            font-size: 12px
+
+          @include media(540)
+            min-width: 36px
+            height: 40px
+            font-size: 11px
+            letter-spacing: 0.06em
 
           &:hover
             color: var(--black)
@@ -487,6 +676,22 @@
       letter-spacing: 0.14em
       transition: color 0.3s ease
 
+      @include media(1024)
+        gap: 8px
+        letter-spacing: 0.12em
+
+      @include media(768)
+        justify-content: center
+        font-size: 11px
+
+      @include media(540)
+        width: calc(50% - 7px)
+        gap: 6px
+        padding: 11px 8px
+        border: 1px solid var(--black)
+        font-size: 10px
+        letter-spacing: 0.1em
+
       &:hover
         color: var(--primary)
 
@@ -494,9 +699,6 @@
         opacity: 0.35
         pointer-events: none
 
-// ======================================================
-// FILTER SIDEBAR
-// ======================================================
 .filter-overlay
   display: none
 
@@ -511,9 +713,15 @@
   border-radius: 18px
   overflow: hidden
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px
-  overflow: clip // programmatic scroll band: size click par content upar nahi khisakta
+  overflow: clip
 
-  // ---------- head ----------
+  @include media(1280)
+    border-radius: 16px
+
+  @include media(1024)
+    top: calc(var(--headerheight) + 16px)
+    border-radius: 14px
+
   .f-head
     display: flex
     flex-shrink: 0
@@ -524,10 +732,20 @@
     background: var(--bg)
     border-bottom: 1px solid var(--gray)
 
+    @include media(1280)
+      padding: 16px 18px
+
+    @include media(1024)
+      gap: 10px
+      padding: 14px 16px
+
     .f-ttl
       display: flex
       align-items: center
       gap: 12px
+
+      @include media(1024)
+        gap: 10px
 
     .f-icon
       display: inline-flex
@@ -540,12 +758,27 @@
       color: var(--white)
       font-size: 12px
 
+      @include media(1024)
+        width: 28px
+        height: 28px
+
+      @include media(540)
+        font-size: 11px
+
     h4
       margin: 0
       font-size: 13px
       font-weight: 600
       text-transform: uppercase
       letter-spacing: 0.2em
+
+      @include media(1024)
+        font-size: 12px
+        letter-spacing: 0.16em
+
+      @include media(540)
+        font-size: 11px
+        letter-spacing: 0.14em
 
     .f-close
       display: none
@@ -556,6 +789,11 @@
       color: var(--black)
       font-size: 18px
       cursor: pointer
+
+      @include media(540)
+        width: 32px
+        height: 32px
+        font-size: 16px
 
   .f-clear
     padding: 0
@@ -570,10 +808,15 @@
     cursor: pointer
     transition: color 0.3s ease
 
+    @include media(1024)
+      letter-spacing: 0.1em
+
+    @include media(540)
+      font-size: 10px
+
     &:hover
       color: var(--secondary)
 
-  // ---------- scroll area ----------
   .f-scroll
     position: relative
     flex: 1
@@ -583,11 +826,15 @@
     scrollbar-width: none
     -ms-overflow-style: none
 
-    &::-webkit-scrollbar
-        display: none
-    
+    @include media(1280)
+      padding: 0 18px
 
-  // ---------- group ----------
+    @include media(1024)
+      padding: 0 16px
+
+    &::-webkit-scrollbar
+      display: none
+
   .f-group
     border-bottom: 1px solid var(--gray)
 
@@ -607,6 +854,12 @@
       list-style: none
       transition: color 0.3s ease
 
+      @include media(1024)
+        font-size: 13px
+
+      @include media(540)
+        font-size: 12px
+
       &::-webkit-details-marker
         display: none
 
@@ -625,6 +878,13 @@
         line-height: 1
         transition: all 0.3s ease
 
+        @include media(1024)
+          width: 20px
+          height: 20px
+
+        @include media(540)
+          font-size: 13px
+
       &:hover
         color: var(--primary)
 
@@ -637,11 +897,25 @@
   .f-body
     padding: 0 0 22px
 
-  // ---------- pill chips ----------
+    @include media(1280)
+      padding-bottom: 20px
+
+    @include media(1024)
+      padding-bottom: 18px
+
+    @include media(540)
+      padding-bottom: 16px
+
   .f-chips
     display: flex
     flex-wrap: wrap
     gap: 8px
+
+    @include media(1024)
+      gap: 6px
+
+    @include media(540)
+      gap: 8px
 
   .f-chip
     position: relative
@@ -676,6 +950,17 @@
       line-height: 1
       transition: all 0.25s ease
 
+      @include media(1280)
+        padding: 8px 12px
+
+      @include media(1024)
+        padding: 7px 11px
+        font-size: 12px
+
+      @include media(540)
+        padding: 8px 13px
+        font-size: 11px
+
     &:hover span
       border-color: var(--secondary)
       color: var(--primary)
@@ -683,12 +968,18 @@
     input:checked + span:hover
       color: var(--white)
 
-  // ---------- checkbox / radio list ----------
   .f-list
     max-height: 210px
     overflow-y: auto
     padding-right: 8px
     @include filter-scroll
+
+    @include media(1024)
+      max-height: 190px
+      padding-right: 6px
+
+    @include media(540)
+      max-height: 180px
 
   .f-check
     position: relative
@@ -697,6 +988,10 @@
     gap: 12px
     padding: 7px 0
     cursor: pointer
+
+    @include media(1024)
+      gap: 10px
+      padding: 6px 0
 
     input
       position: absolute
@@ -764,14 +1059,28 @@
       color: var(--text)
       transition: color 0.25s ease
 
+      @include media(1024)
+        font-size: 13px
+
+      @include media(540)
+        font-size: 12px
+
     &:hover .f-text
       color: var(--black)
 
-  // ---------- colour swatches ----------
   .f-swatches
     display: flex
     flex-wrap: wrap
     gap: 12px
+
+    @include media(1280)
+      gap: 10px
+
+    @include media(1024)
+      gap: 8px
+
+    @include media(540)
+      gap: 12px
 
   .f-swatch
     position: relative
@@ -802,14 +1111,27 @@
       border: 1px solid rgba(0, 0, 0, 0.12)
       transition: transform 0.25s ease, box-shadow 0.25s ease
 
+      @include media(1024)
+        width: 24px
+        height: 24px
+
+      @include media(540)
+        width: 28px
+        height: 28px
+
     &:hover span
       transform: scale(1.12)
 
-  // ---------- size ----------
   .f-sizes
     display: grid
     grid-template-columns: repeat(3, minmax(0, 1fr))
     gap: 8px
+
+    @include media(1024)
+      gap: 6px
+
+    @include media(540)
+      gap: 8px
 
   .f-size
     position: relative
@@ -845,14 +1167,23 @@
       letter-spacing: 0.08em
       transition: all 0.25s ease
 
+      @include media(1024)
+        height: 34px
+
+      @include media(540)
+        height: 38px
+        font-size: 11px
+
     &:hover span
       border-color: var(--secondary)
 
-  // ---------- price ----------
   .price-range
     position: relative
     height: 22px
     margin: 8px 8px 20px
+
+    @include media(1024)
+      margin: 6px 8px 18px
 
     .range-track
       position: absolute
@@ -913,12 +1244,18 @@
     align-items: center
     gap: 10px
 
+    @include media(1024)
+      gap: 8px
+
     .price-dash
       flex-shrink: 0
       width: 10px
       height: 1px
       background: var(--text)
       opacity: 0.5
+
+      @include media(1024)
+        width: 8px
 
     label
       position: relative
@@ -937,6 +1274,10 @@
         text-transform: uppercase
         letter-spacing: 0.12em
 
+        @include media(1024)
+          left: 8px
+          letter-spacing: 0.1em
+
       b
         position: absolute
         top: 50%
@@ -944,6 +1285,12 @@
         font-size: 13px
         font-weight: 500
         transform: translateY(-50%)
+
+        @include media(1024)
+          left: 10px
+
+        @include media(540)
+          font-size: 12px
 
       input
         width: 100%
@@ -957,6 +1304,13 @@
         transition: border-color 0.3s ease
         appearance: textfield
 
+        @include media(1024)
+          padding: 10px 6px 10px 22px
+
+        @include media(540)
+          padding: 12px 8px 12px 24px
+          font-size: 12px
+
         &::-webkit-outer-spin-button, &::-webkit-inner-spin-button
           appearance: none
           margin: 0
@@ -967,7 +1321,6 @@
   .f-foot
     display: none
 
-// ---------- tablet / mobile : bottom sheet (CSS only) ----------
 @include media(991)
   .filter-overlay
     position: fixed
@@ -993,8 +1346,18 @@
     transition: transform 0.4s ease
     box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15)
 
+    @include media(768)
+      border-radius: 20px 20px 0 0
+
+    @include media(540)
+      max-height: 90vh
+      border-radius: 18px 18px 0 0
+
     .f-head
       padding: 14px 20px
+
+      @include media(540)
+        padding: 12px 16px
 
       .f-clear
         display: none
@@ -1005,6 +1368,9 @@
     .f-scroll
       padding: 0 20px
 
+      @include media(540)
+        padding: 0 16px
+
     .f-foot
       display: grid
       flex-shrink: 0
@@ -1013,6 +1379,10 @@
       padding: 14px 20px calc(14px + env(safe-area-inset-bottom))
       border-top: 1px solid var(--gray)
       background: var(--white)
+
+      @include media(540)
+        gap: 10px
+        padding: 12px 16px calc(12px + env(safe-area-inset-bottom))
 
       .btn
         justify-content: center
@@ -1029,14 +1399,17 @@
   body:has(.filter-toggle:checked)
     overflow: hidden
 
-// ======================================================
-// 4 + 5. RECENTLY VIEWED / YOU MAY ALSO LOVE
-// ======================================================
 .listing-recent, .listing-like
   padding: 70px 0
 
+  @include media(1280)
+    padding: 66px 0
+
   @include media(1024)
     padding: 60px 0
+
+  @include media(991)
+    padding: 58px 0
 
   @include media(768)
     padding: 55px 0
@@ -1049,14 +1422,31 @@
     text-align: center
     margin: 0 auto 36px
 
+    @include media(1280)
+      margin-bottom: 34px
+
+    @include media(1024)
+      max-width: 600px
+      margin-bottom: 32px
+
+    @include media(991)
+      max-width: 560px
+
     @include media(768)
       margin-bottom: 30px
 
     @include media(540)
+      max-width: 100%
       margin-bottom: 24px
 
     .heading
       margin-bottom: 14px
+
+      @include media(768)
+        margin-bottom: 12px
+
+      @include media(540)
+        margin-bottom: 10px
 
     p
       margin: 0 auto
@@ -1064,18 +1454,24 @@
   .fourSlider
     padding: 0 0 10px
 
+    @include media(540)
+      padding-bottom: 8px
+
 .listing-recent
   background: var(--bg)
 
-// ======================================================
-// 6. JOURNAL
-// ======================================================
 .listing-journal
   padding: 70px 0
   background: var(--bg)
 
+  @include media(1280)
+    padding: 66px 0
+
   @include media(1024)
     padding: 60px 0
+
+  @include media(991)
+    padding: 58px 0
 
   @include media(768)
     padding: 55px 0
@@ -1099,16 +1495,26 @@
       grid-template-columns: 1fr
       gap: 36px
 
+    @include media(540)
+      gap: 32px
+
   .journal-visual
     position: relative
     padding: 0 0 22px 22px
+
+    @include media(1024)
+      padding: 0 0 18px 18px
 
     @include media(991)
       max-width: 560px
       width: 100%
       margin: 0 auto
 
+    @include media(768)
+      max-width: 480px
+
     @include media(540)
+      max-width: 100%
       padding: 0 0 14px 14px
 
     &::before
@@ -1120,6 +1526,10 @@
       bottom: 0
       border: 1px solid var(--primary)
       z-index: 0
+
+      @include media(1024)
+        top: 18px
+        right: 18px
 
       @include media(540)
         top: 14px
@@ -1176,13 +1586,31 @@
     .heading
       margin-bottom: 20px
 
+      @include media(1024)
+        margin-bottom: 18px
+
+      @include media(768)
+        margin-bottom: 16px
+
+      @include media(540)
+        margin-bottom: 14px
+
     p
       margin: 0 0 32px
+
+      @include media(1024)
+        margin-bottom: 28px
+
+      @include media(768)
+        margin-bottom: 26px
 
       @include media(540)
         margin-bottom: 24px
 
     .btn
+      @include media(768)
+        justify-content: center
+
       @include media(540)
         display: flex
         width: 100%
@@ -1194,14 +1622,17 @@
       &:hover i
         transform: translateX(5px)
 
-// ======================================================
-// 7. NEWSLETTER
-// ======================================================
 .listing-news
   padding: 70px 0
 
+  @include media(1280)
+    padding: 66px 0
+
   @include media(1024)
     padding: 60px 0
+
+  @include media(991)
+    padding: 58px 0
 
   @include media(768)
     padding: 55px 0
@@ -1234,6 +1665,9 @@
     @include media(991)
       min-height: 0
       aspect-ratio: 16 / 10
+
+    @include media(768)
+      aspect-ratio: 16 / 10.5
 
     @include media(540)
       aspect-ratio: 4 / 3.4
@@ -1281,10 +1715,13 @@
     @include media(1024)
       padding: 36px 34px
 
-    @include media(768)
+    @include media(991)
       align-items: center
-      padding: 36px 30px
+      padding: 40px 36px
       text-align: center
+
+    @include media(768)
+      padding: 36px 30px
 
     @include media(540)
       padding: 32px 22px 36px
@@ -1292,16 +1729,32 @@
     .heading
       margin-bottom: 14px
 
+      @include media(768)
+        margin-bottom: 12px
+
+      @include media(540)
+        margin-bottom: 10px
+
     .news-desc
       max-width: 480px
       margin: 0 0 38px
 
+      @include media(1280)
+        margin-bottom: 34px
+
       @include media(1024)
         margin-bottom: 32px
+
+      @include media(991)
+        margin-left: auto
+        margin-right: auto
 
       @include media(768)
         max-width: 100%
         margin-bottom: 30px
+
+      @include media(540)
+        margin-bottom: 28px
 
   .news-form
     display: flex
@@ -1313,6 +1766,12 @@
 
     @include media(1024)
       gap: 16px
+
+    @include media(991)
+      margin: 0 auto
+
+    @include media(768)
+      justify-content: center
 
     @include media(540)
       flex-direction: column
@@ -1326,7 +1785,11 @@
     .btn
       flex-shrink: 0
 
+      @include media(768)
+        justify-content: center
+
       @include media(540)
+        display: flex
         width: 100%
         justify-content: center
 

@@ -2,29 +2,82 @@
 
 .common-policies-secA
   padding: 0 70px 0
-  margin-top: calc(var(--headerheight) + 66px)
+  margin-top: calc(var(--headerheight) + 70px)
   background: var(--white)
+
+  @include media(1280)
+    padding: 45px 50px 0
+
+  @include media(1024)
+    padding: 40px 30px 0
+
+  @include media(991)
+    padding: 36px 30px 0
+    margin-top: calc(var(--headerheight) + -40px)
+
+  @include media(768)
+    padding: 30px 0 0
+
+  @include media(540)
+    padding: 20px 0 0
 
   .banner
     min-height: 180px
+
+    @include media(768)
+      min-height: 160px
+
+    @include media(540)
+      min-height: 140px
+
     padding: 28px 50px
+
+    @include media(1280)
+      padding: 28px 44px
+
+    @include media(1024)
+      padding: 26px 36px
+
+    @include media(991)
+      padding: 26px 32px
+
+    @include media(768)
+      padding: 24px 28px
+
+    @include media(540)
+      padding: 20px
+
     border-radius: 24px
+
+    @include media(768)
+      border-radius: 18px
+
+    @include media(540)
+      border-radius: 14px
+
     background: var(--primary)
     color: var(--white)
 
+    @include media(768)
+      text-align: center
+
     .breadcrumb
       margin-bottom: 14px
+
+      @include media(540)
+        margin-bottom: 10px
 
       ol
         display: flex
         flex-wrap: wrap
         align-items: center
-        margin: 0
-        padding: 0
-        list-style: none
 
         @include media(768)
           justify-content: center
+
+        margin: 0
+        padding: 0
+        list-style: none
 
       li
         display: inline-flex
@@ -32,12 +85,19 @@
         color: rgba(255, 255, 255, 0.8)
         font-size: 13px
 
+        @include media(768)
+          font-size: 12px
+
+        @include media(540)
+          font-size: 11px
+
         i
           margin: 0 10px
-          font-size: 9px
 
           @include media(540)
             margin: 0 8px
+
+          font-size: 10px
 
         a
           color: var(--white)
@@ -48,23 +108,20 @@
           &:focus-visible
             opacity: 0.7
 
-        @include media(540)
-          font-size: 12px
-
-      @include media(540)
-        margin-bottom: 10px
-
     .heading
       max-width: 640px
 
+      @include media(768)
+        max-width: 100%
+
       h1
         margin: 0 0 6px
+
+        @include media(540)
+          margin-bottom: 4px
+
         color: var(--white)
         font-size: 36px
-        font-weight: 700
-        width: 100%
-        max-width: 100%
-        line-height: 1.15
 
         @include media(1280)
           font-size: 34px
@@ -81,63 +138,61 @@
         @include media(540)
           font-size: 26px
 
+        font-weight: 700
+        width: 100%
+        max-width: 100%
+        line-height: 1.15
+
       p
         margin: 0
         color: var(--white)
         font-size: 15px
-        line-height: 1.6
-        opacity: 0.88
 
         @include media(540)
           font-size: 14px
+
+        line-height: 1.6
+
+        @include media(540)
           line-height: 1.55
 
-    @include media(1280)
-      padding: 28px 44px
-
-    @include media(1024)
-      padding: 26px 36px
-
-    @include media(991)
-      padding: 26px 32px
-
-    @include media(768)
-      min-height: 160px
-      padding: 24px 28px
-      border-radius: 18px
-
-    @include media(540)
-      min-height: 140px
-      padding: 20px
-      border-radius: 14px
-
-  @include media(1280)
-    padding: 45px 50px 0
-
-  @include media(1024)
-    padding: 40px 30px 0
-
-  @include media(991)
-    padding: 36px 30px 0
-
-  @include media(768)
-    padding: 30px 0 0
-
-  @include media(540)
-    padding: 20px 0 0
+        opacity: 0.88
 
 .common-policies-secB
   padding: 50px 70px 65px
 
+  @include media(1280)
+    padding: 50px 50px 65px
+
+  @include media(1024)
+    padding: 40px 30px 55px
+
+  @include media(991)
+    padding: 40px 30px 52px
+
+  @include media(768)
+    padding: 35px 0 50px
+
+  @include media(540)
+    padding: 30px 0 44px
+
   .website-content
     max-width: 900px
 
+    @include media(991)
+      max-width: 100%
+
     h2
       font-size: 28px
-      font-weight: 500
+
+      @include media(1280)
+        font-size: 27px
 
       @include media(1024)
         font-size: 26px
+
+      @include media(991)
+        font-size: 25px
 
       @include media(768)
         font-size: 24px
@@ -145,11 +200,12 @@
       @include media(540)
         font-size: 22px
 
-    h3
-      font-size: 24px
       font-weight: 500
 
-      @include media(1024)
+    h3
+      font-size: 24px
+
+      @include media(1280)
         font-size: 23px
 
       @include media(768)
@@ -158,30 +214,45 @@
       @include media(540)
         font-size: 21px
 
-    h4
-      font-size: 20px
       font-weight: 500
 
-      @include media(768)
+    h4
+      font-size: 20px
+
+      @include media(1024)
         font-size: 19px
 
-      @include media(540)
+      @include media(768)
         font-size: 18px
+
+      @include media(540)
+        font-size: 17px
+
+      font-weight: 500
 
     h5
       font-size: 17px
 
-      @include media(540)
+      @include media(768)
         font-size: 16px
+
+      @include media(540)
+        font-size: 15px
 
     h6
       font-size: 15px
 
-      @include media(540)
+      @include media(768)
         font-size: 14px
+
+      @include media(540)
+        font-size: 13px
 
     h2, h3, h4
       margin: 40px 0 15px
+
+      @include media(1024)
+        margin: 36px 0 14px
 
       @include media(768)
         margin: 32px 0 12px
@@ -210,6 +281,7 @@
 
     a
       color: #000000
+      word-break: break-word
 
       &:hover
         text-decoration: underline
@@ -222,28 +294,27 @@
 
     ul
       margin-bottom: 20px
+
+      @include media(540)
+        margin-bottom: 16px
+
       padding-left: 35px
+
+      @include media(1024)
+        padding-left: 28px
+
+      @include media(768)
+        padding-left: 20px
+
+      @include media(540)
+        padding-left: 10px
 
       li
         position: relative
         padding-left: 35px
-        font-family: $Poppins
 
-        &:not(:last-child)
-          margin-bottom: 6px
-
-        &::before
-          content: ""
-          position: absolute
-          top: 8px
-          left: 0
-          width: 10px
-          aspect-ratio: 1
-          border-radius: 50%
-          background: var(--primary)
-
-          @include media(540)
-            width: 8px
+        @include media(1024)
+          padding-left: 32px
 
         @include media(768)
           padding-left: 30px
@@ -251,16 +322,44 @@
         @include media(540)
           padding-left: 25px
 
-      @include media(768)
-        padding-left: 20px
+        font-family: $Poppins
 
-      @include media(540)
-        margin-bottom: 16px
-        padding-left: 10px
+        &:not(:last-child)
+          margin-bottom: 6px
+
+          @include media(540)
+            margin-bottom: 5px
+
+        &::before
+          content: ""
+          position: absolute
+          top: 8px
+          left: 0
+          width: 10px
+
+          @include media(540)
+            width: 8px
+
+          aspect-ratio: 1
+          border-radius: 50%
+          background: var(--primary)
 
     ol
       margin-bottom: 20px
+
+      @include media(540)
+        margin-bottom: 16px
+
       padding-left: 35px
+
+      @include media(1024)
+        padding-left: 32px
+
+      @include media(768)
+        padding-left: 28px
+
+      @include media(540)
+        padding-left: 22px
 
       li
         font-family: $Poppins
@@ -269,27 +368,8 @@
         &:not(:last-child)
           margin-bottom: 6px
 
-      @include media(768)
-        padding-left: 28px
-
-      @include media(540)
-        margin-bottom: 16px
-        padding-left: 22px
-
-  @include media(1280)
-    padding: 50px 50px 65px
-
-  @include media(1024)
-    padding: 40px 30px 55px
-
-  @include media(991)
-    padding: 40px 30px 52px
-
-  @include media(768)
-    padding: 35px 0 50px
-
-  @include media(540)
-    padding: 30px 0 44px
+          @include media(540)
+            margin-bottom: 5px
 
     
 $success: #2e7d32

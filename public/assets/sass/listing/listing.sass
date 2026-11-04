@@ -15,12 +15,20 @@
 
   @include media(1024)
     min-height: 400px
+    margin-bottom: 26px
+
+  @include media(991)
+    min-height: 420px
 
   @include media(768)
     min-height: 480px
+    margin-bottom: 24px
+    margin-top: calc( var(--headerheight) + 1px  )
 
   @include media(540)
     min-height: 460px
+    margin-bottom: 20px
+    margin-top: calc( var(--headerheight) + 1px  )
 
   .banner-img
     position: absolute
@@ -68,12 +76,18 @@
     padding: 22px 0 0
     list-style: none
 
+    @include media(1024)
+      gap: 9px
+
     @include media(768)
+      justify-content: center
       padding-top: 18px
 
     @include media(540)
+      justify-content: flex-start
       flex-wrap: nowrap
       gap: 8px
+      padding-top: 14px
       overflow-x: auto
       white-space: nowrap
       scrollbar-width: none
@@ -89,8 +103,14 @@
       text-transform: uppercase
       letter-spacing: 0.14em
 
-      @include media(540)
+      @include media(1024)
+        letter-spacing: 0.12em
+
+      @include media(768)
         font-size: 11px
+
+      @include media(540)
+        font-size: 10px
         letter-spacing: 0.1em
 
       a
@@ -114,8 +134,15 @@
     margin: auto 0
     padding: 30px 0 50px
 
+    @include media(1280)
+      padding: 28px 0 46px
+
     @include media(1024)
       max-width: 480px
+      padding: 26px 0 42px
+
+    @include media(991)
+      max-width: 460px
 
     @include media(768)
       max-width: 560px
@@ -125,7 +152,7 @@
 
     @include media(540)
       max-width: 100%
-      padding-bottom: 38px
+      padding: 26px 0 34px
 
     .eyebrow
       display: block
@@ -136,18 +163,25 @@
       text-transform: uppercase
       letter-spacing: 0.25em
 
+      @include media(1024)
+        margin-bottom: 14px
+
       @include media(768)
         margin-bottom: 12px
 
       @include media(540)
+        margin-bottom: 10px
         font-size: 11px
         letter-spacing: 0.2em
 
     .banner-title
       margin: 0 0 18px
 
+      @include media(1024)
+        margin-bottom: 16px
+
       @include media(540)
-        margin-bottom: 14px
+        margin-bottom: 12px
 
     .banner-desc
       margin: 0 0 28px
@@ -156,14 +190,25 @@
       font-weight: 300
       line-height: 1.7
 
-      @include media(768)
+      @include media(1280)
+        margin-bottom: 26px
+
+      @include media(1024)
         font-size: 14px
         margin-bottom: 24px
 
-      @include media(540)
+      @include media(768)
         margin-bottom: 22px
 
+      @include media(540)
+        font-size: 13px
+        line-height: 1.65
+        margin-bottom: 20px
+
     .btn
+      @include media(768)
+        justify-content: center
+
       @include media(540)
         display: flex
         width: 100%
@@ -172,8 +217,14 @@
 .product-secB
   padding: 0 0 70px
 
+  @include media(1280)
+    padding-bottom: 66px
+
   @include media(1024)
     padding-bottom: 60px
+
+  @include media(991)
+    padding-bottom: 58px
 
   @include media(768)
     padding-bottom: 55px
@@ -181,7 +232,6 @@
   @include media(540)
     padding-bottom: 50px
 
-  // ---------- sticky strip ----------
   .tab-nav
     position: sticky
     top: calc(var(--headerheight)  - 28px)
@@ -202,14 +252,26 @@
     overflow-x: auto
     scrollbar-width: none
 
+    @include media(1280)
+      gap: 36px
+
     @include media(1024)
       gap: 32px
 
+    @include media(991)
+      width: 100%
+      max-width: 100%
+      gap: 30px
+
     @include media(768)
       gap: 28px
+      padding: 0 20px
+      border-radius: 8px
 
     @include media(540)
-      gap: 22px
+      gap: 14px
+      padding: 0 16px
+      border-radius: 6px
 
     &::-webkit-scrollbar
       display: none
@@ -226,6 +288,14 @@
       white-space: nowrap
       cursor: pointer
       transition: color 0.3s ease
+
+      @include media(1280)
+        padding: 19px 0
+
+      @include media(1024)
+        font-size: 12px
+        padding: 18px 0
+        letter-spacing: 0.12em
 
       @include media(768)
         font-size: 12px
@@ -260,11 +330,16 @@
 
         &::after
           width: 100%
-
   .tab-nav-content
     .tabs
       display: none
       padding-top: 40px
+
+      @include media(1280)
+        padding-top: 36px
+
+      @include media(1024)
+        padding-top: 34px
 
       @include media(768)
         padding-top: 30px
@@ -282,11 +357,26 @@
     gap: 16px
     margin-bottom: 22px
 
+    @include media(1024)
+      margin-bottom: 20px
+
+    @include media(768)
+      flex-direction: column
+      align-items: center
+      justify-content: center
+      gap: 8px
+      margin-bottom: 18px
+      text-align: center
+
     @include media(540)
+      gap: 6px
       margin-bottom: 16px
 
     h3
       margin: 0
+
+      @include media(768)
+        text-align: center
 
     .prod-styles
       flex-shrink: 0
@@ -296,8 +386,14 @@
       letter-spacing: 0.16em
       opacity: 0.7
 
-      @include media(540)
+      @include media(1024)
+        letter-spacing: 0.14em
+
+      @include media(768)
         font-size: 11px
+
+      @include media(540)
+        font-size: 10px
         letter-spacing: 0.1em
 
   .prod-toolbar
@@ -310,6 +406,14 @@
     border-top: 1px solid var(--gray)
     border-bottom: 1px solid var(--gray)
 
+    @include media(1280)
+      margin-bottom: 28px
+
+    @include media(1024)
+      gap: 14px
+      margin-bottom: 26px
+      padding: 12px 0
+
     @include media(768)
       flex-direction: column
       align-items: stretch
@@ -319,18 +423,23 @@
       border-bottom: 0
 
     @include media(540)
+      gap: 12px
       margin-bottom: 22px
+      padding: 12px 0 0
 
   .prod-count
     margin: 0
     font-size: 14px
     letter-spacing: 0.04em
 
+    @include media(1024)
+      font-size: 13px
+
     @include media(768)
       text-align: center
 
     @include media(540)
-      font-size: 13px
+      font-size: 12px
 
     b
       color: var(--black)
@@ -341,10 +450,16 @@
     align-items: center
     gap: 16px
 
+    @include media(1024)
+      gap: 12px
+
     @include media(768)
       display: grid
       grid-template-columns: repeat(2, minmax(0, 1fr))
       gap: 10px
+
+    @include media(540)
+      gap: 8px
 
   .tool-btn
     display: inline-flex
@@ -362,13 +477,33 @@
     cursor: pointer
     transition: all 0.3s ease
 
-    @include media(540)
-      padding: 11px 12px
+    @include media(1280)
+      padding: 10px 20px
+
+    @include media(1024)
+      gap: 8px
+      padding: 10px 18px
+      letter-spacing: 0.12em
+
+    @include media(991)
+      padding: 10px 16px
+
+    @include media(768)
+      width: 100%
+      padding: 11px 14px
       font-size: 11px
+
+    @include media(540)
+      gap: 6px
+      padding: 11px 10px
+      font-size: 10px
       letter-spacing: 0.1em
 
     i
       font-size: 12px
+
+      @include media(540)
+        font-size: 11px
 
     &:hover
       background: var(--black)
@@ -385,6 +520,9 @@
     align-items: center
     gap: 12px
 
+    @include media(1024)
+      gap: 10px
+
     @include media(768)
       display: none
 
@@ -394,6 +532,10 @@
       text-transform: uppercase
       letter-spacing: 0.14em
       white-space: nowrap
+
+      @include media(1024)
+        font-size: 11px
+        letter-spacing: 0.12em
 
     .sort-box
       position: relative
@@ -411,6 +553,17 @@
         outline: none
         transition: border-color 0.3s ease
 
+        @include media(1280)
+          min-width: 190px
+
+        @include media(1024)
+          min-width: 170px
+          padding: 10px 36px 10px 14px
+          font-size: 12px
+
+        @include media(991)
+          min-width: 160px
+
         &:focus
           border-color: var(--primary)
 
@@ -422,6 +575,9 @@
         transform: translateY(-50%)
         pointer-events: none
 
+        @include media(1024)
+          right: 12px
+
   .prod-grid
     display: grid
     grid-template-columns: repeat(4, minmax(0, 1fr))
@@ -430,9 +586,15 @@
     @include media(1280)
       gap: 32px 20px
 
+    @include media(1024)
+      gap: 30px 18px
+
     @include media(991)
       grid-template-columns: repeat(3, minmax(0, 1fr))
       gap: 28px 16px
+
+    @include media(768)
+      gap: 26px 14px
 
     @include media(540)
       grid-template-columns: repeat(2, minmax(0, 1fr))
@@ -445,6 +607,12 @@
     margin-top: 54px
     text-align: center
 
+    @include media(1280)
+      margin-top: 50px
+
+    @include media(1024)
+      margin-top: 48px
+
     @include media(768)
       margin-top: 44px
 
@@ -452,6 +620,9 @@
       margin-top: 38px
 
     .btn
+      @include media(768)
+        justify-content: center
+
       @include media(540)
         display: flex
         width: 100%
@@ -463,15 +634,25 @@
       letter-spacing: 0.08em
       opacity: 0.7
 
+      @include media(768)
+        margin-top: 14px
+
       @include media(540)
+        margin-top: 12px
         font-size: 11px
 
 .product-secC
   padding: 70px 0
   background: var(--bg)
 
+  @include media(1280)
+    padding: 66px 0
+
   @include media(1024)
     padding: 60px 0
+
+  @include media(991)
+    padding: 58px 0
 
   @include media(768)
     padding: 55px 0
@@ -495,6 +676,9 @@
       grid-template-columns: 1fr
       gap: 40px
 
+    @include media(768)
+      gap: 36px
+
     @include media(540)
       gap: 34px
 
@@ -502,12 +686,19 @@
     position: relative
     padding: 0 22px 22px 0
 
+    @include media(1024)
+      padding: 0 18px 18px 0
+
     @include media(991)
       width: 100%
       max-width: 480px
       margin: 0 auto
 
+    @include media(768)
+      max-width: 440px
+
     @include media(540)
+      max-width: 100%
       padding: 0 14px 14px 0
 
     &::before
@@ -520,6 +711,10 @@
       border: 1px solid var(--primary)
       border-radius: 999px 999px 0 0
       z-index: 0
+
+      @include media(1024)
+        top: 18px
+        left: 18px
 
       @include media(540)
         top: 14px
@@ -574,17 +769,29 @@
     .heading
       margin-bottom: 22px
 
+      @include media(1024)
+        margin-bottom: 20px
+
+      @include media(768)
+        margin-bottom: 18px
+
       @include media(540)
         margin-bottom: 16px
 
     p
       margin: 0 0 18px
 
+      @include media(1024)
+        margin-bottom: 16px
+
       @include media(540)
         margin-bottom: 14px
 
       &:last-of-type
         margin-bottom: 34px
+
+        @include media(1024)
+          margin-bottom: 30px
 
         @include media(768)
           margin-bottom: 28px
@@ -593,6 +800,9 @@
           margin-bottom: 24px
 
     .btn
+      @include media(768)
+        justify-content: center
+
       @include media(540)
         display: flex
         width: 100%
@@ -607,8 +817,14 @@
 .product-secD, .product-secE
   padding: 70px 0
 
+  @include media(1280)
+    padding: 66px 0
+
   @include media(1024)
     padding: 60px 0
+
+  @include media(991)
+    padding: 58px 0
 
   @include media(768)
     padding: 55px 0
@@ -621,15 +837,31 @@
     text-align: center
     margin: 0 auto 36px
 
+    @include media(1280)
+      margin-bottom: 34px
+
+    @include media(1024)
+      max-width: 600px
+      margin-bottom: 32px
+
+    @include media(991)
+      max-width: 560px
+
     @include media(768)
       margin-bottom: 30px
 
     @include media(540)
+      max-width: 100%
       margin-bottom: 24px
 
     .heading
       margin-bottom: 14px
-    
+
+      @include media(768)
+        margin-bottom: 12px
+
+      @include media(540)
+        margin-bottom: 10px
 
     p
       margin: 0 auto
@@ -637,14 +869,23 @@
   .fourSlider
     padding: 0 0 10px
 
+    @include media(540)
+      padding-bottom: 8px
+
 .product-secE
   background: var(--bg)
 
 .product-secF
   padding: 70px 0
 
+  @include media(1280)
+    padding: 66px 0
+
   @include media(1024)
     padding: 60px 0
+
+  @include media(991)
+    padding: 58px 0
 
   @include media(768)
     padding: 55px 0
@@ -728,7 +969,9 @@
       padding: 36px 34px
 
     @include media(991)
+      align-items: center
       padding: 40px 36px
+      text-align: center
 
     @include media(768)
       align-items: center
@@ -741,12 +984,25 @@
     .heading
       margin-bottom: 14px
 
+      @include media(768)
+        margin-bottom: 12px
+
+      @include media(540)
+        margin-bottom: 10px
+
     .news-desc
       max-width: 480px
       margin: 0 0 38px
 
+      @include media(1280)
+        margin-bottom: 34px
+
       @include media(1024)
         margin-bottom: 32px
+
+      @include media(991)
+        margin-left: auto
+        margin-right: auto
 
       @include media(768)
         max-width: 100%
@@ -766,6 +1022,12 @@
     @include media(1024)
       gap: 16px
 
+    @include media(991)
+      margin: 0 auto
+
+    @include media(768)
+      justify-content: center
+
     @include media(540)
       flex-direction: column
       align-items: stretch
@@ -778,7 +1040,11 @@
     .btn
       flex-shrink: 0
 
+      @include media(768)
+        justify-content: center
+
       @include media(540)
+        display: flex
         width: 100%
         justify-content: center
 

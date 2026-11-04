@@ -15,10 +15,22 @@
   margin-top: calc(var(--headerheight) + 50px);
   padding-bottom: 70px;
 }
+@media only screen and (max-width: 1280px) {
+  .payment-secA {
+    margin-top: calc(var(--headerheight) + 46px);
+    padding-bottom: 66px;
+  }
+}
 @media only screen and (max-width: 1024px) {
   .payment-secA {
     margin-top: calc(var(--headerheight) + 40px);
     padding-bottom: 60px;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .payment-secA {
+    margin-top: calc(var(--headerheight) + 36px);
+    padding-bottom: 56px;
   }
 }
 @media only screen and (max-width: 768px) {
@@ -42,10 +54,22 @@
   padding-bottom: 26px;
   border-bottom: 1px solid var(--gray);
 }
+@media only screen and (max-width: 1280px) {
+  .payment-secA .pay-top {
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+  }
+}
 @media only screen and (max-width: 1024px) {
   .payment-secA .pay-top {
     margin-bottom: 26px;
     padding-bottom: 22px;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .payment-secA .pay-top {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
   }
 }
 @media only screen and (max-width: 768px) {
@@ -58,7 +82,9 @@
 }
 @media only screen and (max-width: 540px) {
   .payment-secA .pay-top {
+    gap: 10px;
     margin-bottom: 18px;
+    padding-bottom: 16px;
   }
 }
 .payment-secA .pay-steps {
@@ -68,6 +94,11 @@
   margin: 0;
   padding: 0;
   list-style: none;
+}
+@media only screen and (max-width: 1024px) {
+  .payment-secA .pay-steps {
+    gap: 12px;
+  }
 }
 @media only screen and (max-width: 768px) {
   .payment-secA .pay-steps {
@@ -89,6 +120,20 @@
   text-transform: uppercase;
   letter-spacing: 0.18em;
 }
+.payment-secA .pay-steps .step span {
+  font-size: inherit;
+}
+.payment-secA .pay-steps .step a {
+  font-size: inherit;
+}
+.payment-secA .pay-steps .step a > span {
+  font-size: inherit;
+}
+@media only screen and (max-width: 1024px) {
+  .payment-secA .pay-steps .step {
+    letter-spacing: 0.15em;
+  }
+}
 @media only screen and (max-width: 768px) {
   .payment-secA .pay-steps .step {
     font-size: 11px;
@@ -109,9 +154,19 @@
   height: 1px;
   background: var(--gray);
 }
+@media only screen and (max-width: 1280px) {
+  .payment-secA .pay-steps .step + .step::before {
+    width: 48px;
+  }
+}
 @media only screen and (max-width: 1024px) {
   .payment-secA .pay-steps .step + .step::before {
     width: 40px;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .payment-secA .pay-steps .step + .step::before {
+    width: 34px;
   }
 }
 @media only screen and (max-width: 768px) {
@@ -149,6 +204,13 @@
   background: var(--white);
   color: var(--text);
   font-size: 13px;
+}
+@media only screen and (max-width: 768px) {
+  .payment-secA .pay-steps .step .step-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 12px;
+  }
 }
 @media only screen and (max-width: 540px) {
   .payment-secA .pay-steps .step .step-icon {
@@ -194,6 +256,7 @@
 }
 @media only screen and (max-width: 540px) {
   .payment-secA .secure-tag {
+    gap: 6px;
     font-size: 11px;
   }
 }
@@ -201,12 +264,28 @@
   color: #2e7d32;
   font-size: 16px;
 }
+@media only screen and (max-width: 768px) {
+  .payment-secA .secure-tag i {
+    font-size: 15px;
+  }
+}
+@media only screen and (max-width: 540px) {
+  .payment-secA .secure-tag i {
+    font-size: 14px;
+  }
+}
 .payment-secA .pay-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 24px;
+}
+@media only screen and (max-width: 768px) {
+  .payment-secA .pay-head {
+    gap: 12px;
+    margin-bottom: 20px;
+  }
 }
 @media only screen and (max-width: 540px) {
   .payment-secA .pay-head {
@@ -217,9 +296,19 @@
   margin: 0;
   font-size: 36px;
 }
+@media only screen and (max-width: 1280px) {
+  .payment-secA .pay-head h1 {
+    font-size: 34px;
+  }
+}
 @media only screen and (max-width: 1024px) {
   .payment-secA .pay-head h1 {
     font-size: 32px;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .payment-secA .pay-head h1 {
+    font-size: 30px;
   }
 }
 @media only screen and (max-width: 768px) {
@@ -246,6 +335,11 @@
   letter-spacing: 0.16em;
   transition: all 0.3s ease;
 }
+@media only screen and (max-width: 768px) {
+  .payment-secA .pay-head .back-link {
+    letter-spacing: 0.12em;
+  }
+}
 @media only screen and (max-width: 540px) {
   .payment-secA .pay-head .back-link {
     gap: 6px;
@@ -256,6 +350,11 @@
 .payment-secA .pay-head .back-link i {
   font-size: 12px;
   transition: transform 0.3s ease;
+}
+@media only screen and (max-width: 540px) {
+  .payment-secA .pay-head .back-link i {
+    font-size: 11px;
+  }
 }
 .payment-secA .pay-head .back-link:hover {
   border-color: var(--primary);
@@ -274,20 +373,32 @@
   border-left: 4px solid #c62828;
   background: rgba(198, 40, 40, 0.06);
 }
-.payment-secA .pay-alert[hidden] {
-  display: none;
+@media only screen and (max-width: 768px) {
+  .payment-secA .pay-alert {
+    gap: 12px;
+    padding: 14px 16px;
+  }
 }
 @media only screen and (max-width: 540px) {
   .payment-secA .pay-alert {
     flex-wrap: wrap;
     gap: 8px 12px;
+    margin-bottom: 18px;
     padding: 12px 14px;
   }
+}
+.payment-secA .pay-alert[hidden] {
+  display: none;
 }
 .payment-secA .pay-alert > i {
   flex-shrink: 0;
   color: #c62828;
   font-size: 18px;
+}
+@media only screen and (max-width: 540px) {
+  .payment-secA .pay-alert > i {
+    font-size: 16px;
+  }
 }
 .payment-secA .pay-alert p {
   flex: 1;
@@ -316,6 +427,12 @@
   text-transform: uppercase;
   letter-spacing: 0.14em;
 }
+@media only screen and (max-width: 540px) {
+  .payment-secA .pay-alert .alert-link {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+}
 .payment-secA .pay-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 400px;
@@ -340,6 +457,16 @@
     gap: 26px;
   }
 }
+@media only screen and (max-width: 768px) {
+  .payment-secA .pay-layout {
+    gap: 24px;
+  }
+}
+@media only screen and (max-width: 540px) {
+  .payment-secA .pay-layout {
+    gap: 22px;
+  }
+}
 .payment-secA .pay-card {
   min-width: 0;
   border: 1px solid var(--gray);
@@ -348,9 +475,19 @@
 .payment-secA .pay-sec {
   padding: 24px 28px;
 }
+@media only screen and (max-width: 1280px) {
+  .payment-secA .pay-sec {
+    padding: 24px;
+  }
+}
 @media only screen and (max-width: 1024px) {
   .payment-secA .pay-sec {
     padding: 22px 20px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .payment-secA .pay-sec {
+    padding: 20px 18px;
   }
 }
 @media only screen and (max-width: 540px) {
@@ -369,6 +506,11 @@
   text-transform: uppercase;
   letter-spacing: 0.18em;
 }
+@media only screen and (max-width: 1024px) {
+  .payment-secA .sec-label {
+    letter-spacing: 0.15em;
+  }
+}
 @media only screen and (max-width: 540px) {
   .payment-secA .sec-label {
     margin-bottom: 14px;
@@ -381,6 +523,11 @@
   align-items: center;
   gap: 14px;
   background: var(--bg);
+}
+@media only screen and (max-width: 768px) {
+  .payment-secA .ship-to {
+    gap: 12px;
+  }
 }
 @media only screen and (max-width: 540px) {
   .payment-secA .ship-to {
@@ -398,6 +545,12 @@
   background: var(--white);
   color: var(--primary);
   font-size: 14px;
+}
+@media only screen and (max-width: 768px) {
+  .payment-secA .ship-to .ship-icon {
+    width: 36px;
+    height: 36px;
+  }
 }
 @media only screen and (max-width: 540px) {
   .payment-secA .ship-to .ship-icon {
@@ -453,6 +606,7 @@
 @media only screen and (max-width: 540px) {
   .payment-secA .ship-to .ship-change {
     font-size: 10px;
+    letter-spacing: 0.1em;
   }
 }
 .payment-secA .ship-to .ship-change:hover {
@@ -472,6 +626,11 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
 }
+@media only screen and (max-width: 768px) {
+  .payment-secA .pm .pm-tabs {
+    gap: 12px;
+  }
+}
 @media only screen and (max-width: 540px) {
   .payment-secA .pm .pm-tabs {
     gap: 10px;
@@ -490,8 +649,13 @@
 }
 @media only screen and (max-width: 1024px) {
   .payment-secA .pm .pm-tab {
-    padding: 16px 12px;
     gap: 10px;
+    padding: 16px 12px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .payment-secA .pm .pm-tab {
+    padding: 16px 14px;
   }
 }
 @media only screen and (max-width: 540px) {
@@ -588,7 +752,7 @@
   padding: 3px 9px;
   background: var(--primary);
   color: var(--white);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -596,7 +760,8 @@
 @media only screen and (max-width: 540px) {
   .payment-secA .pm .pm-badge {
     left: 10px;
-    font-size: 8px;
+    padding: 3px 8px;
+    letter-spacing: 0.08em;
   }
 }
 .payment-secA .pm #pmOnline:checked ~ .pm-tabs label[for=pmOnline],
@@ -625,6 +790,9 @@
   font-size: 12px;
   line-height: 1.6;
 }
+.payment-secA .pm .pm-info span {
+  font-size: inherit;
+}
 @media only screen and (max-width: 540px) {
   .payment-secA .pm .pm-info {
     margin-top: 14px;
@@ -635,6 +803,11 @@
   margin-top: 3px;
   color: var(--primary);
   font-size: 12px;
+}
+@media only screen and (max-width: 540px) {
+  .payment-secA .pm .pm-info i {
+    font-size: 11px;
+  }
 }
 .payment-secA .pm #pmOnline:checked ~ .pm-online {
   display: flex;
@@ -677,6 +850,12 @@
   padding-top: 22px;
   border-top: 1px solid var(--gray);
 }
+@media only screen and (max-width: 768px) {
+  .payment-secA .bill-form {
+    margin-top: 20px;
+    padding-top: 20px;
+  }
+}
 @media only screen and (max-width: 540px) {
   .payment-secA .bill-form {
     margin-top: 18px;
@@ -691,6 +870,11 @@
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 28px 18px;
   padding-top: 6px;
+}
+@media only screen and (max-width: 1024px) {
+  .payment-secA .fields {
+    gap: 26px 16px;
+  }
 }
 @media only screen and (max-width: 540px) {
   .payment-secA .fields {
@@ -741,6 +925,11 @@
   border: 1px solid var(--gray);
   border-top: 3px solid var(--primary);
 }
+@media only screen and (max-width: 1280px) {
+  .payment-secA .pay-summary {
+    padding: 18px;
+  }
+}
 @media only screen and (max-width: 1024px) {
   .payment-secA .pay-summary {
     padding: 16px;
@@ -752,6 +941,11 @@
     padding: 18px;
   }
 }
+@media only screen and (max-width: 768px) {
+  .payment-secA .pay-summary {
+    padding: 16px;
+  }
+}
 @media only screen and (max-width: 540px) {
   .payment-secA .pay-summary {
     padding: 14px;
@@ -761,7 +955,22 @@
   padding: 22px;
   border: 1px solid var(--gray);
 }
+@media only screen and (max-width: 1280px) {
+  .payment-secA .box {
+    padding: 20px;
+  }
+}
 @media only screen and (max-width: 1024px) {
+  .payment-secA .box {
+    padding: 20px 18px;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .payment-secA .box {
+    padding: 22px;
+  }
+}
+@media only screen and (max-width: 768px) {
   .payment-secA .box {
     padding: 20px 18px;
   }
@@ -778,6 +987,11 @@
   margin-bottom: 16px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--gray);
+}
+@media only screen and (max-width: 1024px) {
+  .payment-secA .mini-row {
+    gap: 12px;
+  }
 }
 @media only screen and (max-width: 540px) {
   .payment-secA .mini-row {
@@ -804,6 +1018,11 @@
 .payment-secA .mini-row .mini-imgs li + li {
   margin-left: -14px;
 }
+@media only screen and (max-width: 540px) {
+  .payment-secA .mini-row .mini-imgs li + li {
+    margin-left: -12px;
+  }
+}
 .payment-secA .mini-row .mini-imgs img {
   display: block;
   width: 100%;
@@ -828,6 +1047,11 @@
   text-transform: uppercase;
   letter-spacing: 0.14em;
 }
+@media only screen and (max-width: 1024px) {
+  .payment-secA .mini-row .mini-text strong {
+    letter-spacing: 0.1em;
+  }
+}
 @media only screen and (max-width: 540px) {
   .payment-secA .mini-row .mini-text strong {
     font-size: 12px;
@@ -837,6 +1061,11 @@
 .payment-secA .mini-row .mini-text small {
   color: var(--text);
   font-size: 12px;
+}
+@media only screen and (max-width: 540px) {
+  .payment-secA .mini-row .mini-text small {
+    font-size: 11px;
+  }
 }
 .payment-secA .mini-row .mini-edit {
   flex-shrink: 0;
@@ -863,6 +1092,11 @@
   color: var(--text);
   font-size: 14px;
 }
+@media only screen and (max-width: 1024px) {
+  .payment-secA .rows .row {
+    gap: 12px;
+  }
+}
 @media only screen and (max-width: 540px) {
   .payment-secA .rows .row {
     gap: 12px;
@@ -883,6 +1117,11 @@
   font-size: 12px;
   opacity: 0.7;
 }
+@media only screen and (max-width: 540px) {
+  .payment-secA .rows .row dd del {
+    font-size: 11px;
+  }
+}
 .payment-secA .rows .row dd.is-green {
   color: #2e7d32;
   font-weight: 500;
@@ -900,6 +1139,11 @@
   text-transform: uppercase;
   letter-spacing: 0.12em;
 }
+@media only screen and (max-width: 1024px) {
+  .payment-secA .rows .row-total {
+    letter-spacing: 0.1em;
+  }
+}
 @media only screen and (max-width: 540px) {
   .payment-secA .rows .row-total {
     padding-top: 14px;
@@ -910,6 +1154,11 @@
   font-size: 22px;
   font-weight: 600;
   letter-spacing: 0;
+}
+@media only screen and (max-width: 768px) {
+  .payment-secA .rows .row-total dd {
+    font-size: 21px;
+  }
 }
 @media only screen and (max-width: 540px) {
   .payment-secA .rows .row-total dd {
@@ -931,6 +1180,7 @@
 @media only screen and (max-width: 540px) {
   .payment-secA .save-chip {
     gap: 8px;
+    margin-bottom: 14px;
     font-size: 11px;
   }
 }
@@ -1009,6 +1259,18 @@
   padding: 4px 2px 0;
   list-style: none;
 }
+@media only screen and (max-width: 1024px) {
+  .payment-secA .trust-list {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .payment-secA .trust-list {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+}
 @media only screen and (max-width: 540px) {
   .payment-secA .trust-list {
     flex-wrap: wrap;
@@ -1035,6 +1297,11 @@
   color: var(--primary);
   font-size: 13px;
 }
+@media only screen and (max-width: 540px) {
+  .payment-secA .trust-list li i {
+    font-size: 12px;
+  }
+}
 .payment-secA .pay-bar {
   display: none;
 }
@@ -1051,6 +1318,16 @@
     background: var(--white);
     border: 1px solid var(--gray);
     box-shadow: rgba(60, 30, 45, 0.16) 0 12px 36px;
+    transition: bottom 0.3s ease;
+  }
+  .payment-secA .pay-bar.is-lifted {
+    bottom: calc(75px + env(safe-area-inset-bottom, 0px));
+  }
+}
+@media only screen and (max-width: 768px) {
+  .payment-secA .pay-bar {
+    gap: 14px;
+    padding: 10px 10px 10px 16px;
   }
 }
 @media only screen and (max-width: 540px) {
@@ -1074,11 +1351,21 @@
   text-transform: uppercase;
   letter-spacing: 0.16em;
 }
+@media only screen and (max-width: 540px) {
+  .payment-secA .pay-bar .bar-total span {
+    letter-spacing: 0.12em;
+  }
+}
 .payment-secA .pay-bar .bar-total strong {
   color: var(--black);
   font-size: 20px;
   font-weight: 600;
   line-height: 1.1;
+}
+@media only screen and (max-width: 768px) {
+  .payment-secA .pay-bar .bar-total strong {
+    font-size: 19px;
+  }
 }
 @media only screen and (max-width: 540px) {
   .payment-secA .pay-bar .bar-total strong {

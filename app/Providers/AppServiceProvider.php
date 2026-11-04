@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Announcement;
 use App\Models\Cart;
 use App\Models\SeoPage;
 use App\Models\Setting;
@@ -86,12 +87,18 @@ class AppServiceProvider extends ServiceProvider
 
             // Price ranges ka koi model nahi hai, isliye yahin define hain
             $navPriceRanges = [
-                ['label' => 'Under ₹2,999',        'min' => null,  'max' => 2999],
-                ['label' => '₹3,000 - ₹5,999',     'min' => 3000,  'max' => 5999],
-                ['label' => '₹6,000 - ₹9,999',     'min' => 6000,  'max' => 9999],
-                ['label' => '₹10,000 - ₹14,999',   'min' => 10000, 'max' => 14999],
-                ['label' => '₹15,000 and Above',   'min' => 15000, 'max' => null],
+                ['label' => 'Under ₹2,999', 'min' => null, 'max' => 2999],
+                ['label' => '₹3,000 - ₹5,999', 'min' => 3000, 'max' => 5999],
+                ['label' => '₹6,000 - ₹9,999', 'min' => 6000, 'max' => 9999],
+                ['label' => '₹10,000 - ₹14,999', 'min' => 10000, 'max' => 14999],
+                ['label' => '₹15,000 and Above', 'min' => 15000, 'max' => null],
             ];
+
+            static $announcements = null;
+
+            $announcements ??= Announcement::where('status', 1)
+                ->latest('id')
+                ->get(['id', 'title', 'link']);
 
             $view->with([
                 'miniCart' => $cart,
@@ -102,6 +109,7 @@ class AppServiceProvider extends ServiceProvider
                 'navBarCollections' => $navBarCollections,
                 'navOccasions' => $navOccasions,
                 'navPriceRanges' => $navPriceRanges,
+                'announcements' => $announcements,
             ]);
         });
     }

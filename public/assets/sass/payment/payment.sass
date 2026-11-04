@@ -9,9 +9,17 @@ $danger-bg: rgba(198, 40, 40, 0.06)
   margin-top: calc(var(--headerheight) + 50px)
   padding-bottom: 70px
 
+  @include media(1280)
+    margin-top: calc(var(--headerheight) + 46px)
+    padding-bottom: 66px
+
   @include media(1024)
     margin-top: calc(var(--headerheight) + 40px)
     padding-bottom: 60px
+
+  @include media(991)
+    margin-top: calc(var(--headerheight) + 36px)
+    padding-bottom: 56px
 
   @include media(768)
     margin-top: calc(var(--headerheight) + 30px)
@@ -21,7 +29,6 @@ $danger-bg: rgba(198, 40, 40, 0.06)
     margin-top: calc(var(--headerheight) + 24px)
     padding-bottom: 40px
 
-  // ---------- Steps ----------
   .pay-top
     position: relative
     display: flex
@@ -31,9 +38,17 @@ $danger-bg: rgba(198, 40, 40, 0.06)
     padding-bottom: 26px
     border-bottom: 1px solid var(--gray)
 
+    @include media(1280)
+      margin-bottom: 28px
+      padding-bottom: 24px
+
     @include media(1024)
       margin-bottom: 26px
       padding-bottom: 22px
+
+    @include media(991)
+      margin-bottom: 24px
+      padding-bottom: 20px
 
     @include media(768)
       flex-direction: column
@@ -42,7 +57,9 @@ $danger-bg: rgba(198, 40, 40, 0.06)
       padding-bottom: 18px
 
     @include media(540)
+      gap: 10px
       margin-bottom: 18px
+      padding-bottom: 16px
 
   .pay-steps
     display: flex
@@ -51,6 +68,9 @@ $danger-bg: rgba(198, 40, 40, 0.06)
     margin: 0
     padding: 0
     list-style: none
+
+    @include media(1024)
+      gap: 12px
 
     @include media(768)
       gap: 10px
@@ -68,6 +88,16 @@ $danger-bg: rgba(198, 40, 40, 0.06)
       text-transform: uppercase
       letter-spacing: 0.18em
 
+      span
+        font-size: inherit
+      a
+        font-size: inherit
+        > span
+          font-size: inherit
+
+      @include media(1024)
+        letter-spacing: 0.15em
+
       @include media(768)
         font-size: 11px
         letter-spacing: 0.12em
@@ -84,8 +114,14 @@ $danger-bg: rgba(198, 40, 40, 0.06)
         height: 1px
         background: var(--gray)
 
+        @include media(1280)
+          width: 48px
+
         @include media(1024)
           width: 40px
+
+        @include media(991)
+          width: 34px
 
         @include media(768)
           width: 28px
@@ -117,6 +153,11 @@ $danger-bg: rgba(198, 40, 40, 0.06)
         color: var(--text)
         font-size: 13px
 
+        @include media(768)
+          width: 34px
+          height: 34px
+          font-size: 12px
+
         @include media(540)
           width: 30px
           height: 30px
@@ -138,6 +179,8 @@ $danger-bg: rgba(198, 40, 40, 0.06)
           border-color: var(--primary)
           color: var(--primary)
 
+        
+
   .secure-tag
     position: absolute
     top: 0
@@ -156,19 +199,29 @@ $danger-bg: rgba(198, 40, 40, 0.06)
       height: auto
 
     @include media(540)
+      gap: 6px
       font-size: 11px
 
     i
       color: $success
       font-size: 16px
 
-  // ---------- Head (one row) ----------
+      @include media(768)
+        font-size: 15px
+
+      @include media(540)
+        font-size: 14px
+
   .pay-head
     display: flex
     align-items: center
     justify-content: space-between
     gap: 16px
     margin-bottom: 24px
+
+    @include media(768)
+      gap: 12px
+      margin-bottom: 20px
 
     @include media(540)
       margin-bottom: 18px
@@ -177,8 +230,14 @@ $danger-bg: rgba(198, 40, 40, 0.06)
       margin: 0
       font-size: 36px
 
+      @include media(1280)
+        font-size: 34px
+
       @include media(1024)
         font-size: 32px
+
+      @include media(991)
+        font-size: 30px
 
       @include media(768)
         font-size: 28px
@@ -200,6 +259,9 @@ $danger-bg: rgba(198, 40, 40, 0.06)
       letter-spacing: 0.16em
       transition: all 0.3s ease
 
+      @include media(768)
+        letter-spacing: 0.12em
+
       @include media(540)
         gap: 6px
         font-size: 10px
@@ -209,6 +271,9 @@ $danger-bg: rgba(198, 40, 40, 0.06)
         font-size: 12px
         transition: transform 0.3s ease
 
+        @include media(540)
+          font-size: 11px
+
       &:hover
         border-color: var(--primary)
         color: var(--primary)
@@ -216,7 +281,6 @@ $danger-bg: rgba(198, 40, 40, 0.06)
         i
           transform: translateX(-5px)
 
-  // ---------- Failed alert (one row) ----------
   .pay-alert
     display: flex
     align-items: center
@@ -227,18 +291,26 @@ $danger-bg: rgba(198, 40, 40, 0.06)
     border-left: 4px solid $danger
     background: $danger-bg
 
-    &[hidden]
-      display: none
+    @include media(768)
+      gap: 12px
+      padding: 14px 16px
 
     @include media(540)
       flex-wrap: wrap
       gap: 8px 12px
+      margin-bottom: 18px
       padding: 12px 14px
+
+    &[hidden]
+      display: none
 
     > i
       flex-shrink: 0
       color: $danger
       font-size: 18px
+
+      @include media(540)
+        font-size: 16px
 
     p
       flex: 1
@@ -265,7 +337,10 @@ $danger-bg: rgba(198, 40, 40, 0.06)
       text-transform: uppercase
       letter-spacing: 0.14em
 
-  // ---------- Layout ----------
+      @include media(540)
+        font-size: 10px
+        letter-spacing: 0.1em
+
   .pay-layout
     display: grid
     grid-template-columns: minmax(0, 1fr) 400px
@@ -284,7 +359,12 @@ $danger-bg: rgba(198, 40, 40, 0.06)
       grid-template-columns: minmax(0, 1fr)
       gap: 26px
 
-  // ---------- Single card, 3 rows ----------
+    @include media(768)
+      gap: 24px
+
+    @include media(540)
+      gap: 22px
+
   .pay-card
     min-width: 0
     border: 1px solid var(--gray)
@@ -293,8 +373,14 @@ $danger-bg: rgba(198, 40, 40, 0.06)
   .pay-sec
     padding: 24px 28px
 
+    @include media(1280)
+      padding: 24px
+
     @include media(1024)
       padding: 22px 20px
+
+    @include media(768)
+      padding: 20px 18px
 
     @include media(540)
       padding: 18px 14px
@@ -310,17 +396,22 @@ $danger-bg: rgba(198, 40, 40, 0.06)
     text-transform: uppercase
     letter-spacing: 0.18em
 
+    @include media(1024)
+      letter-spacing: 0.15em
+
     @include media(540)
       margin-bottom: 14px
       font-size: 11px
       letter-spacing: 0.12em
 
-  // Row 1: deliver to
   .ship-to
     display: flex
     align-items: center
     gap: 14px
     background: var(--bg)
+
+    @include media(768)
+      gap: 12px
 
     @include media(540)
       gap: 10px
@@ -336,6 +427,10 @@ $danger-bg: rgba(198, 40, 40, 0.06)
       background: var(--white)
       color: var(--primary)
       font-size: 14px
+
+      @include media(768)
+        width: 36px
+        height: 36px
 
       @include media(540)
         width: 32px
@@ -384,12 +479,12 @@ $danger-bg: rgba(198, 40, 40, 0.06)
 
       @include media(540)
         font-size: 10px
+        letter-spacing: 0.1em
 
       &:hover
         border-color: var(--primary)
         color: var(--primary)
 
-  // Row 2: payment method (2 tiles in one row)
   .pm
     .pm-radio
       position: absolute
@@ -403,6 +498,9 @@ $danger-bg: rgba(198, 40, 40, 0.06)
       display: grid
       grid-template-columns: repeat(2, minmax(0, 1fr))
       gap: 14px
+
+      @include media(768)
+        gap: 12px
 
       @include media(540)
         gap: 10px
@@ -419,8 +517,11 @@ $danger-bg: rgba(198, 40, 40, 0.06)
       transition: border-color 0.3s ease, background 0.3s ease
 
       @include media(1024)
-        padding: 16px 12px
         gap: 10px
+        padding: 16px 12px
+
+      @include media(768)
+        padding: 16px 14px
 
       @include media(540)
         padding: 14px 10px
@@ -504,16 +605,16 @@ $danger-bg: rgba(198, 40, 40, 0.06)
       padding: 3px 9px
       background: var(--primary)
       color: var(--white)
-      font-size: 9px
+      font-size: 10px
       font-weight: 600
       text-transform: uppercase
       letter-spacing: 0.12em
 
       @include media(540)
         left: 10px
-        font-size: 8px
+        padding: 3px 8px
+        letter-spacing: 0.08em
 
-    // selected states
     #pmOnline:checked ~ .pm-tabs label[for="pmOnline"],
     #pmCod:checked ~ .pm-tabs label[for="pmCod"]
       border-color: var(--primary)
@@ -529,7 +630,6 @@ $danger-bg: rgba(198, 40, 40, 0.06)
     #pmCod:focus-visible ~ .pm-tabs label[for="pmCod"]
       box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.12)
 
-    // one-line info
     .pm-info
       display: none
       align-items: flex-start
@@ -538,6 +638,9 @@ $danger-bg: rgba(198, 40, 40, 0.06)
       color: var(--text)
       font-size: 12px
       line-height: 1.6
+
+      span
+        font-size: inherit
 
       @include media(540)
         margin-top: 14px
@@ -548,13 +651,15 @@ $danger-bg: rgba(198, 40, 40, 0.06)
         color: var(--primary)
         font-size: 12px
 
+        @include media(540)
+          font-size: 11px
+
     #pmOnline:checked ~ .pm-online
       display: flex
 
     #pmCod:checked ~ .pm-cod
       display: flex
 
-  // Row 3: billing
   .check
     display: flex
     align-items: center
@@ -586,6 +691,10 @@ $danger-bg: rgba(198, 40, 40, 0.06)
     padding-top: 22px
     border-top: 1px solid var(--gray)
 
+    @include media(768)
+      margin-top: 20px
+      padding-top: 20px
+
     @include media(540)
       margin-top: 18px
       padding-top: 18px
@@ -593,12 +702,14 @@ $danger-bg: rgba(198, 40, 40, 0.06)
   .pay-card:has(#billSame:not(:checked)) .bill-form
     display: block
 
-  // common .form-group handles the input look
   .fields
     display: grid
     grid-template-columns: repeat(12, minmax(0, 1fr))
     gap: 28px 18px
     padding-top: 6px
+
+    @include media(1024)
+      gap: 26px 16px
 
     @include media(540)
       gap: 26px 14px
@@ -627,7 +738,6 @@ $danger-bg: rgba(198, 40, 40, 0.06)
     @include media(540)
       grid-column: span 12
 
-  // ---------- RIGHT SIDE: highlighted panel ----------
   .pay-summary
     position: sticky
     top: calc(var(--headerheight) + 20px)
@@ -640,12 +750,18 @@ $danger-bg: rgba(198, 40, 40, 0.06)
     border: 1px solid var(--gray)
     border-top: 3px solid var(--primary)
 
+    @include media(1280)
+      padding: 18px
+
     @include media(1024)
       padding: 16px
 
     @include media(991)
       position: static
       padding: 18px
+
+    @include media(768)
+      padding: 16px
 
     @include media(540)
       padding: 14px
@@ -654,13 +770,21 @@ $danger-bg: rgba(198, 40, 40, 0.06)
     padding: 22px
     border: 1px solid var(--gray)
 
+    @include media(1280)
+      padding: 20px
+
     @include media(1024)
+      padding: 20px 18px
+
+    @include media(991)
+      padding: 22px
+
+    @include media(768)
       padding: 20px 18px
 
     @include media(540)
       padding: 18px 14px
 
-  // thumbnails + title + edit in ONE row
   .mini-row
     display: flex
     align-items: center
@@ -668,6 +792,9 @@ $danger-bg: rgba(198, 40, 40, 0.06)
     margin-bottom: 16px
     padding-bottom: 16px
     border-bottom: 1px solid var(--gray)
+
+    @include media(1024)
+      gap: 12px
 
     @include media(540)
       gap: 10px
@@ -689,6 +816,9 @@ $danger-bg: rgba(198, 40, 40, 0.06)
 
         & + li
           margin-left: -14px
+
+          @include media(540)
+            margin-left: -12px
 
       img
         display: block
@@ -712,6 +842,9 @@ $danger-bg: rgba(198, 40, 40, 0.06)
         text-transform: uppercase
         letter-spacing: 0.14em
 
+        @include media(1024)
+          letter-spacing: 0.1em
+
         @include media(540)
           font-size: 12px
           letter-spacing: 0.08em
@@ -719,6 +852,9 @@ $danger-bg: rgba(198, 40, 40, 0.06)
       small
         color: var(--text)
         font-size: 12px
+
+        @include media(540)
+          font-size: 11px
 
     .mini-edit
       flex-shrink: 0
@@ -743,6 +879,9 @@ $danger-bg: rgba(198, 40, 40, 0.06)
       color: var(--text)
       font-size: 14px
 
+      @include media(1024)
+        gap: 12px
+
       @include media(540)
         gap: 12px
         font-size: 13px
@@ -761,6 +900,9 @@ $danger-bg: rgba(198, 40, 40, 0.06)
           font-size: 12px
           opacity: 0.7
 
+          @include media(540)
+            font-size: 11px
+
         &.is-green
           color: $success
           font-weight: 500
@@ -778,6 +920,9 @@ $danger-bg: rgba(198, 40, 40, 0.06)
       text-transform: uppercase
       letter-spacing: 0.12em
 
+      @include media(1024)
+        letter-spacing: 0.1em
+
       @include media(540)
         padding-top: 14px
         font-size: 13px
@@ -786,6 +931,9 @@ $danger-bg: rgba(198, 40, 40, 0.06)
         font-size: 22px
         font-weight: 600
         letter-spacing: 0
+
+        @include media(768)
+          font-size: 21px
 
         @include media(540)
           font-size: 20px
@@ -804,6 +952,7 @@ $danger-bg: rgba(198, 40, 40, 0.06)
 
     @include media(540)
       gap: 8px
+      margin-bottom: 14px
       font-size: 11px
 
   .place-btn
@@ -826,7 +975,6 @@ $danger-bg: rgba(198, 40, 40, 0.06)
   .cod-btn
     display: none
 
-  // COD select hone par buttons swap
   &:has(#pmCod:checked)
     .pay-btn
       display: none
@@ -866,7 +1014,6 @@ $danger-bg: rgba(198, 40, 40, 0.06)
       &:hover
         color: var(--primary)
 
-  // 3 trust points in ONE row
   .trust-list
     display: flex
     align-items: center
@@ -875,6 +1022,14 @@ $danger-bg: rgba(198, 40, 40, 0.06)
     margin: 0
     padding: 4px 2px 0
     list-style: none
+
+    @include media(1024)
+      flex-wrap: wrap
+      justify-content: center
+
+    @include media(991)
+      flex-wrap: nowrap
+      justify-content: space-between
 
     @include media(540)
       flex-wrap: wrap
@@ -898,7 +1053,9 @@ $danger-bg: rgba(198, 40, 40, 0.06)
         color: var(--primary)
         font-size: 13px
 
-  // ---------- Mobile sticky bar ----------
+        @include media(540)
+          font-size: 12px
+
   .pay-bar
     display: none
 
@@ -914,6 +1071,14 @@ $danger-bg: rgba(198, 40, 40, 0.06)
       background: var(--white)
       border: 1px solid var(--gray)
       box-shadow: rgba(60, 30, 45, 0.16) 0 12px 36px
+      transition: bottom 0.3s ease
+
+      &.is-lifted
+        bottom: calc(75px + env(safe-area-inset-bottom, 0px))
+
+    @include media(768)
+      gap: 14px
+      padding: 10px 10px 10px 16px
 
     @include media(540)
       gap: 12px
@@ -934,11 +1099,17 @@ $danger-bg: rgba(198, 40, 40, 0.06)
         text-transform: uppercase
         letter-spacing: 0.16em
 
+        @include media(540)
+          letter-spacing: 0.12em
+
       strong
         color: var(--black)
         font-size: 20px
         font-weight: 600
         line-height: 1.1
+
+        @include media(768)
+          font-size: 19px
 
         @include media(540)
           font-size: 18px
