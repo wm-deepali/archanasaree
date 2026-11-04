@@ -7,23 +7,30 @@ use App\Models\Blog;
 use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\Setting;
+use App\Models\HomeReel;
 use App\Models\Category;
+use App\Models\HomeStory;
+use App\Models\Collection;
 use App\Models\HomeSlider;
 use App\Models\FaqCategory;
 use App\Models\DynamicPage;
+use App\Models\HomeCampaign;
 use Illuminate\Http\Request;
 use App\Traits\LogsApiCalls;
+use App\Models\ProductReview;
 use App\Models\ContactEnquiry;
 use Illuminate\Validation\Rule;
+use App\Models\GiftingOccasion;
 use App\Models\CategoryAttribute;
 use Illuminate\Support\Facades\Log;
+use App\Models\NewsletterSubscriber;
 use Illuminate\Support\Facades\Mail;
 use App\Services\ProductFilterService;
+
 
 class FrontController extends Controller
 {
     use LogsApiCalls;
-
     public function home()
     {
         $heroSlides = HomeSlider::active()->ordered()->get();
@@ -34,9 +41,8 @@ class FrontController extends Controller
             ->take(12)
             ->get();
 
-        // Most Loved: "All" tab + one tab per category (only those that have products)
         $lovedAll = Product::visible()->forCard()
-            ->latest('id')          // swap for your bestseller / featured / most-viewed ordering if you have one
+            ->latest('id')
             ->limit(8)
             ->get();
 
@@ -54,7 +60,141 @@ class FrontController extends Controller
             ->filter(fn($t) => $t['products']->isNotEmpty())
             ->values();
 
-        return view('front-pages.home', compact('heroSlides', 'homeCategories', 'lovedAll', 'lovedTabs'));
+        $editCategory = Category::active()->parents()
+            ->orderByDesc('is_featured')
+            ->orderBy('sort_order')
+            ->first();
+
+        $editSubs = collect();
+        $editProducts = collect();
+
+        if ($editCategory) {
+            $editSubs = $editCategory->children()
+                ->active()
+                ->orderBy('sort_order')
+                ->get();
+
+            $editProducts = Product::visible()->forCard()
+                ->where('category_id', $editCategory->id)
+                ->latest('id')
+                ->limit(3)
+                ->get();
+        }
+
+        $occasions = GiftingOccasion::where('status', 1)
+            ->whereHas('products', fn($q) => $q->visible())
+            ->orderBy('id')
+            ->get();
+
+        $spotCategory = Category::active()->parents()
+            ->when($editCategory, fn($q) => $q->where('id', '!=', $editCategory->id))
+            ->orderByDesc('is_featured')
+            ->orderBy('sort_order')
+            ->first();
+
+        $spotSubs = $spotCategory
+            ? $spotCategory->children()->active()->orderBy('sort_order')->limit(8)->get()
+            : collect();
+
+        $offerProducts = Product::visible()->forCard()
+            ->where('mrp', '>', 0)
+            ->whereColumn('mrp', '>', 'price')
+            ->orderByRaw('((mrp - price) / mrp) desc')
+            ->orderByDesc('id')
+            ->limit(3)
+            ->get();
+
+        $homeCoupons = Coupon::available()
+            ->orderByDesc('discount_value')
+            ->limit(3)
+            ->get();
+
+        // Two collections, one per section (secY and secL), each with its products
+        $homeCollections = Collection::where('status', 1)
+            ->whereHas('products', fn($q) => $q->visible())
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->take(2)
+            ->get()
+            ->each(function ($col) {
+                $col->setRelation(
+                    'homeProducts',
+                    Product::visible()->forCard()
+                        ->whereHas('collections', fn($q) => $q->where('collections.id', $col->id))
+                        ->latest('id')
+                        ->limit(8)
+                        ->get()
+                );
+            })
+            ->values();
+
+        $collectionY = $homeCollections->get(0);
+        $collectionL = $homeCollections->get(1);
+
+        // Customer Love: approved reviews with text, featured first, then best rated
+        $homeReviews = ProductReview::approved()
+            ->with(['customer:id,name,avatar', 'product:id,name,slug'])
+            ->whereNotNull('review')
+            ->where('review', '!=', '')
+            ->where('rating', '>=', 4)
+            ->orderByDesc('featured')
+            ->orderByDesc('rating')
+            ->orderByDesc('id')
+            ->limit(8)
+            ->get();
+
+        // The Archana Edit: top rated products (1st = feature image, rest = slider)
+        $topRated = Product::visible()->forCard()
+            ->whereHas('approvedReviews')
+            ->orderByDesc('avg_rating')
+            ->orderByDesc('id')
+            ->limit(9)
+            ->get();
+
+        $topFeatured = $topRated->first();
+        $topSlider = $topRated->slice(1)->values();
+
+        // secE campaign, secM story + founder, secS reels (all editable from admin)
+        $campaign = HomeCampaign::current();
+        $story = HomeStory::current();
+        $reels = HomeReel::active()->ordered()->get();
+
+        // secP "All Collections": 3 parent categories with their sub categories (+ occasions, already loaded)
+        $collectGroups = Category::active()->parents()
+            ->whereHas('children', fn($q) => $q->active())
+            ->with(['children' => fn($q) => $q->active()->orderBy('sort_order')])
+            ->orderBy('sort_order')
+            ->take(3)
+            ->get();
+
+        return view('front-pages.home', compact(
+            'heroSlides',
+            'homeCategories',
+            'lovedAll',
+            'lovedTabs',
+            'editCategory',
+            'editSubs',
+            'editProducts',
+            'occasions',
+            'spotCategory',
+            'spotSubs',
+            'offerProducts',
+            'homeCoupons',
+            'collectionY',
+            'collectionL',
+            'topFeatured',
+            'topSlider',
+            'homeReviews',
+            'campaign',
+            'story',
+            'reels',
+            'collectGroups'
+        ));
+    }
+
+    public function about()
+    {
+        return view('front-pages.about');
     }
 
     public function searchSuggest(Request $request)
@@ -613,6 +753,34 @@ class FrontController extends Controller
         $content = $page->renderedContent(Setting::first());
 
         return view('front-pages.page', compact('page', 'content'));
+    }
+
+    public function newsletterSubscribe(Request $request)
+    {
+        // honeypot: bots fill this hidden field, so pretend success and save nothing
+        if ($request->filled('website')) {
+            return response()->json(['message' => 'Thank you for subscribing!']);
+        }
+
+        $data = $request->validate([
+            'email' => 'required|email:rfc|max:150',
+        ]);
+
+        $sub = NewsletterSubscriber::firstOrCreate(
+            ['email' => strtolower(trim($data['email']))],
+            ['ip_address' => $request->ip()]
+        );
+
+        if (!$sub->wasRecentlyCreated) {
+            // signed up before; switch back on if admin had unsubscribed them
+            if (!$sub->status) {
+                $sub->update(['status' => true]);
+            }
+
+            return response()->json(['message' => "You're already on our list. Thank you!"]);
+        }
+
+        return response()->json(['message' => 'Thank you for subscribing! Watch your inbox for new arrivals and offers.']);
     }
 
 }

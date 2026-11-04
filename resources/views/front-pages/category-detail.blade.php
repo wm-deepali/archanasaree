@@ -200,25 +200,39 @@
       <div class="container">
         <div class="news-wrap">
           <div class="news-photo">
-            <img src="{{ asset('assets/images/home/offer1.jpg')}}" alt="Stay in the Archana Edit" loading="lazy" />
+            <img src="{{ asset('assets/images/home/offer1.jpg') }}" alt="{{ config('app.name') }} new arrivals"
+              loading="lazy" />
           </div>
           <div class="news-panel">
+            <span class="eyebrow">Stay in the Know</span>
             <div class="heading">
-              <h3>Stay in the Archana Edit</h3>
+              <h3>Be the First to Discover What's New</h3>
             </div>
             <p class="news-desc">
-              Be the first to discover new arrivals, festive edits and
-              exclusive collections.
+              Sign up for new arrivals, curated collections, styling
+              inspiration and exclusive offers from {{ config('app.name') }}.
             </p>
-            <form class="form news-form" action="#" method="post">
+
+            <form class="form news-form" action="{{ route('newsletter.subscribe') }}" method="post" novalidate>
+              @csrf
+              {{-- honeypot --}}
+              <input type="text" name="website" tabindex="-1" autocomplete="off"
+                style="position:absolute;left:-9999px;opacity:0;height:0;width:0" aria-hidden="true">
+
               <div class="form-group">
-                <input type="email" id="catNewsEmail" name="email" placeholder=" " required />
-                <label for="catNewsEmail">Enter your email address</label>
+                <input type="email" id="newsEmail" name="email" placeholder=" " required />
+                <label for="newsEmail">Enter your email address</label>
               </div>
               <button type="submit" class="btn btn-black">
                 Subscribe <i class="fa-solid fa-arrow-right-long"></i>
               </button>
             </form>
+
+            <p class="news-note" id="newsMsg" hidden></p>
+            <p class="news-note">
+              By subscribing, you agree to receive updates and offers from
+              {{ config('app.name') }}.
+            </p>
           </div>
         </div>
       </div>

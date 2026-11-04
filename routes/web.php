@@ -1,64 +1,61 @@
 <?php
 
 use App\Http\Controllers\Admin\{
-    AdminSettingController,
-    AnnouncementController,
-    AttributeController,
-    AttributeValueController,
-    BlogController,
-    CategoryAttributeController,
-    CategoryController,
-    CollectionController,
-    ContactEnquiryController,
-    CouponController,
-    CustomerAddressController,
-    CustomerController,
-    CustomizationController,
-    DashboardController,
-    DynamicPageController,
-    FaqCategoryController,
     FaqController,
-    GalleryImageController,
-    GiftingOccasionController,
-    HomeBrandSectionController,
-    HomeBrandSectionImageController,
-    HomeDealBannerController,
-    HomeFeatureCardController,
-    HomeHeroBannerController,
-    HomeHeroSlideController,
-    HomePageController,
-    HomeSliderController,
-    LogoutController,
-    OrderController,
-    PaymentController,
-    ProductController,
-    ProfileSettingController,
-    ReturnReasonController,
+    NdrController,
     SeoController,
-    StoredCartController,
     TeamController,
-    TestimonialController,
-    OrderReturnController,
+    BlogController,
+    OrderController,
+    CouponController,
+    LogoutController,
     RefundController,
-    StockManagementController,
-    StockAlertsController,
-    SalesReportController,
-    ProductReportController,
-    CustomerReportController,
-    EmailTemplateController,
-    CouponEnquiryController,
-    CustomerWishlistController,
-    NotificationController,
-    OrderReportController,
-    CouponReportController,
+    ProductController,
+    PaymentController,
+    RedirectController,
+    HomeReelController,
+    HomePageController,
+    CustomerController,
+    CategoryController,
     TaxReportController,
     SystemLogController,
-    RedirectController,
-    NdrController,
+    DashboardController,
     NdrReportController,
-    CancelledInvoiceController,
+    AttributeController,
+    HomeStoryController,
+    HomeSliderController,
+    StoredCartController,
+    CreditNoteController,
+    CollectionController,
+    DynamicPageController,
+    FaqCategoryController,
+    StockAlertsController,
+    SalesReportController,
+    TestimonialController,
+    OrderReportController,
+    OrderReturnController,
+    AdminSettingController,
+    HomeCampaignController,
+    ReturnReasonController,
+    AnnouncementController,
+    CouponReportController,
+    NotificationController,
+    CustomizationController,
+    ProductReportController,
+    CouponEnquiryController,
+    EmailTemplateController,
+    ProfileSettingController,
+    AttributeValueController,
+    CustomerReportController,
+    ContactEnquiryController,
+    StockManagementController,
+    GiftingOccasionController,
+    CustomerAddressController,
     CancelledRefundController,
-    CreditNoteController
+    CustomerWishlistController,
+    CancelledInvoiceController,
+    CategoryAttributeController,
+    NewsletterSubscriberController
 };
 
 use Illuminate\Support\Facades\Route;
@@ -77,21 +74,20 @@ Route::middleware('maintenance.mode')->group(function () {
 
     Route::controller(FrontController::class)->group(function () {
         Route::get('/', 'home')->name('home');
-        Route::get('/categories', 'categories')->name('categories');
-        Route::get('/category/{slug}', 'categoryShow')->name('category.show');
-        Route::get('/products', 'products')->name('products');
-        Route::get('/product/{slug}', 'productShow')->name('products.show');
-        Route::get('/products/{id}/quick-view', 'quickView')->whereNumber('id')->middleware('throttle:60,1')->name('products.quick-view');
-        Route::get('/search/suggest', 'searchSuggest')->middleware('throttle:60,1')->name('search.suggest');
         Route::get('/faqs', 'faqs')->name('faqs');
         Route::get('/blog', 'blogs')->name('blogs');
-        Route::get('/blog/{slug}', 'blogDetail')->name('blog.show');
+        Route::get('/about', 'about')->name('about');
         Route::get('/contact', 'contact')->name('contact');
-        Route::post('/contact', 'contactSubmit')->middleware('throttle:5,1')->name('contact.submit');
+        Route::get('/products', 'products')->name('products');
+        Route::get('/blog/{slug}', 'blogDetail')->name('blog.show');
+        Route::get('/categories', 'categories')->name('categories');
+        Route::get('/product/{slug}', 'productShow')->name('products.show');
+        Route::get('/category/{slug}', 'categoryShow')->name('category.show');
         Route::get('/page/{slug}', 'pageDetail')->where('slug', '[a-z0-9\-]+')->name('page.show');
-
-        Route::view('/about', 'front-pages.about')->name('about');
-
+        Route::post('/contact', 'contactSubmit')->middleware('throttle:5,1')->name('contact.submit');
+        Route::get('/search/suggest', 'searchSuggest')->middleware('throttle:60,1')->name('search.suggest');
+        Route::post('/newsletter/subscribe', 'newsletterSubscribe')->middleware('throttle:5,1')->name('newsletter.subscribe');
+        Route::get('/products/{id}/quick-view', 'quickView')->whereNumber('id')->middleware('throttle:60,1')->name('products.quick-view');
     });
 
     Route::get('/pincode/check', [PincodeController::class, 'check'])->middleware('throttle:30,1')->name('pincode.check');
@@ -209,56 +205,25 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->name('home-page.index');
 
         Route::prefix('home/sliders')->name('home.sliders.')->group(function () {
-
             Route::get('/', [HomeSliderController::class, 'index'])->name('index');
-
             Route::get('/create', [HomeSliderController::class, 'create'])->name('create');
-
             Route::post('/store', [HomeSliderController::class, 'store'])->name('store');
-
             Route::get('/edit/{id}', [HomeSliderController::class, 'edit'])->name('edit');
-
             Route::put('/update/{id}', [HomeSliderController::class, 'update'])->name('update');
-
             Route::delete('/delete/{id}', [HomeSliderController::class, 'destroy'])->name('destroy');
         });
+        Route::get('campaign', [HomeCampaignController::class, 'edit'])->name('campaign.edit');
+        Route::put('campaign', [HomeCampaignController::class, 'update'])->name('campaign.update');
 
+        Route::get('story', [HomeStoryController::class, 'edit'])->name('story.edit');
+        Route::put('story', [HomeStoryController::class, 'update'])->name('story.update');
 
-        Route::resource('gallery-images', GalleryImageController::class)->names('gallery-images');
+        Route::resource('reels', HomeReelController::class)->except(['show']);
 
-        Route::get('home/brand-section', [HomeBrandSectionController::class, 'edit'])->name('home.brand-section.edit');
-        Route::post('home/brand-section', [HomeBrandSectionController::class, 'update'])->name('home.brand-section.update');
-        Route::resource('home-brand-section-images', HomeBrandSectionImageController::class);
-
-        Route::resource('home-deal-banners', HomeDealBannerController::class)->names('home-deal-banners');
-        Route::delete('home-deal-banners/delete/{id}', [HomeDealBannerController::class, 'destroy'])->name('home-deal-banners.delete');
-
-        Route::resource('home-hero-slides', HomeHeroSlideController::class)->names('home-hero-slides');
-        Route::resource('home-hero-banners', HomeHeroBannerController::class)->names('home-hero-banners');
-
-
-
-
-        // ================= WHY SECTION =================
-        Route::get('/home-why', [HomeWhyController::class, 'index'])
-            ->name('home.why.index');
-
-        Route::post('/home-why/update', [HomeWhyController::class, 'updateSection'])
-            ->name('home.why.update');
-
-        Route::post('/home-why/card/store', [HomeWhyController::class, 'storeCard'])
-            ->name('home.why.card.store');
-
-        Route::get('/home-why/card/{id}', [HomeWhyController::class, 'editCard'])
-            ->name('home.why.card.edit');
-
-        Route::post('/home-why/card/{id}', [HomeWhyController::class, 'updateCard'])
-            ->name('home.why.card.update');
-
-        Route::delete('/home-why/card/{id}', [HomeWhyController::class, 'deleteCard'])
-            ->name('home.why.card.delete');
-
-        Route::resource('home-feature-cards', HomeFeatureCardController::class);
+        Route::get('subscribers', [NewsletterSubscriberController::class, 'index'])->name('subscribers.index');
+        Route::get('subscribers/export', [NewsletterSubscriberController::class, 'export'])->name('subscribers.export');
+        Route::post('subscribers/{id}/toggle', [NewsletterSubscriberController::class, 'toggle'])->name('subscribers.toggle');
+        Route::delete('subscribers/{id}', [NewsletterSubscriberController::class, 'destroy'])->name('subscribers.destroy');
 
 
         Route::get('/seo', [SeoController::class, 'index'])->name('seo.index');
@@ -276,34 +241,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('coupons/{coupon}/share', [CouponController::class, 'share'])->name('coupons.share');
         Route::resource('coupons', CouponController::class);
 
-        Route::prefix('redirect-settings')->name('redirect-settings.')->group(function () {
-            Route::get('/', [RedirectController::class, 'index'])->name('index');
-            Route::post('/', [RedirectController::class, 'store'])->name('store');
-            Route::put('/{redirect}', [RedirectController::class, 'update'])->name('update');
-            Route::delete('/{redirect}', [RedirectController::class, 'destroy'])->name('destroy');
-            Route::post('/bulk-delete', [RedirectController::class, 'bulkDestroy'])->name('bulk-delete');
-            Route::post('/bulk-toggle', [RedirectController::class, 'bulkToggle'])->name('bulk-toggle');
-            Route::post('/{redirect}/toggle', [RedirectController::class, 'toggleStatus'])->name('toggle');
-            Route::get('/export', [RedirectController::class, 'exportCsv'])->name('export');
-            Route::get('/template', [RedirectController::class, 'downloadTemplate'])->name('template');
-            Route::post('/import', [RedirectController::class, 'importCsv'])->name('import');
-        });
-
-        Route::get('/admin-setting', [AdminSettingController::class, 'index'])->name('admin-setting.index');
-        Route::post('/invoice-settings', [AdminSettingController::class, 'invoiceSettingStore'])->name('invoice-settings.store');
-        Route::post('/smtp-settings/store', [AdminSettingController::class, 'smtpSettingStore'])->name('smtp-settings.store');
-        Route::post('/payment-settings/store', [AdminSettingController::class, 'paymentSettingStore'])->name('payment-settings.store');
-        Route::post('/settings/general', [AdminSettingController::class, 'generalSettingStore'])->name('settings.general.store');
-        Route::post('/settings/courier/store', [AdminSettingController::class, 'courierStore'])->name('couriers.store');
-        Route::delete('/settings/courier/{courier}', [AdminSettingController::class, 'courierDelete'])->name('couriers.delete');
-        Route::post('admin-setting/google-setting', [AdminSettingController::class, 'googleSettingStore'])->name('admin-setting.google-setting');
-        Route::post('/admin-setting/shipping', [AdminSettingController::class, 'shippingSettingStore'])->name('admin-setting.shipping.store');
-
-        Route::get('/security/system-logs', [SystemLogController::class, 'index'])->name('security.system-logs');
-
-        Route::get('/settings/email-templates', [EmailTemplateController::class, 'index'])->name('settings.email-templates.index');
-        Route::post('settings/email-templates/test', [EmailTemplateController::class, 'sendTest'])->name('settings.email-templates.test');
-        Route::post('settings/email-templates/{eventKey}', [EmailTemplateController::class, 'save'])->name('settings.email-templates.save');
 
         // Orders routes
         Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
@@ -314,6 +251,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('orders/{order}/invoice/download', [OrderController::class, 'invoiceDownload'])->name('orders.invoice.download');
         Route::post('orders/{order}/generate-invoice', [OrderController::class, 'generateInvoice'])->name('orders.generate-invoice');
         Route::post('orders/{order}/update-payment', [OrderController::class, 'updatePayment'])->name('orders.update-payment');
+        Route::post('orders/{order}/mark-ndr', [NdrController::class, 'markNdr'])->name('orders.mark-ndr');
 
         // Credit Notes (keyed by completed RefundTransaction id)
         Route::get('credit-notes/{refund}', [CreditNoteController::class, 'show'])->name('credit-notes.show');
@@ -376,9 +314,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::patch('/{ndr}/cancel', [NdrController::class, 'cancel'])->name('cancel');
         });
 
-        Route::post('orders/{order}/mark-ndr', [NdrController::class, 'markNdr'])->name('orders.mark-ndr');
 
-
+        // Stock Management routes
         Route::get('stock', [StockManagementController::class, 'index'])->name('stock.index');
         Route::get('stock/export', [StockManagementController::class, 'export'])->name('stock.export');
         Route::post('stock/bulk-update', [StockManagementController::class, 'bulkUpdate'])->name('stock.bulk-update');
@@ -390,7 +327,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('stock/variant/{variant}/update', [StockManagementController::class, 'updateVariantStock'])->name('stock.variant.update');
         Route::post('stock/variant/{variant}/restock', [StockManagementController::class, 'restockVariant'])->name('stock.variant.restock');
         Route::get('stock/variant/{variant}/history', [StockManagementController::class, 'historyVariant'])->name('stock.variant.history');
-
         Route::get('stock/alerts', [StockAlertsController::class, 'index'])->name('stock.alerts');
         Route::post('stock/alerts/{product}/restock', [StockAlertsController::class, 'restock'])->name('stock.alerts.restock');
         Route::post('stock/alerts/settings/thresholds', [StockAlertsController::class, 'updateThresholds'])->name('stock.alerts.thresholds');
@@ -399,9 +335,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('stock/alerts/restock-all-critical', [StockAlertsController::class, 'restockAllCritical'])->name('stock.alerts.restock.all');
         Route::post('stock/alerts/variant/{variant}/restock', [StockAlertsController::class, 'restockVariant'])->name('stock.alerts.variant.restock');
 
-
-
-        // Listing page
         Route::get('/reviews', [App\Http\Controllers\Admin\ProductReviewController::class, 'index'])->name('reviews.index');
         Route::get('/reviews/{review}', [App\Http\Controllers\Admin\ProductReviewController::class, 'show'])->name('reviews.show');
         Route::patch('/reviews/{review}/approve', [App\Http\Controllers\Admin\ProductReviewController::class, 'approve'])->name('reviews.approve');
@@ -409,34 +342,22 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/reviews/{review}', [App\Http\Controllers\Admin\ProductReviewController::class, 'destroy'])->name('reviews.destroy');
         Route::get('/reviews/export/csv', [App\Http\Controllers\Admin\ProductReviewController::class, 'export'])->name('reviews.export');
 
+        // Admin Settings routes
+        Route::get('/admin-setting', [AdminSettingController::class, 'index'])->name('admin-setting.index');
+        Route::post('/invoice-settings', [AdminSettingController::class, 'invoiceSettingStore'])->name('invoice-settings.store');
+        Route::post('/smtp-settings/store', [AdminSettingController::class, 'smtpSettingStore'])->name('smtp-settings.store');
+        Route::post('/payment-settings/store', [AdminSettingController::class, 'paymentSettingStore'])->name('payment-settings.store');
+        Route::post('/settings/general', [AdminSettingController::class, 'generalSettingStore'])->name('settings.general.store');
+        Route::post('/settings/courier/store', [AdminSettingController::class, 'courierStore'])->name('couriers.store');
+        Route::delete('/settings/courier/{courier}', [AdminSettingController::class, 'courierDelete'])->name('couriers.delete');
+        Route::post('admin-setting/google-setting', [AdminSettingController::class, 'googleSettingStore'])->name('admin-setting.google-setting');
+        Route::post('/admin-setting/shipping', [AdminSettingController::class, 'shippingSettingStore'])->name('admin-setting.shipping.store');
 
-        Route::get('/reports/sales', [SalesReportController::class, 'index'])->name('reports.sales');
-        Route::get('/reports/sales/export', [SalesReportController::class, 'export'])->name('reports.sales.export');
+        Route::get('/security/system-logs', [SystemLogController::class, 'index'])->name('security.system-logs');
 
-        Route::get('/reports/products', [ProductReportController::class, 'index'])->name('reports.products');
-        Route::get('reports/products/export/csv', [ProductReportController::class, 'exportCsv'])->name('reports.products.export.csv');
-        Route::get('reports/products/export/pdf', [ProductReportController::class, 'exportPdf'])->name('reports.products.export.pdf');
-
-        Route::get('reports/customers', [CustomerReportController::class, 'index'])->name('reports.customers');
-        Route::get('reports/customers/export/excel', [CustomerReportController::class, 'exportExcel'])->name('reports.customers.export.excel');
-        Route::get('reports/customers/export/pdf', [CustomerReportController::class, 'exportPdf'])->name('reports.customers.export.pdf');
-
-        Route::get('/reports/order-reports', [OrderReportController::class, 'index'])->name('reports.order-reports');
-        Route::get('/reports/order-reports/export-excel', [OrderReportController::class, 'exportExcel'])->name('reports.order-reports.export-excel');
-        Route::get('/reports/order-reports/export-pdf', [OrderReportController::class, 'exportPdf'])->name('reports.order-reports.export-pdf');
-
-
-        Route::get('/reports/coupon-reports', [CouponReportController::class, 'index'])->name('reports.coupon-reports');
-        Route::get('/reports/coupon-reports/export', [CouponReportController::class, 'export'])->name('reports.coupon-reports.export');
-
-        // routes/web.php (inside your admin group)
-        Route::get('/reports/tax-reports', [TaxReportController::class, 'index'])->name('reports.tax-reports');
-        Route::get('/reports/tax-reports/export-csv', [TaxReportController::class, 'exportCsv'])->name('reports.tax-reports.export-csv');
-        Route::get('reports/tax-reports/export-credit-notes-csv', [TaxReportController::class, 'exportCreditNotesCsv'])->name('reports.tax-reports.export-credit-notes-csv');
-
-        Route::get('reports/ndr', [NdrReportController::class, 'index'])->name('reports.ndr');
-        Route::get('reports/ndr/export', [NdrReportController::class, 'export'])->name('reports.ndr.export');
-
+        Route::get('/settings/email-templates', [EmailTemplateController::class, 'index'])->name('settings.email-templates.index');
+        Route::post('settings/email-templates/test', [EmailTemplateController::class, 'sendTest'])->name('settings.email-templates.test');
+        Route::post('settings/email-templates/{eventKey}', [EmailTemplateController::class, 'save'])->name('settings.email-templates.save');
 
         Route::prefix('notifications')->name('notifications.')->group(function () {
             Route::get('/', [NotificationController::class, 'index'])->name('index');
@@ -446,10 +367,42 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{notification}', [NotificationController::class, 'destroy'])->name('destroy');
         });
 
+        Route::prefix('redirect-settings')->name('redirect-settings.')->group(function () {
+            Route::get('/', [RedirectController::class, 'index'])->name('index');
+            Route::post('/', [RedirectController::class, 'store'])->name('store');
+            Route::put('/{redirect}', [RedirectController::class, 'update'])->name('update');
+            Route::delete('/{redirect}', [RedirectController::class, 'destroy'])->name('destroy');
+            Route::post('/bulk-delete', [RedirectController::class, 'bulkDestroy'])->name('bulk-delete');
+            Route::post('/bulk-toggle', [RedirectController::class, 'bulkToggle'])->name('bulk-toggle');
+            Route::post('/{redirect}/toggle', [RedirectController::class, 'toggleStatus'])->name('toggle');
+            Route::get('/export', [RedirectController::class, 'exportCsv'])->name('export');
+            Route::get('/template', [RedirectController::class, 'downloadTemplate'])->name('template');
+            Route::post('/import', [RedirectController::class, 'importCsv'])->name('import');
+        });
+
+
+        // Reports routes
+        Route::get('/reports/sales', [SalesReportController::class, 'index'])->name('reports.sales');
+        Route::get('/reports/sales/export', [SalesReportController::class, 'export'])->name('reports.sales.export');
+        Route::get('/reports/products', [ProductReportController::class, 'index'])->name('reports.products');
+        Route::get('reports/products/export/csv', [ProductReportController::class, 'exportCsv'])->name('reports.products.export.csv');
+        Route::get('reports/products/export/pdf', [ProductReportController::class, 'exportPdf'])->name('reports.products.export.pdf');
+        Route::get('reports/customers', [CustomerReportController::class, 'index'])->name('reports.customers');
+        Route::get('reports/customers/export/excel', [CustomerReportController::class, 'exportExcel'])->name('reports.customers.export.excel');
+        Route::get('reports/customers/export/pdf', [CustomerReportController::class, 'exportPdf'])->name('reports.customers.export.pdf');
+        Route::get('/reports/order-reports', [OrderReportController::class, 'index'])->name('reports.order-reports');
+        Route::get('/reports/order-reports/export-excel', [OrderReportController::class, 'exportExcel'])->name('reports.order-reports.export-excel');
+        Route::get('/reports/order-reports/export-pdf', [OrderReportController::class, 'exportPdf'])->name('reports.order-reports.export-pdf');
+        Route::get('/reports/coupon-reports', [CouponReportController::class, 'index'])->name('reports.coupon-reports');
+        Route::get('/reports/coupon-reports/export', [CouponReportController::class, 'export'])->name('reports.coupon-reports.export');
+        Route::get('/reports/tax-reports', [TaxReportController::class, 'index'])->name('reports.tax-reports');
+        Route::get('/reports/tax-reports/export-csv', [TaxReportController::class, 'exportCsv'])->name('reports.tax-reports.export-csv');
+        Route::get('reports/tax-reports/export-credit-notes-csv', [TaxReportController::class, 'exportCreditNotesCsv'])->name('reports.tax-reports.export-credit-notes-csv');
+        Route::get('reports/ndr', [NdrReportController::class, 'index'])->name('reports.ndr');
+        Route::get('reports/ndr/export', [NdrReportController::class, 'export'])->name('reports.ndr.export');
 
     });
 });
-
 
 
 // ══════════════════════════════════════════════════

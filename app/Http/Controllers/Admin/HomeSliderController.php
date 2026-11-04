@@ -5,20 +5,18 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\HomeSlider;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Format;
+use Intervention\Image\ImageManager;
 
 class HomeSliderController extends Controller
 {
     public function index()
     {
-        $sliders = HomeSlider::orderBy('sort_order')
-            ->latest()
-            ->paginate(10);
+        $sliders = HomeSlider::orderBy('sort_order')->orderBy('id')->paginate(10);
 
         return view('admin.home.sliders.index', compact('sliders'));
     }
@@ -30,172 +28,114 @@ class HomeSliderController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $request->validate($this->rules(true));
 
-            'image' => [
-                'required',
-                'image',
-                'mimes:jpg,jpeg,png,webp',
-                'max:5120',
-            ],
+        $data = $this->payload($request);
+        $data['image'] = $this->compressAndStore($request->file('image'), 'home-sliders');
 
-            'link' => [
-                'nullable',
-                'url'
-            ],
+        HomeSlider::create($data);
 
-            'sort_order' => [
-                'nullable',
-                'integer',
-                'min:0'
-            ],
-
-            'status' => [
-                'required',
-                'in:0,1'
-            ]
-
-        ]);
-
-        $image = null;
-
-        if ($request->hasFile('image')) {
-
-            $image = $this->compressAndStore(
-                $request->file('image'),
-                'home-sliders'
-            );
-        }
-
-        HomeSlider::create([
-
-            'image' => $image,
-            'link' => $request->link,
-            'sort_order' => $request->sort_order ?? 0,
-            'status' => $request->status
-
-        ]);
-
-        return redirect()
-            ->route('admin.home.sliders.index')
-            ->with('success', 'Slider created successfully.');
+        return redirect()->route('admin.home.sliders.index')->with('success', 'Slider created successfully.');
     }
 
     public function edit($id)
     {
         $slider = HomeSlider::findOrFail($id);
 
-        return view(
-            'admin.home.sliders.edit',
-            compact('slider')
-        );
+        return view('admin.home.sliders.edit', compact('slider'));
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-
-            'image' => [
-                'nullable',
-                'image',
-                'mimes:jpg,jpeg,png,webp',
-                'max:5120',
-            ],
-
-            'link' => [
-                'nullable',
-                'url'
-            ],
-
-            'sort_order' => [
-                'nullable',
-                'integer',
-                'min:0'
-            ],
-
-            'status' => [
-                'required',
-                'in:0,1'
-            ]
-
-        ]);
-
         $slider = HomeSlider::findOrFail($id);
 
-        $image = $slider->image;
+        $request->validate($this->rules(false));
+
+        $data = $this->payload($request);
 
         if ($request->hasFile('image')) {
-
-            if (
-                $slider->image &&
-                Storage::disk('public')->exists($slider->image)
-            ) {
+            if ($slider->image && Storage::disk('public')->exists($slider->image)) {
                 Storage::disk('public')->delete($slider->image);
             }
-
-            $image = $this->compressAndStore(
-                $request->file('image'),
-                'home-sliders'
-            );
+            $data['image'] = $this->compressAndStore($request->file('image'), 'home-sliders');
         }
 
-        $slider->update([
+        $slider->update($data);
 
-            'image' => $image,
-            'link' => $request->link,
-            'sort_order' => $request->sort_order ?? 0,
-            'status' => $request->status
-
-        ]);
-
-        return redirect()
-            ->route('admin.home.sliders.index')
-            ->with('success', 'Slider updated successfully.');
+        return redirect()->route('admin.home.sliders.index')->with('success', 'Slider updated successfully.');
     }
 
     public function destroy($id)
     {
         $slider = HomeSlider::findOrFail($id);
 
-        if (
-            $slider->image &&
-            Storage::disk('public')->exists($slider->image)
-        ) {
+        if ($slider->image && Storage::disk('public')->exists($slider->image)) {
             Storage::disk('public')->delete($slider->image);
         }
 
         $slider->delete();
 
-        return response()->json([
-            'message' => 'Slider deleted successfully.'
-        ]);
+        return response()->json(['message' => 'Slider deleted successfully.']);
     }
 
-    /**
-     * ✅ Compress & store an uploaded image as WebP.
-     * Sliders render as a full-width hero banner, so keep width generous —
-     * unlike category cards these are the largest images on the site.
-     */
-    private function compressAndStore(
-        UploadedFile $file,
-        string $folder,
-        int $maxWidth = 1920,
-        int $quality = 80
-    ): string {
-        $manager = ImageManager::usingDriver(Driver::class);
+    private function rules(bool $imageRequired): array
+    {
+        // Links may be a full URL, a site path (/products) or an anchor (#x). Blocks javascript: etc.
+        $link = ['nullable', 'string', 'max:255', 'regex:/^(https?:\/\/|\/|#)/i'];
 
+        return [
+            'image' => [$imageRequired ? 'required' : 'nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+
+            'eyebrow' => 'nullable|string|max:120',
+            'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:600',
+
+            'primary_btn_text' => 'nullable|string|max:60',
+            'primary_btn_link' => $link,
+            'secondary_btn_text' => 'nullable|string|max:60',
+            'secondary_btn_link' => $link,
+
+            'note' => 'nullable|string|max:160',
+
+            'theme' => 'required|in:default,white',
+            'sort_order' => 'nullable|integer|min:0',
+            'status' => 'required|in:0,1',
+        ];
+    }
+
+    private function payload(Request $request): array
+    {
+        $data = $request->only([
+            'eyebrow',
+            'title',
+            'description',
+            'primary_btn_text',
+            'primary_btn_link',
+            'secondary_btn_text',
+            'secondary_btn_link',
+            'note',
+            'theme',
+        ]);
+
+        $data['sort_order'] = (int) $request->input('sort_order', 0);
+        $data['status'] = $request->boolean('status');
+
+        return $data;
+    }
+
+    /** Compress and store an uploaded image as WebP (hero banners, so keep width generous). */
+    private function compressAndStore(UploadedFile $file, string $folder, int $maxWidth = 1920, int $quality = 80): string
+    {
+        $manager = ImageManager::usingDriver(Driver::class);
         $image = $manager->decode($file);
 
-        // Only downscale, never upscale
         if ($image->width() > $maxWidth) {
             $image->scale(width: $maxWidth);
         }
 
         $encoded = $image->encodeUsingFormat(Format::WEBP, quality: $quality);
 
-        $filename = Str::uuid() . '.webp';
-        $path = trim($folder, '/') . '/' . $filename;
-
+        $path = trim($folder, '/') . '/' . Str::uuid() . '.webp';
         Storage::disk('public')->put($path, (string) $encoded);
 
         return $path;
