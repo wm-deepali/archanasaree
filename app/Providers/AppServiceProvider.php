@@ -2,13 +2,14 @@
 
 namespace App\Providers;
 
-use App\Models\Announcement;
 use App\Models\Cart;
+use App\Models\GoogleSetting;
 use App\Models\SeoPage;
 use App\Models\Setting;
 use App\Models\Category;
 use App\Models\Attribute;
 use App\Models\Collection;
+use App\Models\Announcement;
 use App\Models\GiftingOccasion;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
@@ -110,6 +111,7 @@ class AppServiceProvider extends ServiceProvider
                 'navOccasions' => $navOccasions,
                 'navPriceRanges' => $navPriceRanges,
                 'announcements' => $announcements,
+                'googleSetting' => GoogleSetting::first() ?? new GoogleSetting(),
             ]);
         });
     }

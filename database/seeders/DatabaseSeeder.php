@@ -22,8 +22,9 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             SettingSeeder::class,
             HomePageSeeder::class,
-            DynamicPageSeeder::class,
+            AboutPageSeeder::class,
             FaqCategorySeeder::class,
+            DynamicPageSeeder::class,
         ]);
 
 

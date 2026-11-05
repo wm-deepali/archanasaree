@@ -364,7 +364,7 @@ class CustomerAuthController extends Controller
                 'csrf_token' => csrf_token(), // 👈 naya token
                 'cart_subtotal' => (float) ($cart ? $cart->items()->sum('total') : 0),
                 'tracking_events' => [
-                    ['type' => 'gtag', 'name' => 'login', 'params' => (object) []],
+                    'ga4' => ['name' => 'login', 'params' => ['method' => 'email_password']],
                 ],
             ]);
         }
@@ -420,7 +420,8 @@ class CustomerAuthController extends Controller
             'csrf_token' => csrf_token(), // 👈 naya token
             'cart_subtotal' => (float) ($cart ? $cart->items()->sum('total') : 0),
             'tracking_events' => [
-                ['type' => 'gtag', 'name' => 'sign_up', 'params' => ['method' => 'email_password']],
+                'ga4' => ['name' => 'sign_up', 'params' => ['method' => 'email_password']],
+                'meta' => ['name' => 'CompleteRegistration', 'params' => ['status' => true]],
             ],
         ]);
     }

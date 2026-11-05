@@ -342,23 +342,7 @@ if (!$u) {
                                     <td>
                                         <div class="cart-items-preview">
                                             @foreach($previewItems as $item)
-                                                @php
-                                                    // Thumbnail: image variant > product thumbnail > null
-                                                    $previewThumb = null;
-                                                    if ($item->imageVariant && $item->imageVariant->image) {
-                                                        $previewThumb = $item->imageVariant->image;
-                                                    } elseif ($item->product) {
-                                                        $previewThumb = $item->product->thumbnail;
-                                                    }
-                                                @endphp
-                                                @if($previewThumb)
-                                                    <img src="{{ asset('storage/' . $previewThumb) }}" class="cart-thumb"
-                                                        alt="{{ optional($item->product)->name }}">
-                                                @else
-                                                    <div class="cart-thumb-placeholder">
-                                                        <i class="fa fa-image"></i>
-                                                    </div>
-                                                @endif
+                                                  <img src="{{ $item->product->display_image }}" class="cart-thumb" alt="{{ optional($item->product)->name ?? 'Unknown Product' }}">
                                             @endforeach
                                             @if($moreCount > 0)
                                                 <div class="cart-more-badge">+{{ $moreCount }}</div>
@@ -434,15 +418,6 @@ if (!$u) {
                                                 @foreach($items as $item)
                                                     @php
                                                         $product = $item->product;
-
-                                                        // Thumbnail: image variant > product thumbnail > null
-                                                        $thumb = null;
-                                                        if ($item->imageVariant && $item->imageVariant->image) {
-                                                            $thumb = $item->imageVariant->image;
-                                                        } elseif ($product) {
-                                                            $thumb = $product->thumbnail;
-                                                        }
-
                                                         // Variant label from selected_attributes snapshot
                                                         $variantLabel = null;
                                                         if (!empty($item->selected_attributes)) {
@@ -461,14 +436,7 @@ if (!$u) {
                                                         $sku = optional($item->skuVariant)->sku;
                                                     @endphp
                                                     <div class="expanded-item">
-                                                        @if($thumb)
-                                                            <img src="{{ asset('storage/' . $thumb) }}" class="expanded-item-thumb"
-                                                                alt="{{ optional($product)->name }}">
-                                                        @else
-                                                            <div class="expanded-item-thumb-ph">
-                                                                <i class="fa fa-image"></i>
-                                                            </div>
-                                                        @endif
+                                                          <img src="{{ $product->display_image }}" class="expanded-item-thumb" alt="{{ optional($product)->name ?? 'Unknown Product' }}">
                                                         <div style="flex:1;min-width:0">
                                                             <div class="expanded-item-name">
                                                                 {{ optional($product)->name ?? 'Unknown Product' }}

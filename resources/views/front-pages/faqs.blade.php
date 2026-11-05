@@ -24,21 +24,23 @@
         </ul>
         <div class="ban-grid">
           <div class="ban-content">
-            <span class="eyebrow">Help &amp; Information</span>
+            @if (filled($hero->eyebrow))
+              <span class="eyebrow">{{ $hero->eyebrow }}</span>
+            @endif
             <div class="heading">
-              <h1>Frequently Asked Questions</h1>
+              <h1>{!! nl2br(e($hero->title)) !!}</h1>
             </div>
-            <p class="ban-desc">
-              Find answers to common questions about our sarees, lehengas,
-              bridal collections, orders, payments, delivery and shopping
-              experience.
-            </p>
+            @if (filled($hero->description))
+              <p class="ban-desc">{{ $hero->description }}</p>
+            @endif
           </div>
           <div class="ban-visual">
             <div class="ban-photo">
-              <img src="assets/images/home/banner5.jpg" alt="Archana Saree Emporium saree collection" />
+              <img src="{{ $hero->image_url }}" alt="{{ preg_replace('/\s+/', ' ', $hero->title) }}" />
             </div>
-            <span class="ban-tag">Here to Help</span>
+            @if (filled($hero->tag))
+              <span class="ban-tag">{{ $hero->tag }}</span>
+            @endif
           </div>
         </div>
       </div>

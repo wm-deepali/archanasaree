@@ -4,16 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Faq;
 use App\Models\Blog;
+use App\Models\Cart;
 use App\Models\Coupon;
 use App\Models\Product;
+use App\Models\SeoPage;
 use App\Models\Setting;
 use App\Models\HomeReel;
 use App\Models\Category;
+use App\Models\PageHero;
 use App\Models\HomeStory;
 use App\Models\Collection;
 use App\Models\HomeSlider;
 use App\Models\FaqCategory;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use App\Models\DynamicPage;
+use App\Models\AboutSection;
 use App\Models\HomeCampaign;
 use Illuminate\Http\Request;
 use App\Traits\LogsApiCalls;
@@ -25,8 +31,8 @@ use App\Models\CategoryAttribute;
 use Illuminate\Support\Facades\Log;
 use App\Models\NewsletterSubscriber;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Route;
 use App\Services\ProductFilterService;
-
 
 class FrontController extends Controller
 {
@@ -194,7 +200,13 @@ class FrontController extends Controller
 
     public function about()
     {
-        return view('front-pages.about');
+        $about = AboutSection::active()
+            ->with(['items' => fn($q) => $q->where('status', 1)])
+            ->get()
+            ->keyBy('key');
+
+        $hero = PageHero::forPage('about');
+        return view('front-pages.about', compact('about', 'hero'));
     }
 
     public function searchSuggest(Request $request)
@@ -284,8 +296,27 @@ class FrontController extends Controller
         $currentSort = array_key_exists($request->sort, Product::SORT_OPTIONS) ? $request->sort : 'recommended';
         $sortOptions = Product::SORT_OPTIONS;
 
+        // ── SEO: sub category wins, then category, then generated text ──
+        $site = $this->siteName();
+        $seoSource = $activeSub ?? $category;
+        $seoName = $activeSub ? $activeSub->name . ' - ' . $category->name : $category->name;
+
+        $seoOverride = $this->seoOverride([
+            'meta_title' => $seoSource->meta_title ?: $seoName . ' | ' . $site,
+            'meta_description' => $seoSource->meta_description
+                ?: $this->plain($seoSource->sub_title ?: $seoSource->description)
+                ?: "Shop {$seoName} online at {$site}. Pan-India delivery and easy returns.",
+            'og_image' => $seoSource->image
+                ? asset('storage/' . $seoSource->image)
+                : ($category->image ? asset('storage/' . $category->image) : null),
+            // filters / sort / page stay out of the canonical; only the sub tab is kept
+            'canonical_url' => $activeSub
+                ? route('category.show', ['slug' => $category->slug, 'sub' => $activeSub->slug])
+                : route('category.show', $category->slug),
+        ]);
+
         return view('front-pages.category-detail', array_merge(
-            compact('category', 'subCategories', 'products', 'recentlyViewed', 'alsoLike', 'sortOptions', 'currentSort', 'activeSub'),
+            compact('category', 'subCategories', 'products', 'recentlyViewed', 'alsoLike', 'sortOptions', 'currentSort', 'activeSub', 'seoOverride'),
             $filters->sidebar($request, [$category->id])
         ));
     }
@@ -329,8 +360,45 @@ class FrontController extends Controller
         $sortOptions = Product::SORT_OPTIONS;
         $currentSort = in_array($request->sort, array_keys($sortOptions), true) ? $request->sort : 'recommended';
 
+        // ── SEO ──
+        $site = $this->siteName();
+        $base = SeoPage::forKey('products'); // row from the seeder / admin
+        $page = $products->currentPage();
+
+        $isSearch = $request->filled('q');
+
+        // any query param other than ?page= (sort, price, attr, collection, occasion, q...)
+        $isFiltered = collect($request->query())
+            ->except('page')
+            ->filter(fn($v) => filled($v))
+            ->isNotEmpty();
+
+        $title = $isSearch
+            ? 'Search results for "' . Str::limit(trim($request->q), 60, '') . '" | ' . $site
+            : ($base?->meta_title ?: "Shop All Products | {$site}");
+
+        if (!$isFiltered && $page > 1) {
+            $title .= " - Page {$page}";
+        }
+
+        $seoOverride = $this->seoOverride([
+            'meta_title' => $title,
+            'meta_description' => $isSearch
+                ? "Browse search results at {$site}."
+                : ($base?->meta_description ?: "Shop our full collection online at {$site}."),
+            'meta_keywords' => $base?->meta_keywords,
+            'og_image' => $base?->og_image,
+            // filtered / sorted / search URLs are thin duplicates: keep them out of the index
+            // but let crawlers follow the product links
+            'robots' => $isFiltered ? 'noindex, follow' : null,
+            // filtered -> clean /products ; plain pagination -> its own URL
+            'canonical_url' => (!$isFiltered && $page > 1)
+                ? route('products', ['page' => $page])
+                : route('products'),
+        ]);
+
         return view('front-pages.product-listing', array_merge(
-            compact('products', 'recentlyViewed', 'alsoLike', 'sortOptions', 'currentSort'),
+            compact('products', 'recentlyViewed', 'alsoLike', 'sortOptions', 'currentSort', 'seoOverride'),
             $filters->sidebar($request)
         ));
     }
@@ -359,6 +427,40 @@ class FrontController extends Controller
             ->inRandomOrder()
             ->limit($limit)
             ->get();
+    }
+
+    /** Site name for titles (controller runs before the view composer, so read Setting directly) */
+    private function siteName(): string
+    {
+        static $name = null;
+
+        return $name ??= (Setting::first()?->site_name ?: config('app.name'));
+    }
+
+    /** HTML -> clean one-line text, trimmed for meta descriptions */
+    private function plain($html, int $limit = 155): string
+    {
+        $text = html_entity_decode(strip_tags((string) $html), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $text = trim(preg_replace('/\s+/u', ' ', $text));
+
+        return Str::limit($text, $limit, '...');
+    }
+
+    /**
+     * Unsaved SeoPage for the current record. Empty values are dropped,
+     * and robots / og_type / twitter_card fall back to the route-level row.
+     */
+    private function seoOverride(array $values, ?array $schema = null): SeoPage
+    {
+        $base = Route::currentRouteName() ? SeoPage::forKey(Route::currentRouteName()) : null;
+
+        $inherit = $base ? Arr::only($base->getAttributes(), ['robots', 'og_type', 'twitter_card']) : [];
+
+        if ($schema) {
+            $values['schema_markup'] = json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        }
+
+        return new SeoPage(array_filter($values + $inherit, fn($v) => filled($v)));
     }
 
     public function productShow(Request $request, $slug)
@@ -444,24 +546,82 @@ class FrontController extends Controller
         // ── Product options (selectable attributes + variant map) ──
         [$optionGroups, $optionData] = $this->productOptionData($product, $gallery);
 
+        // Is product ka koi line current cart mein hai? (View Cart / Checkout button ke liye)
+        $currentCart = auth('customer')->check()
+            ? Cart::where('customer_id', auth('customer')->id())->first()
+            : Cart::where('session_id', session()->getId())->first();
+
+        $inCart = $currentCart
+            ? $currentCart->items()->where('product_id', $product->id)->exists()
+            : false;
+
         Product::trackView($product->id);
 
+        // ── SEO ──
+        $site = $this->siteName();
+        $catName = $product->subcategory->name ?? $product->category->name ?? null;
+        $seoImg = $gallery->first() ? asset('storage/' . $gallery->first()->image) : null;
+        $seoDesc = $product->meta_description
+            ?: $this->plain($product->short_description ?: $product->description)
+            ?: "Buy {$product->name} online at {$site}. Pan-India delivery and easy returns.";
+
+        $schema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Product',
+            'name' => $product->name,
+            'description' => $seoDesc,
+            'sku' => $product->sku,
+            'image' => $gallery->map(fn($g) => asset('storage/' . $g->image))->values()->all() ?: null,
+            'category' => $catName,
+            'brand' => ['@type' => 'Brand', 'name' => $site],
+            'offers' => [
+                '@type' => 'Offer',
+                'url' => route('products.show', $product->slug),
+                'priceCurrency' => 'INR',
+                'price' => (float) $product->price,
+                'availability' => (int) $product->stock > 0
+                    ? 'https://schema.org/InStock'
+                    : 'https://schema.org/OutOfStock',
+            ],
+        ];
+
+        if ($product->reviews_count > 0) {
+            $schema['aggregateRating'] = [
+                '@type' => 'AggregateRating',
+                'ratingValue' => round((float) $product->avg_rating, 1),
+                'reviewCount' => (int) $product->reviews_count,
+            ];
+        }
+
+        $seoOverride = $this->seoOverride([
+            'meta_title' => $product->meta_title ?: $product->name . ($catName ? " - {$catName}" : '') . ' | ' . $site,
+            'meta_description' => $seoDesc,
+            'og_image' => $seoImg,
+            'og_type' => 'product',
+            'canonical_url' => route('products.show', $product->slug),
+        ], array_filter($schema, fn($v) => filled($v)));
+
+        $viewItemScript = \App\Services\Tracking\PixelTracker::viewItemScript($product);
+
         return view('front-pages.product-detail', compact(
-            'product',
-            'gallery',
-            'coupons',
             'specs',
+            'inCart',
             'related',
-            'recentlyViewed',
             'reviews',
+            'coupons',
+            'gallery',
+            'product',
+            'optionData',
             'reviewSort',
-            'ratingCounts',
-            'photoReviews',
-            'fiveStarReviews',
-            'customerPhotos',
+            'seoOverride',
             'reviewState',
             'optionGroups',
-            'optionData'
+            'ratingCounts',
+            'photoReviews',
+            'customerPhotos',
+            'recentlyViewed',
+            'viewItemScript',
+            'fiveStarReviews',
         ));
     }
 
@@ -674,7 +834,8 @@ class FrontController extends Controller
             ]);
         }
 
-        return view('front-pages.faqs', compact('categories'));
+        $hero = PageHero::forPage('faqs');
+        return view('front-pages.faqs', compact('categories', 'hero'));
     }
 
     public function blogs()
@@ -688,7 +849,8 @@ class FrontController extends Controller
             ->paginate(9)
             ->withQueryString();
 
-        return view('front-pages.blogs', compact('featured', 'blogs'));
+        $hero = PageHero::forPage('blogs');
+        return view('front-pages.blogs', compact('featured', 'blogs', 'hero'));
     }
 
     public function blogDetail($slug)
@@ -702,12 +864,39 @@ class FrontController extends Controller
             ->limit(6)
             ->get();
 
-        return view('front-pages.blog-detail', compact('blog', 'related'));
+        $site = $this->siteName();
+        $seoDesc = $blog->meta_description
+            ?: $this->plain($blog->excerpt ?? $blog->content ?? '')
+            ?: "Read {$blog->title} on the {$site} blog.";
+        $seoImg = $blog->image ? asset('storage/' . $blog->image) : null;
+
+        $seoOverride = $this->seoOverride([
+            'meta_title' => $blog->meta_title ?: $blog->title . ' | ' . $site,
+            'meta_description' => $seoDesc,
+            'og_image' => $seoImg,
+            'og_type' => 'article',
+            'canonical_url' => route('blog.show', $blog->slug),
+        ], array_filter([
+                '@context' => 'https://schema.org',
+                '@type' => 'BlogPosting',
+                'headline' => Str::limit($blog->title, 110, ''),
+                'description' => $seoDesc,
+                'image' => $seoImg,
+                'datePublished' => optional($blog->published_at)->toIso8601String(),
+                'dateModified' => optional($blog->updated_at)->toIso8601String(),
+                'mainEntityOfPage' => route('blog.show', $blog->slug),
+                'publisher' => ['@type' => 'Organization', 'name' => $site],
+            ], fn($v) => filled($v)));
+
+        return view('front-pages.blog-detail', compact('blog', 'related', 'seoOverride'));
     }
 
     public function contact()
     {
-        return view('front-pages.contact', ['enquiryTypes' => ContactEnquiry::TYPES]);
+        return view('front-pages.contact', [
+            'enquiryTypes' => ContactEnquiry::TYPES,
+            'hero' => PageHero::forPage('contact'),
+        ]);
     }
 
     public function contactSubmit(Request $request)
@@ -752,7 +941,17 @@ class FrontController extends Controller
 
         $content = $page->renderedContent(Setting::first());
 
-        return view('front-pages.page', compact('page', 'content'));
+        $site = $this->siteName();
+
+        $seoOverride = $this->seoOverride([
+            'meta_title' => $page->meta_title ?: $page->heading . ' | ' . $site,
+            'meta_description' => $page->meta_description
+                ?: $this->plain($content)
+                ?: "{$page->heading} - {$site}.",
+            'canonical_url' => route('page.show', $page->slug),
+        ]);
+
+        return view('front-pages.page', compact('page', 'content', 'seoOverride'));
     }
 
     public function newsletterSubscribe(Request $request)

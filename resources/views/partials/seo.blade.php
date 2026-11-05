@@ -1,35 +1,25 @@
-{{--
-    resources/views/partials/seo.blade.php
-
-    Included inside <head> of layouts.app.
-    $seo = SeoPage row for the current route (or null), shared by a View composer.
-
-    Priority:
-      1. Pages that define @section('title') / @section('meta')
-         (blog-detail, career-detail) keep full control of their own tags.
-      2. Everything else uses the seo_pages row for the current route name.
-      3. No row / inactive row => safe defaults.
---}}
 @php
-    $seo       = $seo ?? null;
-    $site      = config('app.name', 'Web Mingo');
+    $base      = $seo ?? null;                    // route-level row (from composer)
+    $seo       = $seoOverride ?? $base;           // per-record override (from controller)
+    $site      = $general->site_name ?: config('app.name');
     $hasTitle  = $__env->hasSection('title');
     $hasMeta   = $__env->hasSection('meta');
 
-    // make "/images/x.jpg" absolute
     $abs = function ($path) {
         if (!$path) return null;
         return \Illuminate\Support\Str::startsWith($path, ['http://', 'https://']) ? $path : url($path);
     };
 
+    $fallbackImg = $general->header_logo ? asset('storage/' . $general->header_logo) : null;
+
     $title     = $seo->meta_title ?? $site;
     $desc      = $seo->meta_description ?? null;
-    $canonical = $seo->canonical_url ?? url()->current();   // current() drops ?query / ?page=
+    $canonical = $seo->canonical_url ?? url()->current();
     $robots    = $seo->robots ?? 'index, follow';
 
     $ogTitle   = $seo->og_title ?? $title;
     $ogDesc    = $seo->og_description ?? $desc;
-    $ogImage   = $abs($seo->og_image ?? null);
+    $ogImage   = $abs($seo->og_image ?? null) ?: $fallbackImg;
 
     $twTitle   = $seo->twitter_title ?? $ogTitle;
     $twDesc    = $seo->twitter_description ?? $ogDesc;
@@ -87,6 +77,6 @@
 @endif
 
 {{-- Custom head scripts (analytics, verification, pixels) --}}
-@if (!empty($seo?->scripts))
-    {!! $seo->scripts !!}
+@if (!empty($base?->scripts))
+    {!! $base->scripts !!}
 @endif

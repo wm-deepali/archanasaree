@@ -652,6 +652,7 @@ class CartController extends Controller
             : $item->product->stock;
 
         $minQty = max(1, (int) $item->product->min_qty);
+        $oldQty = (int) $item->quantity;
 
         if ($request->action == 'plus') {
 
@@ -681,6 +682,17 @@ class CartController extends Controller
         $item->total = $item->quantity * ($item->price + $addonUnitTotal + $dyeUnitCharge);
         $item->save();
 
+        // Tracking: only the change in quantity, and only if it really changed
+        $delta = (int) $item->quantity - $oldQty;
+        $unitPrice = (float) $item->price + $dyeUnitCharge;
+        $trackingEvents = null;
+
+        if ($delta > 0) {
+            $trackingEvents = PixelTracker::addToCart($item->product, $delta, $unitPrice);
+        } elseif ($delta < 0) {
+            $trackingEvents = PixelTracker::removeFromCart($item->product, abs($delta), $unitPrice);
+        }
+
         $cart = $item->cart;
 
         $cart->recalculateTotals();
@@ -706,6 +718,7 @@ class CartController extends Controller
             'coupon_removed' => $couponResult['removed'] ?? false,
             'coupon_message' => $couponResult['message'] ?? null,
             'discount' => $cart->discount,
+            'tracking_events' => $trackingEvents,
         ]);
     }
 

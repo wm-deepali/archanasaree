@@ -23,13 +23,37 @@ class StoredCartController extends Controller
         $abandonedToday = $this->statsQuery()->whereDate('updated_at', today())->count();
         $guestCarts = $this->statsQuery()->whereNull('customer_id')->count();
 
-        $carts = $query->paginate(25)->withQueryString();
+        $carts = $query->paginate(10)->withQueryString();
 
-        // Har cart ka tracked journey (stage dikhane ke liye)
-        $activityMap = CartActivity::whereIn('cart_id', $carts->pluck('id'))
+        // Har cart ka tracked journey (stage dikhane ke liye) — show() jaisi visitor-based history
+        $cartIds = $carts->pluck('id');
+
+        $visitorMap = CartActivity::whereIn('cart_id', $cartIds)
+            ->whereNotNull('visitor_id')
+            ->get(['cart_id', 'visitor_id'])
+            ->groupBy('cart_id')
+            ->map(fn($g) => $g->pluck('visitor_id')->unique()->values());
+
+        $allVisitorIds = $visitorMap->flatten()->unique()->values();
+
+        $allActivities = CartActivity::where(function ($q) use ($cartIds, $allVisitorIds) {
+            $q->whereIn('cart_id', $cartIds);
+            if ($allVisitorIds->isNotEmpty()) {
+                $q->orWhereIn('visitor_id', $allVisitorIds);
+            }
+        })
             ->orderBy('created_at')
-            ->get()
-            ->groupBy('cart_id');
+            ->get();
+
+        $activityMap = $carts->mapWithKeys(function ($cart) use ($visitorMap, $allActivities) {
+            $vids = $visitorMap[$cart->id] ?? collect();
+
+            return [
+                $cart->id => $allActivities->filter(
+                    fn($a) => $a->cart_id == $cart->id || $vids->contains($a->visitor_id)
+                )->values(),
+            ];
+        });
 
         return view('admin.customers.stored-carts', compact(
             'carts',

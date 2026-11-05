@@ -4,7 +4,6 @@ use App\Http\Controllers\Admin\{
     FaqController,
     NdrController,
     SeoController,
-    TeamController,
     BlogController,
     OrderController,
     CouponController,
@@ -17,7 +16,9 @@ use App\Http\Controllers\Admin\{
     HomePageController,
     CustomerController,
     CategoryController,
+    PageHeroController,
     TaxReportController,
+    AboutPageController,
     SystemLogController,
     DashboardController,
     NdrReportController,
@@ -31,7 +32,6 @@ use App\Http\Controllers\Admin\{
     FaqCategoryController,
     StockAlertsController,
     SalesReportController,
-    TestimonialController,
     OrderReportController,
     OrderReturnController,
     AdminSettingController,
@@ -76,7 +76,7 @@ Route::middleware('maintenance.mode')->group(function () {
         Route::get('/', 'home')->name('home');
         Route::get('/faqs', 'faqs')->name('faqs');
         Route::get('/blog', 'blogs')->name('blogs');
-        Route::get('/about', 'about')->name('about');
+        Route::get('/about-us', 'about')->name('about');
         Route::get('/contact', 'contact')->name('contact');
         Route::get('/products', 'products')->name('products');
         Route::get('/blog/{slug}', 'blogDetail')->name('blog.show');
@@ -183,8 +183,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::resource('blogs', BlogController::class)->names('blogs');
 
-        Route::resource('testimonials', TestimonialController::class)->names('testimonials');
-
         Route::get('contact-enquiries', [ContactEnquiryController::class, 'index'])->name('contact-enquiries.index');
         Route::get('contact-enquiries/export', [ContactEnquiryController::class, 'export'])->name('contact-enquiries.export');
         Route::delete('contact-enquiries/bulk-delete', [ContactEnquiryController::class, 'bulkDelete'])->name('contact-enquiries.bulk-delete');
@@ -194,8 +192,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('coupon-enquiries', CouponEnquiryController::class);
         Route::delete('coupon-enquiries/bulk-delete', [CouponEnquiryController::class, 'bulkDelete'])->name('coupon-enquiries.bulk-delete');
         Route::get('coupon-enquiries-export', [CouponEnquiryController::class, 'export'])->name('coupon-enquiries.export');
-
-        Route::resource('teams', TeamController::class);
 
         Route::get('/logout', [LogoutController::class, 'logout']);
 
@@ -225,6 +221,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('subscribers/{id}/toggle', [NewsletterSubscriberController::class, 'toggle'])->name('subscribers.toggle');
         Route::delete('subscribers/{id}', [NewsletterSubscriberController::class, 'destroy'])->name('subscribers.destroy');
 
+        Route::get('about-page', [AboutPageController::class, 'index'])->name('about.index');
+        Route::get('about-page/{key}', [AboutPageController::class, 'edit'])->name('about.edit')->where('key', '[a-z_]+');
+        Route::put('about-page/{key}', [AboutPageController::class, 'update'])->name('about.update')->where('key', '[a-z_]+');
+
+        Route::get('page-banners', [PageHeroController::class, 'index'])->name('page-heroes.index');
+        Route::get('page-banners/{page}', [PageHeroController::class, 'edit'])->name('page-heroes.edit')->where('page', '[a-z_]+');
+        Route::put('page-banners/{page}', [PageHeroController::class, 'update'])->name('page-heroes.update')->where('page', '[a-z_]+');
 
         Route::get('/seo', [SeoController::class, 'index'])->name('seo.index');
         Route::put('/seo/{id}', [SeoController::class, 'update'])->name('seo.update');

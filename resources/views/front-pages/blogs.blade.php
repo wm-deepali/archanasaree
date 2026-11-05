@@ -17,20 +17,23 @@
         </ul>
         <div class="ban-grid">
           <div class="ban-content">
-            <span class="eyebrow">The Archana Journal</span>
+            @if (filled($hero->eyebrow))
+              <span class="eyebrow">{{ $hero->eyebrow }}</span>
+            @endif
             <div class="heading">
-              <h1>Stories, Styling &amp; Saree Inspiration</h1>
+              <h1>{!! nl2br(e($hero->title)) !!}</h1>
             </div>
-            <p class="ban-desc">
-              Draping guides, wedding edits, fabric stories and styling ideas
-              from the world of Indian ethnic wear.
-            </p>
+            @if (filled($hero->description))
+              <p class="ban-desc">{{ $hero->description }}</p>
+            @endif
           </div>
           <div class="ban-visual">
             <div class="ban-photo">
-              <img src="{{ asset('assets/images/home/banner5.jpg') }}" alt="Archana Saree Emporium journal" />
+              <img src="{{ $hero->image_url }}" alt="{{ preg_replace('/\s+/', ' ', $hero->title) }}" />
             </div>
-            <span class="ban-tag">Read &amp; Be Inspired</span>
+            @if (filled($hero->tag))
+              <span class="ban-tag">{{ $hero->tag }}</span>
+            @endif
           </div>
         </div>
       </div>

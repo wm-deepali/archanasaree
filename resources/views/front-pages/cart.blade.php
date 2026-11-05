@@ -83,7 +83,7 @@
                       $extras = $addons->filter(fn($a) => $a->price > 0)
                         ->map(fn($a) => '+ ₹' . number_format($a->price) . ' ' . $a->detail)
                         ->all();
-                        
+
                       if ($dye > 0) {
                         $extras[] = '+ ₹' . number_format($dye) . ' colour customization';
                       }
@@ -520,6 +520,8 @@
 
       // After any successful change
       function finish(r) {
+        fireTrackingEvents(r.tracking_events);
+
         if (Number(r.cart_count) === 0) {
           window.location.reload();
           return $.Deferred().resolve().promise();

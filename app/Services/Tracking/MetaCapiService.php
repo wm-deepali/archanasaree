@@ -20,7 +20,14 @@ class MetaCapiService
     {
         $settings = GoogleSetting::current();
 
-        if (!$settings->meta_enabled || !$settings->meta_pixel_id || !$settings->meta_capi_token) {
+        // meta_ev_purchase bhi check: browser pixel isi toggle se chalta hai
+        // (PixelTracker::purchaseScript), to server event bhi usi se chale.
+        if (
+            !$settings->meta_enabled
+            || !$settings->meta_ev_purchase
+            || !$settings->meta_pixel_id
+            || !$settings->meta_capi_token
+        ) {
             return;
         }
 

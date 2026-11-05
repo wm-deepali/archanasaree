@@ -67,10 +67,13 @@
   <link rel="stylesheet" href="{{ asset('assets/css/animate.css')}}" />
   <link rel="stylesheet" href="{{ asset('assets/css/fancybox.css')}}" />
 
+  @include('layouts.tracking-head')
   @stack('styles')
 </head>
 
 <body>
+
+  @include('layouts.tracking-body-top')
 
   @if (!empty($seo?->body_scripts))
     {!! $seo->body_scripts !!}
@@ -686,7 +689,7 @@
             <button type="submit" class="btn btn-primary pop-submit">
               Register Account
             </button>
-            
+
             @php $tc = $policyPages->get('terms-conditions');
             $pp = $policyPages->get('privacy-policy'); @endphp
             @if ($tc || $pp)
@@ -720,466 +723,330 @@
   </div>
 
   <div class="ham-pop">
-      <div class="ham-body">
-        <div class="ham-top">
-          <button type="button" class="ham-back" data-ham-back>
-            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
-            <span>Back</span>
-          </button>
-
-          <a href="index.html" class="ham-logo">
-            <img
-              src="assets/images/logo.png"
-              alt="Archana Saree Emporium"
-              title="Archana Saree Emporium"
-            />
-          </a>
-
-          <button class="close close-btn" type="button" aria-label="Close menu">
-            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
-          </button>
-        </div>
-
-        <div class="ham-views">
-          <!-- ===== MAIN ===== -->
-          <div
-            class="ham-view is-active"
-            data-ham-view="main"
-            data-ham-title="Menu"
-          >
-            <ul class="ham-list">
-              <li class="active"><a href="index.html">Home</a></li>
-              <li>
-                <button type="button" class="ham-link" data-ham-open="saree">
-                  <span class="ham-link-text">Saree</span>
-                  <span class="ham-arrow"
-                    ><i class="fa-solid fa-arrow-right" aria-hidden="true"></i
-                  ></span>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="ham-link" data-ham-open="lehenga">
-                  <span class="ham-link-text">Lehenga</span>
-                  <span class="ham-arrow"
-                    ><i class="fa-solid fa-arrow-right" aria-hidden="true"></i
-                  ></span>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="ham-link" data-ham-open="bridal">
-                  <span class="ham-link-text">Bridal Wear</span>
-                  <span class="ham-arrow"
-                    ><i class="fa-solid fa-arrow-right" aria-hidden="true"></i
-                  ></span>
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  class="ham-link"
-                  data-ham-open="collection"
-                >
-                  <span class="ham-link-text">Shop by Collection</span>
-                  <span class="ham-arrow"
-                    ><i class="fa-solid fa-arrow-right" aria-hidden="true"></i
-                  ></span>
-                </button>
-              </li>
-              <li><a href="category-listing.html">New Arrivals</a></li>
-              <li><a href="category-listing.html">Offers</a></li>
-            </ul>
-          </div>
-
-          <!-- ===== SAREE ===== -->
-          <div
-            class="ham-view"
-            data-ham-view="saree"
-            data-ham-title="Saree"
-            aria-hidden="true"
-          >
-            <div class="ham-head">
-              <h3 class="ham-title">Saree</h3>
-              <p class="ham-sub">Timeless drapes for every celebration.</p>
-            </div>
-            <ul class="ham-list ham-list--sub">
-              <li><a href="product-listing.html">Bridal Saree</a></li>
-              <li><a href="product-listing.html">Party Wears</a></li>
-              <li><a href="product-listing.html">Cocktail Saree</a></li>
-              <li><a href="product-listing.html">Banarsi Saree</a></li>
-              <li><a href="product-listing.html">Net Sarees</a></li>
-              <li>
-                <a href="category-listing.html">Explore All Sarees &rarr;</a>
-              </li>
-            </ul>
-          </div>
-
-          <!-- ===== LEHENGA ===== -->
-          <div
-            class="ham-view"
-            data-ham-view="lehenga"
-            data-ham-title="Lehenga"
-            aria-hidden="true"
-          >
-            <div class="ham-head">
-              <h3 class="ham-title">Lehenga</h3>
-              <p class="ham-sub">
-                Statement silhouettes for every celebration.
-              </p>
-            </div>
-            <ul class="ham-list ham-list--sub">
-              <li><a href="product-listing.html">Designer Lehengas</a></li>
-              <li><a href="product-listing.html">Bridal Lehengas</a></li>
-              <li><a href="product-listing.html">Party Wear Lehengas</a></li>
-              <li><a href="product-listing.html">Wedding Guest Lehengas</a></li>
-              <li><a href="product-listing.html">Sangeet &amp; Mehendi</a></li>
-              <li><a href="product-listing.html">Embroidered Lehengas</a></li>
-              <li><a href="product-listing.html">Velvet Lehengas</a></li>
-              <li><a href="product-listing.html">Organza Lehengas</a></li>
-              <li>
-                <a href="category-listing.html">Explore All Lehengas &rarr;</a>
-              </li>
-            </ul>
-          </div>
-
-          <!-- ===== BRIDAL WEAR ===== -->
-          <div
-            class="ham-view"
-            data-ham-view="bridal"
-            data-ham-title="Bridal Wear"
-            aria-hidden="true"
-          >
-            <div class="ham-head">
-              <h3 class="ham-title">Bridal Wear</h3>
-              <p class="ham-sub">Heirloom pieces for your most special day.</p>
-            </div>
-            <ul class="ham-list ham-list--sub">
-              <li><a href="product-listing.html">Bridal Lehengas</a></li>
-              <li><a href="product-listing.html">Bridal Sarees</a></li>
-              <li><a href="product-listing.html">Reception Wear</a></li>
-              <li><a href="product-listing.html">Engagement Wear</a></li>
-              <li><a href="product-listing.html">Haldi &amp; Mehendi</a></li>
-              <li><a href="product-listing.html">Sangeet Outfits</a></li>
-              <li><a href="product-listing.html">Bridal Dupattas</a></li>
-              <li><a href="javascript:void(0)">Heirloom Collection</a></li>
-              <li>
-                <a href="category-listing.html">Explore Bridal Wear &rarr;</a>
-              </li>
-            </ul>
-          </div>
-
-          <!-- ===== SHOP BY COLLECTION ===== -->
-          <div
-            class="ham-view"
-            data-ham-view="collection"
-            data-ham-title="Shop by Collection"
-            aria-hidden="true"
-          >
-            <div class="ham-head">
-              <h3 class="ham-title">Shop by Collection</h3>
-            </div>
-            <ul class="ham-list">
-              <li>
-                <button
-                  type="button"
-                  class="ham-link"
-                  data-ham-open="collection-fabric"
-                >
-                  <span class="ham-link-text">Shop by Fabrics</span>
-                  <span class="ham-arrow"
-                    ><i class="fa-solid fa-arrow-right" aria-hidden="true"></i
-                  ></span>
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  class="ham-link"
-                  data-ham-open="collection-color"
-                >
-                  <span class="ham-link-text">Shop by Color</span>
-                  <span class="ham-arrow"
-                    ><i class="fa-solid fa-arrow-right" aria-hidden="true"></i
-                  ></span>
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  class="ham-link"
-                  data-ham-open="collection-collections"
-                >
-                  <span class="ham-link-text">Shop by Collections</span>
-                  <span class="ham-arrow"
-                    ><i class="fa-solid fa-arrow-right" aria-hidden="true"></i
-                  ></span>
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  class="ham-link"
-                  data-ham-open="collection-price"
-                >
-                  <span class="ham-link-text">Price Range</span>
-                  <span class="ham-arrow"
-                    ><i class="fa-solid fa-arrow-right" aria-hidden="true"></i
-                  ></span>
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  class="ham-link"
-                  data-ham-open="collection-occasion"
-                >
-                  <span class="ham-link-text">Shop by Occasions</span>
-                  <span class="ham-arrow"
-                    ><i class="fa-solid fa-arrow-right" aria-hidden="true"></i
-                  ></span>
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          <div
-            class="ham-view"
-            data-ham-view="collection-fabric"
-            data-ham-title="Shop by Collection"
-            aria-hidden="true"
-          >
-            <div class="ham-head">
-              <h3 class="ham-title">Shop by Fabrics</h3>
-            </div>
-            <ul class="ham-list ham-list--sub">
-              <li><a href="product-listing.html">Mul Chanderi</a></li>
-              <li><a href="product-listing.html">Viscose Georgette</a></li>
-              <li><a href="product-listing.html">Cotton</a></li>
-              <li><a href="product-listing.html">Pure Organza</a></li>
-              <li><a href="product-listing.html">Linen</a></li>
-              <li><a href="product-listing.html">Kota</a></li>
-              <li><a href="product-listing.html">Pure Georgette</a></li>
-              <li><a href="product-listing.html">Silk</a></li>
-              <li><a href="product-listing.html">Tissue</a></li>
-              <li><a href="product-listing.html">Chanderi</a></li>
-            </ul>
-          </div>
-
-          <div
-            class="ham-view"
-            data-ham-view="collection-color"
-            data-ham-title="Shop by Collection"
-            aria-hidden="true"
-          >
-            <div class="ham-head">
-              <h3 class="ham-title">Shop by Color</h3>
-            </div>
-            <ul class="ham-list ham-list--sub">
-              <li><a href="product-listing.html">Red</a></li>
-              <li><a href="product-listing.html">Blue</a></li>
-              <li><a href="product-listing.html">Green</a></li>
-              <li><a href="product-listing.html">Yellow</a></li>
-              <li><a href="product-listing.html">Black</a></li>
-              <li><a href="product-listing.html">White</a></li>
-              <li><a href="product-listing.html">Pink</a></li>
-              <li><a href="product-listing.html">Brown</a></li>
-              <li><a href="product-listing.html">Orange</a></li>
-              <li><a href="product-listing.html">Purple</a></li>
-            </ul>
-          </div>
-
-          <div
-            class="ham-view"
-            data-ham-view="collection-collections"
-            data-ham-title="Shop by Collection"
-            aria-hidden="true"
-          >
-            <div class="ham-head">
-              <h3 class="ham-title">Shop by Collections</h3>
-            </div>
-            <ul class="ham-list ham-list--sub">
-              <li><a href="product-listing.html">New Arrival</a></li>
-              <li><a href="product-listing.html">Best Sellers</a></li>
-              <li><a href="product-listing.html">Premium Wear</a></li>
-              <li><a href="product-listing.html">Exclusive Collection</a></li>
-              <li><a href="product-listing.html">Festive Sale</a></li>
-            </ul>
-          </div>
-
-          <div
-            class="ham-view"
-            data-ham-view="collection-price"
-            data-ham-title="Shop by Collection"
-            aria-hidden="true"
-          >
-            <div class="ham-head">
-              <h3 class="ham-title">Price Range</h3>
-            </div>
-            <ul class="ham-list ham-list--sub">
-              <li><a href="product-listing.html">Under ₹2,999</a></li>
-              <li><a href="product-listing.html">₹3,000 - ₹5,999</a></li>
-              <li><a href="product-listing.html">₹6,000 - ₹9,999</a></li>
-              <li><a href="product-listing.html">₹10,000 - ₹14,999</a></li>
-              <li><a href="product-listing.html">₹15,000 and Above</a></li>
-            </ul>
-          </div>
-
-          <div
-            class="ham-view"
-            data-ham-view="collection-occasion"
-            data-ham-title="Shop by Collection"
-            aria-hidden="true"
-          >
-            <div class="ham-head">
-              <h3 class="ham-title">Shop by Occasions</h3>
-            </div>
-            <ul class="ham-list ham-list--sub">
-              <li><a href="product-listing.html">Elegant Ethnic Wear</a></li>
-              <li><a href="product-listing.html">Office/Everyday Wear</a></li>
-              <li>
-                <a href="product-listing.html">Indo-Western Collection</a>
-              </li>
-              <li><a href="product-listing.html">Festive/Occasion Wear</a></li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="ham-bottom">
-          <div class="ham-social">
-            <a
-              href="javascript:void(0)"
-              target="_blank"
-              title="Facebook"
-              aria-label="Facebook"
-              ><i class="fa-brands fa-facebook-f"></i
-            ></a>
-            <a
-              href="javascript:void(0)"
-              target="_blank"
-              title="Instagram"
-              aria-label="Instagram"
-              ><i class="fa-brands fa-instagram"></i
-            ></a>
-            <a
-              href="javascript:void(0)"
-              target="_blank"
-              title="Pinterest"
-              aria-label="Pinterest"
-              ><i class="fa-brands fa-pinterest-p"></i
-            ></a>
-            <a
-              href="javascript:void(0)"
-              target="_blank"
-              title="YouTube"
-              aria-label="YouTube"
-              ><i class="fa-brands fa-youtube"></i
-            ></a>
-            <a
-              href="javascript:void(0)"
-              target="_blank"
-              title="WhatsApp"
-              aria-label="WhatsApp"
-              ><i class="fa-brands fa-whatsapp"></i
-            ></a>
-          </div>
-
-          <a href="category-listing.html" class="btn btn-primary header-cta">
-            <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-            Shop New Arrivals
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <div class="model video-pop">
-      <div class="model-body">
-        <button class="close-video close">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0.75 0.75L23.25 23.25M0.75 23.25L23.25 0.75"
-              stroke="black"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+    <div class="ham-body">
+      <div class="ham-top">
+        <button type="button" class="ham-back" data-ham-back>
+          <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+          <span>Back</span>
         </button>
 
-        <iframe id="iframe1" allow="autoplay; fullscreen" src=""></iframe>
-      </div>
-    </div>
+        <a href="index.html" class="ham-logo">
+          <img src="assets/images/logo.png" alt="Archana Saree Emporium" title="Archana Saree Emporium" />
+        </a>
 
-    <div class="model offer-pop">
-      <div class="model-body">
-        <button class="close close-btn" type="button" aria-label="Close offer">
+        <button class="close close-btn" type="button" aria-label="Close menu">
           <i class="fa-solid fa-xmark" aria-hidden="true"></i>
         </button>
+      </div>
 
-        <div class="op-grid">
-          <div class="op-visual">
-            <img
-              src="assets/images/home/offer1.jpg"
-              alt="Welcome to Archana"
-              loading="lazy"
-            />
-            <span class="op-badge"><b>10%</b> Off First Order</span>
+      <div class="ham-views">
+        <!-- ===== MAIN ===== -->
+        <div class="ham-view is-active" data-ham-view="main" data-ham-title="Menu">
+          <ul class="ham-list">
+            <li class="active"><a href="index.html">Home</a></li>
+            <li>
+              <button type="button" class="ham-link" data-ham-open="saree">
+                <span class="ham-link-text">Saree</span>
+                <span class="ham-arrow"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="ham-link" data-ham-open="lehenga">
+                <span class="ham-link-text">Lehenga</span>
+                <span class="ham-arrow"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="ham-link" data-ham-open="bridal">
+                <span class="ham-link-text">Bridal Wear</span>
+                <span class="ham-arrow"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="ham-link" data-ham-open="collection">
+                <span class="ham-link-text">Shop by Collection</span>
+                <span class="ham-arrow"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+              </button>
+            </li>
+            <li><a href="category-listing.html">New Arrivals</a></li>
+            <li><a href="category-listing.html">Offers</a></li>
+          </ul>
+        </div>
+
+        <!-- ===== SAREE ===== -->
+        <div class="ham-view" data-ham-view="saree" data-ham-title="Saree" aria-hidden="true">
+          <div class="ham-head">
+            <h3 class="ham-title">Saree</h3>
+            <p class="ham-sub">Timeless drapes for every celebration.</p>
           </div>
+          <ul class="ham-list ham-list--sub">
+            <li><a href="product-listing.html">Bridal Saree</a></li>
+            <li><a href="product-listing.html">Party Wears</a></li>
+            <li><a href="product-listing.html">Cocktail Saree</a></li>
+            <li><a href="product-listing.html">Banarsi Saree</a></li>
+            <li><a href="product-listing.html">Net Sarees</a></li>
+            <li>
+              <a href="category-listing.html">Explore All Sarees &rarr;</a>
+            </li>
+          </ul>
+        </div>
 
-          <div class="op-content">
-            <span class="op-eyebrow">Exclusive Offer</span>
-            <h4 class="op-title">Welcome to Archana</h4>
-            <p class="op-desc">
-              Enjoy a special welcome benefit on your first order of sarees,
-              lehengas and bridal wear.
+        <!-- ===== LEHENGA ===== -->
+        <div class="ham-view" data-ham-view="lehenga" data-ham-title="Lehenga" aria-hidden="true">
+          <div class="ham-head">
+            <h3 class="ham-title">Lehenga</h3>
+            <p class="ham-sub">
+              Statement silhouettes for every celebration.
             </p>
-
-            <div class="op-price">
-              <span class="op-save">Extra 10% Off</span>
-              <span class="op-min">on your first order</span>
-            </div>
-
-            <div class="op-coupon">
-              <span class="op-label">Use Coupon Code</span>
-              <div class="op-code-box">
-                <span class="op-code">ARCHANA10</span>
-                <button
-                  type="button"
-                  class="op-copy coupon-copy"
-                  data-code="ARCHANA10"
-                >
-                  <span>Copy Code</span>
-                </button>
-              </div>
-            </div>
-
-            <ul class="op-points">
-              <li>
-                <i class="fa-solid fa-check"></i> Valid on all collections
-              </li>
-              <li>
-                <i class="fa-solid fa-check"></i> Free shipping above ₹2,999
-              </li>
-              <li><i class="fa-solid fa-check"></i> Limited time offer</li>
-            </ul>
-
-            <div class="op-btns">
-              <a href="category-listing.html" class="btn btn-primary">
-                Shop Now <i class="fa-solid fa-arrow-right-long"></i>
-              </a>
-              <a href="category-listing.html" class="btn btn-outline-primary">
-                View All Offers
-              </a>
-            </div>
-
-            <p class="op-note">*Terms &amp; conditions apply.</p>
           </div>
+          <ul class="ham-list ham-list--sub">
+            <li><a href="product-listing.html">Designer Lehengas</a></li>
+            <li><a href="product-listing.html">Bridal Lehengas</a></li>
+            <li><a href="product-listing.html">Party Wear Lehengas</a></li>
+            <li><a href="product-listing.html">Wedding Guest Lehengas</a></li>
+            <li><a href="product-listing.html">Sangeet &amp; Mehendi</a></li>
+            <li><a href="product-listing.html">Embroidered Lehengas</a></li>
+            <li><a href="product-listing.html">Velvet Lehengas</a></li>
+            <li><a href="product-listing.html">Organza Lehengas</a></li>
+            <li>
+              <a href="category-listing.html">Explore All Lehengas &rarr;</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- ===== BRIDAL WEAR ===== -->
+        <div class="ham-view" data-ham-view="bridal" data-ham-title="Bridal Wear" aria-hidden="true">
+          <div class="ham-head">
+            <h3 class="ham-title">Bridal Wear</h3>
+            <p class="ham-sub">Heirloom pieces for your most special day.</p>
+          </div>
+          <ul class="ham-list ham-list--sub">
+            <li><a href="product-listing.html">Bridal Lehengas</a></li>
+            <li><a href="product-listing.html">Bridal Sarees</a></li>
+            <li><a href="product-listing.html">Reception Wear</a></li>
+            <li><a href="product-listing.html">Engagement Wear</a></li>
+            <li><a href="product-listing.html">Haldi &amp; Mehendi</a></li>
+            <li><a href="product-listing.html">Sangeet Outfits</a></li>
+            <li><a href="product-listing.html">Bridal Dupattas</a></li>
+            <li><a href="javascript:void(0)">Heirloom Collection</a></li>
+            <li>
+              <a href="category-listing.html">Explore Bridal Wear &rarr;</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- ===== SHOP BY COLLECTION ===== -->
+        <div class="ham-view" data-ham-view="collection" data-ham-title="Shop by Collection" aria-hidden="true">
+          <div class="ham-head">
+            <h3 class="ham-title">Shop by Collection</h3>
+          </div>
+          <ul class="ham-list">
+            <li>
+              <button type="button" class="ham-link" data-ham-open="collection-fabric">
+                <span class="ham-link-text">Shop by Fabrics</span>
+                <span class="ham-arrow"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="ham-link" data-ham-open="collection-color">
+                <span class="ham-link-text">Shop by Color</span>
+                <span class="ham-arrow"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="ham-link" data-ham-open="collection-collections">
+                <span class="ham-link-text">Shop by Collections</span>
+                <span class="ham-arrow"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="ham-link" data-ham-open="collection-price">
+                <span class="ham-link-text">Price Range</span>
+                <span class="ham-arrow"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="ham-link" data-ham-open="collection-occasion">
+                <span class="ham-link-text">Shop by Occasions</span>
+                <span class="ham-arrow"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="ham-view" data-ham-view="collection-fabric" data-ham-title="Shop by Collection" aria-hidden="true">
+          <div class="ham-head">
+            <h3 class="ham-title">Shop by Fabrics</h3>
+          </div>
+          <ul class="ham-list ham-list--sub">
+            <li><a href="product-listing.html">Mul Chanderi</a></li>
+            <li><a href="product-listing.html">Viscose Georgette</a></li>
+            <li><a href="product-listing.html">Cotton</a></li>
+            <li><a href="product-listing.html">Pure Organza</a></li>
+            <li><a href="product-listing.html">Linen</a></li>
+            <li><a href="product-listing.html">Kota</a></li>
+            <li><a href="product-listing.html">Pure Georgette</a></li>
+            <li><a href="product-listing.html">Silk</a></li>
+            <li><a href="product-listing.html">Tissue</a></li>
+            <li><a href="product-listing.html">Chanderi</a></li>
+          </ul>
+        </div>
+
+        <div class="ham-view" data-ham-view="collection-color" data-ham-title="Shop by Collection" aria-hidden="true">
+          <div class="ham-head">
+            <h3 class="ham-title">Shop by Color</h3>
+          </div>
+          <ul class="ham-list ham-list--sub">
+            <li><a href="product-listing.html">Red</a></li>
+            <li><a href="product-listing.html">Blue</a></li>
+            <li><a href="product-listing.html">Green</a></li>
+            <li><a href="product-listing.html">Yellow</a></li>
+            <li><a href="product-listing.html">Black</a></li>
+            <li><a href="product-listing.html">White</a></li>
+            <li><a href="product-listing.html">Pink</a></li>
+            <li><a href="product-listing.html">Brown</a></li>
+            <li><a href="product-listing.html">Orange</a></li>
+            <li><a href="product-listing.html">Purple</a></li>
+          </ul>
+        </div>
+
+        <div class="ham-view" data-ham-view="collection-collections" data-ham-title="Shop by Collection"
+          aria-hidden="true">
+          <div class="ham-head">
+            <h3 class="ham-title">Shop by Collections</h3>
+          </div>
+          <ul class="ham-list ham-list--sub">
+            <li><a href="product-listing.html">New Arrival</a></li>
+            <li><a href="product-listing.html">Best Sellers</a></li>
+            <li><a href="product-listing.html">Premium Wear</a></li>
+            <li><a href="product-listing.html">Exclusive Collection</a></li>
+            <li><a href="product-listing.html">Festive Sale</a></li>
+          </ul>
+        </div>
+
+        <div class="ham-view" data-ham-view="collection-price" data-ham-title="Shop by Collection" aria-hidden="true">
+          <div class="ham-head">
+            <h3 class="ham-title">Price Range</h3>
+          </div>
+          <ul class="ham-list ham-list--sub">
+            <li><a href="product-listing.html">Under ₹2,999</a></li>
+            <li><a href="product-listing.html">₹3,000 - ₹5,999</a></li>
+            <li><a href="product-listing.html">₹6,000 - ₹9,999</a></li>
+            <li><a href="product-listing.html">₹10,000 - ₹14,999</a></li>
+            <li><a href="product-listing.html">₹15,000 and Above</a></li>
+          </ul>
+        </div>
+
+        <div class="ham-view" data-ham-view="collection-occasion" data-ham-title="Shop by Collection"
+          aria-hidden="true">
+          <div class="ham-head">
+            <h3 class="ham-title">Shop by Occasions</h3>
+          </div>
+          <ul class="ham-list ham-list--sub">
+            <li><a href="product-listing.html">Elegant Ethnic Wear</a></li>
+            <li><a href="product-listing.html">Office/Everyday Wear</a></li>
+            <li>
+              <a href="product-listing.html">Indo-Western Collection</a>
+            </li>
+            <li><a href="product-listing.html">Festive/Occasion Wear</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="ham-bottom">
+        <div class="ham-social">
+          <a href="javascript:void(0)" target="_blank" title="Facebook" aria-label="Facebook"><i
+              class="fa-brands fa-facebook-f"></i></a>
+          <a href="javascript:void(0)" target="_blank" title="Instagram" aria-label="Instagram"><i
+              class="fa-brands fa-instagram"></i></a>
+          <a href="javascript:void(0)" target="_blank" title="Pinterest" aria-label="Pinterest"><i
+              class="fa-brands fa-pinterest-p"></i></a>
+          <a href="javascript:void(0)" target="_blank" title="YouTube" aria-label="YouTube"><i
+              class="fa-brands fa-youtube"></i></a>
+          <a href="javascript:void(0)" target="_blank" title="WhatsApp" aria-label="WhatsApp"><i
+              class="fa-brands fa-whatsapp"></i></a>
+        </div>
+
+        <a href="category-listing.html" class="btn btn-primary header-cta">
+          <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+          Shop New Arrivals
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="model video-pop">
+    <div class="model-body">
+      <button class="close-video close">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0.75 0.75L23.25 23.25M0.75 23.25L23.25 0.75" stroke="black" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </button>
+
+      <iframe id="iframe1" allow="autoplay; fullscreen" src=""></iframe>
+    </div>
+  </div>
+
+  <div class="model offer-pop">
+    <div class="model-body">
+      <button class="close close-btn" type="button" aria-label="Close offer">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+
+      <div class="op-grid">
+        <div class="op-visual">
+          <img src="assets/images/home/offer1.jpg" alt="Welcome to Archana" loading="lazy" />
+          <span class="op-badge"><b>10%</b> Off First Order</span>
+        </div>
+
+        <div class="op-content">
+          <span class="op-eyebrow">Exclusive Offer</span>
+          <h4 class="op-title">Welcome to Archana</h4>
+          <p class="op-desc">
+            Enjoy a special welcome benefit on your first order of sarees,
+            lehengas and bridal wear.
+          </p>
+
+          <div class="op-price">
+            <span class="op-save">Extra 10% Off</span>
+            <span class="op-min">on your first order</span>
+          </div>
+
+          <div class="op-coupon">
+            <span class="op-label">Use Coupon Code</span>
+            <div class="op-code-box">
+              <span class="op-code">ARCHANA10</span>
+              <button type="button" class="op-copy coupon-copy" data-code="ARCHANA10">
+                <span>Copy Code</span>
+              </button>
+            </div>
+          </div>
+
+          <ul class="op-points">
+            <li>
+              <i class="fa-solid fa-check"></i> Valid on all collections
+            </li>
+            <li>
+              <i class="fa-solid fa-check"></i> Free shipping above ₹2,999
+            </li>
+            <li><i class="fa-solid fa-check"></i> Limited time offer</li>
+          </ul>
+
+          <div class="op-btns">
+            <a href="category-listing.html" class="btn btn-primary">
+              Shop Now <i class="fa-solid fa-arrow-right-long"></i>
+            </a>
+            <a href="category-listing.html" class="btn btn-outline-primary">
+              View All Offers
+            </a>
+          </div>
+
+          <p class="op-note">*Terms &amp; conditions apply.</p>
         </div>
       </div>
     </div>
+  </div>
 
   <div class="model product-view-pop">
     <div class="model-body">
@@ -1420,6 +1287,7 @@
 
         $.ajax({ url: url, method: 'POST', data: $.extend({ _token: CSRF }, data), dataType: 'json' })
           .done(function (r) {
+            fireTrackingEvents(r.tracking_events);
             if (r.mini_cart_html) $('#miniCart').html(r.mini_cart_html);
             if (r.cart_count !== undefined) $('.cart-count').text(r.cart_count);
             $(document).trigger('cart:changed', [r]);
@@ -1478,8 +1346,10 @@
           method: 'POST',
           data: $f.serialize() + '&_token=' + encodeURIComponent(CSRF),
           dataType: 'json'
-        }).done(function () {
-          window.location.reload(); // new session and token, and the guest cart is already merged
+        }).done(function (r) {
+          fireTrackingEvents(r.tracking_events);
+          // short delay so the pixel requests leave before the page reloads
+          setTimeout(function () { window.location.reload(); }, 400);
         }).fail(function (xhr) {
           $btn.prop('disabled', false);
           $('<p class="pop-err">').text(errText(xhr)).insertBefore($btn);
@@ -1611,6 +1481,7 @@
           url: QV_CART_URL, method: 'POST', dataType: 'json',
           data: { _token: QV_CSRF, product_id: cur.id, quantity: parseInt($('#pvpQty').val(), 10) || cur.min_qty }
         }).done(function (r) {
+          fireTrackingEvents(r.tracking_events);
           if (r.mini_cart_html) $('#miniCart').html(r.mini_cart_html);
           if (r.cart_count !== undefined) $('.cart-count').text(r.cart_count);
           $(document).trigger('cart:added', [r]);
@@ -1629,10 +1500,23 @@
         });
       });
     });
+
+    function fireTrackingEvents(events) {
+      if (!events) return;
+
+      if (events.ga4 && typeof gtag === 'function') {
+        gtag('event', events.ga4.name, events.ga4.params);
+      }
+
+      if (events.meta && typeof fbq === 'function') {
+        fbq('track', events.meta.name, events.meta.params);
+      }
+    }
   </script>
 
   @include('partials.card-cart-js')
   @stack('scripts')
+  @include('layouts.tracking-body-bottom')
 
 </body>
 

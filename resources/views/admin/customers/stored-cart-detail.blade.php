@@ -4,63 +4,339 @@
 
     <style>
         :root {
-            --bg: #f1f2f4; --surface: #fff; --border: #e3e5e8;
-            --text-primary: #202223; --text-secondary: #6d7175; --text-hint: #8c9196;
-            --accent: #303d89; --accent-light: #f0f1fc;
-            --green: #007a5e; --green-bg: #e3f1ec;
-            --red: #b22222; --red-bg: #fce8e8;
-            --orange: #c84b00; --orange-bg: #fff0e6;
-            --radius-sm: 8px; --radius-md: 12px;
-            --shadow-card: 0 1px 3px rgba(0,0,0,.08), 0 0 0 1px var(--border);
+            --bg: #f1f2f4;
+            --surface: #fff;
+            --border: #e3e5e8;
+            --text-primary: #202223;
+            --text-secondary: #6d7175;
+            --text-hint: #8c9196;
+            --accent: #303d89;
+            --accent-light: #f0f1fc;
+            --green: #007a5e;
+            --green-bg: #e3f1ec;
+            --red: #b22222;
+            --red-bg: #fce8e8;
+            --orange: #c84b00;
+            --orange-bg: #fff0e6;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, .08), 0 0 0 1px var(--border);
         }
-        .dp { background: var(--bg); padding: 24px 28px; min-height: 100vh; color: var(--text-primary); font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif; }
-        .dp * { box-sizing: border-box; }
-        .dp h1 { font-size: 20px; font-weight: 650; margin: 0; }
-        .crumb { font-size: 12.5px; color: var(--text-hint); margin: 3px 0 20px; }
-        .crumb a { color: var(--accent); text-decoration: none; }
-        .crumb span { margin: 0 5px; }
-        .card-x { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-card); padding: 18px 20px; margin-bottom: 18px; }
-        .card-x h6 { font-size: 12px; font-weight: 650; text-transform: uppercase; letter-spacing: .05em; color: var(--text-hint); margin: 0 0 14px; }
-        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 18px; }
-        @media(max-width:900px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } .dp { padding: 16px; } }
-        .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-card); padding: 14px 16px; }
-        .stat .l { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--text-hint); margin-bottom: 6px; }
-        .stat .v { font-size: 18px; font-weight: 700; }
-        .stat .s { font-size: 11.5px; color: var(--text-hint); margin-top: 3px; }
+
+        .dp {
+            background: var(--bg);
+            padding: 24px 28px;
+            min-height: 100vh;
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+        }
+
+        .dp * {
+            box-sizing: border-box;
+        }
+
+        .dp h1 {
+            font-size: 20px;
+            font-weight: 650;
+            margin: 0;
+        }
+
+        .crumb {
+            font-size: 12.5px;
+            color: var(--text-hint);
+            margin: 3px 0 20px;
+        }
+
+        .crumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .crumb span {
+            margin: 0 5px;
+        }
+
+        .card-x {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-card);
+            padding: 18px 20px;
+            margin-bottom: 18px;
+        }
+
+        .card-x h6 {
+            font-size: 12px;
+            font-weight: 650;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: var(--text-hint);
+            margin: 0 0 14px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        @media(max-width:900px) {
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .dp {
+                padding: 16px;
+            }
+        }
+
+        .stat {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-card);
+            padding: 14px 16px;
+        }
+
+        .stat .l {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            color: var(--text-hint);
+            margin-bottom: 6px;
+        }
+
+        .stat .v {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .stat .s {
+            font-size: 11.5px;
+            color: var(--text-hint);
+            margin-top: 3px;
+        }
 
         /* stepper */
-        .stepper { display: flex; align-items: flex-start; overflow-x: auto; padding-bottom: 4px; }
-        .step { flex: 1; min-width: 120px; text-align: center; position: relative; padding: 0 6px; }
-        .step::before { content: ''; position: absolute; top: 19px; left: -50%; width: 100%; height: 2px; background: var(--border); z-index: 0; }
-        .step:first-child::before { display: none; }
-        .step.done::before { background: var(--green); }
-        .step-dot { width: 38px; height: 38px; border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; background: var(--bg); border: 2px solid var(--border); color: var(--text-hint); font-size: 14px; position: relative; z-index: 1; }
-        .step.done .step-dot { background: var(--green-bg); border-color: var(--green); color: var(--green); }
-        .step.stop .step-dot { background: var(--red-bg); border-color: var(--red); color: var(--red); }
-        .step-label { font-size: 12.5px; font-weight: 600; }
-        .step-time { font-size: 11px; color: var(--text-hint); margin-top: 2px; }
-        .step-gap { font-size: 11px; color: var(--accent); margin-top: 2px; font-weight: 600; }
+        .stepper {
+            display: flex;
+            align-items: flex-start;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .step {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            position: relative;
+            padding: 0 6px;
+        }
+
+        .step::before {
+            content: '';
+            position: absolute;
+            top: 19px;
+            left: -50%;
+            width: 100%;
+            height: 2px;
+            background: var(--border);
+            z-index: 0;
+        }
+
+        .step:first-child::before {
+            display: none;
+        }
+
+        .step.done::before {
+            background: var(--green);
+        }
+
+        .step-dot {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            color: var(--text-hint);
+            font-size: 14px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step.done .step-dot {
+            background: var(--green-bg);
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .step.stop .step-dot {
+            background: var(--red-bg);
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        .step-label {
+            font-size: 12.5px;
+            font-weight: 600;
+        }
+
+        .step-time {
+            font-size: 11px;
+            color: var(--text-hint);
+            margin-top: 2px;
+        }
+
+        .step-gap {
+            font-size: 11px;
+            color: var(--accent);
+            margin-top: 2px;
+            font-weight: 600;
+        }
 
         /* timeline */
-        .tl { position: relative; padding-left: 28px; }
-        .tl::before { content: ''; position: absolute; left: 11px; top: 4px; bottom: 4px; width: 2px; background: var(--border); }
-        .tl-item { position: relative; margin-bottom: 18px; }
-        .tl-dot { position: absolute; left: -28px; top: 0; width: 24px; height: 24px; border-radius: 50%; background: var(--accent-light); border: 2px solid var(--accent); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 11px; }
-        .tl-item.ok .tl-dot { background: var(--green-bg); border-color: var(--green); color: var(--green); }
-        .tl-title { font-size: 13.5px; font-weight: 650; }
-        .tl-time { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
-        .tl-gap { display: inline-block; margin-left: 8px; background: var(--orange-bg); color: var(--orange); border-radius: 20px; font-size: 11px; font-weight: 600; padding: 1px 8px; }
-        .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-        .chip { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px; font-size: 11.5px; color: var(--text-secondary); }
-        .chip i { margin-right: 4px; color: var(--text-hint); }
-        .tl-meta { font-size: 12px; color: var(--text-secondary); margin-top: 6px; }
+        .tl {
+            position: relative;
+            padding-left: 28px;
+        }
 
-        .item-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
-        .item-row:last-child { border-bottom: none; }
-        .item-thumb { width: 42px; height: 42px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border); background: var(--bg); }
-        .btn-back { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 16px; font-size: 13px; color: var(--text-primary) !important; text-decoration: none !important; }
-        .row-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; }
-        @media(max-width:900px) { .row-2 { grid-template-columns: 1fr; } }
+        .tl::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 4px;
+            bottom: 4px;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .tl-item {
+            position: relative;
+            margin-bottom: 18px;
+        }
+
+        .tl-dot {
+            position: absolute;
+            left: -28px;
+            top: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent-light);
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+        }
+
+        .tl-item.ok .tl-dot {
+            background: var(--green-bg);
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .tl-title {
+            font-size: 13.5px;
+            font-weight: 650;
+        }
+
+        .tl-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .tl-gap {
+            display: inline-block;
+            margin-left: 8px;
+            background: var(--orange-bg);
+            color: var(--orange);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 1px 8px;
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .chip {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 3px 10px;
+            font-size: 11.5px;
+            color: var(--text-secondary);
+        }
+
+        .chip i {
+            margin-right: 4px;
+            color: var(--text-hint);
+        }
+
+        .tl-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .item-row:last-child {
+            border-bottom: none;
+        }
+
+        .item-thumb {
+            width: 42px;
+            height: 42px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+            background: var(--bg);
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 8px 16px;
+            font-size: 13px;
+            color: var(--text-primary) !important;
+            text-decoration: none !important;
+        }
+
+        .row-2 {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 18px;
+        }
+
+        @media(max-width:900px) {
+            .row-2 {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 
     @php
@@ -70,13 +346,16 @@
         $last = $activities->last();
 
         $fmtGap = function (int $secs) {
-            if ($secs < 60) return $secs . 's';
-            if ($secs < 3600) return floor($secs / 60) . 'm ' . ($secs % 60) . 's';
-            if ($secs < 86400) return floor($secs / 3600) . 'h ' . floor(($secs % 3600) / 60) . 'm';
+            if ($secs < 60)
+                return $secs . 's';
+            if ($secs < 3600)
+                return floor($secs / 60) . 'm ' . ($secs % 60) . 's';
+            if ($secs < 86400)
+                return floor($secs / 3600) . 'h ' . floor(($secs % 3600) / 60) . 'm';
             return floor($secs / 86400) . 'd ' . floor(($secs % 86400) / 3600) . 'h';
         };
 
-        $deviceIcon = fn($d) => match ($d) { 'mobile' => 'fa-mobile', 'tablet' => 'fa-tablet', default => 'fa-desktop' };
+        $deviceIcon = fn($d) => match ($d) { 'mobile' => 'fa-mobile', 'tablet' => 'fa-tablet', default => 'fa-desktop'};
 
         $steps = [
             ['keys' => ['add_to_cart'], 'label' => 'Add to Cart', 'icon' => 'fa-shopping-cart'],
@@ -101,7 +380,10 @@
         // pehla step jahan customer ruk gaya
         $stopIndex = null;
         foreach ($stepEvents as $i => $ev) {
-            if (!$ev) { $stopIndex = $i; break; }
+            if (!$ev) {
+                $stopIndex = $i;
+                break;
+            }
         }
 
         $timeToCheckout = (isset($firstByEvent['add_to_cart'], $firstByEvent['checkout_viewed']))
@@ -121,7 +403,8 @@
                         View Detail
                     </div>
                 </div>
-                <a href="{{ route('admin.stored-carts.index') }}" class="btn-back"><i class="fa fa-arrow-left"></i> Back</a>
+                <a href="{{ route('admin.stored-carts.index') }}" class="btn-back"><i class="fa fa-arrow-left"></i>
+                    Back</a>
             </div>
 
             {{-- Summary --}}
@@ -144,12 +427,15 @@
                 </div>
                 <div class="stat">
                     <div class="l">First Seen</div>
-                    <div class="v" style="font-size:15px">{{ $first ? $first->created_at->format('d M Y, h:i A') : $cart->created_at->format('d M Y, h:i A') }}</div>
+                    <div class="v" style="font-size:15px">
+                        {{ $first ? $first->created_at->format('d M Y, h:i A') : $cart->created_at->format('d M Y, h:i A') }}
+                    </div>
                     <div class="s">Last activity: {{ $last ? $last->created_at->format('d M, h:i A') : '—' }}</div>
                 </div>
                 <div class="stat">
                     <div class="l">Cart → Checkout</div>
-                    <div class="v" style="font-size:15px">{{ $timeToCheckout !== null ? $fmtGap($timeToCheckout) : 'Never reached' }}</div>
+                    <div class="v" style="font-size:15px">
+                        {{ $timeToCheckout !== null ? $fmtGap($timeToCheckout) : 'Never reached' }}</div>
                     <div class="s">Time taken</div>
                 </div>
             </div>
@@ -236,12 +522,16 @@
                                     @endif
 
                                     <div class="chips">
-                                        <span class="chip"><i class="fa {{ $deviceIcon($a->device_type) }}"></i>{{ ucfirst($a->device_type ?? '—') }}</span>
-                                        <span class="chip"><i class="fa fa-globe"></i>{{ $a->browser ?? '—' }} / {{ $a->os ?? '—' }}</span>
+                                        <span class="chip"><i
+                                                class="fa {{ $deviceIcon($a->device_type) }}"></i>{{ ucfirst($a->device_type ?? '—') }}</span>
+                                        <span class="chip"><i class="fa fa-globe"></i>{{ $a->browser ?? '—' }} /
+                                            {{ $a->os ?? '—' }}</span>
                                         <span class="chip"><i class="fa fa-wifi"></i>{{ $a->ip_address ?? '—' }}</span>
-                                        <span class="chip"><i class="fa fa-map-marker"></i>{{ $a->location_label ?? 'Location unknown' }}</span>
+                                        <span class="chip"><i
+                                                class="fa fa-map-marker"></i>{{ $a->location_label ?? 'Location unknown' }}</span>
                                         @if($a->referrer)
-                                            <span class="chip" title="{{ $a->referrer }}"><i class="fa fa-external-link"></i>{{ \Illuminate\Support\Str::limit(parse_url($a->referrer, PHP_URL_HOST) ?: $a->referrer, 28) }}</span>
+                                            <span class="chip" title="{{ $a->referrer }}"><i
+                                                    class="fa fa-external-link"></i>{{ \Illuminate\Support\Str::limit(parse_url($a->referrer, PHP_URL_HOST) ?: $a->referrer, 28) }}</span>
                                         @endif
                                     </div>
                                 </div>
@@ -257,10 +547,6 @@
 
                     @foreach($cart->items as $item)
                         @php
-                            $thumb = ($item->imageVariant && $item->imageVariant->image)
-                                ? $item->imageVariant->image
-                                : optional($item->product)->thumbnail;
-
                             $variantLabel = null;
                             if (!empty($item->selected_attributes)) {
                                 $variantLabel = collect($item->selected_attributes)
@@ -273,13 +559,10 @@
                             }
                         @endphp
                         <div class="item-row">
-                            @if($thumb)
-                                <img src="{{ asset('storage/' . $thumb) }}" class="item-thumb" alt="">
-                            @else
-                                <div class="item-thumb"></div>
-                            @endif
+                            <img src="{{ $item->product->display_image }}" class="item-thumb" alt="{{ optional($item->product)->name ?? 'Unknown Product' }}">
                             <div style="flex:1;min-width:0">
-                                <div style="font-size:13px;font-weight:600">{{ optional($item->product)->name ?? 'Unknown Product' }}</div>
+                                <div style="font-size:13px;font-weight:600">
+                                    {{ optional($item->product)->name ?? 'Unknown Product' }}</div>
                                 <div style="font-size:11.5px;color:var(--text-hint)">
                                     {{ $variantLabel }} @if($variantLabel) · @endif Qty {{ $item->quantity }}
                                 </div>

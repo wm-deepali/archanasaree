@@ -50,6 +50,7 @@
                 data: { _token: CSRF, product_id: $b.data('id') }
             })
                 .done(function (r) {
+                    fireTrackingEvents(r.tracking_events);
                     applyCart(r);
                     $(document).trigger('cart:added', [r]);
                     openMiniCart(r.message);
@@ -76,6 +77,7 @@
                 data: { _token: CSRF, product_id: id }
             })
                 .done(function (r) {
+                    fireTrackingEvents(r.tracking_events);
                     // same product can appear more than once on a page (sliders, tabs)
                     $('.wish-btn[data-id="' + id + '"]').each(function () {
                         $(this).toggleClass('is-active', r.added)

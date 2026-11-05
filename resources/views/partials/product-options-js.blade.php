@@ -6,6 +6,7 @@
             G = D.groups,
             TYPES = ['price', 'image', 'stock', 'sku'],
             CART_URL = @json(route('cart.add')),
+            CART_PAGE = @json(route('cart')),
             CHECKOUT_URL = @json(route('checkout')),
             CSRF = @json(csrf_token()),
             byCa = {},
@@ -13,6 +14,31 @@
             busy = false,
             redirecting = false,
             lastImgKey = D.base.images.map(function (i) { return i.full; }).join('|');
+
+        // added = ye product cart mein hai | signature = add ke time ka selection
+        // touched = page load ke baad user ne option badla
+        var cartState = { added: $('.product-actions').data('in-cart') == 1, signature: null, touched: false };
+
+        function signature() {
+            var v = [], a = [];
+            $('.opt-group input[name^="attr["]:checked:not(:disabled)').each(function () { v.push(+this.value); });
+            $('input[name="addons[]"]:checked').each(function () { a.push(+this.value); });
+            return v.sort().join('-') + '|' + a.sort().join('-') + '|' +
+                ($('#customColour').is(':checked') ? $('#customColourHex').val() + $.trim($('#customColourNote').val()) : '');
+        }
+
+        function syncCartState() {
+            if (!cartState.added) return;
+            var changed = cartState.signature !== null
+                ? signature() !== cartState.signature
+                : cartState.touched;
+            if (changed) cartState.added = false;
+        }
+
+        function renderCartButtons() {
+            $('.js-add-cart').text(cartState.added ? 'View Cart' : 'Add to Bag');
+            $('.js-buy-now').text(cartState.added ? 'Checkout' : 'Buy Now');
+        }
 
         G.forEach(function (g) {
             g.show_when = (g.show_when || []).map(Number);
@@ -215,6 +241,8 @@
             refreshGroups();
             refreshGroups(); // doosri pass: parent change ke baad child state settle
             render();
+            syncCartState();
+            renderCartButtons();
         }
 
         // Colour customization: show/hide fields, disable them when unchecked
@@ -295,18 +323,19 @@
             if (busy || $btn.hasClass('disabled')) return;
 
             busy = true;
-            var label = $btn.html();
             $btn.addClass('is-loading').text(buyNow ? 'Please wait...' : 'Adding...');
             $('#cartMsg').hide();
 
             $.ajax({ url: CART_URL, method: 'POST', data: payload(), dataType: 'json' })
                 .done(function (r) {
+                    fireTrackingEvents(r.tracking_events);
                     applyCart(r);
                     $(document).trigger('cart:added', [r]);
+                    cartState = { added: true, signature: signature(), touched: false };
 
                     if (buyNow) {
                         redirecting = true;
-                        window.location.href = CHECKOUT_URL;
+                        setTimeout(function () { window.location.href = CHECKOUT_URL; }, 300);
                         return;
                     }
                     openMiniCart(r.message);
@@ -316,7 +345,10 @@
                 })
                 .always(function () {
                     busy = false;
-                    if (!redirecting) $btn.removeClass('is-loading').html(label);
+                    if (!redirecting) {
+                        $('.js-add-cart, .js-buy-now').removeClass('is-loading');
+                        renderCartButtons();
+                    }
                 });
         }
 
@@ -363,43 +395,64 @@
                 data: { _token: CSRF, product_id: id }
             })
                 .done(function (r) {
+                    fireTrackingEvents(r.tracking_events);
                     // same product can appear in several places (main button, sliders)
-                    $('.wish-btn[data-id="' + id + '"], .wish-link[data-id="' + id + '"]').each(function () {
+                    $('.wish-btn[data-id="' + id + '"], .wish-link[data-id="' + id + '"]').each(function () { }
                         wishPaint($(this), r.added);
-                    });
-                    $('.wishlist-count, [data-wishlist-count]').text(r.count);   // header badge: adjust selector
-                    $(document).trigger('wishlist:changed', [r]);
-                    wishToast(r.message, true);
-                })
-                .fail(function (xhr) { wishToast(wishFail(xhr), false); })
-                .always(function () { $b.removeClass('is-loading'); });
-        });
+                });
+            $('.wishlist-count, [data-wishlist-count]').text(r.count);   // header badge: adjust selector
+            $(document).trigger('wishlist:changed', [r]);
+            wishToast(r.message, true);
+        })
+            .fail(function (xhr) { wishToast(wishFail(xhr), false); })
+            .always(function () { $b.removeClass('is-loading'); });
+    });
 
-        $(document).on('change', '.opt-group input[name^="attr["]', update);
-        $(document).on('change', 'input[name="addons[]"]', paintPrice);
-        $(document).on('change', '#customColour', function () {
-            toggleCustomColour();
-            paintPrice();
-        });
-
-        $(document).on('click', '.qty-plus, .qty-minus', function () {
-            var v = qtyVal();
-            if ($(this).hasClass('qty-plus')) {
-                if (cur.stock && v + 1 > cur.stock) {
-                    return showMsg('Only ' + cur.stock + ' units available.', false);
-                }
-                v++;
-            } else {
-                v = Math.max(D.minQty, v - 1);
-            }
-            setQty(v);
-        });
-
-        $(document).on('click', '.js-add-cart', function () { addToCart($(this), false); });
-        $(document).on('click', '.js-buy-now', function () { addToCart($(this), true); });
-
-        setQty(D.minQty);
-        toggleCustomColour();
+    // ── Option changes: user ne kuch badla to "View Cart" wapas "Add to Bag" ──
+    $(document).on('change', '.opt-group input[name^="attr["]', function () {
+        cartState.touched = true;
         update();
+    });
+    $(document).on('change', 'input[name="addons[]"]', function () {
+        cartState.touched = true;
+        paintPrice();
+        syncCartState(); renderCartButtons();
+    });
+    $(document).on('change', '#customColour', function () {
+        cartState.touched = true;
+        toggleCustomColour();
+        paintPrice();
+        syncCartState(); renderCartButtons();
+    });
+    $(document).on('input change', '#customColourHex, #customColourNote', function () {
+        cartState.touched = true;
+        syncCartState(); renderCartButtons();
+    });
+
+    $(document).on('click', '.qty-plus, .qty-minus', function () {
+        var v = qtyVal();
+        if ($(this).hasClass('qty-plus')) {
+            if (cur.stock && v + 1 > cur.stock) {
+                return showMsg('Only ' + cur.stock + ' units available.', false);
+            }
+            v++;
+        } else {
+            v = Math.max(D.minQty, v - 1);
+        }
+        setQty(v);
+    });
+
+    $(document).on('click', '.js-add-cart', function () {
+        if (cartState.added) { window.location.href = CART_PAGE; return; }
+        addToCart($(this), false);
+    });
+    $(document).on('click', '.js-buy-now', function () {
+        if (cartState.added) { window.location.href = CHECKOUT_URL; return; }
+        addToCart($(this), true);
+    });
+
+    setQty(D.minQty);
+    toggleCustomColour();
+    update();
     });
 </script>

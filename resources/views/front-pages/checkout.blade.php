@@ -633,6 +633,21 @@
         $.post(TRACK_URL, { _token: CSRF, step: step });
       }
 
+      var ORDER_TOTAL = @json((float) $summary['total']);
+
+      function trackPaymentInfo(method) {
+        fireTrackingEvents({
+          ga4: {
+            name: 'add_payment_info',
+            params: { currency: 'INR', value: ORDER_TOTAL, payment_type: method === 'cod' ? 'cod' : 'online' }
+          },
+          meta: {
+            name: 'AddPaymentInfo',
+            params: { currency: 'INR', value: ORDER_TOTAL }
+          }
+        });
+      }
+
       function failText(xhr) {
         var j = xhr.responseJSON || {};
         if (xhr.status === 422 && j.errors) return Object.values(j.errors)[0][0];
@@ -792,6 +807,7 @@
 
       // ───────── Place order (COD redirect / Razorpay popup) ─────────
       function placeOrder(data) {
+        trackPaymentInfo(data.payment_method);
         busy = true;
         $('.js-pay').prop('disabled', true);
         $('#addrMsg').hide();
@@ -905,10 +921,7 @@
           if (r.csrf_token) CSRF = r.csrf_token;
           $('meta[name="csrf-token"]').attr('content', CSRF);
 
-          // fire the tracking events the controller returns
-          (r.tracking_events || []).forEach(function (t) {
-            if (t.type === 'gtag' && window.gtag) window.gtag('event', t.name, t.params || {});
-          });
+          fireTrackingEvents(r.tracking_events);
 
           IS_GUEST = false;
           busy = false;
@@ -996,4 +1009,11 @@
       $('.co-layout').on('submit', function (e) { e.preventDefault(); });
     });
   </script>
+
+  @if(!empty($beginCheckoutScript))
+    <script>
+      {!! $beginCheckoutScript !!}
+    </script>
+  @endif
+
 @endpush

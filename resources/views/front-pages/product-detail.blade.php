@@ -215,7 +215,7 @@
                                 </ul>
                             </div>
 
-                            <div class="product-actions">
+                            <div class="product-actions" data-in-cart="{{ !empty($inCart) ? 1 : 0 }}">
                                 <div class="act-top">
                                     <div class="qty-box">
                                         <button type="button" class="qty-minus" aria-label="Decrease quantity">
@@ -234,8 +234,10 @@
                                     </button>
                                 </div>
                                 <div class="act-btns">
-                                    <button type="button" class="btn btn-outline-primary js-add-cart">Add to Bag</button>
-                                    <button type="button" class="btn btn-primary js-buy-now">Buy Now</button>
+                                    <button type="button"
+                                        class="btn btn-outline-primary js-add-cart">{{ !empty($inCart) ? 'View Cart' : 'Add to Bag' }}</button>
+                                    <button type="button"
+                                        class="btn btn-primary js-buy-now">{{ !empty($inCart) ? 'Checkout' : 'Buy Now' }}</button>
                                 </div>
                                 <p class="cart-msg" id="cartMsg" style="display:none"></p>
                             </div>
@@ -606,8 +608,10 @@
                             <i class="fa-solid fa-plus"></i>
                         </button>
                     </div>
-                    <button type="button" class="btn btn-outline-primary js-add-cart">Add to Bag</button>
-                    <button type="button" class="btn btn-primary js-buy-now">Buy Now</button>
+                    <button type="button"
+                        class="btn btn-outline-primary js-add-cart">{{ !empty($inCart) ? 'View Cart' : 'Add to Bag' }}</button>
+                    <button type="button"
+                        class="btn btn-primary js-buy-now">{{ !empty($inCart) ? 'Checkout' : 'Buy Now' }}</button>
                 </div>
             </div>
         </div>
@@ -911,6 +915,12 @@
             $(".product-gallery-swiper .swiper-slide-active .glightbox").trigger("click");
         });
     </script>
+
+    @if(!empty($viewItemScript))
+        <script>
+            {!! $viewItemScript !!}
+        </script>
+    @endif
 
     @include('partials.product-options-js')
 @endpush

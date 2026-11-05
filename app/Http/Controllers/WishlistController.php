@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
+use App\Services\Tracking\PixelTracker;
 
 class WishlistController extends Controller
 {
@@ -18,17 +19,23 @@ class WishlistController extends Controller
 
         if ($existing) {
             $existing->delete();
-            $added = false;
-        } else {
-            Wishlist::addProduct($product);
-            $added = true;
+
+            return response()->json([
+                'success' => true,
+                'added' => false,
+                'count' => Wishlist::current()->count(),
+                'message' => 'Removed from your wishlist.',
+            ]);
         }
+
+        Wishlist::addProduct($product);
 
         return response()->json([
             'success' => true,
-            'added'   => $added,
-            'count'   => Wishlist::current()->count(),
-            'message' => $added ? 'Added to your wishlist.' : 'Removed from your wishlist.',
+            'added' => true,
+            'count' => Wishlist::current()->count(),
+            'tracking_events' => PixelTracker::addToWishlist($product),
+            'message' => 'Added to your wishlist.',
         ]);
     }
 }

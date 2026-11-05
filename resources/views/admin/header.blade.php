@@ -117,35 +117,42 @@
 
         {{-- CONTENT MANAGEMENT --}}
         <li class="{{ request()->routeIs(
+    'admin.page-heroes.*',
     'admin.announcements.*',
     'admin.home-page.*',
+    'admin.home.sliders.*',
+    'admin.home.campaign.*',
+    'admin.home.story.*',
+    'admin.home.reels.*',
+    'admin.about.*',
     'admin.faqs.*',
     'admin.blogs.*',
     'admin.pages.*',
-    'admin.testimonials.*',
     'admin.teams.*'
 ) ? 'active' : '' }}">
             <a href="#"><i class="fa-solid fa-file-lines"></i> Content Management</a>
             <ul>
+                <li><a href="{{ route('admin.page-heroes.index') }}">Page Banners</a></li>
                 <li><a href="{{ route('admin.announcements.index') }}">Announcement Bar</a></li>
                 <li><a href="{{ route('admin.home-page.index') }}">Home Page Widgets</a></li>
+                <li><a href="{{ route('admin.about.index') }}">About Page</a></li>
                 <li><a href="{{ route('admin.faqs.index') }}">FAQ</a></li>
                 <li><a href="{{ route('admin.blogs.index') }}">Blog Management</a></li>
                 <li><a href="{{ route('admin.pages.index') }}">Dynamic Pages</a></li>
-                <li><a href="{{ route('admin.teams.index') }}">Manage Teams</a></li>
-                <li><a href="{{ route('admin.testimonials.index') }}">Testimonial & Feedback</a></li>
             </ul>
         </li>
 
         {{-- ENQUIRIES --}}
         <li class="{{ request()->routeIs(
     'admin.contact-enquiries.*',
-    'admin.coupon-enquiries.*'
+    'admin.coupon-enquiries.*',
+    'admin.home.subscribers.*'
 ) ? 'active' : '' }}">
             <a href="#"><i class="fa-solid fa-envelope"></i> Enquiries</a>
             <ul>
                 <li><a href="{{ route('admin.contact-enquiries.index') }}">Contact Us Enquiries</a></li>
                 <li><a href="{{ route('admin.coupon-enquiries.index') }}">Coupon Enquiries</a></li>
+                <li><a href="{{ route('admin.subscribers.index') }}">Newsletter Subscribers</a></li>
             </ul>
         </li>
 
